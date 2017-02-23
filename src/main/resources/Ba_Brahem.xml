@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     Explanation:
+     ============
+     node1 and node2 are names of (abstract)classes or interfaces
+
+     possible values of type are:
+       -  ASSOCIATION             bidirectional association
+       -  ASSOCIATION_DIRECTED    unidirectional association  from node1 to node 2
+       -  AGGREGATE               node2 is the aggregate
+       -  COMPOSITE               node2 is the composite
+       -  INHERITANCE             node2 is the superclass or (super)interface
+                                  node1 is a subclass or subinterface which may
+				  have relations to other classes/interfaces
+				  
+       -  INHERITANCE_MULTI       node2 is the superclass or (super)interface
+                                  node1 is the subclass.
+				  node2 may have more subclasses than the template defines,
+				  but none of them may have relations to other classes/interfaces.
+       -  DEPENDENCY		  node1 depends on node2
+       
+     There are 23 GoF design patterns.
+     Beneath are 16 GoF design patterns which can be detected.
+     The structures of the state pattern and the strategy pattern are identical.
+     The 6 remaining patterns have implementing issues, which can not be denoted by the structure beneath.
+-->
+
+
+<templates>
+   <template name ="Ba_Brahem">	               			                 
+       <edge node1="P"                   node2="Q"           type="ASSOCIATION_DIRECTED"/>
+       <edge node1="R"                   node2="Q"           type="INHERITANCE"/>
+   </template>			               			                 
+</templates>
+    
