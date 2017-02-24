@@ -6,46 +6,40 @@
 package nl.ou.dpd.argoxmi;
 
 /**
- *
  * @author E.M. van Doorn
  */
 
+import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class SAXHandler extends DefaultHandler implements Constants {
+public class ArgoXmiSaxHandler extends DefaultHandler implements Constants {
 
-    private VerwerkSAXTags handler;
+    private ElementHandler handler;
 
-    public SAXHandler() {
+    public ArgoXmiSaxHandler() {
         handler = null;
     }
 
     public void startElement(String uri, String localName,
-            String qName, Attributes attributes) throws SAXException {
+                             String qName, Attributes attributes) throws SAXException {
 
-        if (handler != null)
-        {
+        if (handler != null) {
             handler.startElement(qName, attributes);
-
             return;
         }
 
-        switch (qName)
-        {
-            case ABSTRACTION_TAG:
-            {
-                AbstractionElement ael = new AbstractionElement();
+        switch (qName) {
+            case ABSTRACTION_TAG: {
+                final AbstractionElement ael = new AbstractionElement();
                 handler = ael;
-
                 break;
             }
 
             case CLASS_TAG:
-            case INTERFACE_TAG:
-            {
-                ClassElement cel = new ClassElement();
+            case INTERFACE_TAG: {
+                final ClassElement cel = new ClassElement();
 
                 ArgoXMI.classElements.put(attributes.getValue(ID), cel);
                 handler = cel;
@@ -55,32 +49,29 @@ public class SAXHandler extends DefaultHandler implements Constants {
                 break;
             }
 
-            case GENERALIZATION_TAG:
-            {
-                GeneralizationElement gel = new GeneralizationElement();
+            case GENERALIZATION_TAG: {
+                final GeneralizationElement gel = new GeneralizationElement();
                 handler = gel;
 
                 break;
             }
 
-            case ASSOCIATION_TAG:
-            {
-                AssociationElement asel = new AssociationElement();
+            case ASSOCIATION_TAG: {
+                final AssociationElement asel = new AssociationElement();
                 handler = asel;
-
                 break;
             }
 
-            default:
+            default: {
                 break;
+            }
         }
     }
 
     public void endElement(String uri, String localName,
-            String qName) throws SAXException {
+                           String qName) throws SAXException {
 
-        if (handler != null)
-        {
+        if (handler != null) {
             handler = handler.endElement(qName);
         }
     }

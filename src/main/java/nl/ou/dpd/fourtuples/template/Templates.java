@@ -33,7 +33,7 @@ public class Templates {
         {
             InputStream xmlInput;
             SAXParser saxParser = factory.newSAXParser();
-            SAXHandler handler = new SAXHandler();
+            TemplateSaxHandler handler = new TemplateSaxHandler();
 
             xmlInput = new FileInputStream(fileName);
             saxParser.parse(xmlInput, handler);

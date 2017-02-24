@@ -53,18 +53,25 @@ public final class DesignPatternDetector {
     }
 
     private void run(String[] args) {
-        System.out.println("Current directory: " + System.getProperty("user.dir"));
+        try {
+            System.out.println("Current directory: " + System.getProperty("user.dir"));
 
-        parseArgs(args);
+            parseArgs(args);
 
-        final ArgoXMI inputProcessor = new ArgoXMI(xmiFileName);
-        final Templates templates = new Templates(templateFileName);
+            final ArgoXMI inputProcessor = new ArgoXMI(xmiFileName);
+            final Templates templates = new Templates(templateFileName);
 
-        final FourTupleArray fta = inputProcessor.getFourtuples();
-        final ArrayList<FourTupleArray> dps = templates.parse();
+            final FourTupleArray fta = inputProcessor.getFourtuples();
+            final ArrayList<FourTupleArray> dps = templates.parse();
 
-        // Find a match for each design pattern in dsp
-        dps.forEach(dp -> dp.match(fta, maxMissingEdges));
+            // Find a match for each design pattern in dsp
+            dps.forEach(dp -> dp.match(fta, maxMissingEdges));
+
+        } catch(Throwable t) {
+            t.printStackTrace();
+            System.err.println("An unexpected error occurred. The application has stopped.");
+            System.exit(-1);
+        }
     }
 
     private void parseArgs(String[] args) {

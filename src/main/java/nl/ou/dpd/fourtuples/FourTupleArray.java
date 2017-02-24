@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class FourTupleArray {
 
-    private List<FourTuple> fourTuples;
+    protected List<FourTuple> fourTuples; // protected for testing purposes; TODO: turn back to private again
     private String dpName;
     private Solutions solutions;
 
@@ -44,8 +44,10 @@ public class FourTupleArray {
         // Put every classname occuring in a 4-tuple in fta in MatchedNames with value = EMPTY.
         MatchedNames matchedClassNames = fillMatchedNames(fta);
 
+        // Order the fourTuples
         fourTuples = order(fourTuples);
 
+        // Do the matching recursively
         return recursiveMatch(fta, maxNotMatchable, 0, matchedClassNames);
     }
 

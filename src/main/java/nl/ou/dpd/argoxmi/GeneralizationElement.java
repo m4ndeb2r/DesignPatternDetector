@@ -5,43 +5,44 @@
  */
 package nl.ou.dpd.argoxmi;
 
+import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
 
 /**
- *
  * @author E.M. van Doorn
  */
 
-public class GeneralizationElement implements Constants, VerwerkSAXTags {
+public class GeneralizationElement implements Constants, ElementHandler {
 
-    private VerwerkSAXTags handler;
+    private ElementHandler handler;
     private boolean expectChild;
     private String child;
 
     GeneralizationElement() {
         handler = null;
-        expectChild = true;   
+        expectChild = true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void startElement(String qName, Attributes attributes) {
-        if (qName.equals(CLASS_TAG) || qName.equals(INTERFACE_TAG))
-        {
-            if (expectChild)
-            {
+        if (qName.equals(CLASS_TAG) || qName.equals(INTERFACE_TAG)) {
+            if (expectChild) {
                 child = new String(attributes.getValue(ID_REF));
                 expectChild = false;
-            }
-            else
-            {
+            } else {
                 ArgoXMI.inheritanceElements.put(child, new String(attributes.getValue(ID_REF)));
-            }  
+            }
         }
     }
 
-    public VerwerkSAXTags endElement(String qName) {
+    /**
+     * {@inheritDoc}
+     */
+    public ElementHandler endElement(String qName) {
 
-        if (handler != null)
-        {
+        if (handler != null) {
             handler = handler.endElement(qName);
 
             return this;

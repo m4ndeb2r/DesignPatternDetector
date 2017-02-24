@@ -7,18 +7,18 @@ package nl.ou.dpd.argoxmi;
 
 import nl.ou.dpd.fourtuples.FT_constants;
 import nl.ou.dpd.fourtuples.FourTuple;
+import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
 
 /**
- *
  * @author E.M.van Doorn
  */
 
-public class AssociationElement implements Constants, VerwerkSAXTags {
+public class AssociationElement implements Constants, ElementHandler {
     // Association is denoted  from left to right
     // Aggregation and composite sign is denoted at right side.
 
-    private VerwerkSAXTags handler;
+    private ElementHandler handler;
     private boolean isAggregate, isComposite, isNavigable, isFirstPart;
     private String leftElement, rightElement;
 
@@ -29,19 +29,18 @@ public class AssociationElement implements Constants, VerwerkSAXTags {
         rightElement = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void startElement(String qName, Attributes attributes) {
-        switch (qName)
-        {
-            case ASSOCIATION_END_TAG:
-            {
-                if (isFirstPart)
-                {
+        switch (qName) {
+            case ASSOCIATION_END_TAG: {
+                if (isFirstPart) {
                     isNavigable = attributes.getValue(IS_NAVIGABLE).equals("true");
                     isAggregate = attributes.getValue(AGGREGATION).equals(AGGREGATE);
                     isComposite = attributes.getValue(AGGREGATION).equals(COMPOSITE);
 
-                } else
-                {
+                } else {
                     isNavigable = isNavigable && attributes.getValue(IS_NAVIGABLE).equals("true");
                     isAggregate = isAggregate || attributes.getValue(AGGREGATION).equals(AGGREGATE);
                     isComposite = isComposite || attributes.getValue(AGGREGATION).equals(COMPOSITE);
@@ -51,26 +50,19 @@ public class AssociationElement implements Constants, VerwerkSAXTags {
             }
 
             case INTERFACE_TAG:
-            case CLASS_TAG:
-            {
-                if (isFirstPart)
-                {
-                    if (isAggregate || isComposite || isNavigable)
-                    {
+            case CLASS_TAG: {
+                if (isFirstPart) {
+                    if (isAggregate || isComposite || isNavigable) {
                         rightElement = attributes.getValue(ID_REF);
-                    } else
-                    {
+                    } else {
                         leftElement = attributes.getValue(ID_REF);
                     }
 
                     isFirstPart = false;
-                } else
-                {
-                    if (leftElement == null)
-                    {
+                } else {
+                    if (leftElement == null) {
                         leftElement = attributes.getValue(ID_REF);
-                    } else
-                    {
+                    } else {
                         rightElement = attributes.getValue(ID_REF);
                     }
 
@@ -86,10 +78,12 @@ public class AssociationElement implements Constants, VerwerkSAXTags {
 
     }
 
-    public VerwerkSAXTags endElement(String qName) {
+    /**
+     * {@inheritDoc}
+     */
+    public ElementHandler endElement(String qName) {
 
-        if (handler != null)
-        {
+        if (handler != null) {
             handler = handler.endElement(qName);
 
             return this;
@@ -101,17 +95,13 @@ public class AssociationElement implements Constants, VerwerkSAXTags {
     public FourTuple getFourtuple() {
         int type;
 
-        if (isAggregate)
-        {
+        if (isAggregate) {
             type = FT_constants.AGGREGATE;
-        } else if (isComposite)
-        {
+        } else if (isComposite) {
             type = FT_constants.COMPOSITE;
-        } else if (isNavigable)
-        {
+        } else if (isNavigable) {
             type = FT_constants.ASSOCIATION;
-        } else
-        {
+        } else {
             type = FT_constants.ASSOCIATION_DIRECTED;
         }
 

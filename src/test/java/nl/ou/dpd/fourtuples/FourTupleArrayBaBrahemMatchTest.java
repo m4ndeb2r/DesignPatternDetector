@@ -30,7 +30,7 @@ public class FourTupleArrayBaBrahemMatchTest {
      * consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the prototype
      * pattern is detected.
      *
-     * TODO: currently this test is alway successful. We cannot check the output (yet), since it is printed to System.out.
+     * TODO: currently this test is always successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectPrototype() {
@@ -42,7 +42,7 @@ public class FourTupleArrayBaBrahemMatchTest {
      * consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the bridge
      * pattern is detected.
      *
-     * TODO: currently this test is alway successful. We cannot check the output (yet), since it is printed to System.out.
+     * TODO: currently this test is always successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectBridge() {

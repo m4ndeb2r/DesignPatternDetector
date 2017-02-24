@@ -5,20 +5,20 @@
  */
 package nl.ou.dpd.argoxmi;
 
+import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
 
 /**
- *
  * @author E.M. van Doorn
  */
 
-public class ClassElement implements Constants, VerwerkSAXTags {
+public class ClassElement implements Constants, ElementHandler {
 
     private String name;
     private ArrayList<String> dependentClasses;
-    private VerwerkSAXTags handler;
+    private ElementHandler handler;
     private boolean expectSupplier, inClass;
 
     ClassElement() {
@@ -29,14 +29,14 @@ public class ClassElement implements Constants, VerwerkSAXTags {
         inClass = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void startElement(String qName, Attributes attributes) {
-        if (name == null)
-        {
+        if (name == null) {
             name = attributes.getValue(NAME);
-        } else
-        {
-            switch (qName)
-            {
+        } else {
+            switch (qName) {
                 case DEPENDENCY_SUPPLIER_TAG:
                     expectSupplier = true;
 
@@ -45,8 +45,7 @@ public class ClassElement implements Constants, VerwerkSAXTags {
                 case INTERFACE_TAG:
                 case CLASS_TAG:
                     inClass = true;
-                    if (expectSupplier)
-                    {
+                    if (expectSupplier) {
                         dependentClasses.add(attributes.getValue(ID_REF));
                     }
 
@@ -58,28 +57,27 @@ public class ClassElement implements Constants, VerwerkSAXTags {
         }
     }
 
-    public VerwerkSAXTags endElement(String qName) {
-        if (handler != null)
-        {
+    /**
+     * {@inheritDoc}
+     */
+    public ElementHandler endElement(String qName) {
+        if (handler != null) {
             handler = handler.endElement(qName);
 
             return this;
         }
 
-        if (qName.equals(DEPENDENCY_SUPPLIER_TAG))
-        {
+        if (qName.equals(DEPENDENCY_SUPPLIER_TAG)) {
             expectSupplier = false;
         }
 
-        if (qName.equals(CLASS_TAG) || qName.equals(INTERFACE_TAG))
-        {
-            if (inClass)
-            {
+        if (qName.equals(CLASS_TAG) || qName.equals(INTERFACE_TAG)) {
+            if (inClass) {
                 inClass = false;
 
                 return this;
             }
-            
+
             return null;
         }
 
@@ -93,15 +91,13 @@ public class ClassElement implements Constants, VerwerkSAXTags {
     public ArrayList<String> getDependencies() {
         ArrayList<String> result;
 
-        if (dependentClasses.isEmpty())
-        {
+        if (dependentClasses.isEmpty()) {
             return null;
         }
 
         result = new ArrayList();
 
-        for (String s : dependentClasses)
-        {
+        for (String s : dependentClasses) {
             result.add(ArgoXMI.classElements.get(s).getName());
         }
 

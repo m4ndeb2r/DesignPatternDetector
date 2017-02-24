@@ -6,16 +6,16 @@
 package nl.ou.dpd.fourtuples.template;
 
 /**
- *
  * @author E.M. van Doorn
  */
 
 import nl.ou.dpd.fourtuples.FourTupleArray;
+import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
 
-public class TemplateElement implements VerwerkSAXTags {
+public class TemplateElement implements ElementHandler {
 
-    private VerwerkSAXTags handler;
+    private ElementHandler handler;
     private FourTupleArray fta;
     private EdgeElement edgeElement;
 
@@ -24,14 +24,14 @@ public class TemplateElement implements VerwerkSAXTags {
         fta = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void startElement(String qName, Attributes attributes) {
-        if (fta == null)
-        {
+        if (fta == null) {
             fta = new FourTupleArray(attributes.getValue("name"));
-        } else
-        {
-            switch (qName)
-            {
+        } else {
+            switch (qName) {
                 case "edge":
                     edgeElement = new EdgeElement();
                     handler = edgeElement;
@@ -45,14 +45,15 @@ public class TemplateElement implements VerwerkSAXTags {
         }
     }
 
-    public VerwerkSAXTags endElement(String qName) {
+    /**
+     * {@inheritDoc}
+     */
+    public ElementHandler endElement(String qName) {
 
-        if (handler != null)
-        {
+        if (handler != null) {
             handler = handler.endElement(qName);
 
-            if (qName.equals("edge"))
-            {
+            if (qName.equals("edge")) {
                 fta.add(edgeElement.getFourtuple());
             }
 

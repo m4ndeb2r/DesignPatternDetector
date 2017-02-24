@@ -6,35 +6,34 @@
 package nl.ou.dpd.fourtuples.template;
 
 /**
- *
  * @author E.M. van Doorn
  */
 
 import nl.ou.dpd.fourtuples.FourTuple;
 import nl.ou.dpd.fourtuples.TagValue;
+import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
 
-public class EdgeElement implements VerwerkSAXTags {
+public class EdgeElement implements ElementHandler {
     private FourTuple fourtuple;
-    
-    EdgeElement()
-    { 
-    }
-    
-    public void startElement(String qName, Attributes attributes)  { 
-        fourtuple = new FourTuple(attributes.getValue("node1"), 
-                attributes.getValue("node2"), 
+
+    /**
+     * {@inheritDoc}
+     */
+    public void startElement(String qName, Attributes attributes) {
+        fourtuple = new FourTuple(attributes.getValue("node1"),
+                attributes.getValue("node2"),
                 TagValue.getTagValue(attributes.getValue("type").toUpperCase()));
     }
 
-
-    public VerwerkSAXTags endElement(String qName) {
+    /**
+     * {@inheritDoc}
+     */
+    public ElementHandler endElement(String qName) {
         return null;
     }
-    
-    
-    public FourTuple getFourtuple()
-    {
+
+    public FourTuple getFourtuple() {
         return fourtuple;
     }
 }

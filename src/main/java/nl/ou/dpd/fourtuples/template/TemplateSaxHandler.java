@@ -11,6 +11,7 @@ package nl.ou.dpd.fourtuples.template;
  */
 
 import nl.ou.dpd.fourtuples.FourTupleArray;
+import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -18,12 +19,12 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 
 
-public class SAXHandler extends DefaultHandler {
-     private VerwerkSAXTags handler;
+public class TemplateSaxHandler extends DefaultHandler {
+     private ElementHandler handler;
      private TemplateElement templateElement;
      ArrayList<FourTupleArray> dps;
 
-    public SAXHandler() {
+    public TemplateSaxHandler() {
         handler = null;
         dps = new ArrayList();
     }
