@@ -29,7 +29,7 @@ public class MatchedNames {
     void show(String name) {
         String value;
 
-        if (!name.equals(FT_constants.EMPTY)) {
+        if (!name.equals(EdgeType.EMPTY.getName())) {
             System.out.printf("Design Pattern: %s\n", name);
         }
 
@@ -44,7 +44,7 @@ public class MatchedNames {
 
 
     boolean isEmpty(String key) {
-        return names.get(key).equals(FT_constants.EMPTY);
+        return names.get(key).equals(EdgeType.EMPTY.getName());
     }
 
 
@@ -58,7 +58,7 @@ public class MatchedNames {
     }
 
     void add(String key) {
-        add(key, FT_constants.EMPTY);
+        add(key, EdgeType.EMPTY.getName());
     }
 
 
@@ -80,7 +80,7 @@ public class MatchedNames {
         resultSet = new TreeSet();
         for (String key : sortedSet) {
             value = names.get(key);
-            if (!value.equals(FT_constants.EMPTY)) {
+            if (!value.equals(EdgeType.EMPTY.getName())) {
                 resultSet.add(key);
             }
         }
@@ -90,7 +90,7 @@ public class MatchedNames {
 
 
     boolean keyIsBounded(String k) {
-        return !get(k).equals(FT_constants.EMPTY);
+        return !get(k).equals(EdgeType.EMPTY.getName());
     }
 
 

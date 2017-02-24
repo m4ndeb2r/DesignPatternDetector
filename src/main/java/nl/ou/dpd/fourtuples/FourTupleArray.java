@@ -17,7 +17,7 @@ public class FourTupleArray {
      */
     public FourTupleArray() {
         fourTuples = new ArrayList();
-        dpName = FT_constants.EMPTY;
+        dpName = EdgeType.EMPTY.getName();
         solutions = new Solutions();
     }
 
@@ -107,7 +107,7 @@ public class FourTupleArray {
                 dpFt.setMatched(true);
                 seFt.setMatched(true);
 
-                if (dpFt.getTypeRelation() == FT_constants.INHERITANCE_MULTI) {
+                if (dpFt.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
                     int k;
 
                     // There may be more edges of se which
@@ -235,7 +235,7 @@ public class FourTupleArray {
     public void add(FourTuple ft) {
         fourTuples.add(new FourTuple(ft));
 
-        if (ft.getTypeRelation() == FT_constants.ASSOCIATION)
+        if (ft.getTypeRelation() == EdgeType.ASSOCIATION)
         // For edge (A, B, ....) a second but virtual edge (B, A, ...)
         // will be added.
         {
@@ -248,7 +248,7 @@ public class FourTupleArray {
     }
 
     public void show() {
-        if (!dpName.equals(FT_constants.EMPTY)) {
+        if (!dpName.equals(EdgeType.EMPTY.getName())) {
             System.out.println("Design pattern: " + dpName);
         }
 

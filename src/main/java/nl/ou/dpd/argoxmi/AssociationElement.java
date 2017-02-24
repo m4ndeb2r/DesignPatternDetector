@@ -5,7 +5,7 @@
  */
 package nl.ou.dpd.argoxmi;
 
-import nl.ou.dpd.fourtuples.FT_constants;
+import nl.ou.dpd.fourtuples.EdgeType;
 import nl.ou.dpd.fourtuples.FourTuple;
 import nl.ou.dpd.sax.ElementHandler;
 import org.xml.sax.Attributes;
@@ -93,19 +93,21 @@ public class AssociationElement implements Constants, ElementHandler {
     }
 
     public FourTuple getFourtuple() {
-        int type;
+        EdgeType type;
 
         if (isAggregate) {
-            type = FT_constants.AGGREGATE;
+            type = EdgeType.AGGREGATE;
         } else if (isComposite) {
-            type = FT_constants.COMPOSITE;
+            type = EdgeType.COMPOSITE;
         } else if (isNavigable) {
-            type = FT_constants.ASSOCIATION;
+            type = EdgeType.ASSOCIATION;
         } else {
-            type = FT_constants.ASSOCIATION_DIRECTED;
+            type = EdgeType.ASSOCIATION_DIRECTED;
         }
 
-        return new FourTuple(ArgoXMI.classElements.get(leftElement).getName(),
-                ArgoXMI.classElements.get(rightElement).getName(), type);
+        return new FourTuple(
+                ArgoXMI.classElements.get(leftElement).getName(),
+                ArgoXMI.classElements.get(rightElement).getName(),
+                type);
     }
 }

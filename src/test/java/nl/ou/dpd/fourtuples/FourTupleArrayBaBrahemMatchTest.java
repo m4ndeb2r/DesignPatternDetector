@@ -4,8 +4,6 @@ import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 /**
  * Tests the {@link FourTuplesArray} class for the BaBrahem-example in Ed van Doorn's article "Design Patterns -
  * Supporting design process by automatically detecting design patterns and giving some feedback". See: Van Doorn
@@ -51,11 +49,11 @@ public class FourTupleArrayBaBrahemMatchTest {
 
     private FourTupleArray createBaBrahemExampleFta() {
         final FourTupleArray system = new FourTupleArray();
-        system.add(new FourTuple("A", "B", FT_constants.ASSOCIATION_DIRECTED));
-        system.add(new FourTuple("A", "C", FT_constants.ASSOCIATION_DIRECTED));
-        system.add(new FourTuple("C", "B", FT_constants.ASSOCIATION_DIRECTED));
-        system.add(new FourTuple("D", "B", FT_constants.INHERITANCE));
-        system.add(new FourTuple("E", "C", FT_constants.INHERITANCE));
+        system.add(new FourTuple("A", "B", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(new FourTuple("A", "C", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(new FourTuple("C", "B", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(new FourTuple("D", "B", EdgeType.INHERITANCE));
+        system.add(new FourTuple("E", "C", EdgeType.INHERITANCE));
         return system;
     }
 
@@ -73,10 +71,10 @@ public class FourTupleArrayBaBrahemMatchTest {
      */
     private FourTupleArray createBridgePattern() {
         final FourTupleArray bridge = new FourTupleArray("Bridge");
-        bridge.add(new FourTuple("Client", "Abstraction", FT_constants.ASSOCIATION_DIRECTED));
-        bridge.add(new FourTuple("Implementor", "Abstraction", FT_constants.AGGREGATE));
-        bridge.add(new FourTuple("ConcreteImplementor", "Implementor", FT_constants.INHERITANCE));
-        bridge.add(new FourTuple("RefinedAbstraction", "Abstraction", FT_constants.INHERITANCE));
+        bridge.add(new FourTuple("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
+        bridge.add(new FourTuple("Implementor", "Abstraction", EdgeType.AGGREGATE));
+        bridge.add(new FourTuple("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE));
+        bridge.add(new FourTuple("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE));
         return bridge;
     }
 }

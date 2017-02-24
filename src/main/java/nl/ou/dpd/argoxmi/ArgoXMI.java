@@ -10,11 +10,10 @@ package nl.ou.dpd.argoxmi;
  */
 
 import nl.ou.dpd.exception.DesignPatternDetectorException;
-import nl.ou.dpd.fourtuples.FT_constants;
+import nl.ou.dpd.fourtuples.EdgeType;
 import nl.ou.dpd.fourtuples.FourTuple;
 import nl.ou.dpd.fourtuples.FourTupleArray;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -76,7 +75,7 @@ public class ArgoXMI {
             if (dep != null) {
                 for (String nm : dep) {
                     fta.add(new FourTuple(classElements.get(s).getName(),
-                            nm, FT_constants.DEPENDENCY));
+                            nm, EdgeType.DEPENDENCY));
                 }
             }
         }
@@ -87,7 +86,7 @@ public class ArgoXMI {
         for (String s : inheritanceElements.keySet()) {
             fta.add(new FourTuple(ArgoXMI.classElements.get(s).getName(),
                     ArgoXMI.classElements.get(inheritanceElements.get(s)).getName(),
-                    FT_constants.INHERITANCE));
+                    EdgeType.INHERITANCE));
         }
     }
 
@@ -95,7 +94,7 @@ public class ArgoXMI {
         for (AbstractionElement s : abstractElements) {
             fta.add(new FourTuple(ArgoXMI.classElements.get(s.getImplementer()).getName(),
                     ArgoXMI.classElements.get(s.getSuper()).getName(),
-                    FT_constants.INHERITANCE));
+                    EdgeType.INHERITANCE));
         }
     }
 
