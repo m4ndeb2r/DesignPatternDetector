@@ -7,37 +7,35 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 /**
- * Tests the {@link DetectPatterns} class for a complex systeem.
+ * Tests the {@link FourTupleArray} class for a complex systeem.
  *
  * @author Martin de Boer
  */
-public class ComplexDetectPatternsTest {
+public class FourTupleArrayComplexMatchTest {
 
-    // Test subject
-    private DetectPatterns detectPatterns;
 
     // Template containing GoF design patterns
-    private ArrayList<FourTupleArray> dpsTemplate;
+    private ArrayList<FourTupleArray> dpsTemplates;
 
     /**
      * Initialize the test(s).
      */
     @Before
     public void setUp() {
-        dpsTemplate = TestHelper.createDesignPatternsTemplate();
-        detectPatterns = new DetectPatterns();
+        dpsTemplates = TestHelper.createDesignPatternsTemplates();
     }
 
     /**
-     * Tests the {@link DetectPatterns#detectDP(FourTupleArray, ArrayList, int)} method. We set up a "System under
-     * consideration", containing all patterns. We then analyse this with a template containing GoF design patterns.
+     * Tests the {@link FourTupleArray#match(FourTupleArray, int)} method. We set up a complex "System under
+     * consideration", containing many patterns. We then analyse this with a template containing GoF design patterns.
      * Finally we check if the expected patterns are detected (TODO).
      *
      * TODO: currently this test is alway successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
-    public void testDetectDP() {
-        detectPatterns.detectDP(createSystemUnderConsideration(), dpsTemplate, 1);
+    public void testMatch() {
+        final FourTupleArray systemUnderConsideration = createSystemUnderConsideration();
+        dpsTemplates.forEach(pattern -> pattern.match(systemUnderConsideration, 1));
     }
 
     private FourTupleArray createSystemUnderConsideration() {

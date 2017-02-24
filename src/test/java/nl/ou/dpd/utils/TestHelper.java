@@ -19,7 +19,7 @@ public class TestHelper {
      *
      * @return an {@link ArrayList} containing 17 GoF design patterns.
      */
-    public static ArrayList<FourTupleArray> createDesignPatternsTemplate() {
+    public static ArrayList<FourTupleArray> createDesignPatternsTemplates() {
         final ArrayList<FourTupleArray> dps = new ArrayList<>();
         dps.add(createBridgePattern());
         dps.add(createStateStrategyPattern());

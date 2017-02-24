@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.SortedSet;
 
 /**
- *
  * @author E.M. van Doorn
  */
 
@@ -16,24 +15,22 @@ public class Solutions {
     Solutions() {
         solutions = new ArrayList();
     }
-    
-    void add(Solution sol)
-    {
+
+    void add(Solution sol) {
         solutions.add(sol);
     }
 
-    
+
     boolean isUniq(SortedSet names) {
         Solution sol = new Solution(names);
         boolean result;
-        
+
         result = true;
-        
-        for (Solution s: solutions)
-        {
+
+        for (Solution s : solutions) {
             result = result && !s.isEqual(sol);
         }
-        
+
         return result;
     }
 }

@@ -32,7 +32,7 @@ public class FourTupleArray {
     }
 
     /**
-     * Match a specified {@link FourTupleArray} matches this {@link FourTupleArray}. At most {@code maxNotMatchable}
+     * Check if a specified {@link FourTupleArray} matches this {@link FourTupleArray}. At most {@code maxNotMatchable}
      * may be missing in the specified {@link FourTupleArray}.
      *
      * @param fta             the {@link FourTupleArray} to match with this {@link FourTupleArray}. The argument

@@ -7,50 +7,49 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 /**
- * Tests the {@link DetectPatterns} class for the BaBrahem-example in Ed van Doorn's article "Design Patterns -
+ * Tests the {@link FourTuplesArray} class for the BaBrahem-example in Ed van Doorn's article "Design Patterns -
  * Supporting design process by automatically detecting design patterns and giving some feedback". See: Van Doorn
  * (2016), page 22/23.
  *
  * @author Martin de Boer
  */
-public class BaBrahemDetectPatternsTest {
+public class FourTupleArrayBaBrahemMatchTest {
 
-    // Test subject
-    private DetectPatterns detectPatterns;
+    private FourTupleArray fta;
 
     /**
      * Initialises the test(s).
      */
     @Before
     public void setUp() {
-        detectPatterns = new DetectPatterns();
+        fta = createBaBrahemExampleFta();
     }
 
     /**
-     * Tests de {@link DetectPatterns#detectDP(FourTupleArray, ArrayList, int)} method. We set up a simple "System under
-     * consideration", based on the BaBrahem-example in Ed van Doorn's article, and check if the prototype pattern is
-     * detected.
+     * Tests de {@link FourTupleArray#match(FourTupleArray, int)} method. We have set up a simple "System under
+     * consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the prototype
+     * pattern is detected.
      *
      * TODO: currently this test is alway successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectPrototype() {
-        detectPatterns.detectDP(createBaBrahemExampleSystem(), createPrototypeTemplate(), 0);
+        TestHelper.createPrototypePattern().match(createBaBrahemExampleFta(), 0);
     }
 
     /**
-     * Tests de {@link DetectPatterns#detectDP(FourTupleArray, ArrayList, int)} method. We set up a simple "System under
-     * consideration", based on the BaBrahem-example in Ed van Doorn's article, and check if the bridge pattern is
-     * detected.
+     * Tests de {@link FourTupleArray#match(FourTupleArray, int)} method. We have set up a simple "System under
+     * consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the bridge
+     * pattern is detected.
      *
      * TODO: currently this test is alway successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectBridge() {
-        detectPatterns.detectDP(createBaBrahemExampleSystem(), createBridgeTemplate(), 1);
+        createBridgePattern().match(createBaBrahemExampleFta(), 1);
     }
 
-    private FourTupleArray createBaBrahemExampleSystem() {
+    private FourTupleArray createBaBrahemExampleFta() {
         final FourTupleArray system = new FourTupleArray();
         system.add(new FourTuple("A", "B", FT_constants.ASSOCIATION_DIRECTED));
         system.add(new FourTuple("A", "C", FT_constants.ASSOCIATION_DIRECTED));
@@ -58,19 +57,6 @@ public class BaBrahemDetectPatternsTest {
         system.add(new FourTuple("D", "B", FT_constants.INHERITANCE));
         system.add(new FourTuple("E", "C", FT_constants.INHERITANCE));
         return system;
-    }
-
-    private ArrayList<FourTupleArray> createPrototypeTemplate() {
-        final ArrayList<FourTupleArray> dps = new ArrayList<>();
-        dps.add(TestHelper.createPrototypePattern());
-        return dps;
-    }
-
-
-    private ArrayList<FourTupleArray> createBridgeTemplate() {
-        final ArrayList<FourTupleArray> dps = new ArrayList<>();
-        dps.add(createBridgePattern());
-        return dps;
     }
 
     /**
