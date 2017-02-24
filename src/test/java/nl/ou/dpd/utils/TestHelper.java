@@ -41,7 +41,12 @@ public class TestHelper {
         return dps;
     }
 
-    private static FourTupleArray createAbstractFactoryPattern() {
+    /**
+     * Creates an AbstractFactory design pattern.
+     *
+     * @return a {@link FourTupleArray} representing an AbstractFactory pattern.
+     */
+    public static FourTupleArray createAbstractFactoryPattern() {
         final FourTupleArray abstractFactory = new FourTupleArray("Abstract Factory");
         abstractFactory.add(new FourTuple("Client", "AbstractFactory", FT_constants.ASSOCIATION_DIRECTED));
         abstractFactory.add(new FourTuple("Client", "AbstractProductA", FT_constants.ASSOCIATION_DIRECTED));
@@ -59,7 +64,12 @@ public class TestHelper {
         return abstractFactory;
     }
 
-    private static FourTupleArray createAdapterPattern() {
+    /**
+     * Creates an Adapter design pattern.
+     *
+     * @return a {@link FourTupleArray} representing an Adapter pattern.
+     */
+    public static FourTupleArray createAdapterPattern() {
         final FourTupleArray adapter = new FourTupleArray("Adapter");
         adapter.add(new FourTuple("Client", "Target", FT_constants.ASSOCIATION_DIRECTED));
         adapter.add(new FourTuple("Adapter", "Target", FT_constants.INHERITANCE));
@@ -67,7 +77,12 @@ public class TestHelper {
         return adapter;
     }
 
-    private static FourTupleArray createBuilderPattern() {
+    /**
+     * Creates a Builder design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a Builder pattern.
+     */
+    public static FourTupleArray createBuilderPattern() {
         final FourTupleArray builder = new FourTupleArray("Builder");
         builder.add(new FourTuple("Builder", "Director", FT_constants.AGGREGATE));
         builder.add(new FourTuple("ConcreteBuilder", "Builder", FT_constants.INHERITANCE));
@@ -75,7 +90,12 @@ public class TestHelper {
         return builder;
     }
 
-    private static FourTupleArray createChainOfResponsibilityPattern() {
+    /**
+     * Creates a ChainOfResponsibility design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a ChainOfResponsibility pattern.
+     */
+    public static FourTupleArray createChainOfResponsibilityPattern() {
         final FourTupleArray chainOfResponsibility = new FourTupleArray("ChainOfResponsibility");
         chainOfResponsibility.add(new FourTuple("ConcreteHandler", "Handler", FT_constants.INHERITANCE_MULTI));
         chainOfResponsibility.add(new FourTuple("Handler", "Handler", FT_constants.ASSOCIATION_DIRECTED));
@@ -83,7 +103,12 @@ public class TestHelper {
         return chainOfResponsibility;
     }
 
-    private static FourTupleArray createCommandPattern() {
+    /**
+     * Creates a Command design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a Command pattern.
+     */
+    public static FourTupleArray createCommandPattern() {
         final FourTupleArray command = new FourTupleArray("Command");
         command.add(new FourTuple("Client", "Receiver", FT_constants.ASSOCIATION_DIRECTED));
         command.add(new FourTuple("Client", "ConcreteCommand", FT_constants.DEPENDENCY));
@@ -93,7 +118,12 @@ public class TestHelper {
         return command;
     }
 
-    private static FourTupleArray createCompositePattern() {
+    /**
+     * Creates a Composite design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a Composite pattern.
+     */
+    public static FourTupleArray createCompositePattern() {
         final FourTupleArray composite = new FourTupleArray("Composite");
         composite.add(new FourTuple("Client", "Component", FT_constants.ASSOCIATION_DIRECTED));
         composite.add(new FourTuple("Leaf", "Component", FT_constants.INHERITANCE));
@@ -102,7 +132,12 @@ public class TestHelper {
         return composite;
     }
 
-    private static FourTupleArray createDecoratorPattern() {
+    /**
+     * Creates a Decorator design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a Decorator pattern.
+     */
+    public static FourTupleArray createDecoratorPattern() {
         final FourTupleArray decorator = new FourTupleArray("Decorator");
         decorator.add(new FourTuple("ConcreteComponent", "Component", FT_constants.INHERITANCE));
         decorator.add(new FourTuple("Decorator", "Component", FT_constants.INHERITANCE));
@@ -111,7 +146,12 @@ public class TestHelper {
         return decorator;
     }
 
-    private static FourTupleArray createFactoryMethodPattern() {
+    /**
+     * Creates a FactoryMethod design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a FactoryMethod pattern.
+     */
+    public static FourTupleArray createFactoryMethodPattern() {
         final FourTupleArray factoryMethod = new FourTupleArray("Factory Method");
         factoryMethod.add(new FourTuple("Product", "ConcreteProduct", FT_constants.INHERITANCE));
         factoryMethod.add(new FourTuple("ConcreteCreator", "Product", FT_constants.DEPENDENCY));
@@ -122,9 +162,9 @@ public class TestHelper {
     /**
      * Creates a flyweight pattern. Checked with the UML diagram in [GoF].
      *
-     * @return a {@link FourTupleArray} representing a flyweight pattern
+     * @return a {@link FourTupleArray} representing a flyweight pattern.
      */
-    private static FourTupleArray createFlyweightPattern() {
+    public static FourTupleArray createFlyweightPattern() {
         final FourTupleArray flyweight = new FourTupleArray("Flyweight");
         flyweight.add(new FourTuple("Client", "FlyweightFactory", FT_constants.ASSOCIATION_DIRECTED));
         flyweight.add(new FourTuple("Client", "ConcreteFlyweight", FT_constants.ASSOCIATION_DIRECTED));
@@ -135,7 +175,13 @@ public class TestHelper {
         return flyweight;
     }
 
-    private static FourTupleArray createIteratorPattern() {
+    /**
+     * Creates an Iterator design pattern.
+     *
+     * @return a {@link FourTupleArray} representing an Iterator pattern.
+     */
+
+    public static FourTupleArray createIteratorPattern() {
         final FourTupleArray iterator = new FourTupleArray("Iterator");
         iterator.add(new FourTuple("ConcreteAggregate", "Aggregate", FT_constants.INHERITANCE));
         iterator.add(new FourTuple("Client", "Aggregate", FT_constants.ASSOCIATION_DIRECTED));
@@ -146,7 +192,13 @@ public class TestHelper {
         return iterator;
     }
 
-    private static FourTupleArray createMediatorPattern() {
+    /**
+     * Creates a Mediator design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a Mediator pattern.
+     */
+
+    public static FourTupleArray createMediatorPattern() {
         final FourTupleArray mediator = new FourTupleArray("Mediator");
         mediator.add(new FourTuple("ConcreteMediator", "Mediator", FT_constants.INHERITANCE));
         mediator.add(new FourTuple("Colleague", "Mediator", FT_constants.ASSOCIATION_DIRECTED));
@@ -157,14 +209,25 @@ public class TestHelper {
         return mediator;
     }
 
-    private static FourTupleArray createMementoPattern() {
+    /**
+     * Creates a Memento design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a Memento pattern.
+     */
+
+    public static FourTupleArray createMementoPattern() {
         final FourTupleArray memento = new FourTupleArray("Memento");
         memento.add(new FourTuple("Memento", "Caretaker", FT_constants.AGGREGATE));
         memento.add(new FourTuple("Originator", "Memento", FT_constants.DEPENDENCY));
         return memento;
     }
 
-    private static FourTupleArray createObserverPattern() {
+    /**
+     * Creates an Observer design pattern.
+     *
+     * @return a {@link FourTupleArray} representing an Observer pattern.
+     */
+    public static FourTupleArray createObserverPattern() {
         final FourTupleArray observer = new FourTupleArray("Observer");
         observer.add(new FourTuple("ConcreteSubject", "Subject", FT_constants.INHERITANCE));
         observer.add(new FourTuple("Subject", "Observer", FT_constants.AGGREGATE));
@@ -173,7 +236,12 @@ public class TestHelper {
         return observer;
     }
 
-    private static FourTupleArray createProxyPattern() {
+    /**
+     * Creates a Proxy design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a Proxy pattern.
+     */
+    public static FourTupleArray createProxyPattern() {
         final FourTupleArray proxy = new FourTupleArray("Proxy");
         proxy.add(new FourTuple("Client", "Subject", FT_constants.ASSOCIATION_DIRECTED));
         proxy.add(new FourTuple("Proxy", "Subject", FT_constants.INHERITANCE));
@@ -182,7 +250,12 @@ public class TestHelper {
         return proxy;
     }
 
-    private static FourTupleArray createStateStrategyPattern() {
+    /**
+     * Creates a State/Strategy design pattern.
+     *
+     * @return a {@link FourTupleArray} representing a State/Strategy pattern.
+     */
+    public static FourTupleArray createStateStrategyPattern() {
         final FourTupleArray strategy = new FourTupleArray("State - Strategy");
         strategy.add(new FourTuple("Strategy", "Context", FT_constants.AGGREGATE));
         strategy.add(new FourTuple("ConcreteStrategy", "Strategy", FT_constants.INHERITANCE_MULTI));
@@ -190,11 +263,11 @@ public class TestHelper {
     }
 
     /**
-     * Creates a bridge pattern. Checked with the UML diagram in [GoF]
+     * Creates a bridge pattern. Checked with the UML diagram in [GoF].
      *
-     * @return a {@link FourTupleArray} representing a bridge pattern
+     * @return a {@link FourTupleArray} representing a bridge pattern.
      */
-    private static FourTupleArray createBridgePattern() {
+    public static FourTupleArray createBridgePattern() {
         final FourTupleArray bridge = new FourTupleArray("Bridge");
         bridge.add(new FourTuple("Client", "Abstraction", FT_constants.ASSOCIATION));
         bridge.add(new FourTuple("Implementor", "Abstraction", FT_constants.AGGREGATE));
@@ -202,5 +275,17 @@ public class TestHelper {
         bridge.add(new FourTuple("ConcreteImplementorB", "Implementor", FT_constants.INHERITANCE));
         bridge.add(new FourTuple("RefinedAbstraction", "Abstraction", FT_constants.INHERITANCE));
         return bridge;
+    }
+
+    /**
+     * Creates a prototype pattern.
+     *
+     * @return a {@link FourTupleArray} representing a protoype pattern.
+     */
+    public static FourTupleArray createPrototypePattern() {
+        final FourTupleArray prototype = new FourTupleArray("Prototype");
+        prototype.add(new FourTuple("P", "Q", FT_constants.ASSOCIATION_DIRECTED));
+        prototype.add(new FourTuple("R", "Q", FT_constants.INHERITANCE));
+        return prototype;
     }
 }

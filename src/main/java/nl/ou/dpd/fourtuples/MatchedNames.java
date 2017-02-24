@@ -3,7 +3,6 @@ package nl.ou.dpd.fourtuples;
 import java.util.*;
 
 /**
- *
  * @author E.M. van Doorn
  */
 
@@ -11,116 +10,101 @@ public class MatchedNames {
     // Contains class/interface names of se mapped on class/interface names of
     // the design pattern.
     // se-names --> dp-names.
-    
-    private  HashMap<String, String> names;
-    
-    MatchedNames()
-    {
+
+    private HashMap<String, String> names;
+
+    MatchedNames() {
         names = new HashMap();
     }
-    
-    MatchedNames(MatchedNames nm)
-    {
+
+    MatchedNames(MatchedNames nm) {
         this();
-        
-        Set <String> s = nm.<String>getKeySet();
-        for (String name: s)
-        {
+
+        Set<String> s = nm.getKeySet();
+        for (String name : s) {
             add(name, nm.get(name));
         }
     }
-    
-    void show(String name)
-    {
+
+    void show(String name) {
         String value;
-        
-        if (!name.equals(FT_constants.EMPTY))
-        {
+
+        if (!name.equals(FT_constants.EMPTY)) {
             System.out.printf("Design Pattern: %s\n", name);
         }
-        
-        SortedSet <String> sortedSet = getBoundedSortedKeySet();
-        
-        for (String key: sortedSet)
-        {
-                System.out.printf("%20s --> %25s\n", key, names.get(key));  
+
+        SortedSet<String> sortedSet = getBoundedSortedKeySet();
+
+        for (String key : sortedSet) {
+            System.out.printf("%20s --> %25s\n", key, names.get(key));
         }
-        
+
         System.out.println("------------------------");
     }
-    
-        
-    boolean isEmpty(String key)
-    {
+
+
+    boolean isEmpty(String key) {
         return names.get(key).equals(FT_constants.EMPTY);
     }
-    
-    
-    boolean equals(String key, String value)
-    {
+
+
+    boolean equals(String key, String value) {
         return get(key).equals(value);
     }
-    
-    
-    void add(String key, String value)
-    {
+
+
+    void add(String key, String value) {
         names.<String, String>put(key, value);
     }
-    
-    void add(String key)
-    {
+
+    void add(String key) {
         add(key, FT_constants.EMPTY);
     }
-    
-    
-    String get(String key)
-    {
+
+
+    String get(String key) {
         return names.<String>get(key);
     }
-    
-    
-    Set<String> getKeySet()
-    {
+
+
+    Set<String> getKeySet() {
         return names.keySet();
     }
-    
-    
-    SortedSet <String> getBoundedSortedKeySet()
-    {
-        SortedSet <String> resultSet;
-        SortedSet <String> sortedSet = new TreeSet(getKeySet());
+
+
+    SortedSet<String> getBoundedSortedKeySet() {
+        SortedSet<String> resultSet;
+        SortedSet<String> sortedSet = new TreeSet(getKeySet());
         String value;
-        
+
         resultSet = new TreeSet();
-        for (String key: sortedSet)
-        {
+        for (String key : sortedSet) {
             value = names.get(key);
-            if (!value.equals(FT_constants.EMPTY))
-            {
-                resultSet.add(key);  
+            if (!value.equals(FT_constants.EMPTY)) {
+                resultSet.add(key);
             }
         }
-        
+
         return resultSet;
     }
-    
-    
-    boolean keyIsBounded(String k)
-    {
+
+
+    boolean keyIsBounded(String k) {
         return !get(k).equals(FT_constants.EMPTY);
     }
-    
-    
-    boolean valueIsBounded(String v)
-    {
-        Collection <String>verz;
-        
+
+
+    boolean valueIsBounded(String v) {
+        Collection<String> verz;
+
         verz = names.values();
-        
-        for (String s: verz)
-            if (s.equals(v))
+
+        for (String s : verz) {
+            if (s.equals(v)) {
                 return true;
-        
+            }
+        }
+
         return false;
     }
 }

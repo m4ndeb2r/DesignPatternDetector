@@ -1,13 +1,15 @@
 package nl.ou.dpd.fourtuples;
 
+import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 /**
- * Tests the {@link DetectPatterns} class for the BaBrahem-example in Ed van Doorn's article. See: Van Doorn (2016),
- * page 22.
+ * Tests the {@link DetectPatterns} class for the BaBrahem-example in Ed van Doorn's article "Design Patterns -
+ * Supporting design process by automatically detecting design patterns and giving some feedback". See: Van Doorn
+ * (2016), page 22/23.
  *
  * @author Martin de Boer
  */
@@ -60,16 +62,10 @@ public class BaBrahemDetectPatternsTest {
 
     private ArrayList<FourTupleArray> createPrototypeTemplate() {
         final ArrayList<FourTupleArray> dps = new ArrayList<>();
-        dps.add(createPrototypePattern());
+        dps.add(TestHelper.createPrototypePattern());
         return dps;
     }
 
-    private FourTupleArray createPrototypePattern() {
-        final FourTupleArray prototype = new FourTupleArray("Prototype");
-        prototype.add(new FourTuple("P", "Q", FT_constants.ASSOCIATION_DIRECTED));
-        prototype.add(new FourTuple("R", "Q", FT_constants.INHERITANCE));
-        return prototype;
-    }
 
     private ArrayList<FourTupleArray> createBridgeTemplate() {
         final ArrayList<FourTupleArray> dps = new ArrayList<>();
@@ -77,6 +73,18 @@ public class BaBrahemDetectPatternsTest {
         return dps;
     }
 
+    /**
+     * Note 1: the bridge pattern returned by this method is taken from Ed van Doorn's article, page 23. It deviates
+     * from the pattern as described by GoF, in that it only has one ConcreteImplementor (instead of two:
+     * ConcreteImplementorA and ConcreteImplementorB).
+     *
+     * Note 2: The {@link TestHelper#createBridgePattern()} utility method, however, returns the version as described
+     * by GoF. Would we have used that version here (the BaBrahem example used by Van Doorn) we would get a different
+     * result: no match.
+     *
+     * @return a {@link FourTupleArray} representing a bridge pattern, as used by Ed van Doorn in his 2016 article,
+     * page 23.
+     */
     private FourTupleArray createBridgePattern() {
         final FourTupleArray bridge = new FourTupleArray("Bridge");
         bridge.add(new FourTuple("Client", "Abstraction", FT_constants.ASSOCIATION_DIRECTED));
@@ -84,7 +92,6 @@ public class BaBrahemDetectPatternsTest {
         bridge.add(new FourTuple("ConcreteImplementor", "Implementor", FT_constants.INHERITANCE));
         bridge.add(new FourTuple("RefinedAbstraction", "Abstraction", FT_constants.INHERITANCE));
         return bridge;
-
     }
 }
 
