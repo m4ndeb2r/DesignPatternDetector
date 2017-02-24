@@ -21,3 +21,8 @@ We are currently working on:
 ## Other future work ...
 Besides detecting patterns in UML, we foresee:
 * detection of patterns in Java-code
+
+# Tooling
+Build tool: Maven 3.3.9 (Bundled with IntelliJ)
+
+Compiler: Java 1.8
