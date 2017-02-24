@@ -1,12 +1,12 @@
 package nl.ou.dpd.fourtuples;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.SortedSet;
 
 /**
  * @author E.M. van Doorn
  */
-
 public class Solution {
     private ArrayList<String> solution;
 
@@ -15,17 +15,8 @@ public class Solution {
         solution.addAll(names);
     }
 
-    boolean isEqual(Solution sol) {
-        boolean result;
-        int index;
-
-        result = true;
-        index = 0;
-
-        for (String s : sol.solution) {
-            result = result && s.equals(solution.get(index++));
-        }
-
-        return result;
+    boolean isEqual(Solution other) {
+        return this.solution.equals(other.solution);
     }
+
 }

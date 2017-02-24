@@ -20,17 +20,16 @@ public class Solutions {
         solutions.add(sol);
     }
 
-
     boolean isUniq(SortedSet names) {
         Solution sol = new Solution(names);
-        boolean result;
 
-        result = true;
-
+        boolean result = true;
         for (Solution s : solutions) {
             result = result && !s.isEqual(sol);
+            if (!result) {
+                return false;
+            }
         }
-
         return result;
     }
 }
