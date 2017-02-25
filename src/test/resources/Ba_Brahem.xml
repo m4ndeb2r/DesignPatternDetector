@@ -20,7 +20,6 @@
        -  DEPENDENCY		  node1 depends on node2
 -->
 
-
 <templates>
    <template name ="Ba_Brahem">	               			                 
        <edge node1="P"                   node2="Q"           type="ASSOCIATION_DIRECTED"/>

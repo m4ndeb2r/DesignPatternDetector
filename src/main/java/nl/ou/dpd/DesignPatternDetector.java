@@ -68,9 +68,13 @@ public final class DesignPatternDetector {
             dps.forEach(dp -> dp.match(fta, maxMissingEdges));
 
         } catch(Throwable t) {
+
+            // Acknowledge the user of the unrecoverable error situation
             t.printStackTrace();
-            System.err.println("An unexpected error occurred. The application has stopped.");
-            System.exit(-1);
+            System.out.println("Er is een onverwachte fout opgetreden. De applicatie wordt gestopt.");
+
+            // Do not call System.ext(). It is a bad habit.
+            throw (t);
         }
     }
 

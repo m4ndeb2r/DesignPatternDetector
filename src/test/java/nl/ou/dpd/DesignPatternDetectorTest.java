@@ -1,11 +1,18 @@
 package nl.ou.dpd;
 
+import nl.ou.dpd.exception.DesignPatternDetectorException;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
+import org.junit.rules.ExpectedException;
+import org.xml.sax.SAXParseException;
+
+import java.io.FileNotFoundException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -16,6 +23,8 @@ import static org.hamcrest.core.Is.is;
  */
 public class DesignPatternDetectorTest {
 
+    private static final String INVALID_INPUT_XMI = "/invalid.xmi";
+    private static final String INVALID_TEMPLATES_XML = "/invalid.xml";
     private static final String INPUT_XMI = "/input.xmi";
     private static final String TEMPLATES_XML = "/templates.xml";
 
@@ -142,6 +151,12 @@ public class DesignPatternDetectorTest {
     public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
     /**
+     * Exception rule.
+     */
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    /**
      * Clean the captured output after every test.
      */
     @After
@@ -174,6 +189,82 @@ public class DesignPatternDetectorTest {
         final String templatesFile = createPathFromResource(BA_BRAHEM_TEMPLATES_XML);
         final String[] args = {"-x", inputFile, "-t", templatesFile, "-n", "0"};
         runApplicationRun(args, LEGACY_VERSION_BA_BRAHEM_OUTPUT);
+    }
+
+    /**
+     * Tests the error handling in case of a {@link FileNotFoundException}.
+     */
+    @Test
+    public void testInputFileNotFound() {
+        final String inputFile = "oops.xmi";
+        final String templatesFile = createPathFromResource(BA_BRAHEM_TEMPLATES_XML);
+        final String[] args = {"-x", inputFile, "-t", templatesFile, "-n", "0"};
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(FileNotFoundException.class));
+        thrown.expectMessage("Het bestand oops.xmi kon niet worden gevonden.");
+
+        DesignPatternDetector.main(args);
+
+        // Assert the output, and compare it to our expectations
+        assertThat(systemOutRule.getLog(), endsWith("Er is een onverwachte fout opgetreden. De applicatie wordt gestopt."));
+    }
+
+    /**
+     * Tests the error handling in case of a {@link FileNotFoundException}.
+     */
+    @Test
+    public void testTemplatesFileNotFound() {
+        final String inputFile = createPathFromResource(BA_BRAHEM_INPUT_XMI);
+        final String templatesFile = "oops.xml";
+        final String[] args = {"-x", inputFile, "-t", templatesFile, "-n", "0"};
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(FileNotFoundException.class));
+        thrown.expectMessage("Het bestand oops.xml kon niet worden gevonden.");
+
+        DesignPatternDetector.main(args);
+
+        // Assert the output, and compare it to our expectations
+        assertThat(systemOutRule.getLog(), endsWith("Er is een onverwachte fout opgetreden. De applicatie wordt gestopt."));
+    }
+
+    /**
+     * Tests the error handling in case of a {@link SAXParseException} when parsing the input XMI-file.
+     */
+    @Test
+    public void testInputParseException() {
+        final String inputFile = createPathFromResource(INVALID_INPUT_XMI);
+        final String templatesFile = createPathFromResource(BA_BRAHEM_TEMPLATES_XML);
+        final String[] args = {"-x", inputFile, "-t", templatesFile, "-n", "0"};
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(SAXParseException.class));
+        thrown.expectMessage("Het bestand " + inputFile + " kon niet worden geparsed.");
+
+        DesignPatternDetector.main(args);
+
+        // Assert the output, and compare it to our expectations
+        assertThat(systemOutRule.getLog(), endsWith("Er is een onverwachte fout opgetreden. De applicatie wordt gestopt."));
+    }
+
+    /**
+     * Tests the error handling in case of a {@link SAXParseException} when parsing the templates XML-file.
+     */
+    @Test
+    public void testTemplatesParseException() {
+        final String inputFile = createPathFromResource(BA_BRAHEM_INPUT_XMI);
+        final String templatesFile = createPathFromResource(INVALID_TEMPLATES_XML);
+        final String[] args = {"-x", inputFile, "-t", templatesFile, "-n", "0"};
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(SAXParseException.class));
+        thrown.expectMessage("Het bestand " + templatesFile + " kon niet worden geparsed.");
+
+        DesignPatternDetector.main(args);
+
+        // Assert the output, and compare it to our expectations
+        assertThat(systemOutRule.getLog(), endsWith("Er is een onverwachte fout opgetreden. De applicatie wordt gestopt."));
     }
 
     private void runApplicationRun(String[] args, String expectedOutput) {

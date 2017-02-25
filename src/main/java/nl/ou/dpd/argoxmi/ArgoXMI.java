@@ -54,10 +54,9 @@ public class ArgoXMI {
 
     private void parse(String fileName) {
         try {
-            InputStream xmlInput;
-            SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-            ArgoXmiSaxHandler handler = new ArgoXmiSaxHandler();
-            xmlInput = new FileInputStream(fileName);
+            final ArgoXmiSaxHandler handler = new ArgoXmiSaxHandler();
+            final InputStream xmlInput = new FileInputStream(fileName);
+            final SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
             saxParser.parse(xmlInput, handler);
         } catch (SAXException | ParserConfigurationException e) {
             throw new DesignPatternDetectorException("Het bestand " + fileName + " kon niet worden geparsed.", e);
@@ -67,15 +66,16 @@ public class ArgoXMI {
     }
 
     private void fourtuplesClassElements(FourTupleArray fta) {
-        ArrayList<String> dep;
+        ArrayList<String> deps;
 
-        for (String s : classElements.keySet()) {
-            dep = classElements.get(s).getDependencies();
+        for (String key : classElements.keySet()) {
+            deps = classElements.get(key).getDependencies();
 
-            if (dep != null) {
-                for (String nm : dep) {
-                    fta.add(new FourTuple(classElements.get(s).getName(),
-                            nm, EdgeType.DEPENDENCY));
+            if (deps != null) {
+                for (String dep : deps) {
+                    final String name = classElements.get(key).getName();
+                    final FourTuple ft = new FourTuple(name, dep, EdgeType.DEPENDENCY);
+                    fta.add(ft);
                 }
             }
         }
@@ -83,17 +83,17 @@ public class ArgoXMI {
 
     private void fourtuplesInheritanceElements(FourTupleArray fta) {
 
-        for (String s : inheritanceElements.keySet()) {
-            fta.add(new FourTuple(ArgoXMI.classElements.get(s).getName(),
-                    ArgoXMI.classElements.get(inheritanceElements.get(s)).getName(),
+        for (String key : inheritanceElements.keySet()) {
+            fta.add(new FourTuple(ArgoXMI.classElements.get(key).getName(),
+                    ArgoXMI.classElements.get(inheritanceElements.get(key)).getName(),
                     EdgeType.INHERITANCE));
         }
     }
 
     private void fourtuplesAbstractElements(FourTupleArray fta) {
-        for (AbstractionElement s : abstractElements) {
-            fta.add(new FourTuple(ArgoXMI.classElements.get(s.getImplementer()).getName(),
-                    ArgoXMI.classElements.get(s.getSuper()).getName(),
+        for (AbstractionElement elem : abstractElements) {
+            fta.add(new FourTuple(ArgoXMI.classElements.get(elem.getImplementer()).getName(),
+                    ArgoXMI.classElements.get(elem.getSuper()).getName(),
                     EdgeType.INHERITANCE));
         }
     }

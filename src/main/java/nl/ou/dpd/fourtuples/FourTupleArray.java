@@ -239,9 +239,7 @@ public class FourTupleArray {
         // For edge (A, B, ....) a second but virtual edge (B, A, ...)
         // will be added.
         {
-            FourTuple tmp;
-
-            tmp = new FourTuple(ft);
+            FourTuple tmp = new FourTuple(ft);
             tmp.makeVirtual();
             fourTuples.add(tmp);
         }
@@ -264,26 +262,25 @@ public class FourTupleArray {
         // design pattern but ther is no coressponding edge in the design
         // pattern.
 
-        boolean found;
-
-        found = false;
-
+        boolean found = false;
         for (FourTuple edge : fta.fourTuples) {
-            if (matchedClassNames.keyIsBounded(edge.getClassName1())
-                    && matchedClassNames.keyIsBounded(edge.getClassName2())) {
-                if (!edge.getMatched()) {
-                    if (!found) {
-                        System.out.println("Edges which do not belong to this design pattern:");
-                        found = true;
-                    }
-
-                    edge.showSimple();
+            if (isEdgeSupplementary(matchedClassNames, edge)) {
+                if (!found) {
+                    System.out.println("Edges which do not belong to this design pattern:");
+                    found = true;
                 }
+                edge.showSimple();
             }
         }
 
         if (found) {
             System.out.println("==================================================");
         }
+    }
+
+    private boolean isEdgeSupplementary(MatchedNames matchedClassNames, FourTuple edge) {
+        return matchedClassNames.keyIsBounded(edge.getClassName1())
+                && matchedClassNames.keyIsBounded(edge.getClassName2())
+                && !edge.getMatched();
     }
 }

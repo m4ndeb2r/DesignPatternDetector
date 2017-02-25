@@ -10,39 +10,8 @@ public class DesignPatternDetectorException extends RuntimeException {
     /**
      * {@inheritDoc}
      */
-    public DesignPatternDetectorException() {
-        super();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public DesignPatternDetectorException(String message) {
-        super(message);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public DesignPatternDetectorException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public DesignPatternDetectorException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public DesignPatternDetectorException(
-            String message,
-            Throwable cause,
-            boolean enableSuppression,
-            boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

@@ -1,6 +1,8 @@
 package nl.ou.dpd.fourtuples;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author E.M. van Doorn
@@ -71,26 +73,20 @@ public class MatchedNames {
         return names.keySet();
     }
 
-
+    /**
+     *
+     * @return
+     */
     SortedSet<String> getBoundedSortedKeySet() {
-        SortedSet<String> resultSet;
-        SortedSet<String> sortedSet = new TreeSet(getKeySet());
-        String value;
-
-        resultSet = new TreeSet();
-        for (String key : sortedSet) {
-            value = names.get(key);
-            if (!value.equals(EdgeType.EMPTY.getName())) {
-                resultSet.add(key);
-            }
-        }
-
-        return resultSet;
+        return new TreeSet(getKeySet()
+                .stream()
+                .filter(key -> keyIsBounded(key))
+                .collect(Collectors.toSet()));
     }
 
 
-    boolean keyIsBounded(String k) {
-        return !get(k).equals(EdgeType.EMPTY.getName());
+    boolean keyIsBounded(String key) {
+        return !names.<String>get(key).equals(EdgeType.EMPTY.getName());
     }
 
 
