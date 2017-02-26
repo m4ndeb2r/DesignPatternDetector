@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ou.dpd;
 
-import nl.ou.dpd.argoxmi.ArgoXMI;
-import nl.ou.dpd.fourtuples.FourTupleArray;
-import nl.ou.dpd.fourtuples.template.Templates;
+import nl.ou.dpd.data.argoxmi.ArgoXMIParser;
+import nl.ou.dpd.data.template.TemplatesParser;
+import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.SystemUnderConsideration;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main class of the Design Pattern Detector application.
@@ -19,8 +15,22 @@ import java.util.ArrayList;
  */
 public final class DesignPatternDetector {
 
+    private static final String USAGE_TXT =
+            "\nUsage: \n\tjava -t templateFile -x xmiFile -n maxNumberOfMissingEdges." +
+            "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0";
+
+
     private String templateFileName, xmiFileName;
     private int maxMissingEdges;
+
+    /**
+     * Constructor without arguments. This constructor is package scoped for testing purposes.
+     */
+    DesignPatternDetector() {
+        templateFileName = "templates.xml";
+        xmiFileName = "input.xmi";
+        maxMissingEdges = 0;
+    }
 
     /**
      * The main method of the application. Reads the command line arguments and starts the {@link DesignPatternDetector}
@@ -43,35 +53,25 @@ public final class DesignPatternDetector {
         new DesignPatternDetector().run(args);
     }
 
-    /**
-     * Constructor without arguments. This constructor is package scoped for testing purposes.
-     */
-    DesignPatternDetector() {
-        templateFileName = "templates.xml";
-        xmiFileName = "input.xmi";
-        maxMissingEdges = 0;
-    }
-
     private void run(String[] args) {
         try {
             System.out.println("Current directory: " + System.getProperty("user.dir"));
 
+            // Parse the arguments
             parseArgs(args);
 
-            final ArgoXMI inputProcessor = new ArgoXMI(xmiFileName);
-            final Templates templates = new Templates(templateFileName);
-
-            final FourTupleArray fta = inputProcessor.getFourtuples();
-            final ArrayList<FourTupleArray> dps = templates.parse();
+            // Parse the input files
+            final SystemUnderConsideration system = new ArgoXMIParser().parse(xmiFileName);
+            final List<DesignPattern> designPatterns = new TemplatesParser().parse(templateFileName);
 
             // Find a match for each design pattern in dsp
-            dps.forEach(dp -> dp.match(fta, maxMissingEdges));
+            designPatterns.forEach(dp -> dp.match(system, maxMissingEdges));
 
-        } catch(Throwable t) {
+        } catch (Throwable t) {
 
             // Acknowledge the user of the unrecoverable error situation
             t.printStackTrace();
-            System.out.println("Er is een onverwachte fout opgetreden. De applicatie wordt gestopt.");
+            System.out.println("An unexpected error occurred. Exiting...");
 
             // Do not call System.ext(). It is a bad habit.
             throw (t);
@@ -79,9 +79,9 @@ public final class DesignPatternDetector {
     }
 
     private void parseArgs(String[] args) {
-        // Every flag should be followd by a value
+        // Every flag should be followed by a value
         if (args.length > 6 || args.length % 2 == 1) {
-            foutmeldingExit();
+            throw new IllegalArgumentException("Illegal number of parameters. " + USAGE_TXT);
         }
 
         for (int i = 0; i < args.length; i += 2) {
@@ -92,15 +92,8 @@ public final class DesignPatternDetector {
             } else if (args[i].equals("-n")) {
                 maxMissingEdges = Integer.parseInt(args[i + 1]);
             } else {
-                foutmeldingExit();
+                throw new IllegalArgumentException("Incorrect parameter: " + args[i] + ". " + USAGE_TXT);
             }
         }
-    }
-
-    private void foutmeldingExit() {
-        System.out.println("Correct is: java -t templateFile -x xmiFile -n maxNumberOfMissingEdges");
-        System.out.println("Default values for templateFile and xmiFile are templates.xml, input.xmi and 0");
-
-        System.exit(1);
     }
 }

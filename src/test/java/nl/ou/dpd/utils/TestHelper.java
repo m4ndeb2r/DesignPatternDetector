@@ -1,8 +1,9 @@
 package nl.ou.dpd.utils;
 
-import nl.ou.dpd.fourtuples.EdgeType;
-import nl.ou.dpd.fourtuples.FourTuple;
-import nl.ou.dpd.fourtuples.FourTupleArray;
+import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.EdgeType;
+import nl.ou.dpd.domain.FourTuple;
+import nl.ou.dpd.domain.SystemUnderConsideration;
 
 import java.util.ArrayList;
 
@@ -15,12 +16,12 @@ public class TestHelper {
 
     /**
      * Creates a "template" containing 17 GoF design patterns represented by an {@link ArrayList} of
-     * {@link FourTupleArray} instances.
+     * {@link DesignPattern} instances.
      *
      * @return an {@link ArrayList} containing 17 GoF design patterns.
      */
-    public static ArrayList<FourTupleArray> createDesignPatternsTemplates() {
-        final ArrayList<FourTupleArray> dps = new ArrayList<>();
+    public static ArrayList<DesignPattern> createDesignPatternsTemplates() {
+        final ArrayList<DesignPattern> dps = new ArrayList<>();
         dps.add(createBridgePattern());
         dps.add(createStateStrategyPattern());
         dps.add(createMediatorPattern());
@@ -44,10 +45,10 @@ public class TestHelper {
     /**
      * Creates an AbstractFactory design pattern.
      *
-     * @return a {@link FourTupleArray} representing an AbstractFactory pattern.
+     * @return a {@link DesignPattern} representing an AbstractFactory pattern.
      */
-    public static FourTupleArray createAbstractFactoryPattern() {
-        final FourTupleArray abstractFactory = new FourTupleArray("Abstract Factory");
+    public static DesignPattern createAbstractFactoryPattern() {
+        final DesignPattern abstractFactory = new DesignPattern("Abstract Factory");
         abstractFactory.add(new FourTuple("Client", "AbstractFactory", EdgeType.ASSOCIATION_DIRECTED));
         abstractFactory.add(new FourTuple("Client", "AbstractProductA", EdgeType.ASSOCIATION_DIRECTED));
         abstractFactory.add(new FourTuple("Client", "AbstractProductB", EdgeType.ASSOCIATION_DIRECTED));
@@ -67,10 +68,10 @@ public class TestHelper {
     /**
      * Creates an Adapter design pattern.
      *
-     * @return a {@link FourTupleArray} representing an Adapter pattern.
+     * @return a {@link DesignPattern} representing an Adapter pattern.
      */
-    public static FourTupleArray createAdapterPattern() {
-        final FourTupleArray adapter = new FourTupleArray("Adapter");
+    public static DesignPattern createAdapterPattern() {
+        final DesignPattern adapter = new DesignPattern("Adapter");
         adapter.add(new FourTuple("Client", "Target", EdgeType.ASSOCIATION_DIRECTED));
         adapter.add(new FourTuple("Adapter", "Target", EdgeType.INHERITANCE));
         adapter.add(new FourTuple("Adapter", "Adaptee", EdgeType.ASSOCIATION_DIRECTED));
@@ -80,10 +81,10 @@ public class TestHelper {
     /**
      * Creates a Builder design pattern.
      *
-     * @return a {@link FourTupleArray} representing a Builder pattern.
+     * @return a {@link DesignPattern} representing a Builder pattern.
      */
-    public static FourTupleArray createBuilderPattern() {
-        final FourTupleArray builder = new FourTupleArray("Builder");
+    public static DesignPattern createBuilderPattern() {
+        final DesignPattern builder = new DesignPattern("Builder");
         builder.add(new FourTuple("Builder", "Director", EdgeType.AGGREGATE));
         builder.add(new FourTuple("ConcreteBuilder", "Builder", EdgeType.INHERITANCE));
         builder.add(new FourTuple("ConcreteBuilder", "Product", EdgeType.DEPENDENCY));
@@ -93,10 +94,10 @@ public class TestHelper {
     /**
      * Creates a ChainOfResponsibility design pattern.
      *
-     * @return a {@link FourTupleArray} representing a ChainOfResponsibility pattern.
+     * @return a {@link DesignPattern} representing a ChainOfResponsibility pattern.
      */
-    public static FourTupleArray createChainOfResponsibilityPattern() {
-        final FourTupleArray chainOfResponsibility = new FourTupleArray("ChainOfResponsibility");
+    public static DesignPattern createChainOfResponsibilityPattern() {
+        final DesignPattern chainOfResponsibility = new DesignPattern("ChainOfResponsibility");
         chainOfResponsibility.add(new FourTuple("ConcreteHandler", "Handler", EdgeType.INHERITANCE_MULTI));
         chainOfResponsibility.add(new FourTuple("Handler", "Handler", EdgeType.ASSOCIATION_DIRECTED));
         chainOfResponsibility.add(new FourTuple("Client", "Handler", EdgeType.ASSOCIATION_DIRECTED));
@@ -106,10 +107,10 @@ public class TestHelper {
     /**
      * Creates a Command design pattern.
      *
-     * @return a {@link FourTupleArray} representing a Command pattern.
+     * @return a {@link DesignPattern} representing a Command pattern.
      */
-    public static FourTupleArray createCommandPattern() {
-        final FourTupleArray command = new FourTupleArray("Command");
+    public static DesignPattern createCommandPattern() {
+        final DesignPattern command = new DesignPattern("Command");
         command.add(new FourTuple("Client", "Receiver", EdgeType.ASSOCIATION_DIRECTED));
         command.add(new FourTuple("Client", "ConcreteCommand", EdgeType.DEPENDENCY));
         command.add(new FourTuple("ConcreteCommand", "Receiver", EdgeType.ASSOCIATION_DIRECTED));
@@ -121,10 +122,10 @@ public class TestHelper {
     /**
      * Creates a Composite design pattern.
      *
-     * @return a {@link FourTupleArray} representing a Composite pattern.
+     * @return a {@link DesignPattern} representing a Composite pattern.
      */
-    public static FourTupleArray createCompositePattern() {
-        final FourTupleArray composite = new FourTupleArray("Composite");
+    public static DesignPattern createCompositePattern() {
+        final DesignPattern composite = new DesignPattern("Composite");
         composite.add(new FourTuple("Client", "Component", EdgeType.ASSOCIATION_DIRECTED));
         composite.add(new FourTuple("Leaf", "Component", EdgeType.INHERITANCE));
         composite.add(new FourTuple("Composite", "Component", EdgeType.INHERITANCE));
@@ -135,10 +136,10 @@ public class TestHelper {
     /**
      * Creates a Decorator design pattern.
      *
-     * @return a {@link FourTupleArray} representing a Decorator pattern.
+     * @return a {@link DesignPattern} representing a Decorator pattern.
      */
-    public static FourTupleArray createDecoratorPattern() {
-        final FourTupleArray decorator = new FourTupleArray("Decorator");
+    public static DesignPattern createDecoratorPattern() {
+        final DesignPattern decorator = new DesignPattern("Decorator");
         decorator.add(new FourTuple("ConcreteComponent", "Component", EdgeType.INHERITANCE));
         decorator.add(new FourTuple("Decorator", "Component", EdgeType.INHERITANCE));
         decorator.add(new FourTuple("Component", "Decorator", EdgeType.AGGREGATE));
@@ -149,10 +150,10 @@ public class TestHelper {
     /**
      * Creates a FactoryMethod design pattern.
      *
-     * @return a {@link FourTupleArray} representing a FactoryMethod pattern.
+     * @return a {@link DesignPattern} representing a FactoryMethod pattern.
      */
-    public static FourTupleArray createFactoryMethodPattern() {
-        final FourTupleArray factoryMethod = new FourTupleArray("Factory Method");
+    public static DesignPattern createFactoryMethodPattern() {
+        final DesignPattern factoryMethod = new DesignPattern("Factory Method");
         factoryMethod.add(new FourTuple("Product", "ConcreteProduct", EdgeType.INHERITANCE));
         factoryMethod.add(new FourTuple("ConcreteCreator", "Product", EdgeType.DEPENDENCY));
         factoryMethod.add(new FourTuple("ConcreteCreator", "Creator", EdgeType.INHERITANCE));
@@ -162,10 +163,10 @@ public class TestHelper {
     /**
      * Creates a flyweight pattern. Checked with the UML diagram in [GoF].
      *
-     * @return a {@link FourTupleArray} representing a flyweight pattern.
+     * @return a {@link DesignPattern} representing a flyweight pattern.
      */
-    public static FourTupleArray createFlyweightPattern() {
-        final FourTupleArray flyweight = new FourTupleArray("Flyweight");
+    public static DesignPattern createFlyweightPattern() {
+        final DesignPattern flyweight = new DesignPattern("Flyweight");
         flyweight.add(new FourTuple("Client", "FlyweightFactory", EdgeType.ASSOCIATION_DIRECTED));
         flyweight.add(new FourTuple("Client", "ConcreteFlyweight", EdgeType.ASSOCIATION_DIRECTED));
         flyweight.add(new FourTuple("Client", "UnsharedConcreteFlyweight", EdgeType.ASSOCIATION_DIRECTED));
@@ -178,11 +179,11 @@ public class TestHelper {
     /**
      * Creates an Iterator design pattern.
      *
-     * @return a {@link FourTupleArray} representing an Iterator pattern.
+     * @return a {@link DesignPattern} representing an Iterator pattern.
      */
 
-    public static FourTupleArray createIteratorPattern() {
-        final FourTupleArray iterator = new FourTupleArray("Iterator");
+    public static DesignPattern createIteratorPattern() {
+        final DesignPattern iterator = new DesignPattern("Iterator");
         iterator.add(new FourTuple("ConcreteAggregate", "Aggregate", EdgeType.INHERITANCE));
         iterator.add(new FourTuple("Client", "Aggregate", EdgeType.ASSOCIATION_DIRECTED));
         iterator.add(new FourTuple("Client", "Iterator", EdgeType.ASSOCIATION_DIRECTED));
@@ -195,11 +196,11 @@ public class TestHelper {
     /**
      * Creates a Mediator design pattern.
      *
-     * @return a {@link FourTupleArray} representing a Mediator pattern.
+     * @return a {@link DesignPattern} representing a Mediator pattern.
      */
 
-    public static FourTupleArray createMediatorPattern() {
-        final FourTupleArray mediator = new FourTupleArray("Mediator");
+    public static DesignPattern createMediatorPattern() {
+        final DesignPattern mediator = new DesignPattern("Mediator");
         mediator.add(new FourTuple("ConcreteMediator", "Mediator", EdgeType.INHERITANCE));
         mediator.add(new FourTuple("Colleague", "Mediator", EdgeType.ASSOCIATION_DIRECTED));
         mediator.add(new FourTuple("ConcreteColleague1", "Colleague", EdgeType.INHERITANCE));
@@ -212,11 +213,11 @@ public class TestHelper {
     /**
      * Creates a Memento design pattern.
      *
-     * @return a {@link FourTupleArray} representing a Memento pattern.
+     * @return a {@link DesignPattern} representing a Memento pattern.
      */
 
-    public static FourTupleArray createMementoPattern() {
-        final FourTupleArray memento = new FourTupleArray("Memento");
+    public static DesignPattern createMementoPattern() {
+        final DesignPattern memento = new DesignPattern("Memento");
         memento.add(new FourTuple("Memento", "Caretaker", EdgeType.AGGREGATE));
         memento.add(new FourTuple("Originator", "Memento", EdgeType.DEPENDENCY));
         return memento;
@@ -225,10 +226,10 @@ public class TestHelper {
     /**
      * Creates an Observer design pattern.
      *
-     * @return a {@link FourTupleArray} representing an Observer pattern.
+     * @return a {@link DesignPattern} representing an Observer pattern.
      */
-    public static FourTupleArray createObserverPattern() {
-        final FourTupleArray observer = new FourTupleArray("Observer");
+    public static DesignPattern createObserverPattern() {
+        final DesignPattern observer = new DesignPattern("Observer");
         observer.add(new FourTuple("ConcreteSubject", "Subject", EdgeType.INHERITANCE));
         observer.add(new FourTuple("Subject", "Observer", EdgeType.AGGREGATE));
         observer.add(new FourTuple("ConcreteObserver", "Observer", EdgeType.INHERITANCE));
@@ -239,10 +240,10 @@ public class TestHelper {
     /**
      * Creates a Proxy design pattern.
      *
-     * @return a {@link FourTupleArray} representing a Proxy pattern.
+     * @return a {@link DesignPattern} representing a Proxy pattern.
      */
-    public static FourTupleArray createProxyPattern() {
-        final FourTupleArray proxy = new FourTupleArray("Proxy");
+    public static DesignPattern createProxyPattern() {
+        final DesignPattern proxy = new DesignPattern("Proxy");
         proxy.add(new FourTuple("Client", "Subject", EdgeType.ASSOCIATION_DIRECTED));
         proxy.add(new FourTuple("Proxy", "Subject", EdgeType.INHERITANCE));
         proxy.add(new FourTuple("RealSubject", "Subject", EdgeType.INHERITANCE));
@@ -253,10 +254,10 @@ public class TestHelper {
     /**
      * Creates a State/Strategy design pattern.
      *
-     * @return a {@link FourTupleArray} representing a State/Strategy pattern.
+     * @return a {@link DesignPattern} representing a State/Strategy pattern.
      */
-    public static FourTupleArray createStateStrategyPattern() {
-        final FourTupleArray strategy = new FourTupleArray("State - Strategy");
+    public static DesignPattern createStateStrategyPattern() {
+        final DesignPattern strategy = new DesignPattern("State - Strategy");
         strategy.add(new FourTuple("Strategy", "Context", EdgeType.AGGREGATE));
         strategy.add(new FourTuple("ConcreteStrategy", "Strategy", EdgeType.INHERITANCE_MULTI));
         return strategy;
@@ -265,10 +266,10 @@ public class TestHelper {
     /**
      * Creates a bridge pattern. Checked with the UML diagram in [GoF].
      *
-     * @return a {@link FourTupleArray} representing a bridge pattern.
+     * @return a {@link DesignPattern} representing a bridge pattern.
      */
-    public static FourTupleArray createBridgePattern() {
-        final FourTupleArray bridge = new FourTupleArray("Bridge");
+    public static DesignPattern createBridgePattern() {
+        final DesignPattern bridge = new DesignPattern("Bridge");
         bridge.add(new FourTuple("Client", "Abstraction", EdgeType.ASSOCIATION));
         bridge.add(new FourTuple("Implementor", "Abstraction", EdgeType.AGGREGATE));
         bridge.add(new FourTuple("ConcreteImplementorA", "Implementor", EdgeType.INHERITANCE));
@@ -280,10 +281,10 @@ public class TestHelper {
     /**
      * Creates a prototype pattern.
      *
-     * @return a {@link FourTupleArray} representing a protoype pattern.
+     * @return a {@link DesignPattern} representing a protoype pattern.
      */
-    public static FourTupleArray createPrototypePattern() {
-        final FourTupleArray prototype = new FourTupleArray("Prototype");
+    public static DesignPattern createPrototypePattern() {
+        final DesignPattern prototype = new DesignPattern("Prototype");
         prototype.add(new FourTuple("P", "Q", EdgeType.ASSOCIATION_DIRECTED));
         prototype.add(new FourTuple("R", "Q", EdgeType.INHERITANCE));
         return prototype;
@@ -293,10 +294,10 @@ public class TestHelper {
      * Creates a "system under consideration" containing quite a number of patterns that the application should be able
      * to detect.
      *
-     * @return a {@link FourTupleArray} representing the design of a "system under consideration".
+     * @return a {@link DesignPattern} representing the design of a "system under consideration".
      */
-    public static FourTupleArray createComplexSystemUnderConsideration() {
-        final FourTupleArray system = new FourTupleArray();
+    public static SystemUnderConsideration createComplexSystemUnderConsideration() {
+        final SystemUnderConsideration system = new SystemUnderConsideration();
 
         // Bridge
         system.add(new FourTuple("Client", "Ab", EdgeType.ASSOCIATION));
