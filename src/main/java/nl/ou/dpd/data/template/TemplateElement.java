@@ -1,7 +1,7 @@
 package nl.ou.dpd.data.template;
 
 /**
- * TODO...
+ * Represents a template element in the design pattern templates XML file.
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
@@ -64,6 +64,11 @@ public final class TemplateElement implements ElementHandler {
         return qName.equals("template") ? null : this;
     }
 
+    /**
+     * Returns a {@link DesignPattern} representation of the template element.
+     *
+     * @return the parsed {@link DesignPattern}.
+     */
     public DesignPattern getTemplate() {
         return designPattern;
     }

@@ -9,7 +9,7 @@ package nl.ou.dpd.domain;
 public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsiderationEdge, SystemUnderConsiderationEdgeCreator> {
 
     /**
-     * TODO...
+     * Constructs a new {@link SystemUnderConsideration} instance.
      */
     public SystemUnderConsideration() {
         super(new SystemUnderConsiderationEdgeCreator());

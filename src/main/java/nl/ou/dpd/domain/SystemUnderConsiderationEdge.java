@@ -1,26 +1,29 @@
 package nl.ou.dpd.domain;
 
 /**
- * TODO...
+ * A {@link SystemUnderConsiderationEdge} represents an relation between to classes in a system design. When the design
+ * is viewed as a graph, these relations can be viewed as edges between vertices (the classes).
  *
  * @author Martin de Boer
  */
 public class SystemUnderConsiderationEdge extends FourTuple {
 
     /**
-     * TODO...
+     * Constructs an instance of a {@link SystemUnderConsiderationEdge} with the specified class names and edge type.
+     * The classes represent the vertices in the graph (when the system design is viewed as a graph), and the edge type
+     * represents the relation type between the classes.
      *
-     * @param cl1
-     * @param cl2
-     * @param type
+     * @param cl1  the name of the first class
+     * @param cl2  the name of the second class
+     * @param type the relation type
      */
     public SystemUnderConsiderationEdge(String cl1, String cl2, EdgeType type) {
         super(cl1, cl2, type);
     }
 
     /**
-     * This constructor has package protected access because it is only available within this package.
-     * TODO....
+     * This constructor has package protected access because it is only available within this package. It duplicates the
+     * specified {@code edge}.
      *
      * @param edge a {@link SystemUnderConsiderationEdge} to construct a copy of.
      */
@@ -29,11 +32,12 @@ public class SystemUnderConsiderationEdge extends FourTuple {
     }
 
     /**
-     * TODO...
+     * Returns whether there is a match between this {@link SystemUnderConsiderationEdge} and the specified
+     * {@link DesignPatternEdge}.
      *
-     * @param edge
-     * @param matchedNames
-     * @return
+     * @param edge         the {@link DesignPatternEdge} to check.
+     * @param matchedNames the object containing all matches.
+     * @return {@code true} if there is a match with the specified {@code edge}, or {@code false} otherwise.
      */
     boolean isMatch(DesignPatternEdge edge, MatchedNames matchedNames) {
         if (edge.getTypeRelation() != getTypeRelation()) {

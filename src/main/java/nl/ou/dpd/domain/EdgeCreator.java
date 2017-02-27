@@ -5,6 +5,11 @@ package nl.ou.dpd.domain;
  *
  * @param <EDGE> the type of objects this creator creates.
  * @author Martin de Boer
+ * @see DesignPatternEdgeCreator
+ * @see SystemUnderConsiderationEdgeCreator
+ * @see FourTuple
+ * @see SystemUnderConsiderationEdge
+ * @see DesignPatternEdge
  */
 public interface EdgeCreator<EDGE extends FourTuple> {
 
