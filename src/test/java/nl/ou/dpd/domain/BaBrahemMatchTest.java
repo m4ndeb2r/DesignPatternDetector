@@ -49,11 +49,11 @@ public class BaBrahemMatchTest {
 
     private SystemUnderConsideration createBaBrahemExample() {
         final SystemUnderConsideration system = new SystemUnderConsideration();
-        system.add(new FourTuple("A", "B", EdgeType.ASSOCIATION_DIRECTED));
-        system.add(new FourTuple("A", "C", EdgeType.ASSOCIATION_DIRECTED));
-        system.add(new FourTuple("C", "B", EdgeType.ASSOCIATION_DIRECTED));
-        system.add(new FourTuple("D", "B", EdgeType.INHERITANCE));
-        system.add(new FourTuple("E", "C", EdgeType.INHERITANCE));
+        system.add(new SystemUnderConsiderationEdge("A", "B", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(new SystemUnderConsiderationEdge("A", "C", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(new SystemUnderConsiderationEdge("C", "B", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(new SystemUnderConsiderationEdge("D", "B", EdgeType.INHERITANCE));
+        system.add(new SystemUnderConsiderationEdge("E", "C", EdgeType.INHERITANCE));
         return system;
     }
 
@@ -71,10 +71,10 @@ public class BaBrahemMatchTest {
      */
     private DesignPattern createBridgePattern() {
         final DesignPattern bridge = new DesignPattern("Bridge");
-        bridge.add(new FourTuple("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
-        bridge.add(new FourTuple("Implementor", "Abstraction", EdgeType.AGGREGATE));
-        bridge.add(new FourTuple("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE));
-        bridge.add(new FourTuple("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE));
+        bridge.add(new DesignPatternEdge("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
+        bridge.add(new DesignPatternEdge("Implementor", "Abstraction", EdgeType.AGGREGATE));
+        bridge.add(new DesignPatternEdge("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE));
+        bridge.add(new DesignPatternEdge("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE));
         return bridge;
     }
 }

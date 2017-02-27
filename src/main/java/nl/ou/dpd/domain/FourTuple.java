@@ -1,24 +1,29 @@
 package nl.ou.dpd.domain;
 
 /**
- * TODO
+ * A {@link FourTuple} represents an edge in a {@link DesignPattern} or a {@link SystemUnderConsideration}.
+ * <p>
+ * If a FourTuple (A, B, type) represents a bi-directional association, a FourTuple (B, A, type) will be made. This
+ * second FourTuple will have attribute virtual = true. FourTuples with virtual == true will not be shown.
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
  */
 
-public class FourTuple {
+public abstract class FourTuple {
 
     private String classInterface1, classInterface2;
     private EdgeType typeRelation;
     private boolean selfRef, matched, virtual;
 
-    // If a FourTuple (A, B, type) represents a bi-directional association,
-    // a FourTuple(B, A, type) will be made.
-    // This second FourTuple will have attribute virtual = true;
-    // FourTuples with virtual = true will not be shown.
-
-    public FourTuple(String cl1, String cl2, EdgeType type) {
+    /**
+     * This constructor has protected access because it is only available within subclasses.
+     *
+     * @param cl1
+     * @param cl2
+     * @param type
+     */
+    protected FourTuple(String cl1, String cl2, EdgeType type) {
         classInterface1 = cl1;
         classInterface2 = cl2;
         typeRelation = type;
@@ -29,7 +34,7 @@ public class FourTuple {
     }
 
     /**
-     * This constructor has protected access because it is only available within this package.
+     * This constructor has protected access because it is only available within subclasses.
      *
      * @param ft a {@link FourTuple} to construct a copy of.
      */
@@ -38,6 +43,9 @@ public class FourTuple {
         matched = ft.matched;
     }
 
+    /**
+     * Creates a virtual (none visible) counterpart of a {@link FourTuple}.
+     */
     void makeVirtual() {
         String tmp;
 
@@ -149,4 +157,5 @@ public class FourTuple {
     EdgeType getTypeRelation() {
         return typeRelation;
     }
+
 }

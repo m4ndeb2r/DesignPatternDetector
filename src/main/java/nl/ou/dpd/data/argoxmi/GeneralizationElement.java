@@ -4,7 +4,7 @@ import nl.ou.dpd.data.parser.ElementHandler;
 import org.xml.sax.Attributes;
 
 /**
- * Represents an element in an XMI file, that represents a class in the underlying UML design.
+ * Represents an element in an XMI file, that represents a generalization in the underlying UML design.
  *
  * @author E.M. van Doorn
  */
@@ -16,9 +16,9 @@ public final class GeneralizationElement implements Constants, ElementHandler {
     private String child;
 
     /**
-     * Protected constructor to prevent access form outside the package.
+     * Package protected constructor to prevent access from outside the package.
      */
-    protected GeneralizationElement() {
+    GeneralizationElement() {
         handler = null;
         expectChild = true;
     }

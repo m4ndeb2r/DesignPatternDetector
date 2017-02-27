@@ -21,9 +21,9 @@ public final class ClassElement implements Constants, ElementHandler {
     private boolean expectSupplier, inClass;
 
     /**
-     * Protected constructor to prevent access form outside the package.
+     * Package protected constructor to prevent access from outside the package.
      */
-    protected ClassElement() {
+    ClassElement() {
         name = null;
         dependentClasses = new ArrayList();
         handler = null;
@@ -41,7 +41,6 @@ public final class ClassElement implements Constants, ElementHandler {
             switch (qName) {
                 case DEPENDENCY_SUPPLIER_TAG:
                     expectSupplier = true;
-
                     break;
 
                 case INTERFACE_TAG:
@@ -50,7 +49,6 @@ public final class ClassElement implements Constants, ElementHandler {
                     if (expectSupplier) {
                         dependentClasses.add(attributes.getValue(ID_REF));
                     }
-
                     break;
 
                 default:
@@ -99,14 +97,12 @@ public final class ClassElement implements Constants, ElementHandler {
      * @return a list of subclass names, or {@code null} if there are no dependent classes.
      */
     public List<String> getDependencies() {
-        ArrayList<String> result;
 
         if (dependentClasses.isEmpty()) {
             return null;
         }
 
-        result = new ArrayList();
-
+        final List<String> result = new ArrayList();
         for (String s : dependentClasses) {
             result.add(ArgoXMIParser.classElements.get(s).getName());
         }

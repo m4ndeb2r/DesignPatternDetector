@@ -6,52 +6,55 @@ import java.util.List;
 /**
  * Represents a list of {@link FourTuple}s.
  *
- * @author E.M. van Doorn
+ * @author EDGE.M. van Doorn
  * @author Martin de Boer
  */
-public abstract class FourTupleArray {
+public abstract class FourTupleArray <EDGE extends FourTuple, CREATOR extends EdgeCreator> {
 
-    private List<FourTuple> fourTuples;
+    private List<EDGE> fourTuples;
+    private CREATOR edgeCreator;
 
     /**
-     * The default constructor. This constructor initialises all the attributes with default values.
+     * TODO....
      */
-    public FourTupleArray() {
-        fourTuples = new ArrayList();
+    public FourTupleArray(CREATOR edgeCreator) {
+        this.fourTuples = new ArrayList();
+        this.edgeCreator = edgeCreator;
     }
 
     /**
-     * Adds a new {@link FoutTuple} to this {@link FourTupleArray}.
+     * Adds a new {@link EDGE} to this {@link FourTupleArray}. Whenever the {@link EdgeType} of the new {@link EDGE}
+     * equals {@link EdgeType#ASSOCIATION}, an extra, virtual (non-visible) is also added.
      *
-     * @param ft the {@link FoutTuple} to add.
+     * @param edge the {@link EDGE} to add.
      */
-    public void add(FourTuple ft) {
-        fourTuples.add(new FourTuple(ft));
+    public void add(EDGE edge) {
+        fourTuples.add((EDGE) this.edgeCreator.create(edge));
 
-        if (ft.getTypeRelation() == EdgeType.ASSOCIATION) {
+        if (edge.getTypeRelation() == EdgeType.ASSOCIATION) {
             // For edge (A, B, ....) a second but virtual edge (B, A, ...) will be added.
-            FourTuple tmp = new FourTuple(ft);
+            EDGE tmp = (EDGE) this.edgeCreator.create(edge);
             tmp.makeVirtual();
             fourTuples.add(tmp);
         }
     }
 
     /**
-     * Getter method for the list of {@link FourTuple}s.
+     * Getter method for the list of {@link EDGE}s.
      *
-     * @return the list of {@link FourTuple}s, or an empty list if none exist.
+     * @return the list of {@link EDGE}s, or an empty list if none exist.
      */
-    protected List<FourTuple> getFourTuples() {
+    protected List<EDGE> getFourTuples() {
         return this.fourTuples;
     }
 
     /**
-     * Sets the list of {@link FourTuple}s.
+     * Sets the list of {@link EDGE}s.
      *
-     * @param fourTuples the new list of {@link FourTuple}s.
+     * @param edges the new list of {@link EDGE}s.
      */
-    protected void setFourTuples(List<FourTuple> fourTuples) {
-        this.fourTuples = fourTuples;
+    protected void setFourTuples(List<EDGE> edges) {
+        this.fourTuples = edges;
     }
 
     /**

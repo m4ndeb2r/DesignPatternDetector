@@ -16,9 +16,9 @@ public final class AbstractionElement implements Constants, ElementHandler {
     private boolean expectImplementer;
 
     /**
-     * Protected constructor to prevent access form outside the package.
+     * Package protected constructor to prevent access from outside the package.
      */
-    protected AbstractionElement() {
+    AbstractionElement() {
         handler = null;
         expectImplementer = true;
     }
@@ -42,10 +42,8 @@ public final class AbstractionElement implements Constants, ElementHandler {
      * {@inheritDoc}
      */
     public ElementHandler endElement(String qName) {
-
         if (handler != null) {
             handler = handler.endElement(qName);
-
             return this;
         }
 

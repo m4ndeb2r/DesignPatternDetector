@@ -1,6 +1,11 @@
 package nl.ou.dpd.domain;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -12,7 +17,7 @@ public class MatchedNames {
     // the design pattern.
     // se-names --> dp-names.
 
-    private HashMap<String, String> names;
+    private Map<String, String> names;
 
     MatchedNames() {
         names = new HashMap();

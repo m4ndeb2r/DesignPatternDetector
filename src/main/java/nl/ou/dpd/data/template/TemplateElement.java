@@ -55,7 +55,7 @@ public final class TemplateElement implements ElementHandler {
             handler = handler.endElement(qName);
 
             if (qName.equals("edge")) {
-                designPattern.add(edgeElement.getFourtuple());
+                designPattern.add(edgeElement.getEdge());
             }
 
             return this;

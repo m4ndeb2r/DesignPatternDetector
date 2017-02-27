@@ -1,5 +1,7 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.DesignPatternDetector;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
  *
  * @author Martin de Boer
  */
-public class DesignPattern extends FourTupleArray {
+public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatternEdgeCreator> {
 
     private String name;
     private Solutions solutions;
@@ -19,6 +21,7 @@ public class DesignPattern extends FourTupleArray {
      * @param name the name of this design pattern
      */
     public DesignPattern(String name) {
+        super(new DesignPatternEdgeCreator());
         this.name = name;
         this.solutions = new Solutions();
     }
@@ -31,8 +34,8 @@ public class DesignPattern extends FourTupleArray {
             System.out.println("Design pattern: " + name);
         }
 
-        for (FourTuple ft : getFourTuples()) {
-            ft.show();
+        for (DesignPatternEdge edge : getFourTuples()) {
+            edge.show();
         }
 
         System.out.println();
@@ -65,7 +68,6 @@ public class DesignPattern extends FourTupleArray {
 
         //int nNotMatchable;
         boolean found;
-        FourTuple dpFt;
 
         if (startIndex >= getFourTuples().size()) {
             if (maxNotMatchable >= 0) {
@@ -91,7 +93,7 @@ public class DesignPattern extends FourTupleArray {
             return false;
         }
 
-        dpFt = getFourTuples().get(startIndex); // improves readability
+        DesignPatternEdge dpEdge = getFourTuples().get(startIndex); // improves readability
 
         found = false; // makes compiler happy;;
 
@@ -99,35 +101,35 @@ public class DesignPattern extends FourTupleArray {
         for (int j = 0; j < systemUnderConsideration.getFourTuples().size(); j++) {
             // For all edges in SE
 
-            FourTuple seFt = systemUnderConsideration.getFourTuples().get(j);
+            SystemUnderConsiderationEdge sysEdge = systemUnderConsideration.getFourTuples().get(j);
             // improves readablity
 
             MatchedNames copyMatchedClassNames = new MatchedNames(matchedClassNames);
             ArrayList<Integer> extraMatched = new ArrayList<Integer>();
 
-            if (!seFt.isMatched()
-                    && seFt.isMatch(dpFt, matchedClassNames)) {
+            if (!sysEdge.isMatched()
+                    && sysEdge.isMatch(dpEdge, matchedClassNames)) {
                 boolean hulp;
 
-                dpFt.makeMatch(seFt, copyMatchedClassNames);
-                dpFt.setMatched(true);
-                seFt.setMatched(true);
+                dpEdge.makeMatch(sysEdge, copyMatchedClassNames);
+                dpEdge.setMatched(true);
+                sysEdge.setMatched(true);
 
-                if (dpFt.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
+                if (dpEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
                     int k;
 
                     // There may be more edges of se which
                     // contains an inheritance to the same parent and
                     // have unmatched children
                     for (k = j + 1; k < systemUnderConsideration.getFourTuples().size(); k++) {
-                        FourTuple sekFt = systemUnderConsideration.getFourTuples().get(k);
+                        SystemUnderConsiderationEdge skEdge = systemUnderConsideration.getFourTuples().get(k);
                         // for readablity;
-                        if (!sekFt.isMatched()
-                                && sekFt.getClassName2().equals(seFt.getClassName2())
-                                && sekFt.isMatch(dpFt, matchedClassNames)) {
-                            dpFt.makeMatch(sekFt, copyMatchedClassNames);
+                        if (!skEdge.isMatched()
+                                && skEdge.getClassName2().equals(sysEdge.getClassName2())
+                                && skEdge.isMatch(dpEdge, matchedClassNames)) {
+                            dpEdge.makeMatch(skEdge, copyMatchedClassNames);
                             extraMatched.add(new Integer(k));
-                            sekFt.setMatched(true);
+                            skEdge.setMatched(true);
                         }
                     }
                 }
@@ -137,8 +139,8 @@ public class DesignPattern extends FourTupleArray {
 
                 found = found || hulp;
 
-                dpFt.setMatched(false);
-                seFt.setMatched(false);
+                dpEdge.setMatched(false);
+                sysEdge.setMatched(false);
 
                 // undo multiple matched edges.
                 for (Integer getal : extraMatched) {
@@ -181,7 +183,7 @@ public class DesignPattern extends FourTupleArray {
      * @param graph the graph to order
      * @return the ordered graph
      */
-    private List<FourTuple> order(final List<FourTuple> graph) {
+    private List<DesignPatternEdge> order(final List<DesignPatternEdge> graph) {
         // Skip the first element. It stays where it is. Start with i = 1.
         for (int i = 1; i < graph.size(); i++) {
 
@@ -193,7 +195,7 @@ public class DesignPattern extends FourTupleArray {
                     found = areEdgesConnected(graph.get(j), graph.get(k));
                     if (found && (j != i)) {
                         // Switch elements
-                        final FourTuple temp = graph.get(j);
+                        final DesignPatternEdge temp = graph.get(j);
                         graph.set(j, graph.get(i));
                         graph.set(i, temp);
                     }
@@ -215,7 +217,7 @@ public class DesignPattern extends FourTupleArray {
      * @param edge2 the edge to compare to {@code edge1}
      * @return {@code true} if the edges are connected, or {@code false} otherwise
      */
-    private boolean areEdgesConnected(FourTuple edge1, FourTuple edge2) {
+    private boolean areEdgesConnected(DesignPatternEdge edge1, DesignPatternEdge edge2) {
         final String v1 = edge1.getClassName1();
         final String v2 = edge1.getClassName2();
         final String v3 = edge2.getClassName1();
@@ -226,9 +228,9 @@ public class DesignPattern extends FourTupleArray {
     private MatchedNames fillMatchedNames() {
         MatchedNames names = new MatchedNames();
 
-        for (FourTuple ft : getFourTuples()) {
-            names.add(ft.getClassName1());
-            names.add(ft.getClassName2());
+        for (DesignPatternEdge edge : getFourTuples()) {
+            names.add(edge.getClassName1());
+            names.add(edge.getClassName2());
         }
 
         return names;
@@ -238,9 +240,9 @@ public class DesignPattern extends FourTupleArray {
         // No classname will be matched
         MatchedNames names = new MatchedNames();
 
-        for (FourTuple ft : system.getFourTuples()) {
-            names.add(ft.getClassName1());
-            names.add(ft.getClassName2());
+        for (SystemUnderConsiderationEdge edge : system.getFourTuples()) {
+            names.add(edge.getClassName1());
+            names.add(edge.getClassName2());
         }
 
         return names;

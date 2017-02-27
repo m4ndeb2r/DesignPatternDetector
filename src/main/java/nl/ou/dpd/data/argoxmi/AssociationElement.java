@@ -2,7 +2,7 @@ package nl.ou.dpd.data.argoxmi;
 
 import nl.ou.dpd.data.parser.ElementHandler;
 import nl.ou.dpd.domain.EdgeType;
-import nl.ou.dpd.domain.FourTuple;
+import nl.ou.dpd.domain.SystemUnderConsiderationEdge;
 import org.xml.sax.Attributes;
 
 /**
@@ -19,9 +19,9 @@ public final class AssociationElement implements Constants, ElementHandler {
     private String leftElement, rightElement;
 
     /**
-     * Protected constructor to prevent access form outside the package.
+     * Package protected constructor to prevent access from outside the package.
      */
-    protected AssociationElement() {
+    AssociationElement() {
         handler = null;
         isFirstPart = true;
         leftElement = null;
@@ -33,7 +33,7 @@ public final class AssociationElement implements Constants, ElementHandler {
      */
     public void startElement(String qName, Attributes attributes) {
         switch (qName) {
-            case ASSOCIATION_END_TAG: {
+            case ASSOCIATION_END_TAG:
                 if (isFirstPart) {
                     isNavigable = attributes.getValue(IS_NAVIGABLE).equals("true");
                     isAggregate = attributes.getValue(AGGREGATION).equals(AGGREGATE);
@@ -44,12 +44,11 @@ public final class AssociationElement implements Constants, ElementHandler {
                     isAggregate = isAggregate || attributes.getValue(AGGREGATION).equals(AGGREGATE);
                     isComposite = isComposite || attributes.getValue(AGGREGATION).equals(COMPOSITE);
                 }
-
                 break;
-            }
+
 
             case INTERFACE_TAG:
-            case CLASS_TAG: {
+            case CLASS_TAG:
                 if (isFirstPart) {
                     if (isAggregate || isComposite || isNavigable) {
                         rightElement = attributes.getValue(ID_REF);
@@ -65,9 +64,8 @@ public final class AssociationElement implements Constants, ElementHandler {
                     }
                     ArgoXMIParser.associationElements.add(this);
                 }
-
                 break;
-            }
+
 
             default:
                 break;
@@ -87,12 +85,12 @@ public final class AssociationElement implements Constants, ElementHandler {
     }
 
     /**
-     * Return a {@link FourTuple} representation of this element.
+     * Return a {@link SystemUnderConsiderationEdge} representation of this element.
      *
-     * @return a {@link FourTuple} representation of this element.
+     * @return a {@link SystemUnderConsiderationEdge} representation of this element.
      */
-    public FourTuple getFourtuple() {
-        EdgeType type;
+    public SystemUnderConsiderationEdge getSystemUnderConsiderationEdge() {
+        final EdgeType type;
 
         if (isAggregate) {
             type = EdgeType.AGGREGATE;
@@ -104,7 +102,7 @@ public final class AssociationElement implements Constants, ElementHandler {
             type = EdgeType.ASSOCIATION_DIRECTED;
         }
 
-        return new FourTuple(
+        return new SystemUnderConsiderationEdge(
                 ArgoXMIParser.classElements.get(leftElement).getName(),
                 ArgoXMIParser.classElements.get(rightElement).getName(),
                 type);

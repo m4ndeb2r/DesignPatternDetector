@@ -17,7 +17,7 @@ import java.util.List;
  * @author Martin de Boer
  */
 public final class TemplateSaxHandler extends DefaultHandler {
-    private List<DesignPattern> dps;
+    private List<DesignPattern> templates;
     private ElementHandler handler;
     private TemplateElement templateElement;
 
@@ -26,7 +26,7 @@ public final class TemplateSaxHandler extends DefaultHandler {
      */
     protected TemplateSaxHandler() {
         handler = null;
-        dps = new ArrayList();
+        templates = new ArrayList();
     }
 
     /**
@@ -77,11 +77,11 @@ public final class TemplateSaxHandler extends DefaultHandler {
         }
 
         if (qName.equals("template")) {
-            dps.add(templateElement.getTemplate());
+            templates.add(templateElement.getTemplate());
         }
     }
 
     protected List<DesignPattern> getTemplates() {
-        return dps;
+        return templates;
     }
 }

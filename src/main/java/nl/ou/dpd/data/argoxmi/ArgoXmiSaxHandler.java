@@ -6,8 +6,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * A {@link DefaultHandler} for the {@link ArgoXMIParser}. It handles start tags and end tags, encountered in an XMI
- * file.
+ * A {@link DefaultHandler} for the {@link ArgoXMIParser}. It handles start tags and end tags, encountered in the XMI
+ * file that is being parsed.
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
@@ -17,9 +17,9 @@ public class ArgoXmiSaxHandler extends DefaultHandler implements Constants {
     private ElementHandler handler;
 
     /**
-     * A default constructor.
+     * Package protected constructor to prevent access from outside the package.
      */
-    public ArgoXmiSaxHandler() {
+    ArgoXmiSaxHandler() {
         handler = null;
     }
 

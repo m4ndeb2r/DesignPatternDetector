@@ -1,13 +1,9 @@
 package nl.ou.dpd.data.argoxmi;
 
-/**
- * @author E.M. van Doorn
- */
-
 import nl.ou.dpd.data.parser.Parser;
 import nl.ou.dpd.domain.EdgeType;
-import nl.ou.dpd.domain.FourTuple;
 import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.SystemUnderConsiderationEdge;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.xml.sax.SAXException;
 
@@ -20,15 +16,26 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-
+/**
+ * Parser for the XMI input files, containing a representation of the "system under consideration". The parsing result
+ * is a {@link SystemUnderConsiderationEdge} instance.
+ *
+ * @author E.M. van Doorn
+ * @author Martin de Boer
+ */
 public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
 
-    static HashMap<String, ClassElement> classElements;
-    static HashMap<String, String> inheritanceElements;
+    static Map<String, ClassElement> classElements;
+    static Map<String, String> inheritanceElements;
     static ArrayList<AbstractionElement> abstractElements;
     static ArrayList<AssociationElement> associationElements;
 
+    /**
+     * Default constructor that initialises the static attributes {@link #classElements}, {@link #inheritanceElements},
+     * {@link #abstractElements} and {@link #associationElements}.
+     */
     public ArgoXMIParser() {
         classElements = new HashMap();
         inheritanceElements = new HashMap();
@@ -36,13 +43,16 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
         associationElements = new ArrayList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public SystemUnderConsideration parse(String fileName) {
         try {
             final ArgoXmiSaxHandler handler = new ArgoXmiSaxHandler();
             final InputStream xmlInput = new FileInputStream(fileName);
             final SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
             saxParser.parse(xmlInput, handler);
-            return getFourtuples();
+            return getSystemUnderConsideration();
         } catch (SAXException | ParserConfigurationException e) {
             throw new DesignPatternDetectorException("Het bestand " + fileName + " kon niet worden geparsed.", e);
         } catch (IOException e) {
@@ -50,7 +60,7 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
         }
     }
 
-    private SystemUnderConsideration getFourtuples() {
+    private SystemUnderConsideration getSystemUnderConsideration() {
         final SystemUnderConsideration systemUnderConsideration = new SystemUnderConsideration();
 
         fourtuplesClassElements(systemUnderConsideration);
@@ -62,16 +72,13 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
     }
 
     private void fourtuplesClassElements(SystemUnderConsideration system) {
-        List<String> deps;
-
         for (String key : classElements.keySet()) {
-            deps = classElements.get(key).getDependencies();
-
-            if (deps != null) {
-                for (String dep : deps) {
+            final List<String> dependencies = classElements.get(key).getDependencies();
+            if (dependencies != null) {
+                for (String dep : dependencies) {
                     final String name = classElements.get(key).getName();
-                    final FourTuple ft = new FourTuple(name, dep, EdgeType.DEPENDENCY);
-                    system.add(ft);
+                    final SystemUnderConsiderationEdge sys = new SystemUnderConsiderationEdge(name, dep, EdgeType.DEPENDENCY);
+                    system.add(sys);
                 }
             }
         }
@@ -79,7 +86,7 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
 
     private void fourtuplesInheritanceElements(SystemUnderConsideration system) {
         for (String key : inheritanceElements.keySet()) {
-            system.add(new FourTuple(
+            system.add(new SystemUnderConsiderationEdge(
                     ArgoXMIParser.classElements.get(key).getName(),
                     ArgoXMIParser.classElements.get(inheritanceElements.get(key)).getName(),
                     EdgeType.INHERITANCE)
@@ -89,7 +96,7 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
 
     private void fourtuplesAbstractElements(SystemUnderConsideration system) {
         for (AbstractionElement elem : abstractElements) {
-            system.add(new FourTuple(
+            system.add(new SystemUnderConsiderationEdge(
                     ArgoXMIParser.classElements.get(elem.getImplementer()).getName(),
                     ArgoXMIParser.classElements.get(elem.getSuper()).getName(),
                     EdgeType.INHERITANCE)
@@ -98,8 +105,8 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
     }
 
     private void fourtuplesAssociationElements(SystemUnderConsideration system) {
-        for (AssociationElement assEl : associationElements) {
-            system.add(assEl.getFourtuple());
+        for (AssociationElement elem : associationElements) {
+            system.add(elem.getSystemUnderConsiderationEdge());
         }
     }
 }
