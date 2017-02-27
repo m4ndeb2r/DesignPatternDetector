@@ -15,9 +15,9 @@ public abstract class FourTupleArray <EDGE extends FourTuple, CREATOR extends Ed
     private CREATOR edgeCreator;
 
     /**
-     * TODO....
+     * Constructor that has protected access because it is only accessable from subclasses.
      */
-    public FourTupleArray(CREATOR edgeCreator) {
+    protected FourTupleArray(CREATOR edgeCreator) {
         this.fourTuples = new ArrayList();
         this.edgeCreator = edgeCreator;
     }

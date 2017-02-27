@@ -10,7 +10,6 @@ package nl.ou.dpd.data.template;
 import nl.ou.dpd.data.parser.ElementHandler;
 import nl.ou.dpd.domain.DesignPatternEdge;
 import nl.ou.dpd.domain.EdgeType;
-import nl.ou.dpd.domain.FourTuple;
 import org.xml.sax.Attributes;
 
 public final class EdgeElement implements ElementHandler {

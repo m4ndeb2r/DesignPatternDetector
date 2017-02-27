@@ -1,7 +1,5 @@
 package nl.ou.dpd.domain;
 
-import nl.ou.dpd.DesignPatternDetector;
-
 import java.util.ArrayList;
 import java.util.List;
 

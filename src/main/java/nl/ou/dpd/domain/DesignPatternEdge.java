@@ -19,11 +19,27 @@ public class DesignPatternEdge extends FourTuple {
     }
 
     /**
-     * This constructor has protected access because it is only available within this package.
+     * This constructor has package protected access because it is only available within this package.
+     * TODO...
      *
      * @param edge a {@link DesignPatternEdge} to construct a copy of.
      */
-    protected DesignPatternEdge(DesignPatternEdge edge) {
+    DesignPatternEdge(DesignPatternEdge edge) {
         super(edge);
     }
+
+    /**
+     * TODO...
+     *
+     * @param edge
+     * @param matchedNames
+     */
+    void makeMatch(SystemUnderConsiderationEdge edge, MatchedNames matchedNames) {
+        matchedNames.add(edge.getClassName1(), getClassName1());
+        matchedNames.add(edge.getClassName2(), getClassName2());
+        setMatched(true);
+        edge.setMatched(true);
+    }
+
+
 }

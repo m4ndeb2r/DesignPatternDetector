@@ -56,59 +56,6 @@ public abstract class FourTuple {
         virtual = true;
     }
 
-    boolean isMatch(FourTuple dp, MatchedNames matchedNames) {
-        // dp must be an edge of the design pattern
-        if (dp.typeRelation != typeRelation) {
-            if (dp.typeRelation == EdgeType.INHERITANCE_MULTI
-                    && typeRelation == EdgeType.INHERITANCE)
-                ; // break; generates a warning.
-            else {
-                return false;
-            }
-        }
-
-        if (dp.selfRef != selfRef) {
-            return false;
-        }
-
-        // two empty names
-        if (matchedNames.isEmpty(classInterface1)
-                && matchedNames.isEmpty(classInterface2)
-                && !matchedNames.valueIsBounded(dp.classInterface1)
-                && !matchedNames.valueIsBounded(dp.classInterface2)) {
-            return true;
-        }
-
-        // first name matched, second name empty
-        if (matchedNames.equals(classInterface1, dp.classInterface1)
-                && matchedNames.isEmpty(classInterface2)
-                && !matchedNames.valueIsBounded(dp.classInterface2)) {
-            return true;
-        }
-
-        // first name empty, second name matched
-        if (matchedNames.isEmpty(classInterface1)
-                && !matchedNames.valueIsBounded(dp.classInterface1)
-                && matchedNames.equals(classInterface2, dp.classInterface2)) {
-            return true;
-        }
-
-        // both names are already matched.
-        if (matchedNames.equals(classInterface1, dp.classInterface1)
-                && matchedNames.equals(classInterface2, dp.classInterface2)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    void makeMatch(FourTuple se, MatchedNames matchedNames) {
-        matchedNames.add(se.classInterface1, classInterface1);
-        matchedNames.add(se.classInterface2, classInterface2);
-        setMatched(true);
-        se.setMatched(true);
-    }
-
     /**
      * @deprecated All show methods must go. No more printing to System.out very soon.
      */
@@ -158,4 +105,7 @@ public abstract class FourTuple {
         return typeRelation;
     }
 
+    boolean getSelfRef() {
+        return selfRef;
+    }
 }
