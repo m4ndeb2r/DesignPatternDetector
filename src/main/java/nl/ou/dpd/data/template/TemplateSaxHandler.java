@@ -2,6 +2,8 @@ package nl.ou.dpd.data.template;
 
 import nl.ou.dpd.data.parser.ElementHandler;
 import nl.ou.dpd.domain.DesignPattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -17,6 +19,9 @@ import java.util.List;
  * @author Martin de Boer
  */
 public final class TemplateSaxHandler extends DefaultHandler {
+
+    private static final Logger LOGGER = LogManager.getLogger(TemplateSaxHandler.class);
+
     private List<DesignPattern> templates;
     private ElementHandler handler;
     private TemplateElement templateElement;
@@ -57,7 +62,9 @@ public final class TemplateSaxHandler extends DefaultHandler {
                 break;
 
             default:
-                throw new SAXException("Unexpected tag: " + qName);
+                final String msg = "Unexpected tag: " + qName + ".";
+                LOGGER.error(msg);
+                throw new SAXException(msg);
         }
     }
 

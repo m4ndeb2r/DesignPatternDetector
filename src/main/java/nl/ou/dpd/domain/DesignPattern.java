@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +12,8 @@ import java.util.List;
  * @author Martin de Boer
  */
 public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatternEdgeCreator> {
+
+    private static final Logger LOGGER = LogManager.getLogger(DesignPattern.class);
 
     private String name;
     private Solutions solutions;
@@ -84,7 +89,8 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
                 return true;
             }
 
-            System.out.println("Should not be shown 1");
+            LOGGER.warn("Unexpected situation in DesignPattern#recursiveMatch(). " +
+                    "Value of maxNotMatchable = " + maxNotMatchable);
 
             // Should not occur. The search should be stopped before.
 
@@ -201,7 +207,7 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
             }
 
             if (!found) {
-                System.out.println("Warning: Template is not a connected graph.");
+                LOGGER.warn("Template is not a connected graph.");
             }
         }
         return graph;

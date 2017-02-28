@@ -5,6 +5,8 @@ import nl.ou.dpd.domain.EdgeType;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.SystemUnderConsiderationEdge;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,6 +28,8 @@ import java.util.Map;
  * @author Martin de Boer
  */
 public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
+
+    private static final Logger LOGGER = LogManager.getLogger(ArgoXMIParser.class);
 
     static Map<String, ClassElement> classElements;
     static Map<String, String> inheritanceElements;
@@ -54,9 +58,13 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
             saxParser.parse(xmlInput, handler);
             return getSystemUnderConsideration();
         } catch (SAXException | ParserConfigurationException e) {
-            throw new DesignPatternDetectorException("Het bestand " + fileName + " kon niet worden geparsed.", e);
+            final String msg = "Het bestand " + fileName + " kon niet worden geparsed.";
+            LOGGER.error(msg);
+            throw new DesignPatternDetectorException(msg, e);
         } catch (IOException e) {
-            throw new DesignPatternDetectorException("Het bestand " + fileName + " kon niet worden gevonden.", e);
+            final String msg = "Het bestand " + fileName + " kon niet worden gevonden.";
+            LOGGER.error(msg);
+            throw new DesignPatternDetectorException(msg, e);
         }
     }
 

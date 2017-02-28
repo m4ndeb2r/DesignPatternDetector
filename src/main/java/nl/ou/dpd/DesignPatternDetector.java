@@ -83,7 +83,9 @@ public final class DesignPatternDetector {
     private void parseArgs(String[] args) {
         // Every flag should be followed by a value
         if (args.length > 6 || args.length % 2 == 1) {
-            throw new IllegalArgumentException("Illegal number of parameters. " + USAGE_TXT);
+            final String msg = "Illegal number of parameters: " + args.length + ". " + USAGE_TXT;
+            LOGGER.error(msg);
+            throw new IllegalArgumentException(msg);
         }
 
         for (int i = 0; i < args.length; i += 2) {
@@ -94,7 +96,9 @@ public final class DesignPatternDetector {
             } else if (args[i].equals("-n")) {
                 maxMissingEdges = Integer.parseInt(args[i + 1]);
             } else {
-                throw new IllegalArgumentException("Incorrect parameter: " + args[i] + ". " + USAGE_TXT);
+                final String msg = "Incorrect parameter: " + args[i] + ". " + USAGE_TXT;
+                LOGGER.error(msg);
+                throw new IllegalArgumentException(msg);
             }
         }
     }

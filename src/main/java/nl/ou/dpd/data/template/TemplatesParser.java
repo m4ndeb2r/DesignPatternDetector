@@ -4,6 +4,8 @@ package nl.ou.dpd.data.template;
 import nl.ou.dpd.data.parser.Parser;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,6 +24,8 @@ import java.util.List;
  */
 public class TemplatesParser implements Parser<List<DesignPattern>> {
 
+    private static final Logger LOGGER = LogManager.getLogger(TemplatesParser.class);
+
     /**
      * Parses a template file with the specified {@code filename}.
      *
@@ -38,9 +42,13 @@ public class TemplatesParser implements Parser<List<DesignPattern>> {
             saxParser.parse(xmlInput, handler);
             return handler.getTemplates();
         } catch (SAXException | ParserConfigurationException e) {
-            throw new DesignPatternDetectorException("Het bestand " + filename + " kon niet worden geparsed.", e);
+            final String msg = "Het bestand " + filename + " kon niet worden geparsed.";
+            LOGGER.error(msg, e);
+            throw new DesignPatternDetectorException(msg, e);
         } catch (IOException e) {
-            throw new DesignPatternDetectorException("Het bestand " + filename + " kon niet worden gevonden.", e);
+            final String msg = "Het bestand " + filename + " kon niet worden gevonden.";
+            LOGGER.error(msg, e);
+            throw new DesignPatternDetectorException(msg, e);
         }
     }
 }

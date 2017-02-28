@@ -182,7 +182,7 @@ public class DesignPatternDetectorTest {
     @Test
     public void testIncorrectNumberOfArgumentsException() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Illegal number of parameters. " +
+        thrown.expectMessage("Illegal number of parameters: 1. " +
                 "\nUsage: \n\tjava -t templateFile -x xmiFile -n maxNumberOfMissingEdges." +
                 "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0");
 
