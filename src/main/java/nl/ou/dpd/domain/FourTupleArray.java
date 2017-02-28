@@ -33,9 +33,7 @@ public abstract class FourTupleArray <EDGE extends FourTuple, CREATOR extends Ed
 
         if (edge.getTypeRelation() == EdgeType.ASSOCIATION) {
             // For edge (A, B, ....) a second but virtual edge (B, A, ...) will be added.
-            EDGE tmp = (EDGE) this.edgeCreator.create(edge);
-            tmp.makeVirtual();
-            fourTuples.add(tmp);
+            fourTuples.add((EDGE) this.edgeCreator.createVirtual(edge));
         }
     }
 

@@ -108,4 +108,5 @@ public abstract class FourTuple {
     boolean getSelfRef() {
         return selfRef;
     }
+
 }

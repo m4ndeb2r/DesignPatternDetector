@@ -6,6 +6,8 @@ import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The main class of the Design Pattern Detector application.
@@ -14,6 +16,8 @@ import java.util.List;
  * @author Martin de Boer
  */
 public final class DesignPatternDetector {
+
+    private static final Logger LOGGER = LogManager.getLogger(DesignPatternDetector.class);
 
     private static final String USAGE_TXT =
             "\nUsage: \n\tjava -t templateFile -x xmiFile -n maxNumberOfMissingEdges." +
@@ -68,10 +72,8 @@ public final class DesignPatternDetector {
             designPatterns.forEach(dp -> dp.match(system, maxMissingEdges));
 
         } catch (Throwable t) {
-
             // Acknowledge the user of the unrecoverable error situation
-            t.printStackTrace();
-            System.out.println("An unexpected error occurred. Exiting...");
+            LOGGER.error("An unexpected error occurred. Exiting...", t);
 
             // Do not call System.ext(). It is a bad habit.
             throw (t);

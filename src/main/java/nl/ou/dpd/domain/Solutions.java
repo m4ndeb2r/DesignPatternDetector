@@ -9,7 +9,6 @@ import java.util.Set;
  * @author E.M. van Doorn
  * @author Martin de Boer
  */
-
 public class Solutions {
 
     private ArrayList<Solution> solutions;

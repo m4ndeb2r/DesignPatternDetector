@@ -9,20 +9,28 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
+ * Contains class/interface names of the "system under consideration" mapped to class/interface names of the design
+ * pattern. (sys-names --> dp-names).
+ *
  * @author E.M. van Doorn
+ * @author Martin de Boer
  */
 
 public class MatchedNames {
-    // Contains class/interface names of se mapped on class/interface names of
-    // the design pattern.
-    // se-names --> dp-names.
 
     private Map<String, String> names;
 
+    /**
+     * TODO...
+     */
     MatchedNames() {
         names = new HashMap();
     }
 
+    /**
+     * TODO...
+     * @param nm
+     */
     MatchedNames(MatchedNames nm) {
         this();
 
@@ -51,36 +59,61 @@ public class MatchedNames {
         System.out.println("------------------------");
     }
 
-
+    /**
+     * TODO...
+     * @param key
+     * @return
+     */
     boolean isEmpty(String key) {
         return names.get(key).equals(EdgeType.EMPTY.getName());
     }
 
-
+    /**
+     * TODO...
+     * @param key
+     * @param value
+     * @return
+     */
     boolean equals(String key, String value) {
         return get(key).equals(value);
     }
 
-
+    /**
+     * TODO...
+     * @param key
+     * @param value
+     */
     void add(String key, String value) {
         names.<String, String>put(key, value);
     }
 
+    /**
+     * TODO...
+     * @param key
+     */
     void add(String key) {
         add(key, EdgeType.EMPTY.getName());
     }
 
-
+    /**
+     * TODO...
+     * @param key
+     * @return
+     */
     String get(String key) {
         return names.<String>get(key);
     }
 
-
+    /**
+     * TODO...
+     * @return
+     */
     Set<String> getKeySet() {
         return names.keySet();
     }
 
     /**
+     * TODO...
      * @return
      */
     SortedSet<String> getBoundedSortedKeySet() {
@@ -90,16 +123,22 @@ public class MatchedNames {
                 .collect(Collectors.toSet()));
     }
 
-
+    /**
+     * TODO...
+     * @param key
+     * @return
+     */
     boolean keyIsBounded(String key) {
         return !names.<String>get(key).equals(EdgeType.EMPTY.getName());
     }
 
-
+    /**
+     * TODO...
+     * @param v
+     * @return
+     */
     boolean valueIsBounded(String v) {
-        Collection<String> verz;
-
-        verz = names.values();
+        final Collection<String> verz = names.values();
 
         for (String s : verz) {
             if (s.equals(v)) {
