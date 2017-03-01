@@ -82,7 +82,7 @@ public abstract class FourTuple {
         return ft.getClassName1().equals(classInterface1)
                 && ft.getClassName2().equals(classInterface2)
                 && ft.getTypeRelation() == typeRelation
-                && ft.selfRef == selfRef;
+                && ft.getSelfRef() == selfRef;
     }
 
     boolean isMatched() {
