@@ -42,17 +42,6 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
     }
 
     /**
-     * Attempts to match this {@link DesignPattern} with the specified {@link SystemUnderConsideration}.
-     *
-     * @param system          the system design to analyse and find the design pattern
-     * @param maxNotMatchable the maximum number of edges allowed that do not match.
-     * @return {@code true} if there was a match, of {@code false} otherwise.
-     */
-    public boolean match(SystemUnderConsideration system, int maxNotMatchable) {
-        return new Matcher().match(this, system, maxNotMatchable);
-    }
-
-    /**
      * Getter for the pattern name.
      *
      * @return the name of this design pattern.

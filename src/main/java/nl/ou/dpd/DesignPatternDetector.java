@@ -3,6 +3,7 @@ package nl.ou.dpd;
 import nl.ou.dpd.data.argoxmi.ArgoXMIParser;
 import nl.ou.dpd.data.template.TemplatesParser;
 import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.Matcher;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 
 import java.util.List;
@@ -59,6 +60,10 @@ public final class DesignPatternDetector {
 
     private void run(String[] args) {
         try {
+            LOGGER.info("Application DesignPatternDetector started.");
+            LOGGER.debug("Current directory: " + System.getProperty("user.dir"));
+
+            // TODO: remove console output
             System.out.println("Current directory: " + System.getProperty("user.dir"));
 
             // Parse the arguments
@@ -69,7 +74,8 @@ public final class DesignPatternDetector {
             final List<DesignPattern> designPatterns = new TemplatesParser().parse(templateFileName);
 
             // Find a match for each design pattern in dsp
-            designPatterns.forEach(dp -> dp.match(system, maxMissingEdges));
+            final Matcher matcher = new Matcher();
+            designPatterns.forEach(dp -> matcher.match(dp, system, maxMissingEdges));
 
         } catch (Throwable t) {
             // Acknowledge the user of the unrecoverable error situation

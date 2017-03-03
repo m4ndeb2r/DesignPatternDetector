@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests the {@link DesignPattern} class for the BaBrahem-example in Ed van Doorn's article "Design Patterns -
+ * Tests the {@link Matcher} class for the BaBrahem-example in Ed van Doorn's article "Design Patterns -
  * Supporting design process by automatically detecting design patterns and giving some feedback". See: Van Doorn
  * (2016), page 22/23.
  *
@@ -14,6 +14,7 @@ import org.junit.Test;
 public class BaBrahemMatchTest {
 
     private SystemUnderConsideration system;
+    private Matcher matcher;
 
     /**
      * Initialises the test(s).
@@ -21,30 +22,31 @@ public class BaBrahemMatchTest {
     @Before
     public void setUp() {
         system = createBaBrahemExample();
+        matcher = new Matcher();
     }
 
     /**
-     * Tests de {@link DesignPattern#match(SystemUnderConsideration, int)} method. We have set up a simple "System under
-     * consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the prototype
-     * pattern is detected.
+     * Tests de {@link Matcher#match(DesignPattern, SystemUnderConsideration, int)} method. We have set up a simple
+     * "System under consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if
+     * the prototype pattern is detected.
      * <p>
      * TODO: currently this test is always successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectPrototype() {
-        TestHelper.createPrototypePattern().match(createBaBrahemExample(), 0);
+        matcher.match(TestHelper.createPrototypePattern(), createBaBrahemExample(), 0);
     }
 
     /**
-     * Tests de {@link DesignPattern#match(SystemUnderConsideration, int)} method. We have set up a simple "System under
-     * consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the bridge
-     * pattern is detected.
+     * Tests de {@link Matcher#match(DesignPattern, SystemUnderConsideration, int)} method. We have set up a simple
+     * "System under consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the
+     * bridge pattern is detected.
      * <p>
      * TODO: currently this test is always successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectBridge() {
-        createBridgePattern().match(createBaBrahemExample(), 1);
+        matcher.match(createBridgePattern(), createBaBrahemExample(), 1);
     }
 
     private SystemUnderConsideration createBaBrahemExample() {
