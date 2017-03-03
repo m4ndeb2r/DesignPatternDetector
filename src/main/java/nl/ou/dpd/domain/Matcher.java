@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A {@link Matcher} matches a {@link DesignPattern} and a {@link SystemUnderConsideration}, and tries to detect
@@ -50,10 +52,7 @@ public class Matcher {
         // For a particular edge (fourtuple.get(startIndex) in the design pattern
         // try to find the corresponding edge(s) in system under consideration.
 
-        //int nNotMatchable;
-        boolean found;
-
-        if (startIndex >= pattern.getFourTuples().size()) {
+        if (startIndex >= pattern.getEdges().size()) {
             if (maxNotMatchable >= 0) {
                 // This is an acceptable solution.
                 if (solutions.isUniq(matchedClasses.getBoundedSortedKeySet())) {
@@ -70,49 +69,37 @@ public class Matcher {
                 return true;
             }
 
+            // Should not occur. The search should be stopped before.
             LOGGER.warn("Unexpected situation in DesignPattern#recursiveMatch(). " +
                     "Value of maxNotMatchable = " + maxNotMatchable);
-
-            // Should not occur. The search should be stopped before.
-
             return false;
         }
 
-        DesignPatternEdge dpEdge = pattern.getFourTuples().get(startIndex); // improves readability
-
-        found = false; // makes compiler happy;;
+        final Edge patternEdge = pattern.getEdges().get(startIndex);
+        boolean found = false;
 
         // For this (startIndex) edge in DP, find matching edges in SE
-        for (int j = 0; j < system.getFourTuples().size(); j++) {
-            // For all edges in SE
+        for (int j = 0; j < system.getEdges().size(); j++) {
 
-            SystemUnderConsiderationEdge sysEdge = system.getFourTuples().get(j);
-            // improves readablity
+            final Edge systemEdge = system.getEdges().get(j);
+            final MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
+            final List<Integer> extraMatched = new ArrayList<Integer>();
 
-            MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
-            ArrayList<Integer> extraMatched = new ArrayList<Integer>();
+            if (!systemEdge.isLocked() && matchedClasses.canMatch(systemEdge, patternEdge)) {
 
-            if (!sysEdge.isLocked() && matchedClasses.canMatch(sysEdge, dpEdge)) {
+                // Make match in copyMatchedClasses, and lock the matched edges to prevent them from being matched twice
+                copyMatchedClasses.makeMatch(systemEdge, patternEdge);
+                lockEdges(patternEdge, systemEdge);
 
-                // Make match in matched classes
-                copyMatchedClasses.makeMatch(sysEdge, dpEdge);
-
-                // Lock edges to prevent them from being matched twice
-                dpEdge.lock();
-                sysEdge.lock();
-
-                if (dpEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
-                    int k;
-
+                if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
                     // There may be more edges of se that contain an inheritance to the same parent and
                     // have unmatched children
-                    for (k = j + 1; k < system.getFourTuples().size(); k++) {
-                        SystemUnderConsiderationEdge skEdge = system.getFourTuples().get(k);
-                        // for readablity;
+                    for (int k = j + 1; k < system.getEdges().size(); k++) {
+                        final Edge skEdge = system.getEdges().get(k);
                         if (!skEdge.isLocked()
-                                && skEdge.getClass2().equals(sysEdge.getClass2())
-                                && matchedClasses.canMatch(skEdge, dpEdge)) {
-                            copyMatchedClasses.makeMatch(skEdge, dpEdge);
+                                && skEdge.getClass2().equals(systemEdge.getClass2())
+                                && matchedClasses.canMatch(skEdge, patternEdge)) {
+                            copyMatchedClasses.makeMatch(skEdge, patternEdge);
                             extraMatched.add(new Integer(k));
                             skEdge.lock();
                         }
@@ -124,26 +111,23 @@ public class Matcher {
                         startIndex + 1, copyMatchedClasses);
                 found = found || foundRecursively;
 
-                // Reset match setting in dp en sys and multiple matched edges
-                dpEdge.unlock();
-                sysEdge.unlock();
+                // Unlock all locked edges, including the multiple inherited ones
+                unlockEdges(patternEdge, systemEdge);
                 for (Integer getal : extraMatched) {
-                    system.getFourTuples().get(getal.intValue()).unlock();
+                    system.getEdges().get(getal.intValue()).unlock();
                 }
 
                 if (found && extraMatched.size() > 0) {
-                    // In case of inheritance with multiple childs
-                    // all matching  edges has been found.
+                    // In case of inheritance with multiple children, all matching edges has been found.
                     // Therefore searching for more edges may be stopped.
-
-                    j = system.getFourTuples().size();
+                    j = system.getEdges().size();
                 }
             }
         }
 
         if (!found) {
 
-            // is the number of not matched edges acceptable?
+            // Is the number of not matched edges acceptable? Can we proceed recursively?
             if (--maxNotMatchable >= 0) {
                 return recursiveMatch(pattern, system, maxNotMatchable,
                         startIndex + 1, matchedClasses);
@@ -152,7 +136,7 @@ public class Matcher {
             return false;
         }
 
-        return found; //  == true !!
+        return found; // == true !!
     }
 
     /**
@@ -163,7 +147,15 @@ public class Matcher {
      */
     private MatchedClasses prepareMatchedClasses(SystemUnderConsideration system) {
         MatchedClasses matchedClasses = new MatchedClasses();
-        system.getFourTuples().forEach(edge -> matchedClasses.prepareMatch(edge));
+        system.getEdges().forEach(edge -> matchedClasses.prepareMatch(edge));
         return matchedClasses;
+    }
+
+    private void lockEdges(Edge... edges) {
+        Arrays.asList(edges).forEach(edge -> edge.lock());
+    }
+
+    private void unlockEdges(Edge... edges) {
+        Arrays.asList(edges).forEach(edge -> edge.unlock());
     }
 }

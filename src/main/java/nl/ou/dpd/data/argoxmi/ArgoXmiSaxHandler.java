@@ -40,33 +40,29 @@ public class ArgoXmiSaxHandler extends DefaultHandler implements Constants {
         }
 
         switch (qName) {
-            case ABSTRACTION_TAG: {
+            case ABSTRACTION_TAG:
                 handler = new AbstractionElement();
                 break;
-            }
 
             case CLASS_TAG:
-            case INTERFACE_TAG: {
+            case INTERFACE_TAG:
                 final ClassElement cel = new ClassElement();
                 ArgoXMIParser.classElements.put(attributes.getValue(ID), cel);
                 handler = cel;
                 cel.startElement(qName, attributes);
                 break;
-            }
 
-            case GENERALIZATION_TAG: {
+            case GENERALIZATION_TAG:
                 handler = new GeneralizationElement();
                 break;
-            }
 
-            case ASSOCIATION_TAG: {
+            case ASSOCIATION_TAG:
                 handler = new AssociationElement();
                 break;
-            }
 
-            default: {
+            default:
                 break;
-            }
+
         }
     }
 

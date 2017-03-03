@@ -63,7 +63,7 @@ public class SolutionsTest {
     private SortedSet<Clazz> createClasses(String... names) {
         SortedSet<Clazz> set = new TreeSet<>();
         for (String name : names) {
-            set.add(new DesignPatternClass(name));
+            set.add(new Clazz(name));
         }
         return set;
     }

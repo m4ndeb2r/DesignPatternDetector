@@ -57,10 +57,11 @@ public class MatchedClasses {
     }
 
     /**
-     * TODO...
+     * Determines whether a {@link Clazz}, specified by {@code key}, is matched with an empty class (or, in other words,
+     * is not yet connected to another {@link Clazz}.
      *
-     * @param key
-     * @return
+     * @param key the {@link Clazz} to lookup and find a mathed {@link Clazz} for.
+     * @return {@code true} when {@code key}s matched {@link Clazz} is {@link Clazz#EMPTY_CLASS}.
      */
     boolean isEmpty(Clazz key) {
         return classes.get(key).equals(Clazz.EMPTY_CLASS);
@@ -136,14 +137,14 @@ public class MatchedClasses {
     }
 
     /**
-     * Returns whether there is a match between this {@link SystemUnderConsiderationEdge} and the specified
-     * {@link DesignPatternEdge}.
+     * Returns whether the specified {@link Edge}s can be matched.
+     * TODO: explain this is bit more extensively
      *
      * @param systemEdge  the "system under consideration" edge
      * @param patternEdge the design pattern edge
      * @return {@code true} if a match can be made, or {@code false} otherwise.
      */
-    boolean canMatch(SystemUnderConsiderationEdge systemEdge, DesignPatternEdge patternEdge) {
+    boolean canMatch(Edge systemEdge, Edge patternEdge) {
         if (patternEdge.getTypeRelation() != systemEdge.getTypeRelation()) {
             if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI
                     && systemEdge.getTypeRelation() == EdgeType.INHERITANCE)
@@ -189,15 +190,15 @@ public class MatchedClasses {
     }
 
     /**
-     * Marks two edges (a {@link SystemUnderConsiderationEdge} and a {@link DesignPatternEdge}) as matched. This
-     * happens when a design pattern is detected in the "system under consideration", and must be carried out for all
-     * the edges in the pattern and all the involved edges in the "system under consideration". Both edges are also
-     * locked to prevent them form being matched again (no bigamy allowed here ...)
+     * Marks two {@link Edge}s as matched. This happens when a design pattern is detected in the "system under
+     * consideration", and must be carried out for all the edges in the pattern and all the involved edges in the
+     * "system under consideration". Both edges are also locked to prevent them form being matched again (no bigamy
+     * allowed here ...)
      *
      * @param systemEdge  the edge for the "system under consideration" to match.
      * @param patternEdge the edge from the design pattern to match.
      */
-    void makeMatch(SystemUnderConsiderationEdge systemEdge, DesignPatternEdge patternEdge) {
+    void makeMatch(Edge systemEdge, Edge patternEdge) {
         add(systemEdge.getClass1(), patternEdge.getClass1());
         add(systemEdge.getClass2(), patternEdge.getClass2());
         systemEdge.lock();
@@ -205,12 +206,11 @@ public class MatchedClasses {
     }
 
     /**
-     * Makes an "empty" match. It merely reserve space for the specified {@link SystemUnderConsiderationEdge} to be
-     * matched later.
+     * Makes an "empty" match. It merely reserve space for the specified {@link Edge} to be matched later.
      *
      * @param systemEdge the edge to prepare space for.
      */
-    void prepareMatch(SystemUnderConsiderationEdge systemEdge) {
+    void prepareMatch(Edge systemEdge) {
         add(systemEdge.getClass1());
         add(systemEdge.getClass2());
     }

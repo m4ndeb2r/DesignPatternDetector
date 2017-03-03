@@ -1,12 +1,5 @@
 package nl.ou.dpd.data.template;
 
-/**
- * Represents a template element in the design pattern templates XML file.
- *
- * @author E.M. van Doorn
- * @author Martin de Boer
- */
-
 import nl.ou.dpd.data.parser.ElementHandler;
 import nl.ou.dpd.domain.DesignPattern;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +7,12 @@ import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+/**
+ * Represents a template element in the design pattern templates XML file.
+ *
+ * @author E.M. van Doorn
+ * @author Martin de Boer
+ */
 public final class TemplateElement implements ElementHandler {
 
     private static final Logger LOGGER = LogManager.getLogger(TemplateElement.class);
@@ -23,9 +22,9 @@ public final class TemplateElement implements ElementHandler {
     private EdgeElement edgeElement;
 
     /**
-     * Protected constructor to prevent access form outside the package.
+     * Package protected constructor to prevent access form outside the package.
      */
-    protected TemplateElement() {
+    TemplateElement() {
         handler = null;
         designPattern = null;
     }

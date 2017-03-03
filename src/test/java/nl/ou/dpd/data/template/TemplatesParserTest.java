@@ -95,7 +95,7 @@ public class TemplatesParserTest {
                         "(              R,               Q, type relatie  4, self ref: nee, locked: nee)\n" +
                         "\n";
 
-        // Print the fourTuples to the stdout
+        // Print the edges to the stdout
         parseResult.get(0).show();
 
         // Assert the output, and compare it to our expectations

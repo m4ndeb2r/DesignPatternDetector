@@ -1,10 +1,10 @@
 package nl.ou.dpd.data.argoxmi;
 
 import nl.ou.dpd.data.parser.Parser;
+import nl.ou.dpd.domain.Clazz;
+import nl.ou.dpd.domain.Edge;
 import nl.ou.dpd.domain.EdgeType;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.domain.SystemUnderConsiderationClass;
-import nl.ou.dpd.domain.SystemUnderConsiderationEdge;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * Parser for the XMI input files, containing a representation of the "system under consideration". The parsing result
- * is a {@link SystemUnderConsiderationEdge} instance.
+ * is a {@link SystemUnderConsideration} instance.
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
@@ -69,54 +69,79 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
         }
     }
 
+    /**
+     * Adds the parsed elements to a {@link SystemUnderConsideration} and returns the result.
+     *
+     * @return a populated {@link SystemUnderConsideration} instance.
+     */
     private SystemUnderConsideration getSystemUnderConsideration() {
         final SystemUnderConsideration systemUnderConsideration = new SystemUnderConsideration();
 
-        fourtuplesClassElements(systemUnderConsideration);
-        fourtuplesInheritanceElements(systemUnderConsideration);
-        fourtuplesAbstractElements(systemUnderConsideration);
-        fourtuplesAssociationElements(systemUnderConsideration);
+        addClassElements(systemUnderConsideration);
+        addInheritanceElements(systemUnderConsideration);
+        addAbstractElements(systemUnderConsideration);
+        addAssociationElements(systemUnderConsideration);
 
         return systemUnderConsideration;
     }
 
-    private void fourtuplesClassElements(SystemUnderConsideration system) {
+    /**
+     * Adds class elements to the specified {@link SystemUnderConsideration}.
+     *
+     * @param system the {@link SystemUnderConsideration} to add the class elements to.
+     */
+    private void addClassElements(SystemUnderConsideration system) {
         for (String key : classElements.keySet()) {
             final List<String> dependencies = classElements.get(key).getDependencies();
             if (dependencies != null) {
                 for (String dep : dependencies) {
                     final String name = classElements.get(key).getName();
-                    final SystemUnderConsiderationClass class1 = new SystemUnderConsiderationClass(name);
-                    final SystemUnderConsiderationClass class2 = new SystemUnderConsiderationClass(dep);
-                    system.add(new SystemUnderConsiderationEdge(class1, class2, EdgeType.DEPENDENCY));
+                    final Clazz class1 = new Clazz(name);
+                    final Clazz class2 = new Clazz(dep);
+                    system.add(new Edge(class1, class2, EdgeType.DEPENDENCY));
                 }
             }
         }
     }
 
-    private void fourtuplesInheritanceElements(SystemUnderConsideration system) {
+    /**
+     * Adds inheritance elements to the specified {@link SystemUnderConsideration}.
+     *
+     * @param system the {@link SystemUnderConsideration} to add the inheritance elements to.
+     */
+    private void addInheritanceElements(SystemUnderConsideration system) {
         for (String key : inheritanceElements.keySet()) {
             final String name1 = ArgoXMIParser.classElements.get(key).getName();
             final String name2 = ArgoXMIParser.classElements.get(inheritanceElements.get(key)).getName();
-            final SystemUnderConsiderationClass class1 = new SystemUnderConsiderationClass(name1);
-            final SystemUnderConsiderationClass class2 = new SystemUnderConsiderationClass(name2);
-            system.add(new SystemUnderConsiderationEdge(class1, class2, EdgeType.INHERITANCE));
+            final Clazz class1 = new Clazz(name1);
+            final Clazz class2 = new Clazz(name2);
+            system.add(new Edge(class1, class2, EdgeType.INHERITANCE));
         }
     }
 
-    private void fourtuplesAbstractElements(SystemUnderConsideration system) {
+    /**
+     * Adds abstract elements to the specified {@link SystemUnderConsideration}.
+     *
+     * @param system the {@link SystemUnderConsideration} to add the inheritance elements to.
+     */
+    private void addAbstractElements(SystemUnderConsideration system) {
         for (AbstractionElement elem : abstractElements) {
             final String name1 = ArgoXMIParser.classElements.get(elem.getImplementer()).getName();
             final String name2 = ArgoXMIParser.classElements.get(elem.getSuper()).getName();
-            final SystemUnderConsiderationClass class1 = new SystemUnderConsiderationClass(name1);
-            final SystemUnderConsiderationClass class2 = new SystemUnderConsiderationClass(name2);
-            system.add(new SystemUnderConsiderationEdge(class1, class2, EdgeType.INHERITANCE));
+            final Clazz class1 = new Clazz(name1);
+            final Clazz class2 = new Clazz(name2);
+            system.add(new Edge(class1, class2, EdgeType.INHERITANCE));
         }
     }
 
-    private void fourtuplesAssociationElements(SystemUnderConsideration system) {
+    /**
+     * Adds association elements to the specified {@link SystemUnderConsideration}.
+     *
+     * @param system the {@link SystemUnderConsideration} to add the association elements to.
+     */
+    private void addAssociationElements(SystemUnderConsideration system) {
         for (AssociationElement elem : associationElements) {
-            system.add(elem.getSystemUnderConsiderationEdge());
+            system.add(elem.getEdge());
         }
     }
 }

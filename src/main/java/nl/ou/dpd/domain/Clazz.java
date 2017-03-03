@@ -3,25 +3,26 @@ package nl.ou.dpd.domain;
 import java.util.Objects;
 
 /**
- * Represents a class or interface in a design pattern or a system under consideration.
+ * Represents a class or interface in a design pattern or a "system under consideration". A {@link Clazz} is a
+ * {@link Comparable} because it must be possible to add instances to a sorted set.
  *
  * @author Martin de Boer
  */
-public abstract class Clazz implements Comparable<Clazz> {
+public class Clazz implements Comparable<Clazz> {
 
     /**
-     * An "empty" {@link Clazz}
+     * An "empty" {@link Clazz}.
      */
-    public static final Clazz EMPTY_CLASS = new EmptyClazz();
+    public static final Clazz EMPTY_CLASS = new Clazz("");
 
     private final String name;
 
     /**
-     * Constructor with protected access, so only subclasses can access it.
+     * Constructs a {@link Class} instance with the specified {@code name}.
      *
      * @param name the classname of this {@link Clazz}
      */
-    protected Clazz(String name) {
+    public Clazz(String name) {
         this.name = name;
     }
 
@@ -67,16 +68,4 @@ public abstract class Clazz implements Comparable<Clazz> {
         return this.getName().compareTo(other.getName());
     }
 
-    /**
-     * An empty {@link Clazz}.
-     */
-    private static class EmptyClazz extends Clazz {
-
-        /**
-         * Constructs a {@link Clazz} with an empty name.
-         */
-        EmptyClazz() {
-            super("");
-        }
-    }
 }

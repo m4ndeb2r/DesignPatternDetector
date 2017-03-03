@@ -6,22 +6,15 @@ package nl.ou.dpd.domain;
  *
  * @author Martin de Boer
  */
-public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsiderationEdge, SystemUnderConsiderationEdgeFactory> {
+public class SystemUnderConsideration extends Edges {
 
     /**
-     * Constructs a new {@link SystemUnderConsideration} instance.
-     */
-    public SystemUnderConsideration() {
-        super(new SystemUnderConsiderationEdgeFactory());
-    }
-
-    /**
-     * Shows all tuples in this system design.
+     * Shows all edges in this system design.
      *
      * @deprecated All show methods will be removed. No more printing to System.out soon.
      */
     public void show() {
-        for (SystemUnderConsiderationEdge edge : getFourTuples()) {
+        for (Edge edge : getEdges()) {
             edge.show();
         }
         System.out.println();
@@ -36,7 +29,7 @@ public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsider
     public void showSupplementaryEdges(MatchedClasses matchedClasses) {
 
         boolean found = false;
-        for (SystemUnderConsiderationEdge edge : this.getFourTuples()) {
+        for (Edge edge : this.getEdges()) {
             if (isEdgeSupplementary(matchedClasses, edge)) {
                 if (!found) {
                     System.out.println("Edges which do not belong to this design pattern:");
@@ -51,7 +44,7 @@ public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsider
         }
     }
 
-    private boolean isEdgeSupplementary(MatchedClasses matchedClasses, SystemUnderConsiderationEdge edge) {
+    private boolean isEdgeSupplementary(MatchedClasses matchedClasses, Edge edge) {
         return matchedClasses.keyIsBounded(edge.getClass1())
                 && matchedClasses.keyIsBounded(edge.getClass2())
                 && !edge.isLocked();

@@ -51,11 +51,11 @@ public class BaBrahemMatchTest {
 
     private SystemUnderConsideration createBaBrahemExample() {
         final SystemUnderConsideration system = new SystemUnderConsideration();
-        system.add(TestHelper.createSystemUnderConsiderationEdge("A", "B", EdgeType.ASSOCIATION_DIRECTED));
-        system.add(TestHelper.createSystemUnderConsiderationEdge("A", "C", EdgeType.ASSOCIATION_DIRECTED));
-        system.add(TestHelper.createSystemUnderConsiderationEdge("C", "B", EdgeType.ASSOCIATION_DIRECTED));
-        system.add(TestHelper.createSystemUnderConsiderationEdge("D", "B", EdgeType.INHERITANCE));
-        system.add(TestHelper.createSystemUnderConsiderationEdge("E", "C", EdgeType.INHERITANCE));
+        system.add(TestHelper.createEdge("A", "B", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(TestHelper.createEdge("A", "C", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(TestHelper.createEdge("C", "B", EdgeType.ASSOCIATION_DIRECTED));
+        system.add(TestHelper.createEdge("D", "B", EdgeType.INHERITANCE));
+        system.add(TestHelper.createEdge("E", "C", EdgeType.INHERITANCE));
         return system;
     }
 
@@ -68,15 +68,15 @@ public class BaBrahemMatchTest {
      * by GoF. Would we have used that version here (the BaBrahem example used by Van Doorn) we would get a different
      * result: no match.
      *
-     * @return a {@link FourTupleArray} representing a bridge pattern, as used by Ed van Doorn in his 2016 article,
+     * @return a {@link Edges} representing a bridge pattern, as used by Ed van Doorn in his 2016 article,
      * page 23.
      */
     private DesignPattern createBridgePattern() {
         final DesignPattern bridge = new DesignPattern("Bridge");
-        bridge.add(TestHelper.createDesignPatternEdge("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
-        bridge.add(TestHelper.createDesignPatternEdge("Implementor", "Abstraction", EdgeType.AGGREGATE));
-        bridge.add(TestHelper.createDesignPatternEdge("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE));
-        bridge.add(TestHelper.createDesignPatternEdge("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE));
+        bridge.add(TestHelper.createEdge("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
+        bridge.add(TestHelper.createEdge("Implementor", "Abstraction", EdgeType.AGGREGATE));
+        bridge.add(TestHelper.createEdge("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE));
+        bridge.add(TestHelper.createEdge("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE));
         return bridge;
     }
 

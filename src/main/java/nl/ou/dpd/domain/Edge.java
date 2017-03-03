@@ -1,29 +1,31 @@
 package nl.ou.dpd.domain;
 
 /**
- * A {@link FourTuple} represents an edge in a {@link DesignPattern} or a {@link SystemUnderConsideration}.
+ * A {@link Edge} represents an edge in a {@link DesignPattern} or a {@link SystemUnderConsideration}.
  * <p>
- * If a FourTuple (A, B, type) represents a bi-directional association, a FourTuple (B, A, type) will be made. This
- * second FourTuple will have attribute virtual = true. FourTuples with virtual == true will not be shown.
+ * If an Edge (A, B, type) represents a bi-directional association, an Edge (B, A, type) will also be made. This
+ * second Edge will have attribute virtual = true. Edges with virtual == true will not be shown (hidden).
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
  */
 
-public abstract class FourTuple {
+public class Edge {
 
     private Clazz classInterface1, classInterface2;
     private EdgeType typeRelation;
     private boolean selfRef, locked, virtual;
 
     /**
-     * This constructor has protected access because it is only available within subclasses.
+     * Constructs an instance of a {@link Edge} with the specified class names and edge type. The classes
+     * represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type represents
+     * the relation type between the classes.
      *
      * @param cl1  the "left" class or interface in the relation
      * @param cl2  the "right" class or interface in the relation
      * @param type the type of relation
      */
-    protected FourTuple(Clazz cl1, Clazz cl2, EdgeType type) {
+    public Edge(Clazz cl1, Clazz cl2, EdgeType type) {
         classInterface1 = cl1;
         classInterface2 = cl2;
         typeRelation = type;
@@ -34,17 +36,17 @@ public abstract class FourTuple {
     }
 
     /**
-     * This constructor has protected access because it is only available within subclasses.
+     * This constructor returns a duplicate of the specified {@link Edge}.
      *
-     * @param ft a {@link FourTuple} to construct a copy of.
+     * @param edge an {@link Edge} to construct a duplicate of.
      */
-    protected FourTuple(FourTuple ft) {
-        this(ft.classInterface1, ft.classInterface2, ft.typeRelation);
-        locked = ft.locked;
+    public Edge(Edge edge) {
+        this(edge.classInterface1, edge.classInterface2, edge.typeRelation);
+        locked = edge.locked;
     }
 
     /**
-     * Creates a virtual (none visible) counterpart of a {@link FourTuple}.
+     * Creates a virtual (none-visible) counterpart of a {@link Edge}.
      */
     void makeVirtual() {
         Clazz tmp;
@@ -82,21 +84,21 @@ public abstract class FourTuple {
     }
 
     /**
-     * Determines whether the specified {@link FourTuple} has the same classes/interfaces, type of relation and
-     * self reference. In that case they are being consideren equal.
+     * Determines whether the specified {@link Edge} has the same classes/interfaces, type of relation and
+     * self reference. In that case they are being considered equal.
      *
-     * @param ft the {@link FourTuple} to compare {@code this} with
-     * @return {@code true} if {@code this} equals {@code ft}, {@code false} otherwise
+     * @param edge the {@link Edge} to compare {@code this} with
+     * @return {@code true} if {@code this} equals {@code edge}, {@code false} otherwise
      */
-    boolean equals(FourTuple ft) {
-        return ft.getClass1().equals(classInterface1)
-                && ft.getClass2().equals(classInterface2)
-                && ft.getTypeRelation() == typeRelation
-                && ft.getSelfRef() == selfRef;
+    boolean equals(Edge edge) {
+        return edge.getClass1().equals(classInterface1)
+                && edge.getClass2().equals(classInterface2)
+                && edge.getTypeRelation() == typeRelation
+                && edge.getSelfRef() == selfRef;
     }
 
     /**
-     * Locks a {@link FourTuple} to prevent it from being matched.
+     * Locks a {@link Edge} to prevent it from being matched (again).
      *
      * @return {@code true} if the lock succeeded, or {@code false} otherwise.
      */
@@ -106,7 +108,7 @@ public abstract class FourTuple {
     }
 
     /**
-     * Unlocks a {@link FourTuple} so it may be matched again.
+     * Unlocks a {@link Edge} so it may be matched again.
      *
      * @return {@code true} if unlocking succeeded, or {@code false} otherwise.
      */
@@ -116,7 +118,7 @@ public abstract class FourTuple {
     }
 
     /**
-     * Returns whether or not this {@link FourTuple} is locked.
+     * Returns whether or not this {@link Edge} is locked.
      *
      * @return {@code true} when it is locked, or {@code false} if it is not.
      */

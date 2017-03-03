@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
  * @author E.M. van Doorn
  */
 public interface ElementHandler {
+
     /**
      * Handles a start tag of an XML element.
      *

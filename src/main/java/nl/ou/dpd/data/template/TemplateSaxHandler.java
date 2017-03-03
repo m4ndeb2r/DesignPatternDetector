@@ -27,9 +27,9 @@ public final class TemplateSaxHandler extends DefaultHandler {
     private TemplateElement templateElement;
 
     /**
-     * Protected constructor to prevent access form outside the package.
+     * Package protected constructor to prevent access form outside the package.
      */
-    protected TemplateSaxHandler() {
+    TemplateSaxHandler() {
         handler = null;
         templates = new ArrayList();
     }
@@ -88,7 +88,7 @@ public final class TemplateSaxHandler extends DefaultHandler {
         }
     }
 
-    protected List<DesignPattern> getTemplates() {
+    List<DesignPattern> getTemplates() {
         return templates;
     }
 }
