@@ -27,6 +27,11 @@ public class ArgoXMIParserTest {
     private static final String INVALID_XMI = "/invalid.xmi";
     // A test file containing the Ba Brahem "system under consideration" example.
     private static final String BA_BRAHEM_TEST_XMI = "/Ba_Brahem.xmi";
+
+    // Test files containing XMI exports of strategy UMLs.
+    private static final String STRATEGY_XMI = "/Strategy.xmi";
+    private static final String ABSTRACT_FACTORY_XMI = "/AbstractFactory.xmi";
+
     /**
      * A rule to capture the output written to System.out.
      */
@@ -109,7 +114,7 @@ public class ArgoXMIParserTest {
     public void testAbstractFactoryXmiParse() {
         final SystemUnderConsideration system = new SystemUnderConsideration();
         final ArgoXMIParser argoXMIParser = new ArgoXMIParser();
-        final String path = getPath("/AbstractFactory.xmi");
+        final String path = getPath(ABSTRACT_FACTORY_XMI);
 
         final String expectedOutput =
                 "(      ConcFact1,          Prod1A, type relatie  5, self ref: nee, matched: nee)\n" +
@@ -146,9 +151,9 @@ public class ArgoXMIParserTest {
     public void testStrategyXmiParse() {
         final SystemUnderConsideration system = new SystemUnderConsideration();
         final ArgoXMIParser argoXMIParser = new ArgoXMIParser();
-        final String path = getPath("/Strategy.xmi");
+        final String path = getPath(STRATEGY_XMI);
 
-        final String expectedOutput = "" +
+        final String expectedOutput =
                 "(    ConcrStratB,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
                 "(    ConcrStratC,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
                 "(    ConcrStratA,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
@@ -161,9 +166,6 @@ public class ArgoXMIParserTest {
         // Assert the output, and compare it to our expectations
         assertThat(systemOutRule.getLog(), is(expectedOutput));
     }
-
-
-
 
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();

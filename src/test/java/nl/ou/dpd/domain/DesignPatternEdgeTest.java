@@ -1,5 +1,6 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,17 +22,17 @@ public class DesignPatternEdgeTest {
      */
     @Test
     public void testEquals() {
-        DesignPatternEdge edge1 = new DesignPatternEdge("class1", "class2", EdgeType.DEPENDENCY);
+        DesignPatternEdge edge1 = TestHelper.createDesignPatternEdge("class1", "class2", EdgeType.DEPENDENCY);
         DesignPatternEdge edge2 = new DesignPatternEdge(edge1);
         assertThat(edge1.equals(edge2), is(true));
 
-        DesignPatternEdge edge3 = new DesignPatternEdge("class3", "class2", EdgeType.DEPENDENCY);
+        DesignPatternEdge edge3 = TestHelper.createDesignPatternEdge("class3", "class2", EdgeType.DEPENDENCY);
         assertThat(edge1.equals(edge3), is(false));
 
-        DesignPatternEdge edge4 = new DesignPatternEdge("class1", "class3", EdgeType.DEPENDENCY);
+        DesignPatternEdge edge4 = TestHelper.createDesignPatternEdge("class1", "class3", EdgeType.DEPENDENCY);
         assertThat(edge1.equals(edge4), is(false));
 
-        DesignPatternEdge edge5 = new DesignPatternEdge("class1", "class2", EdgeType.AGGREGATE);
+        DesignPatternEdge edge5 = TestHelper.createDesignPatternEdge("class1", "class2", EdgeType.AGGREGATE);
         assertThat(edge1.equals(edge5), is(false));
     }
 

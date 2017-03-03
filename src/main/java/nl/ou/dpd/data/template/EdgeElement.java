@@ -8,6 +8,7 @@ package nl.ou.dpd.data.template;
  */
 
 import nl.ou.dpd.data.parser.ElementHandler;
+import nl.ou.dpd.domain.DesignPatternClass;
 import nl.ou.dpd.domain.DesignPatternEdge;
 import nl.ou.dpd.domain.EdgeType;
 import org.xml.sax.Attributes;
@@ -25,8 +26,9 @@ public final class EdgeElement implements ElementHandler {
      * {@inheritDoc}
      */
     public void startElement(String qName, Attributes attributes) {
-        edge = new DesignPatternEdge(attributes.getValue("node1"),
-                attributes.getValue("node2"),
+        edge = new DesignPatternEdge(
+                new DesignPatternClass(attributes.getValue("node1")),
+                new DesignPatternClass(attributes.getValue("node2")),
                 EdgeType.valueOf(attributes.getValue("type").toUpperCase()));
     }
 

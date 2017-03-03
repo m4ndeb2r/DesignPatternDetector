@@ -33,7 +33,7 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
      * @deprecated All show methods must go. No more printing to System.out very soon.
      */
     public void show() {
-        if (!name.equals(EdgeType.EMPTY.getName())) {
+        if (!name.isEmpty()) {
             System.out.println("Design pattern: " + name);
         }
 
@@ -52,19 +52,19 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
      * @return {@code true} if there was a match, of {@code false} otherwise.
      */
     public boolean match(SystemUnderConsideration system, int maxNotMatchable) {
-        // Put every classname occuring in a 4-tuple in system in MatchedNames with value = EMPTY.
-        MatchedNames matchedClassNames = fillMatchedNames(system);
+        // Put every classname occuring in a 4-tuple in system in MatchedClasses with value = EMPTY.
+        MatchedClasses matchedClasses = fillMatchedClasses(system);
 
         // Order the fourTuples
         setFourTuples(order(getFourTuples()));
 
         // Do the matching recursively
-        return recursiveMatch(system, maxNotMatchable, 0, matchedClassNames);
+        return recursiveMatch(system, maxNotMatchable, 0, matchedClasses);
     }
 
     // TODO: this method is large and hard to maintain. Refactor this (very carefully)....
     private boolean recursiveMatch(SystemUnderConsideration systemUnderConsideration, int maxNotMatchable,
-                                   int startIndex, MatchedNames matchedClassNames) {
+                                   int startIndex, MatchedClasses matchedClasses) {
         // --this-- should contain the edges of the design pattern !!
         // For a particular edge (fourtuple.get(startIndex) in the design pattern
         // try to find the corresponding edge(s) in systemUnderConsideration.
@@ -75,14 +75,14 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
         if (startIndex >= getFourTuples().size()) {
             if (maxNotMatchable >= 0) {
                 // This is an acceptable solution.
-                if (solutions.isUniq(matchedClassNames.getBoundedSortedKeySet())) {
-                    solutions.add(new Solution(matchedClassNames.getBoundedSortedKeySet()));
+                if (solutions.isUniq(matchedClasses.getBoundedSortedKeySet())) {
+                    solutions.add(new Solution(matchedClasses.getBoundedSortedKeySet()));
 
-                    matchedClassNames.show(name);
+                    matchedClasses.show(name);
 
                     // Does the detected design pattern have more edges than the design pattern?
                     // If so, show those edges.
-                    systemUnderConsideration.showSupplementaryEdges(matchedClassNames);
+                    systemUnderConsideration.showSupplementaryEdges(matchedClasses);
                     System.out.println();
                 }
 
@@ -108,14 +108,14 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
             SystemUnderConsiderationEdge sysEdge = systemUnderConsideration.getFourTuples().get(j);
             // improves readablity
 
-            MatchedNames copyMatchedClassNames = new MatchedNames(matchedClassNames);
+            MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
             ArrayList<Integer> extraMatched = new ArrayList<Integer>();
 
             if (!sysEdge.isMatched()
-                    && sysEdge.isMatch(dpEdge, matchedClassNames)) {
+                    && sysEdge.isMatch(dpEdge, matchedClasses)) {
                 boolean hulp;
 
-                dpEdge.makeMatch(sysEdge, copyMatchedClassNames);
+                dpEdge.makeMatch(sysEdge, copyMatchedClasses);
                 dpEdge.setMatched(true);
                 sysEdge.setMatched(true);
 
@@ -129,9 +129,9 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
                         SystemUnderConsiderationEdge skEdge = systemUnderConsideration.getFourTuples().get(k);
                         // for readablity;
                         if (!skEdge.isMatched()
-                                && skEdge.getClassName2().equals(sysEdge.getClassName2())
-                                && skEdge.isMatch(dpEdge, matchedClassNames)) {
-                            dpEdge.makeMatch(skEdge, copyMatchedClassNames);
+                                && skEdge.getClass2().equals(sysEdge.getClass2())
+                                && skEdge.isMatch(dpEdge, matchedClasses)) {
+                            dpEdge.makeMatch(skEdge, copyMatchedClasses);
                             extraMatched.add(new Integer(k));
                             skEdge.setMatched(true);
                         }
@@ -139,7 +139,7 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
                 }
 
                 hulp = recursiveMatch(systemUnderConsideration, maxNotMatchable,
-                        startIndex + 1, copyMatchedClassNames);
+                        startIndex + 1, copyMatchedClasses);
 
                 found = found || hulp;
 
@@ -166,7 +166,7 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
             // is the number of not matched edges acceptable?
             if (--maxNotMatchable >= 0) {
                 return recursiveMatch(systemUnderConsideration, maxNotMatchable,
-                        startIndex + 1, matchedClassNames);
+                        startIndex + 1, matchedClasses);
             }
 
             return false;
@@ -214,30 +214,30 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
     }
 
     /**
-     * Determines if two edges are connected. They are connected if one or more vertices in one have the same name as
-     * one or more vertices in the other.
+     * Determines if two edges are connected. They are connected if one or more vertices in one are equal to one or
+     * more vertices in the other.
      *
      * @param edge1 the edge to compare to {@code edge2}
      * @param edge2 the edge to compare to {@code edge1}
      * @return {@code true} if the edges are connected, or {@code false} otherwise
      */
     private boolean areEdgesConnected(DesignPatternEdge edge1, DesignPatternEdge edge2) {
-        final String v1 = edge1.getClassName1();
-        final String v2 = edge1.getClassName2();
-        final String v3 = edge2.getClassName1();
-        final String v4 = edge2.getClassName2();
+        final Clazz v1 = edge1.getClass1();
+        final Clazz v2 = edge1.getClass2();
+        final Clazz v3 = edge2.getClass1();
+        final Clazz v4 = edge2.getClass2();
         return v1.equals(v3) || v1.equals(v4) || v2.equals(v3) || v2.equals(v4);
     }
 
-    private MatchedNames fillMatchedNames(SystemUnderConsideration system) {
+    private MatchedClasses fillMatchedClasses(SystemUnderConsideration system) {
         // No classname will be matched
-        MatchedNames names = new MatchedNames();
+        MatchedClasses matchedClasses = new MatchedClasses();
 
         for (SystemUnderConsiderationEdge edge : system.getFourTuples()) {
-            names.add(edge.getClassName1());
-            names.add(edge.getClassName2());
+            matchedClasses.add(edge.getClass1());
+            matchedClasses.add(edge.getClass2());
         }
 
-        return names;
+        return matchedClasses;
     }
 }

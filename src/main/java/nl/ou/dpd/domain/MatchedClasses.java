@@ -9,34 +9,33 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
- * Contains class/interface names of the "system under consideration" mapped to class/interface names of the design
- * pattern. (sys-names --> dp-names).
+ * Contains classes/interfaces of the "system under consideration" mapped to classes/interfaces of the design
+ * pattern. (sys --> dp). Names o
  *
- * @author E.M. van Doorn
  * @author Martin de Boer
  */
 
-public class MatchedNames {
+public class MatchedClasses {
 
-    private Map<String, String> names;
+    private Map<Clazz, Clazz> classes;
 
     /**
      * TODO...
      */
-    MatchedNames() {
-        names = new HashMap();
+    MatchedClasses() {
+        classes = new HashMap<>();
     }
 
     /**
      * TODO...
      * @param nm
      */
-    MatchedNames(MatchedNames nm) {
+    MatchedClasses(MatchedClasses classes) {
         this();
 
-        Set<String> s = nm.getKeySet();
-        for (String name : s) {
-            add(name, nm.get(name));
+        Set<Clazz> sc = classes.getKeySet();
+        for (Clazz c : sc) {
+            add(c, classes.get(c));
         }
     }
 
@@ -46,14 +45,14 @@ public class MatchedNames {
     void show(String name) {
         String value;
 
-        if (!name.equals(EdgeType.EMPTY.getName())) {
+        if (!name.isEmpty()) {
             System.out.printf("Design Pattern: %s\n", name);
         }
 
-        SortedSet<String> sortedSet = getBoundedSortedKeySet();
+        SortedSet<Clazz> sortedSet = getBoundedSortedKeySet();
 
-        for (String key : sortedSet) {
-            System.out.printf("%20s --> %25s\n", key, names.get(key));
+        for (Clazz key : sortedSet) {
+            System.out.printf("%20s --> %25s\n", key.getName(), classes.get(key).getName());
         }
 
         System.out.println("------------------------");
@@ -64,8 +63,8 @@ public class MatchedNames {
      * @param key
      * @return
      */
-    boolean isEmpty(String key) {
-        return names.get(key).equals(EdgeType.EMPTY.getName());
+    boolean isEmpty(Clazz key) {
+        return classes.get(key).equals(Clazz.EMPTY_CLASS);
     }
 
     /**
@@ -74,7 +73,7 @@ public class MatchedNames {
      * @param value
      * @return
      */
-    boolean equals(String key, String value) {
+    boolean equals(Clazz key, Clazz value) {
         return get(key).equals(value);
     }
 
@@ -83,16 +82,16 @@ public class MatchedNames {
      * @param key
      * @param value
      */
-    void add(String key, String value) {
-        names.<String, String>put(key, value);
+    void add(Clazz key, Clazz value) {
+        classes.put(key, value);
     }
 
     /**
      * TODO...
      * @param key
      */
-    void add(String key) {
-        add(key, EdgeType.EMPTY.getName());
+    void add(Clazz key) {
+        add(key, Clazz.EMPTY_CLASS);
     }
 
     /**
@@ -100,23 +99,23 @@ public class MatchedNames {
      * @param key
      * @return
      */
-    String get(String key) {
-        return names.<String>get(key);
+    Clazz get(Clazz key) {
+        return classes.get(key);
     }
 
     /**
      * TODO...
      * @return
      */
-    Set<String> getKeySet() {
-        return names.keySet();
+    Set<Clazz> getKeySet() {
+        return classes.keySet();
     }
 
     /**
      * TODO...
      * @return
      */
-    SortedSet<String> getBoundedSortedKeySet() {
+    SortedSet<Clazz> getBoundedSortedKeySet() {
         return new TreeSet(getKeySet()
                 .stream()
                 .filter(key -> keyIsBounded(key))
@@ -128,8 +127,8 @@ public class MatchedNames {
      * @param key
      * @return
      */
-    boolean keyIsBounded(String key) {
-        return !names.<String>get(key).equals(EdgeType.EMPTY.getName());
+    boolean keyIsBounded(Clazz key) {
+        return !classes.get(key).equals(Clazz.EMPTY_CLASS);
     }
 
     /**
@@ -137,11 +136,11 @@ public class MatchedNames {
      * @param v
      * @return
      */
-    boolean valueIsBounded(String v) {
-        final Collection<String> verz = names.values();
+    boolean valueIsBounded(Clazz v) {
+        final Collection<Clazz> verz = classes.values();
 
-        for (String s : verz) {
-            if (s.equals(v)) {
+        for (Clazz dpc : verz) {
+            if (dpc.equals(v)) {
                 return true;
             }
         }

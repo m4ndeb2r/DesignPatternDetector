@@ -12,18 +12,18 @@ package nl.ou.dpd.domain;
 
 public abstract class FourTuple {
 
-    private String classInterface1, classInterface2;
+    private Clazz classInterface1, classInterface2;
     private EdgeType typeRelation;
     private boolean selfRef, matched, virtual;
 
     /**
      * This constructor has protected access because it is only available within subclasses.
      *
-     * @param cl1
-     * @param cl2
-     * @param type
+     * @param cl1 the "left" class or interface in the relation
+     * @param cl2 the "right" class or interface in the relation
+     * @param type the type of relation
      */
-    protected FourTuple(String cl1, String cl2, EdgeType type) {
+    protected FourTuple(Clazz cl1, Clazz cl2, EdgeType type) {
         classInterface1 = cl1;
         classInterface2 = cl2;
         typeRelation = type;
@@ -47,7 +47,7 @@ public abstract class FourTuple {
      * Creates a virtual (none visible) counterpart of a {@link FourTuple}.
      */
     void makeVirtual() {
-        String tmp;
+        Clazz tmp;
 
         tmp = classInterface1;
         classInterface1 = classInterface2;
@@ -61,10 +61,13 @@ public abstract class FourTuple {
      */
     void show() {
         if (!virtual) {
-            final String sr = selfRef ? "ja" : "nee";
-            final String ma = matched ? "ja" : "nee";
-            System.out.printf("(%15s, %15s, type relatie %2d, self ref: %3s, matched: %3s)\n", classInterface1,
-                    classInterface2, typeRelation.getCode(), sr, ma);
+            System.out.printf(
+                    "(%15s, %15s, type relatie %2d, self ref: %3s, matched: %3s)\n",
+                    classInterface1.getName(),
+                    classInterface2.getName(),
+                    typeRelation.getCode(),
+                    selfRef ? "ja" : "nee",
+                    matched ? "ja" : "nee");
         }
 
     }
@@ -74,13 +77,13 @@ public abstract class FourTuple {
      */
     void showSimple() {
         if (!virtual) {
-            System.out.println(classInterface1 + " --> " + classInterface2);
+            System.out.println(classInterface1.getName() + " --> " + classInterface2.getName());
         }
     }
 
     boolean equals(FourTuple ft) {
-        return ft.getClassName1().equals(classInterface1)
-                && ft.getClassName2().equals(classInterface2)
+        return ft.getClass1().equals(classInterface1)
+                && ft.getClass2().equals(classInterface2)
                 && ft.getTypeRelation() == typeRelation
                 && ft.getSelfRef() == selfRef;
     }
@@ -93,11 +96,11 @@ public abstract class FourTuple {
         matched = value;
     }
 
-    String getClassName1() {
+    Clazz getClass1() {
         return classInterface1;
     }
 
-    String getClassName2() {
+    Clazz getClass2() {
         return classInterface2;
     }
 

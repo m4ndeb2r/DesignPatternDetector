@@ -26,14 +26,14 @@ public class SolutionsTest {
 
     @Before
     public void initSolution() {
-        solution1a = new Solution(createNames("A", "B", "C"));
-        solution1b = new Solution(createNames("A", "B", "D"));
+        solution1a = new Solution(createClasses("A", "B", "C"));
+        solution1b = new Solution(createClasses("A", "B", "D"));
         solutions1 = new Solutions();
         solutions1.add(solution1a);
         solutions1.add(solution1b);
 
-        solution2a = new Solution(createNames("A", "B", "X"));
-        solution2b = new Solution(createNames("A", "C", "X"));
+        solution2a = new Solution(createClasses("A", "B", "X"));
+        solution2b = new Solution(createClasses("A", "C", "X"));
         solutions2 = new Solutions();
         solutions2.add(solution2a);
         solutions2.add(solution2b);
@@ -41,29 +41,29 @@ public class SolutionsTest {
 
     @Test
     public void testIsUnique() {
-        assertThat(solutions1.isUniq(createNames("A", "B", "C")), is(false));
-        assertThat(solutions1.isUniq(createNames("A", "C", "B")), is(false));
-        assertThat(solutions1.isUniq(createNames("C", "B", "A")), is(false));
-        assertThat(solutions1.isUniq(createNames("C", "A", "B")), is(false));
-        assertThat(solutions1.isUniq(createNames("F", "B", "C")), is(true));
-        assertThat(solutions1.isUniq(createNames("F", "C", "B")), is(true));
-        assertThat(solutions1.isUniq(createNames("C", "B", "F")), is(true));
-        assertThat(solutions1.isUniq(createNames("C", "F", "B")), is(true));
+        assertThat(solutions1.isUniq(createClasses("A", "B", "C")), is(false));
+        assertThat(solutions1.isUniq(createClasses("A", "C", "B")), is(false));
+        assertThat(solutions1.isUniq(createClasses("C", "B", "A")), is(false));
+        assertThat(solutions1.isUniq(createClasses("C", "A", "B")), is(false));
+        assertThat(solutions1.isUniq(createClasses("F", "B", "C")), is(true));
+        assertThat(solutions1.isUniq(createClasses("F", "C", "B")), is(true));
+        assertThat(solutions1.isUniq(createClasses("C", "B", "F")), is(true));
+        assertThat(solutions1.isUniq(createClasses("C", "F", "B")), is(true));
 
-        assertThat(solutions2.isUniq(createNames("A", "B", "X")), is(false));
-        assertThat(solutions2.isUniq(createNames("A", "X", "B")), is(false));
-        assertThat(solutions2.isUniq(createNames("X", "B", "A")), is(false));
-        assertThat(solutions2.isUniq(createNames("X", "A", "B")), is(false));
-        assertThat(solutions2.isUniq(createNames("F", "B", "C")), is(true));
-        assertThat(solutions2.isUniq(createNames("F", "C", "B")), is(true));
-        assertThat(solutions2.isUniq(createNames("C", "B", "F")), is(true));
-        assertThat(solutions2.isUniq(createNames("C", "F", "B")), is(true));
+        assertThat(solutions2.isUniq(createClasses("A", "B", "X")), is(false));
+        assertThat(solutions2.isUniq(createClasses("A", "X", "B")), is(false));
+        assertThat(solutions2.isUniq(createClasses("X", "B", "A")), is(false));
+        assertThat(solutions2.isUniq(createClasses("X", "A", "B")), is(false));
+        assertThat(solutions2.isUniq(createClasses("F", "B", "C")), is(true));
+        assertThat(solutions2.isUniq(createClasses("F", "C", "B")), is(true));
+        assertThat(solutions2.isUniq(createClasses("C", "B", "F")), is(true));
+        assertThat(solutions2.isUniq(createClasses("C", "F", "B")), is(true));
     }
 
-    private SortedSet<String> createNames(String... names) {
-        SortedSet<String> set = new TreeSet<>();
+    private SortedSet<Clazz> createClasses(String... names) {
+        SortedSet<Clazz> set = new TreeSet<>();
         for (String name : names) {
-            set.add(name);
+            set.add(new DesignPatternClass(name));
         }
         return set;
     }

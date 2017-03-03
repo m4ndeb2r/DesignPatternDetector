@@ -23,18 +23,10 @@ public class SolutionTest {
 
     @Before
     public void initSolution() {
-        solution1a = new Solution(createNames("A", "B", "C"));
-        solution1b = new Solution(createNames("A", "C", "B"));
-        solution2a = new Solution(createNames("A", "B", "X"));
-        solution2b = new Solution(createNames("A", "X", "B"));
-    }
-
-    private SortedSet<String> createNames(String... names) {
-        SortedSet<String> set = new TreeSet<>();
-        for (String name : names) {
-            set.add(name);
-        }
-        return set;
+        solution1a = new Solution(createClasses("A", "B", "C"));
+        solution1b = new Solution(createClasses("A", "C", "B"));
+        solution2a = new Solution(createClasses("A", "B", "X"));
+        solution2b = new Solution(createClasses("A", "X", "B"));
     }
 
     @Test
@@ -48,4 +40,13 @@ public class SolutionTest {
         assertThat(solution2a.isEqual(solution2a), is(true));
         assertThat(solution2a.isEqual(solution2b), is(true));
     }
+
+    private SortedSet<Clazz> createClasses(String... names) {
+        SortedSet<Clazz> set = new TreeSet<>();
+        for (String name : names) {
+            set.add(new DesignPatternClass(name));
+        }
+        return set;
+    }
+
 }

@@ -11,12 +11,15 @@ package nl.ou.dpd.domain;
  * @see SystemUnderConsiderationEdge
  * @see DesignPatternEdge
  */
-public class SystemUnderConsiderationEdgeFactory implements EdgeFactory<SystemUnderConsiderationEdge> {
+public class SystemUnderConsiderationEdgeFactory implements EdgeFactory<SystemUnderConsiderationEdge, SystemUnderConsiderationClass> {
 
     /**
      * {@inheritDoc}
      */
-    public SystemUnderConsiderationEdge create(String class1, String class2, EdgeType type) {
+    public SystemUnderConsiderationEdge create(
+            SystemUnderConsiderationClass class1,
+            SystemUnderConsiderationClass class2,
+            EdgeType type) {
         return new SystemUnderConsiderationEdge(class1, class2, type);
     }
 

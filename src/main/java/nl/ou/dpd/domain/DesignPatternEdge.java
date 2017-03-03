@@ -13,11 +13,11 @@ public class DesignPatternEdge extends FourTuple {
      * represent the vertices in the graph (when the design pattern is viewed as a graph), and the edge type represents
      * the relation type between the classes.
      *
-     * @param cl1  the name of the first class
-     * @param cl2  the name of the second class
+     * @param cl1  the "left" class in the relation
+     * @param cl2  the "right" class in the relation
      * @param type the relation type
      */
-    public DesignPatternEdge(String cl1, String cl2, EdgeType type) {
+    public DesignPatternEdge(Clazz cl1, Clazz cl2, EdgeType type) {
         super(cl1, cl2, type);
     }
 
@@ -34,14 +34,14 @@ public class DesignPatternEdge extends FourTuple {
     /**
      * Makes a match with the specified {@link SystemUnderConsiderationEdge}. When detecting design patterns in a
      * "system under consideration" their edges are matched, and the class names are stored in the specified
-     * {@link MatchedNames}.
+     * {@link MatchedClasses}.
      *
-     * @param edge         the edge in the "system under consideration" to match this {@link DesignPatternEdge} with.
-     * @param matchedNames the object to store the matching class names in.
+     * @param edge           the edge in the "system under consideration" to match this {@link DesignPatternEdge} with.
+     * @param matchedClasses the object to store the matching class names in.
      */
-    void makeMatch(SystemUnderConsiderationEdge edge, MatchedNames matchedNames) {
-        matchedNames.add(edge.getClassName1(), getClassName1());
-        matchedNames.add(edge.getClassName2(), getClassName2());
+    void makeMatch(SystemUnderConsiderationEdge edge, MatchedClasses matchedClasses) {
+        matchedClasses.add(edge.getClass1(), getClass1());
+        matchedClasses.add(edge.getClass2(), getClass2());
         setMatched(true);
         edge.setMatched(true);
     }

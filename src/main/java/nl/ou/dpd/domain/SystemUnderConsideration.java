@@ -30,14 +30,14 @@ public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsider
     /**
      * Show all edges without a corresponding edge in the design pattern.
      *
-     * @param matchedClassNames a map containing matched class names.
+     * @param matchedClasses a map containing matched classes/interfaces.
      * @deprecated All show methods will be removed. No more printing to System.out soon.
      */
-    public void showSupplementaryEdges(MatchedNames matchedClassNames) {
+    public void showSupplementaryEdges(MatchedClasses matchedClasses) {
 
         boolean found = false;
         for (SystemUnderConsiderationEdge edge : this.getFourTuples()) {
-            if (isEdgeSupplementary(matchedClassNames, edge)) {
+            if (isEdgeSupplementary(matchedClasses, edge)) {
                 if (!found) {
                     System.out.println("Edges which do not belong to this design pattern:");
                     found = true;
@@ -51,9 +51,9 @@ public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsider
         }
     }
 
-    private boolean isEdgeSupplementary(MatchedNames matchedClassNames, SystemUnderConsiderationEdge edge) {
-        return matchedClassNames.keyIsBounded(edge.getClassName1())
-                && matchedClassNames.keyIsBounded(edge.getClassName2())
+    private boolean isEdgeSupplementary(MatchedClasses matchedClasses, SystemUnderConsiderationEdge edge) {
+        return matchedClasses.keyIsBounded(edge.getClass1())
+                && matchedClasses.keyIsBounded(edge.getClass2())
                 && !edge.isMatched();
     }
 

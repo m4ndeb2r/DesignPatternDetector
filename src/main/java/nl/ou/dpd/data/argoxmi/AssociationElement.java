@@ -2,6 +2,7 @@ package nl.ou.dpd.data.argoxmi;
 
 import nl.ou.dpd.data.parser.ElementHandler;
 import nl.ou.dpd.domain.EdgeType;
+import nl.ou.dpd.domain.SystemUnderConsiderationClass;
 import nl.ou.dpd.domain.SystemUnderConsiderationEdge;
 import org.xml.sax.Attributes;
 
@@ -103,8 +104,8 @@ public final class AssociationElement implements Constants, ElementHandler {
         }
 
         return new SystemUnderConsiderationEdge(
-                ArgoXMIParser.classElements.get(leftElement).getName(),
-                ArgoXMIParser.classElements.get(rightElement).getName(),
+                new SystemUnderConsiderationClass(ArgoXMIParser.classElements.get(leftElement).getName()),
+                new SystemUnderConsiderationClass(ArgoXMIParser.classElements.get(rightElement).getName()),
                 type);
     }
 }

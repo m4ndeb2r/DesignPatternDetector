@@ -6,25 +6,25 @@ import java.util.TreeSet;
 
 /**
  * A {@link Solution} is the result of a matching process between a "system under consideration" and one design pattern.
- * If a design pattern is detected, a {@link Solution} contains the names of the classes from the "system under
- * consideration" that match that design pattern.
+ * If a design pattern is detected, a {@link Solution} contains the the classes from the "system under consideration"
+ * that match that design pattern.
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
  */
 public class Solution {
-    private SortedSet<String> solution;
+    private SortedSet<Clazz> solution;
 
     /**
-     * Constructs a {@link Solution} instance with a set of {@code names} that represent classes (or vertices in a
-     * graph). Two {@link Solutions} are considered "equal" if they posess the same names. Because the {@code names}
+     * Constructs a {@link Solution} instance with a set of {@code classes} (representing vertices in a graph). Two
+     * {@link Solutions} are considered "equal" if they posess the same classes/interfaces. Because the {@code classes}
      * are passed as a {@link SortedSet}, the class names will always be in the right order.
      *
-     * @param names a set of class names. These classes are part of a matching solution.
+     * @param classes a set of classes/interfaces. These classes are part of a matching solution.
      */
-    public Solution(Set<String> names) {
+    public Solution(Set<Clazz> classes) {
         solution = new TreeSet();
-        solution.addAll(names);
+        solution.addAll(classes);
     }
 
     /**

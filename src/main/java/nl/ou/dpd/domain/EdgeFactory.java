@@ -11,17 +11,17 @@ package nl.ou.dpd.domain;
  * @see SystemUnderConsiderationEdge
  * @see DesignPatternEdge
  */
-public interface EdgeFactory<EDGE extends FourTuple> {
+public interface EdgeFactory<EDGE extends FourTuple, CLASS extends Clazz> {
 
     /**
      * Creates a {@link EDGE} with the specified class names and edge type.
      *
-     * @param class1 the first class name (one end of the edge).
-     * @param class2 the second class name (the other end of the edge).
+     * @param class1 the first class (one end of the edge).
+     * @param class2 the second class (the other end of the edge).
      * @param type   the edge type, representing the type of relation between the classes.
      * @return a new {@link EDGE} instance.
      */
-    EDGE create(String class1, String class2, EdgeType type);
+    EDGE create(CLASS class1, CLASS class2, EdgeType type);
 
     /**
      * Creates a duplicate of an existing {@link EDGE}.

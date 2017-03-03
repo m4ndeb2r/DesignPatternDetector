@@ -18,14 +18,16 @@ public class DesignPatternEdgeFactoryTest {
     public void testCreate() {
         final DesignPatternEdgeFactory factory = new DesignPatternEdgeFactory();
 
-        final DesignPatternEdge edge = factory.create("c1", "c2", EdgeType.AGGREGATE);
-        assertThat(edge.getClassName1(), is("c1"));
-        assertThat(edge.getClassName2(), is("c2"));
+        final DesignPatternClass c1 = new DesignPatternClass("c1");
+        final DesignPatternClass c2 = new DesignPatternClass("c2");
+        final DesignPatternEdge edge = factory.create(c1, c2, EdgeType.AGGREGATE);
+        assertThat(edge.getClass1().getName(), is("c1"));
+        assertThat(edge.getClass2().getName(), is("c2"));
         assertThat(edge.getTypeRelation(), is(EdgeType.AGGREGATE));
 
         final DesignPatternEdge duplicate = factory.create(edge);
-        assertThat(duplicate.getClassName1(), is("c1"));
-        assertThat(duplicate.getClassName2(), is("c2"));
+        assertThat(duplicate.getClass1().getName(), is("c1"));
+        assertThat(duplicate.getClass2().getName(), is("c2"));
         assertThat(duplicate.getTypeRelation(), is(EdgeType.AGGREGATE));
 
         assertThat(edge == duplicate, is(false));
