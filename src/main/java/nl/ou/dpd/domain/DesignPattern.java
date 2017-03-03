@@ -58,9 +58,6 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
      * to a vertex of a preceding edge.
      * <p/>
      * Example: A->B, C->D, A->C becomes A->B, A->C, C->D.
-     *
-     * @param graph the graph to order
-     * @return the ordered graph
      */
     void order() {
         // Skip the first element. It stays where it is. Start with i = 1.

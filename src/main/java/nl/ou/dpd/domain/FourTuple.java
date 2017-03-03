@@ -19,8 +19,8 @@ public abstract class FourTuple {
     /**
      * This constructor has protected access because it is only available within subclasses.
      *
-     * @param cl1 the "left" class or interface in the relation
-     * @param cl2 the "right" class or interface in the relation
+     * @param cl1  the "left" class or interface in the relation
+     * @param cl2  the "right" class or interface in the relation
      * @param type the type of relation
      */
     protected FourTuple(Clazz cl1, Clazz cl2, EdgeType type) {
@@ -81,6 +81,13 @@ public abstract class FourTuple {
         }
     }
 
+    /**
+     * Determines whether the specified {@link FourTuple} has the same classes/interfaces, type of relation and
+     * self reference. In that case they are being consideren equal.
+     *
+     * @param ft the {@link FourTuple} to compare {@code this} with
+     * @return {@code true} if {@code this} equals {@code ft}, {@code false} otherwise
+     */
     boolean equals(FourTuple ft) {
         return ft.getClass1().equals(classInterface1)
                 && ft.getClass2().equals(classInterface2)
@@ -88,32 +95,68 @@ public abstract class FourTuple {
                 && ft.getSelfRef() == selfRef;
     }
 
+    /**
+     * Locks a {@link FourTuple} to prevent it from being matched.
+     *
+     * @return {@code true} if the lock succeeded, or {@code false} otherwise.
+     */
     boolean lock() {
         this.locked = true;
         return isLocked();
     }
 
+    /**
+     * Unlocks a {@link FourTuple} so it may be matched again.
+     *
+     * @return {@code true} if unlocking succeeded, or {@code false} otherwise.
+     */
     boolean unlock() {
         this.locked = false;
         return !isLocked();
     }
 
+    /**
+     * Returns whether or not this {@link FourTuple} is locked.
+     *
+     * @return {@code true} when it is locked, or {@code false} if it is not.
+     */
     boolean isLocked() {
         return this.locked;
     }
 
+    /**
+     * Returns the first class/interface.
+     *
+     * @return the first class/interface.
+     */
     Clazz getClass1() {
         return classInterface1;
     }
 
+    /**
+     * Returns the second class/interface.
+     *
+     * @return the second class/interface.
+     */
     Clazz getClass2() {
         return classInterface2;
     }
 
+    /**
+     * Returns the type of relation between the first and the second class/interface.
+     *
+     * @return the edge type.
+     */
     EdgeType getTypeRelation() {
         return typeRelation;
     }
 
+    /**
+     * Returns whether this edge references to itself. In that case the first and the second class/inteface are the
+     * same.
+     *
+     * @return {@code true} if this edge references itself, or {@code false} otherwise.
+     */
     boolean getSelfRef() {
         return selfRef;
     }

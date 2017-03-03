@@ -31,20 +31,4 @@ public class DesignPatternEdge extends FourTuple {
         super(edge);
     }
 
-    /**
-     * Makes a match with the specified {@link SystemUnderConsiderationEdge}. When detecting design patterns in a
-     * "system under consideration" their edges are matched, and the class names are stored in the specified
-     * {@link MatchedClasses}.
-     *
-     * @param edge           the edge in the "system under consideration" to match this {@link DesignPatternEdge} with.
-     * @param matchedClasses the object to store the matching class names in.
-     */
-    void makeMatch(SystemUnderConsiderationEdge edge, MatchedClasses matchedClasses) {
-        matchedClasses.add(edge.getClass1(), getClass1());
-        matchedClasses.add(edge.getClass2(), getClass2());
-        lock();
-        edge.lock();
-    }
-
-
 }

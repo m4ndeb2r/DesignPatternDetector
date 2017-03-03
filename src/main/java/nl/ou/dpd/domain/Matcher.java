@@ -30,7 +30,7 @@ public class Matcher {
         pattern.order();
 
         // Put every classname occuring in a 4-tuple in system in MatchedClasses with value = EMPTY.
-        MatchedClasses matchedClasses = fillMatchedClasses(system);
+        MatchedClasses matchedClasses = prepareMatchedClasses(system);
 
         // Initiliase the solutions
         solutions = new Solutions();
@@ -92,10 +92,10 @@ public class Matcher {
             MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
             ArrayList<Integer> extraMatched = new ArrayList<Integer>();
 
-            if (!sysEdge.isLocked() && sysEdge.isMatch(dpEdge, matchedClasses)) {
+            if (!sysEdge.isLocked() && matchedClasses.canMatch(sysEdge, dpEdge)) {
 
                 // Make match in matched classes
-                dpEdge.makeMatch(sysEdge, copyMatchedClasses);
+                copyMatchedClasses.makeMatch(sysEdge, dpEdge);
 
                 // Lock edges to prevent them from being matched twice
                 dpEdge.lock();
@@ -111,8 +111,8 @@ public class Matcher {
                         // for readablity;
                         if (!skEdge.isLocked()
                                 && skEdge.getClass2().equals(sysEdge.getClass2())
-                                && skEdge.isMatch(dpEdge, matchedClasses)) {
-                            dpEdge.makeMatch(skEdge, copyMatchedClasses);
+                                && matchedClasses.canMatch(skEdge, dpEdge)) {
+                            copyMatchedClasses.makeMatch(skEdge, dpEdge);
                             extraMatched.add(new Integer(k));
                             skEdge.lock();
                         }
@@ -155,15 +155,15 @@ public class Matcher {
         return found; //  == true !!
     }
 
-    private MatchedClasses fillMatchedClasses(SystemUnderConsideration system) {
-        // No classname will be matched
+    /**
+     * Prepares a {@link MatchedClasses} for the matching process, based on the "system under consideration".
+     *
+     * @param system the "system under consideration"
+     * @return the prepared {@link MatchedClasses} instance.
+     */
+    private MatchedClasses prepareMatchedClasses(SystemUnderConsideration system) {
         MatchedClasses matchedClasses = new MatchedClasses();
-
-        for (SystemUnderConsiderationEdge edge : system.getFourTuples()) {
-            matchedClasses.add(edge.getClass1());
-            matchedClasses.add(edge.getClass2());
-        }
-
+        system.getFourTuples().forEach(edge -> matchedClasses.prepareMatch(edge));
         return matchedClasses;
     }
 }

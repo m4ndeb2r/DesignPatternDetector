@@ -1,6 +1,5 @@
 package nl.ou.dpd.domain;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -82,25 +81,6 @@ public class MatchedClasses {
      * TODO...
      *
      * @param key
-     * @param value
-     */
-    void add(Clazz key, Clazz value) {
-        classes.put(key, value);
-    }
-
-    /**
-     * TODO...
-     *
-     * @param key
-     */
-    void add(Clazz key) {
-        add(key, Clazz.EMPTY_CLASS);
-    }
-
-    /**
-     * TODO...
-     *
-     * @param key
      * @return
      */
     Clazz get(Clazz key) {
@@ -154,4 +134,93 @@ public class MatchedClasses {
 
         return false;
     }
+
+    /**
+     * Returns whether there is a match between this {@link SystemUnderConsiderationEdge} and the specified
+     * {@link DesignPatternEdge}.
+     *
+     * @param systemEdge  the "system under consideration" edge
+     * @param patternEdge the design pattern edge
+     * @return {@code true} if a match can be made, or {@code false} otherwise.
+     */
+    boolean canMatch(SystemUnderConsiderationEdge systemEdge, DesignPatternEdge patternEdge) {
+        if (patternEdge.getTypeRelation() != systemEdge.getTypeRelation()) {
+            if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI
+                    && systemEdge.getTypeRelation() == EdgeType.INHERITANCE)
+                ; // break; generates a warning.
+            else {
+                return false;
+            }
+        }
+
+        if (patternEdge.getSelfRef() != systemEdge.getSelfRef()) {
+            return false;
+        }
+
+        // two empty names
+        if (this.isEmpty(systemEdge.getClass1())
+                && this.isEmpty(systemEdge.getClass2())
+                && !this.valueIsBounded(patternEdge.getClass1())
+                && !this.valueIsBounded(patternEdge.getClass2())) {
+            return true;
+        }
+
+        // first name matched, second name empty
+        if (this.equals(systemEdge.getClass1(), patternEdge.getClass1())
+                && this.isEmpty(systemEdge.getClass2())
+                && !this.valueIsBounded(patternEdge.getClass2())) {
+            return true;
+        }
+
+        // first name empty, second name matched
+        if (this.isEmpty(systemEdge.getClass1())
+                && !this.valueIsBounded(patternEdge.getClass1())
+                && this.equals(systemEdge.getClass2(), patternEdge.getClass2())) {
+            return true;
+        }
+
+        // both names are already matched.
+        if (this.equals(systemEdge.getClass1(), patternEdge.getClass1())
+                && this.equals(systemEdge.getClass2(), patternEdge.getClass2())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Marks two edges (a {@link SystemUnderConsiderationEdge} and a {@link DesignPatternEdge}) as matched. This
+     * happens when a design pattern is detected in the "system under consideration", and must be carried out for all
+     * the edges in the pattern and all the involved edges in the "system under consideration". Both edges are also
+     * locked to prevent them form being matched again (no bigamy allowed here ...)
+     *
+     * @param systemEdge  the edge for the "system under consideration" to match.
+     * @param patternEdge the edge from the design pattern to match.
+     */
+    void makeMatch(SystemUnderConsiderationEdge systemEdge, DesignPatternEdge patternEdge) {
+        add(systemEdge.getClass1(), patternEdge.getClass1());
+        add(systemEdge.getClass2(), patternEdge.getClass2());
+        systemEdge.lock();
+        patternEdge.lock();
+    }
+
+    /**
+     * Makes an "empty" match. It merely reserve space for the specified {@link SystemUnderConsiderationEdge} to be
+     * matched later.
+     *
+     * @param systemEdge the edge to prepare space for.
+     */
+    void prepareMatch(SystemUnderConsiderationEdge systemEdge) {
+        add(systemEdge.getClass1());
+        add(systemEdge.getClass2());
+    }
+
+    private void add(Clazz key, Clazz value) {
+        classes.put(key, value);
+    }
+
+    private void add(Clazz key) {
+        add(key, Clazz.EMPTY_CLASS);
+    }
+
 }
