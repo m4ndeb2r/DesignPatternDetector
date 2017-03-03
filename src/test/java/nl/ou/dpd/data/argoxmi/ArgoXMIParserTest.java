@@ -92,12 +92,12 @@ public class ArgoXMIParserTest {
         final String path = getPath(BA_BRAHEM_TEST_XMI);
 
         final String expectedOutput =
-                "(              D,               E, type relatie  5, self ref: nee, matched: nee)\n" +
-                        "(              E,               C, type relatie  4, self ref: nee, matched: nee)\n" +
-                        "(              D,               B, type relatie  4, self ref: nee, matched: nee)\n" +
-                        "(              C,               B, type relatie 10, self ref: nee, matched: nee)\n" +
-                        "(              A,               B, type relatie 10, self ref: nee, matched: nee)\n" +
-                        "(              A,               C, type relatie 10, self ref: nee, matched: nee)\n" +
+                "(              D,               E, type relatie  5, self ref: nee, locked: nee)\n" +
+                        "(              E,               C, type relatie  4, self ref: nee, locked: nee)\n" +
+                        "(              D,               B, type relatie  4, self ref: nee, locked: nee)\n" +
+                        "(              C,               B, type relatie 10, self ref: nee, locked: nee)\n" +
+                        "(              A,               B, type relatie 10, self ref: nee, locked: nee)\n" +
+                        "(              A,               C, type relatie 10, self ref: nee, locked: nee)\n" +
                         "\n";
 
         // Print the fourTuples to the stdout
@@ -117,24 +117,24 @@ public class ArgoXMIParserTest {
         final String path = getPath(ABSTRACT_FACTORY_XMI);
 
         final String expectedOutput =
-                "(      ConcFact1,          Prod1A, type relatie  5, self ref: nee, matched: nee)\n" +
-                "(      ConcFact1,          Prob1B, type relatie  5, self ref: nee, matched: nee)\n" +
-                "(      ConcFact1,          Prod1C, type relatie  5, self ref: nee, matched: nee)\n" +
-                "(      ConcFact2,          Prod2A, type relatie  5, self ref: nee, matched: nee)\n" +
-                "(      ConcFact2,          Prob2B, type relatie  5, self ref: nee, matched: nee)\n" +
-                "(      ConcFact2,          Prod2C, type relatie  5, self ref: nee, matched: nee)\n" +
-                "(         Prod1A,      AbstrProdA, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(         Prod2A,      AbstrProdA, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(         Prob1B,      AbstrProdB, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(         Prob2B,      AbstrProdB, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(      ConcFact1,       AbstrFact, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(      ConcFact2,       AbstrFact, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(         Prod1C,      AbstrProdC, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(         Prod2C,      AbstrProdC, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(           User,       AbstrFact, type relatie 10, self ref: nee, matched: nee)\n" +
-                "(           User,      AbstrProdA, type relatie 10, self ref: nee, matched: nee)\n" +
-                "(           User,      AbstrProdB, type relatie 10, self ref: nee, matched: nee)\n" +
-                "(           User,      AbstrProdC, type relatie 10, self ref: nee, matched: nee)\n" +
+                "(      ConcFact1,          Prod1A, type relatie  5, self ref: nee, locked: nee)\n" +
+                "(      ConcFact1,          Prob1B, type relatie  5, self ref: nee, locked: nee)\n" +
+                "(      ConcFact1,          Prod1C, type relatie  5, self ref: nee, locked: nee)\n" +
+                "(      ConcFact2,          Prod2A, type relatie  5, self ref: nee, locked: nee)\n" +
+                "(      ConcFact2,          Prob2B, type relatie  5, self ref: nee, locked: nee)\n" +
+                "(      ConcFact2,          Prod2C, type relatie  5, self ref: nee, locked: nee)\n" +
+                "(         Prod1A,      AbstrProdA, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(         Prod2A,      AbstrProdA, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(         Prob1B,      AbstrProdB, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(         Prob2B,      AbstrProdB, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(      ConcFact1,       AbstrFact, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(      ConcFact2,       AbstrFact, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(         Prod1C,      AbstrProdC, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(         Prod2C,      AbstrProdC, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(           User,       AbstrFact, type relatie 10, self ref: nee, locked: nee)\n" +
+                "(           User,      AbstrProdA, type relatie 10, self ref: nee, locked: nee)\n" +
+                "(           User,      AbstrProdB, type relatie 10, self ref: nee, locked: nee)\n" +
+                "(           User,      AbstrProdC, type relatie 10, self ref: nee, locked: nee)\n" +
                 "\n";
 
         // Print the fourTuples to the stdout
@@ -154,10 +154,10 @@ public class ArgoXMIParserTest {
         final String path = getPath(STRATEGY_XMI);
 
         final String expectedOutput =
-                "(    ConcrStratB,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(    ConcrStratC,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(    ConcrStratA,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
-                "(          Strat,            Cont, type relatie  2, self ref: nee, matched: nee)\n" +
+                "(    ConcrStratB,           Strat, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(    ConcrStratC,           Strat, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(    ConcrStratA,           Strat, type relatie  4, self ref: nee, locked: nee)\n" +
+                "(          Strat,            Cont, type relatie  2, self ref: nee, locked: nee)\n" +
                 "\n";
 
         // Print the fourTuples to the stdout

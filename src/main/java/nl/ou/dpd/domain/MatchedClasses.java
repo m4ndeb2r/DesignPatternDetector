@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * Contains classes/interfaces of the "system under consideration" mapped to classes/interfaces of the design
- * pattern. (sys --> dp). Names o
+ * pattern. (sys --> dp).
  *
  * @author Martin de Boer
  */
@@ -20,21 +20,20 @@ public class MatchedClasses {
     private Map<Clazz, Clazz> classes;
 
     /**
-     * TODO...
+     * Constructs a new instance with no matched classes, initially.
      */
     MatchedClasses() {
         classes = new HashMap<>();
     }
 
     /**
-     * TODO...
-     * @param nm
+     * Creates a duplicate of the specified {@code classes}.
+     *
+     * @param classes the object to duplicate.
      */
     MatchedClasses(MatchedClasses classes) {
         this();
-
-        Set<Clazz> sc = classes.getKeySet();
-        for (Clazz c : sc) {
+        for (Clazz c : classes.getKeySet()) {
             add(c, classes.get(c));
         }
     }
@@ -60,6 +59,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @param key
      * @return
      */
@@ -69,6 +69,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @param key
      * @param value
      * @return
@@ -79,6 +80,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @param key
      * @param value
      */
@@ -88,6 +90,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @param key
      */
     void add(Clazz key) {
@@ -96,6 +99,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @param key
      * @return
      */
@@ -105,6 +109,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @return
      */
     Set<Clazz> getKeySet() {
@@ -113,6 +118,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @return
      */
     SortedSet<Clazz> getBoundedSortedKeySet() {
@@ -124,6 +130,7 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @param key
      * @return
      */
@@ -133,13 +140,13 @@ public class MatchedClasses {
 
     /**
      * TODO...
+     *
      * @param v
      * @return
      */
     boolean valueIsBounded(Clazz v) {
-        final Collection<Clazz> verz = classes.values();
 
-        for (Clazz dpc : verz) {
+        for (Clazz dpc : classes.values()) {
             if (dpc.equals(v)) {
                 return true;
             }

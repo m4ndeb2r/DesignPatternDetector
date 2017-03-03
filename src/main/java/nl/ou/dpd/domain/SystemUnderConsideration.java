@@ -54,7 +54,7 @@ public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsider
     private boolean isEdgeSupplementary(MatchedClasses matchedClasses, SystemUnderConsiderationEdge edge) {
         return matchedClasses.keyIsBounded(edge.getClass1())
                 && matchedClasses.keyIsBounded(edge.getClass2())
-                && !edge.isMatched();
+                && !edge.isLocked();
     }
 
 }

@@ -92,44 +92,43 @@ public class Matcher {
             MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
             ArrayList<Integer> extraMatched = new ArrayList<Integer>();
 
-            if (!sysEdge.isMatched()
-                    && sysEdge.isMatch(dpEdge, matchedClasses)) {
-                boolean hulp;
+            if (!sysEdge.isLocked() && sysEdge.isMatch(dpEdge, matchedClasses)) {
 
+                // Make match in matched classes
                 dpEdge.makeMatch(sysEdge, copyMatchedClasses);
-                dpEdge.setMatched(true);
-                sysEdge.setMatched(true);
+
+                // Lock edges to prevent them from being matched twice
+                dpEdge.lock();
+                sysEdge.lock();
 
                 if (dpEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
                     int k;
 
-                    // There may be more edges of se which
-                    // contains an inheritance to the same parent and
+                    // There may be more edges of se that contain an inheritance to the same parent and
                     // have unmatched children
                     for (k = j + 1; k < system.getFourTuples().size(); k++) {
                         SystemUnderConsiderationEdge skEdge = system.getFourTuples().get(k);
                         // for readablity;
-                        if (!skEdge.isMatched()
+                        if (!skEdge.isLocked()
                                 && skEdge.getClass2().equals(sysEdge.getClass2())
                                 && skEdge.isMatch(dpEdge, matchedClasses)) {
                             dpEdge.makeMatch(skEdge, copyMatchedClasses);
                             extraMatched.add(new Integer(k));
-                            skEdge.setMatched(true);
+                            skEdge.lock();
                         }
                     }
                 }
 
-                hulp = recursiveMatch(pattern, system, maxNotMatchable,
+                // Recursive matching
+                boolean foundRecursively = recursiveMatch(pattern, system, maxNotMatchable,
                         startIndex + 1, copyMatchedClasses);
+                found = found || foundRecursively;
 
-                found = found || hulp;
-
-                dpEdge.setMatched(false);
-                sysEdge.setMatched(false);
-
-                // undo multiple matched edges.
+                // Reset match setting in dp en sys and multiple matched edges
+                dpEdge.unlock();
+                sysEdge.unlock();
                 for (Integer getal : extraMatched) {
-                    system.getFourTuples().get(getal.intValue()).setMatched(false);
+                    system.getFourTuples().get(getal.intValue()).unlock();
                 }
 
                 if (found && extraMatched.size() > 0) {

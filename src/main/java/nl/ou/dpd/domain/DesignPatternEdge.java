@@ -42,8 +42,8 @@ public class DesignPatternEdge extends FourTuple {
     void makeMatch(SystemUnderConsiderationEdge edge, MatchedClasses matchedClasses) {
         matchedClasses.add(edge.getClass1(), getClass1());
         matchedClasses.add(edge.getClass2(), getClass2());
-        setMatched(true);
-        edge.setMatched(true);
+        lock();
+        edge.lock();
     }
 
 

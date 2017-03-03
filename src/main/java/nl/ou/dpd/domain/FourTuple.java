@@ -14,7 +14,7 @@ public abstract class FourTuple {
 
     private Clazz classInterface1, classInterface2;
     private EdgeType typeRelation;
-    private boolean selfRef, matched, virtual;
+    private boolean selfRef, locked, virtual;
 
     /**
      * This constructor has protected access because it is only available within subclasses.
@@ -29,7 +29,7 @@ public abstract class FourTuple {
         typeRelation = type;
         selfRef = cl1.equals(cl2);
 
-        matched = false;
+        locked = false;
         virtual = false;
     }
 
@@ -40,7 +40,7 @@ public abstract class FourTuple {
      */
     protected FourTuple(FourTuple ft) {
         this(ft.classInterface1, ft.classInterface2, ft.typeRelation);
-        matched = ft.matched;
+        locked = ft.locked;
     }
 
     /**
@@ -62,12 +62,12 @@ public abstract class FourTuple {
     void show() {
         if (!virtual) {
             System.out.printf(
-                    "(%15s, %15s, type relatie %2d, self ref: %3s, matched: %3s)\n",
+                    "(%15s, %15s, type relatie %2d, self ref: %3s, locked: %3s)\n",
                     classInterface1.getName(),
                     classInterface2.getName(),
                     typeRelation.getCode(),
                     selfRef ? "ja" : "nee",
-                    matched ? "ja" : "nee");
+                    locked ? "ja" : "nee");
         }
 
     }
@@ -88,12 +88,18 @@ public abstract class FourTuple {
                 && ft.getSelfRef() == selfRef;
     }
 
-    boolean isMatched() {
-        return matched;
+    boolean lock() {
+        this.locked = true;
+        return isLocked();
     }
 
-    void setMatched(boolean value) {
-        matched = value;
+    boolean unlock() {
+        this.locked = false;
+        return !isLocked();
+    }
+
+    boolean isLocked() {
+        return this.locked;
     }
 
     Clazz getClass1() {

@@ -91,8 +91,8 @@ public class TemplatesParserTest {
 
         final String expectedOutput =
                 "Design pattern: Ba_Brahem\n" +
-                        "(              P,               Q, type relatie 10, self ref: nee, matched: nee)\n" +
-                        "(              R,               Q, type relatie  4, self ref: nee, matched: nee)\n" +
+                        "(              P,               Q, type relatie 10, self ref: nee, locked: nee)\n" +
+                        "(              R,               Q, type relatie  4, self ref: nee, locked: nee)\n" +
                         "\n";
 
         // Print the fourTuples to the stdout
