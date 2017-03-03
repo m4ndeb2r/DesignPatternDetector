@@ -78,10 +78,10 @@ public class ArgoXMIParserTest {
     }
 
     /**
-     * Test the happy flow of parsing an XMI input file by the {@link ArgoXMIParser}.
+     * Test the happy flow of parsing a Ba_Brahem XMI input file by the {@link ArgoXMIParser}.
      */
     @Test
-    public void testParse() {
+    public void testBa_BrahemXmiParse() {
         final SystemUnderConsideration system = new SystemUnderConsideration();
         final ArgoXMIParser argoXMIParser = new ArgoXMIParser();
         final String path = getPath(BA_BRAHEM_TEST_XMI);
@@ -101,6 +101,69 @@ public class ArgoXMIParserTest {
         // Assert the output, and compare it to our expectations
         assertThat(systemOutRule.getLog(), is(expectedOutput));
     }
+
+    /**
+     * Test the happy flow of parsing an AbstractFactory XMI input file by the {@link ArgoXMIParser}.
+     */
+    @Test
+    public void testAbstractFactoryXmiParse() {
+        final SystemUnderConsideration system = new SystemUnderConsideration();
+        final ArgoXMIParser argoXMIParser = new ArgoXMIParser();
+        final String path = getPath("/AbstractFactory.xmi");
+
+        final String expectedOutput =
+                "(      ConcFact1,          Prod1A, type relatie  5, self ref: nee, matched: nee)\n" +
+                "(      ConcFact1,          Prob1B, type relatie  5, self ref: nee, matched: nee)\n" +
+                "(      ConcFact1,          Prod1C, type relatie  5, self ref: nee, matched: nee)\n" +
+                "(      ConcFact2,          Prod2A, type relatie  5, self ref: nee, matched: nee)\n" +
+                "(      ConcFact2,          Prob2B, type relatie  5, self ref: nee, matched: nee)\n" +
+                "(      ConcFact2,          Prod2C, type relatie  5, self ref: nee, matched: nee)\n" +
+                "(         Prod1A,      AbstrProdA, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(         Prod2A,      AbstrProdA, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(         Prob1B,      AbstrProdB, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(         Prob2B,      AbstrProdB, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(      ConcFact1,       AbstrFact, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(      ConcFact2,       AbstrFact, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(         Prod1C,      AbstrProdC, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(         Prod2C,      AbstrProdC, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(           User,       AbstrFact, type relatie 10, self ref: nee, matched: nee)\n" +
+                "(           User,      AbstrProdA, type relatie 10, self ref: nee, matched: nee)\n" +
+                "(           User,      AbstrProdB, type relatie 10, self ref: nee, matched: nee)\n" +
+                "(           User,      AbstrProdC, type relatie 10, self ref: nee, matched: nee)\n" +
+                "\n";
+
+        // Print the fourTuples to the stdout
+        argoXMIParser.parse(path).show();
+
+        // Assert the output, and compare it to our expectations
+        assertThat(systemOutRule.getLog(), is(expectedOutput));
+    }
+
+    /**
+     * Test the happy flow of parsing a Strategy XMI input file by the {@link ArgoXMIParser}.
+     */
+    @Test
+    public void testStrategyXmiParse() {
+        final SystemUnderConsideration system = new SystemUnderConsideration();
+        final ArgoXMIParser argoXMIParser = new ArgoXMIParser();
+        final String path = getPath("/Strategy.xmi");
+
+        final String expectedOutput = "" +
+                "(    ConcrStratB,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(    ConcrStratC,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(    ConcrStratA,           Strat, type relatie  4, self ref: nee, matched: nee)\n" +
+                "(          Strat,            Cont, type relatie  2, self ref: nee, matched: nee)\n" +
+                "\n";
+
+        // Print the fourTuples to the stdout
+        argoXMIParser.parse(path).show();
+
+        // Assert the output, and compare it to our expectations
+        assertThat(systemOutRule.getLog(), is(expectedOutput));
+    }
+
+
+
 
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();

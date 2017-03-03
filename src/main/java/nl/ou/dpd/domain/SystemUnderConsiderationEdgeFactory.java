@@ -1,16 +1,17 @@
 package nl.ou.dpd.domain;
 
 /**
- * A creator for {@link SystemUnderConsiderationEdge}s. Implements part of the FactoryMethod design pattern.
+ * A factory for {@link SystemUnderConsiderationEdge}s. Implements the ConcreteFactory of the Abstract Factory design
+ * pattern.
  *
  * @author Martin de Boer
- * @see EdgeCreator
- * @see DesignPatternEdgeCreator
+ * @see EdgeFactory
+ * @see DesignPatternEdgeFactory
  * @see FourTuple
  * @see SystemUnderConsiderationEdge
  * @see DesignPatternEdge
  */
-public class SystemUnderConsiderationEdgeCreator implements EdgeCreator<SystemUnderConsiderationEdge> {
+public class SystemUnderConsiderationEdgeFactory implements EdgeFactory<SystemUnderConsiderationEdge> {
 
     /**
      * {@inheritDoc}

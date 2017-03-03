@@ -1,16 +1,16 @@
 package nl.ou.dpd.domain;
 
 /**
- * A creator for {@link DesignPatternEdge}s.
+ * A factory for {@link DesignPatternEdge}s.
  *
  * @author Martin de Boer
- * @see EdgeCreator
- * @see SystemUnderConsiderationEdgeCreator
+ * @see EdgeFactory
+ * @see SystemUnderConsiderationEdgeFactory
  * @see FourTuple
  * @see SystemUnderConsiderationEdge
  * @see DesignPatternEdge
  */
-public class DesignPatternEdgeCreator implements EdgeCreator<DesignPatternEdge> {
+public class DesignPatternEdgeFactory implements EdgeFactory<DesignPatternEdge> {
 
     /**
      * {@inheritDoc}

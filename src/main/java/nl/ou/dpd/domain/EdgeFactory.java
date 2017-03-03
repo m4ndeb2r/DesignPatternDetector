@@ -1,17 +1,17 @@
 package nl.ou.dpd.domain;
 
 /**
- * Creates {@link FourTuple}s. This class is the {@code Creator} in the FactoryMethod design pattern.
+ * Creates {@link FourTuple}s. This class is the AbstractFactory in the Abstract Factory design pattern.
  *
- * @param <EDGE> the type of objects this creator creates.
+ * @param <EDGE> the type of objects this factory creates.
  * @author Martin de Boer
- * @see DesignPatternEdgeCreator
- * @see SystemUnderConsiderationEdgeCreator
+ * @see DesignPatternEdgeFactory
+ * @see SystemUnderConsiderationEdgeFactory
  * @see FourTuple
  * @see SystemUnderConsiderationEdge
  * @see DesignPatternEdge
  */
-public interface EdgeCreator<EDGE extends FourTuple> {
+public interface EdgeFactory<EDGE extends FourTuple> {
 
     /**
      * Creates a {@link EDGE} with the specified class names and edge type.

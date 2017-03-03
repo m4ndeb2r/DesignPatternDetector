@@ -6,13 +6,13 @@ package nl.ou.dpd.domain;
  *
  * @author Martin de Boer
  */
-public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsiderationEdge, SystemUnderConsiderationEdgeCreator> {
+public class SystemUnderConsideration extends FourTupleArray<SystemUnderConsiderationEdge, SystemUnderConsiderationEdgeFactory> {
 
     /**
      * Constructs a new {@link SystemUnderConsideration} instance.
      */
     public SystemUnderConsideration() {
-        super(new SystemUnderConsiderationEdgeCreator());
+        super(new SystemUnderConsiderationEdgeFactory());
     }
 
     /**

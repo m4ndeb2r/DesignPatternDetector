@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Martin de Boer
  */
-public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatternEdgeCreator> {
+public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatternEdgeFactory> {
 
     private static final Logger LOGGER = LogManager.getLogger(DesignPattern.class);
 
@@ -24,7 +24,7 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
      * @param name the name of this design pattern
      */
     public DesignPattern(String name) {
-        super(new DesignPatternEdgeCreator());
+        super(new DesignPatternEdgeFactory());
         this.name = name;
         this.solutions = new Solutions();
     }

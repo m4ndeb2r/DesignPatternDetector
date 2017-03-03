@@ -9,17 +9,17 @@ import java.util.List;
  * @author EDGE.M. van Doorn
  * @author Martin de Boer
  */
-public abstract class FourTupleArray <EDGE extends FourTuple, CREATOR extends EdgeCreator> {
+public abstract class FourTupleArray <EDGE extends FourTuple, FACTORY extends EdgeFactory> {
 
     private List<EDGE> fourTuples;
-    private CREATOR edgeCreator;
+    private FACTORY edgeFactory;
 
     /**
      * Constructor that has protected access because it is only accessable from subclasses.
      */
-    protected FourTupleArray(CREATOR edgeCreator) {
+    protected FourTupleArray(FACTORY edgeFactory) {
         this.fourTuples = new ArrayList();
-        this.edgeCreator = edgeCreator;
+        this.edgeFactory = edgeFactory;
     }
 
     /**
@@ -29,11 +29,11 @@ public abstract class FourTupleArray <EDGE extends FourTuple, CREATOR extends Ed
      * @param edge the {@link EDGE} to add.
      */
     public void add(EDGE edge) {
-        fourTuples.add((EDGE) this.edgeCreator.create(edge));
+        fourTuples.add((EDGE) this.edgeFactory.create(edge));
 
         if (edge.getTypeRelation() == EdgeType.ASSOCIATION) {
             // For edge (A, B, ....) a second but virtual edge (B, A, ...) will be added.
-            fourTuples.add((EDGE) this.edgeCreator.createVirtual(edge));
+            fourTuples.add((EDGE) this.edgeFactory.createVirtual(edge));
         }
     }
 
