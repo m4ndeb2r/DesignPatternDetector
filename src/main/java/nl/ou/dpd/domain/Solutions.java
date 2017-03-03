@@ -1,6 +1,7 @@
 package nl.ou.dpd.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Set;
  */
 public class Solutions {
 
-    private ArrayList<Solution> solutions;
+    private List<Solution> solutions;
 
     /**
      * Default constructor. Constructs a {@link Solution}s instance containing an empty list of {@link Solution}s.

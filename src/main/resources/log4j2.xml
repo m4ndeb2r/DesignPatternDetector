@@ -21,7 +21,7 @@
         </Console>
 
         <!--
-        A RollingFileAppender with both the time and size based triggering policies, will create up to 100 archives on
+        A RollingFile appender with both the time and size based triggering policies, will create up to 100 archives on
         the same day (1-100) that are stored in a directory based on the current year and month, and will compress each
         archive using gzip and will roll every hour.
         -->

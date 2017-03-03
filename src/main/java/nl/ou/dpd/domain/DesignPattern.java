@@ -3,7 +3,6 @@ package nl.ou.dpd.domain;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +14,7 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
 
     private static final Logger LOGGER = LogManager.getLogger(DesignPattern.class);
 
-    private String name;
-    private Solutions solutions;
+    private final String name;
 
     /**
      * Constructs a {@link DesignPattern} instance with the specified name.
@@ -26,7 +24,6 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
     public DesignPattern(String name) {
         super(new DesignPatternEdgeFactory());
         this.name = name;
-        this.solutions = new Solutions();
     }
 
     /**
@@ -52,127 +49,16 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
      * @return {@code true} if there was a match, of {@code false} otherwise.
      */
     public boolean match(SystemUnderConsideration system, int maxNotMatchable) {
-        // Put every classname occuring in a 4-tuple in system in MatchedClasses with value = EMPTY.
-        MatchedClasses matchedClasses = fillMatchedClasses(system);
-
-        // Order the fourTuples
-        setFourTuples(order(getFourTuples()));
-
-        // Do the matching recursively
-        return recursiveMatch(system, maxNotMatchable, 0, matchedClasses);
+        return new Matcher().match(this, system, maxNotMatchable);
     }
 
-    // TODO: this method is large and hard to maintain. Refactor this (very carefully)....
-    private boolean recursiveMatch(SystemUnderConsideration systemUnderConsideration, int maxNotMatchable,
-                                   int startIndex, MatchedClasses matchedClasses) {
-        // --this-- should contain the edges of the design pattern !!
-        // For a particular edge (fourtuple.get(startIndex) in the design pattern
-        // try to find the corresponding edge(s) in systemUnderConsideration.
-
-        //int nNotMatchable;
-        boolean found;
-
-        if (startIndex >= getFourTuples().size()) {
-            if (maxNotMatchable >= 0) {
-                // This is an acceptable solution.
-                if (solutions.isUniq(matchedClasses.getBoundedSortedKeySet())) {
-                    solutions.add(new Solution(matchedClasses.getBoundedSortedKeySet()));
-
-                    matchedClasses.show(name);
-
-                    // Does the detected design pattern have more edges than the design pattern?
-                    // If so, show those edges.
-                    systemUnderConsideration.showSupplementaryEdges(matchedClasses);
-                    System.out.println();
-                }
-
-                return true;
-            }
-
-            LOGGER.warn("Unexpected situation in DesignPattern#recursiveMatch(). " +
-                    "Value of maxNotMatchable = " + maxNotMatchable);
-
-            // Should not occur. The search should be stopped before.
-
-            return false;
-        }
-
-        DesignPatternEdge dpEdge = getFourTuples().get(startIndex); // improves readability
-
-        found = false; // makes compiler happy;;
-
-        // For this (startIndex) edge in DP, find matching edges in SE
-        for (int j = 0; j < systemUnderConsideration.getFourTuples().size(); j++) {
-            // For all edges in SE
-
-            SystemUnderConsiderationEdge sysEdge = systemUnderConsideration.getFourTuples().get(j);
-            // improves readablity
-
-            MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
-            ArrayList<Integer> extraMatched = new ArrayList<Integer>();
-
-            if (!sysEdge.isMatched()
-                    && sysEdge.isMatch(dpEdge, matchedClasses)) {
-                boolean hulp;
-
-                dpEdge.makeMatch(sysEdge, copyMatchedClasses);
-                dpEdge.setMatched(true);
-                sysEdge.setMatched(true);
-
-                if (dpEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
-                    int k;
-
-                    // There may be more edges of se which
-                    // contains an inheritance to the same parent and
-                    // have unmatched children
-                    for (k = j + 1; k < systemUnderConsideration.getFourTuples().size(); k++) {
-                        SystemUnderConsiderationEdge skEdge = systemUnderConsideration.getFourTuples().get(k);
-                        // for readablity;
-                        if (!skEdge.isMatched()
-                                && skEdge.getClass2().equals(sysEdge.getClass2())
-                                && skEdge.isMatch(dpEdge, matchedClasses)) {
-                            dpEdge.makeMatch(skEdge, copyMatchedClasses);
-                            extraMatched.add(new Integer(k));
-                            skEdge.setMatched(true);
-                        }
-                    }
-                }
-
-                hulp = recursiveMatch(systemUnderConsideration, maxNotMatchable,
-                        startIndex + 1, copyMatchedClasses);
-
-                found = found || hulp;
-
-                dpEdge.setMatched(false);
-                sysEdge.setMatched(false);
-
-                // undo multiple matched edges.
-                for (Integer getal : extraMatched) {
-                    systemUnderConsideration.getFourTuples().get(getal.intValue()).setMatched(false);
-                }
-
-                if (found && extraMatched.size() > 0) {
-                    // In case of inheritance with multiple childs
-                    // all matching  edges has been found.
-                    // Therefore searching for more edges may be stopped.
-
-                    j = systemUnderConsideration.getFourTuples().size();
-                }
-            }
-        }
-
-        if (!found) {
-
-            // is the number of not matched edges acceptable?
-            if (--maxNotMatchable >= 0) {
-                return recursiveMatch(systemUnderConsideration, maxNotMatchable,
-                        startIndex + 1, matchedClasses);
-            }
-
-            return false;
-        }
-
-        return found; //  == true !!
+    /**
+     * Getter for the pattern name.
+     *
+     * @return the name of this design pattern.
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -187,8 +73,9 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
      * @param graph the graph to order
      * @return the ordered graph
      */
-    private List<DesignPatternEdge> order(final List<DesignPatternEdge> graph) {
+    void order() {
         // Skip the first element. It stays where it is. Start with i = 1.
+        final List<DesignPatternEdge> graph = getFourTuples();
         for (int i = 1; i < graph.size(); i++) {
 
             boolean found = false;
@@ -210,7 +97,7 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
                 LOGGER.warn("Template is not a connected graph.");
             }
         }
-        return graph;
+        this.setFourTuples(graph);
     }
 
     /**
@@ -229,15 +116,4 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
         return v1.equals(v3) || v1.equals(v4) || v2.equals(v3) || v2.equals(v4);
     }
 
-    private MatchedClasses fillMatchedClasses(SystemUnderConsideration system) {
-        // No classname will be matched
-        MatchedClasses matchedClasses = new MatchedClasses();
-
-        for (SystemUnderConsiderationEdge edge : system.getFourTuples()) {
-            matchedClasses.add(edge.getClass1());
-            matchedClasses.add(edge.getClass2());
-        }
-
-        return matchedClasses;
-    }
 }
