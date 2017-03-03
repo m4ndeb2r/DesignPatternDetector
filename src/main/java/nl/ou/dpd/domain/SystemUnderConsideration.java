@@ -44,6 +44,9 @@ public class SystemUnderConsideration extends Edges {
         }
     }
 
+    /**
+     * @deprecated because {@link #showSupplementaryEdges(MatchedClasses)} is deprecated.
+     */
     private boolean isEdgeSupplementary(MatchedClasses matchedClasses, Edge edge) {
         return matchedClasses.keyIsBounded(edge.getClass1())
                 && matchedClasses.keyIsBounded(edge.getClass2())

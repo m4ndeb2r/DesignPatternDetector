@@ -18,7 +18,7 @@ public class Solution {
     /**
      * Constructs a {@link Solution} instance with a set of {@code classes} (representing vertices in a graph). Two
      * {@link Solutions} are considered "equal" if they posess the same classes/interfaces. Because the {@code classes}
-     * are passed as a {@link SortedSet}, the class names will always be in the right order.
+     * are passed as a {@link SortedSet}, the classes will always be in the right order (ordered by class name).
      *
      * @param classes a set of classes/interfaces. These classes are part of a matching solution.
      */

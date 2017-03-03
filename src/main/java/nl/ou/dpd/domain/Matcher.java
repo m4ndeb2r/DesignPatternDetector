@@ -41,6 +41,16 @@ public class Matcher {
         return recursiveMatch(pattern, system, maxNotMatchable, 0, matchedClasses);
     }
 
+    /**
+     * TODO: simplify this method. It is to long and incomprehensive.
+     *
+     * @param pattern
+     * @param system
+     * @param maxNotMatchable
+     * @param startIndex
+     * @param matchedClasses
+     * @return
+     */
     private boolean recursiveMatch(
             DesignPattern pattern,
             SystemUnderConsideration system,
@@ -151,10 +161,20 @@ public class Matcher {
         return matchedClasses;
     }
 
+    /**
+     * Locks a number of {@link Edge}s.
+     *
+     * @param edges the {@link Edge}s to lock.
+     */
     private void lockEdges(Edge... edges) {
         Arrays.asList(edges).forEach(edge -> edge.lock());
     }
 
+    /**
+     * Unlocks a number of {@link Edge}s.
+     *
+     * @param edges the {@link Edge}s to unlock.
+     */
     private void unlockEdges(Edge... edges) {
         Arrays.asList(edges).forEach(edge -> edge.unlock());
     }
