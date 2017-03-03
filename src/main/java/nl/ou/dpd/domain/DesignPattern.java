@@ -229,17 +229,6 @@ public class DesignPattern extends FourTupleArray<DesignPatternEdge, DesignPatte
         return v1.equals(v3) || v1.equals(v4) || v2.equals(v3) || v2.equals(v4);
     }
 
-    private MatchedNames fillMatchedNames() {
-        MatchedNames names = new MatchedNames();
-
-        for (DesignPatternEdge edge : getFourTuples()) {
-            names.add(edge.getClassName1());
-            names.add(edge.getClassName2());
-        }
-
-        return names;
-    }
-
     private MatchedNames fillMatchedNames(SystemUnderConsideration system) {
         // No classname will be matched
         MatchedNames names = new MatchedNames();
