@@ -59,6 +59,15 @@ public class Edge {
     }
 
     /**
+     * Indicates whether or not this {@link Edge} is virtual (non-visible).
+     *
+     * @return {@code true} if virtual, or {@code false} otherwise.
+     */
+    boolean isVirtual() {
+        return virtual;
+    }
+
+    /**
      * @deprecated All show methods must go. No more printing to System.out very soon.
      */
     void show() {
@@ -162,5 +171,6 @@ public class Edge {
     boolean getSelfRef() {
         return selfRef;
     }
+
 
 }

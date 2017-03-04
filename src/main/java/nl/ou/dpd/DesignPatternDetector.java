@@ -5,10 +5,10 @@ import nl.ou.dpd.data.template.TemplatesParser;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.Matcher;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 /**
  * The main class of the Design Pattern Detector application.
@@ -22,7 +22,7 @@ public final class DesignPatternDetector {
 
     private static final String USAGE_TXT =
             "\nUsage: \n\tjava -t templateFile -x xmiFile -n maxNumberOfMissingEdges." +
-            "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0";
+                    "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0";
 
 
     private String templateFileName, xmiFileName;
@@ -63,7 +63,7 @@ public final class DesignPatternDetector {
             LOGGER.info("Application DesignPatternDetector started.");
             LOGGER.debug("Current directory: " + System.getProperty("user.dir"));
 
-            // TODO: remove console output
+            // TODO: remove console output. This is still here for backbward compatibility
             System.out.println("Current directory: " + System.getProperty("user.dir"));
 
             // Parse the arguments
@@ -75,7 +75,8 @@ public final class DesignPatternDetector {
 
             // Find a match for each design pattern in dsp
             final Matcher matcher = new Matcher();
-            designPatterns.forEach(dp -> matcher.match(dp, system, maxMissingEdges));
+            // TODO: the show() method is called tmeporarily for backaward compatibility
+            designPatterns.forEach(dp -> matcher.match(dp, system, maxMissingEdges).show());
 
         } catch (Throwable t) {
             // Acknowledge the user of the unrecoverable error situation

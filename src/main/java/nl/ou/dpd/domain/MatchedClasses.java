@@ -38,25 +38,6 @@ public class MatchedClasses {
     }
 
     /**
-     * @deprecated All show methods must go. There will be no printing to System.out soon.
-     */
-    void show(String name) {
-        String value;
-
-        if (!name.isEmpty()) {
-            System.out.printf("Design Pattern: %s\n", name);
-        }
-
-        SortedSet<Clazz> sortedSet = getBoundedSortedKeySet();
-
-        for (Clazz key : sortedSet) {
-            System.out.printf("%20s --> %25s\n", key.getName(), classes.get(key).getName());
-        }
-
-        System.out.println("------------------------");
-    }
-
-    /**
      * Determines whether a {@link Clazz}, specified by {@code key}, is matched with an empty class (or, in other words,
      * is not yet connected to another {@link Clazz}.
      *
@@ -86,6 +67,18 @@ public class MatchedClasses {
      */
     Clazz get(Clazz key) {
         return classes.get(key);
+    }
+
+    /**
+     * TODO...
+     *
+     * @param key
+     * @return
+     */
+    MatchedClasses filter(Set<Clazz> keys) {
+        MatchedClasses filtered = new MatchedClasses();
+        keys.forEach(key -> filtered.add(key, get(key)));
+        return filtered;
     }
 
     /**

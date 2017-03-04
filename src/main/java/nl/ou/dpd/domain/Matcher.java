@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * A {@link Matcher} matches a {@link DesignPattern} and a {@link SystemUnderConsideration}, and tries to detect
@@ -20,25 +21,29 @@ public class Matcher {
     private Solutions solutions;
 
     /**
-     * Matches the specified {@link DesignPattern} and {@link SystemUnderConsideration}.
+     * Matches the specified {@link DesignPattern} and {@link SystemUnderConsideration}. This method is called once for
+     * the whole detection process.
      *
      * @param pattern         the pattern to detect
      * @param system          the system to search for the {@code pattern}
      * @param maxNotMatchable the maximum number of not matchable edges allowed.
-     * @return {@code true} if a design pattern was detected, or {@code false} otherwise.
+     * @return a {@link Solutions} instance containing feedback information.
      */
-    public boolean match(DesignPattern pattern, SystemUnderConsideration system, int maxNotMatchable) {
+    public Solutions match(DesignPattern pattern, SystemUnderConsideration system, int maxNotMatchable) {
         // Order the design pattern's edges
         pattern.order();
 
         // Put every classname occuring in a 4-tuple in system in MatchedClasses with value = EMPTY.
         MatchedClasses matchedClasses = prepareMatchedClasses(system);
 
-        // Initiliase the solutions
+        // Initialise the solutions. These will be populated during the recursive match.
         solutions = new Solutions();
 
-        // Do the matching recursively
-        return recursiveMatch(pattern, system, maxNotMatchable, 0, matchedClasses);
+        // Do the matching recursively.
+        recursiveMatch(pattern, system, maxNotMatchable, 0, matchedClasses);
+
+        // Return feedback
+        return solutions;
     }
 
     /**
@@ -63,19 +68,15 @@ public class Matcher {
         // try to find the corresponding edge(s) in system under consideration.
 
         if (startIndex >= pattern.getEdges().size()) {
+            // The detecting process is completed
+
             if (maxNotMatchable >= 0) {
-                // This is an acceptable solution.
-                if (solutions.isUniq(matchedClasses.getBoundedSortedKeySet())) {
-                    solutions.add(new Solution(matchedClasses.getBoundedSortedKeySet()));
+                // This is an acceptable solution. Let's gather the information and keep it.
 
-                    matchedClasses.show(pattern.getName());
-
-                    // Does the detected design pattern have more edges than the design pattern?
-                    // If so, show those edges.
-                    system.showSupplementaryEdges(matchedClasses);
-                    System.out.println();
+                final Solution solution = createSolution(pattern, system, matchedClasses);
+                if (solutions.isUniq(solution)) {
+                    solutions.add(solution);
                 }
-
                 return true;
             }
 
@@ -147,6 +148,30 @@ public class Matcher {
         }
 
         return found; // == true !!
+    }
+
+
+    /**
+     * TODO...
+     *
+     * @param pattern
+     * @param system
+     * @param matchedClasses
+     * @return
+     */
+    private Solution createSolution(DesignPattern pattern, SystemUnderConsideration system, MatchedClasses matchedClasses) {
+        final String dpName = pattern.getName();
+        final SortedSet<Clazz> boundedKeys = matchedClasses.getBoundedSortedKeySet();
+        final MatchedClasses involvedClasses = matchedClasses.filter(boundedKeys);
+        final List<Edge> superfluousEdges = new ArrayList<>();
+        for (Edge edge : system.getEdges()) {
+            if (matchedClasses.keyIsBounded(edge.getClass1())
+                    && matchedClasses.keyIsBounded(edge.getClass2())
+                    && !edge.isLocked()) {
+                superfluousEdges.add(edge);
+            }
+        }
+        return new Solution(dpName, involvedClasses, superfluousEdges);
     }
 
     /**

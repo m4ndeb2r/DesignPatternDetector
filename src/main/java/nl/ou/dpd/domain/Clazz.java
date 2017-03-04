@@ -3,15 +3,23 @@ package nl.ou.dpd.domain;
 import java.util.Objects;
 
 /**
- * Represents a class or interface in a design pattern or a "system under consideration". A {@link Clazz} is a
- * {@link Comparable} because it must be possible to add instances to a sorted set.
+ * Represents a class or interface in a design pattern or a "system under consideration". A {@link Clazz} is typically
+ * connected to another {@link Clazz} within the same design pattern or "system under consideration". Two connected
+ * {@link Clazz}'s form an {@link Edge}. A combination of {@link Edge}s (combined in a subclass of {@link Edges}) form a
+ * design pattern or a system design. {@link Edge}s can have an {@link EdgeType}, defining the type of relation between
+ * the {@link Clazz}'s.
+ * <p>
+ * <p>
+ * A {@link Clazz} is a {@link Comparable} because it must be possible to add instances to a sorted set.
  *
  * @author Martin de Boer
  */
 public class Clazz implements Comparable<Clazz> {
 
     /**
-     * An "empty" {@link Clazz}.
+     * An "empty" {@link Clazz}. The {@link #EMPTY_CLASS} is used to prepare a "match" (similarity) between a class or
+     * interface in a pattern and the system design. It is a placeholder for a matching {@link Clazz} that is not yet
+     * identified.
      */
     public static final Clazz EMPTY_CLASS = new Clazz("");
 

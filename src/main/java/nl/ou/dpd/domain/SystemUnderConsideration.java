@@ -20,37 +20,4 @@ public class SystemUnderConsideration extends Edges {
         System.out.println();
     }
 
-    /**
-     * Show all edges without a corresponding edge in the design pattern.
-     *
-     * @param matchedClasses a map containing matched classes/interfaces.
-     * @deprecated All show methods will be removed. No more printing to System.out soon.
-     */
-    public void showSupplementaryEdges(MatchedClasses matchedClasses) {
-
-        boolean found = false;
-        for (Edge edge : this.getEdges()) {
-            if (isEdgeSupplementary(matchedClasses, edge)) {
-                if (!found) {
-                    System.out.println("Edges which do not belong to this design pattern:");
-                    found = true;
-                }
-                edge.showSimple();
-            }
-        }
-
-        if (found) {
-            System.out.println("==================================================");
-        }
-    }
-
-    /**
-     * @deprecated because {@link #showSupplementaryEdges(MatchedClasses)} is deprecated.
-     */
-    private boolean isEdgeSupplementary(MatchedClasses matchedClasses, Edge edge) {
-        return matchedClasses.keyIsBounded(edge.getClass1())
-                && matchedClasses.keyIsBounded(edge.getClass2())
-                && !edge.isLocked();
-    }
-
 }

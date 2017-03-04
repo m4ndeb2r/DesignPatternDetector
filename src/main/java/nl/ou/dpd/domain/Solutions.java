@@ -2,7 +2,6 @@ package nl.ou.dpd.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Represents a list of {@link Solution}s.
@@ -31,15 +30,12 @@ public class Solutions {
     }
 
     /**
-     * Determines if the specified set of {@code names} (or a premutation of it) is already present as a
-     * {@link Solution} in this {@link Solutions}.
+     * TODO....
      *
-     * @param names a set of class names to detect in the current {@link Solutions}.
-     * @return {@code true} if {@code names} is NOT detected in the list, or {@code false} otherwise.
+     * @param sol
+     * @return
      */
-    public boolean isUniq(Set names) {
-        Solution sol = new Solution(names);
-
+    public boolean isUniq(Solution sol) {
         boolean result = true;
         for (Solution s : solutions) {
             result = result && !s.isEqual(sol);
@@ -48,5 +44,35 @@ public class Solutions {
             }
         }
         return result;
+    }
+
+    /**
+     * @deprecated no System.out prints in this application!!
+     */
+    public void show() {
+        for (Solution solution : solutions) {
+            final String designPatternName = solution.getDesignPatternName();
+            final MatchedClasses matchedClasses = solution.getMatchedClasses();
+            final List<Edge> superfluousEdges = solution.getSuperfluousEdges();
+
+            if (!designPatternName.isEmpty()) {
+                System.out.printf("Design Pattern: %s\n", designPatternName);
+            }
+            for (Clazz key : matchedClasses.getBoundedSortedKeySet()) {
+                System.out.printf("%20s --> %25s\n", key.getName(), matchedClasses.get(key).getName());
+            }
+            System.out.println("------------------------");
+
+            if (superfluousEdges.size() > 0) {
+                System.out.println("Edges which do not belong to this design pattern:");
+                for (Edge edge : superfluousEdges) {
+                    if (!edge.isVirtual()) {
+                        System.out.println(edge.getClass1().getName() + " --> " + edge.getClass2().getName());
+                    }
+                }
+                System.out.println("==================================================");
+            }
+            System.out.println();
+        }
     }
 }
