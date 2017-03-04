@@ -27,21 +27,6 @@ public class DesignPattern extends Edges {
     }
 
     /**
-     * @deprecated All show methods must go. No more printing to System.out very soon.
-     */
-    public void show() {
-        if (!name.isEmpty()) {
-            System.out.println("Design pattern: " + name);
-        }
-
-        for (Edge edge : getEdges()) {
-            edge.show();
-        }
-
-        System.out.println();
-    }
-
-    /**
      * Getter for the pattern name.
      *
      * @return the name of this design pattern.

@@ -289,7 +289,7 @@ public class TestHelper {
 
     /**
      * Creates a "system under consideration" containing quite a number of patterns that the application should be able
-     * to detect.
+     * to detect. This system is depicted Figure 4.5 in E.M. van Doorns article on page 29 (4.3 - Experiments).
      *
      * @return a {@link DesignPattern} representing the design of a "system under consideration".
      */

@@ -8,16 +8,4 @@ package nl.ou.dpd.domain;
  */
 public class SystemUnderConsideration extends Edges {
 
-    /**
-     * Shows all edges in this system design.
-     *
-     * @deprecated All show methods will be removed. No more printing to System.out soon.
-     */
-    public void show() {
-        for (Edge edge : getEdges()) {
-            edge.show();
-        }
-        System.out.println();
-    }
-
 }

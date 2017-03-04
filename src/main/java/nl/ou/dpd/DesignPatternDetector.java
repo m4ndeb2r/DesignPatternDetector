@@ -76,7 +76,7 @@ public final class DesignPatternDetector {
             // Find a match for each design pattern in dsp
             final Matcher matcher = new Matcher();
             // TODO: the show() method is called tmeporarily for backaward compatibility
-            designPatterns.forEach(dp -> matcher.match(dp, system, maxMissingEdges).show());
+            designPatterns.forEach(pattern -> matcher.match(pattern, system, maxMissingEdges).show());
 
         } catch (Throwable t) {
             // Acknowledge the user of the unrecoverable error situation

@@ -42,7 +42,7 @@ public abstract class Edges {
      *
      * @return the list of {@link Edge}s, or an empty list if none exist.
      */
-    protected List<Edge> getEdges() {
+    public List<Edge> getEdges() {
         return this.edges;
     }
 
@@ -54,10 +54,5 @@ public abstract class Edges {
     protected void setEdges(List<Edge> edges) {
         this.edges = edges;
     }
-
-    /**
-     * @deprecated All show methods will be removed. No more printing to System.out soon.
-     */
-    public abstract void show();
 
 }

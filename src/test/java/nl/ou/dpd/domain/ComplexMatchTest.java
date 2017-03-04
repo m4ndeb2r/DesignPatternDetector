@@ -2,15 +2,24 @@ package nl.ou.dpd.domain;
 
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 
 /**
  * Tests the {@link Matcher} class for a complex systeem.
  *
+ * TODO: This test detects a tremendous number of patterns. We must rethink this one before implementing it in-depth.
+ *
  * @author Martin de Boer
  */
+@Ignore ("Is this useful for a unittest? E. van Doorn used this for performance testing.")
 public class ComplexMatchTest {
 
     // Template containing GoF design patterns
@@ -33,12 +42,15 @@ public class ComplexMatchTest {
      * "System under consideration", containing many patterns. We then analyse this with a template containing GoF
      * design patterns. Finally we check if the expected patterns are detected (TODO).
      * <p>
-     * TODO: currently this test is always successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testMatch() {
         final SystemUnderConsideration system = TestHelper.createComplexSystemUnderConsideration();
-        dpsTemplates.forEach(pattern -> matcher.match(pattern, system, 1));
+        final List<Solutions> solutionsList = new ArrayList<>();
+
+        dpsTemplates.forEach(pattern -> solutionsList.add(matcher.match(pattern, system, 1)));
+
+        assertThat(solutionsList.size(), is(17));
     }
 
 }

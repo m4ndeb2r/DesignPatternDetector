@@ -17,17 +17,19 @@ import static org.hamcrest.core.Is.is;
 /**
  * An overall test of the {@link DesignPatternDetector}, comparing the output of the program (old style, as printed to
  * the console, with the expected output (as was printed to the console by the original program by Ed van Doorn).
+ * This test is in fact a backwards compatibility test. It checks for identical output to the legacy version of the
+ * application, when identical input is provided. This test will be outdated in the near future.
  *
  * @author Martin de Boer
  */
-public class DesignPatternDetectorTest {
+public class BackwardCompatibilityTest {
 
     private static final String INVALID_INPUT_XMI = "/invalid.xmi";
     private static final String INVALID_TEMPLATES_XML = "/invalid.xml";
     private static final String INPUT_XMI = "/input.xmi";
     private static final String TEMPLATES_XML = "/templates.xml";
 
-    private static final String LEGACY_VERSION_COMPLEX_OUTPUT =
+    private static final String LEGACY_VERSION_DEFAULT_OUTPUT =
             "Design Pattern: Adapter\n" +
                     "                   B -->                    Target\n" +
                     "                   C -->                    Client\n" +
@@ -144,7 +146,7 @@ public class DesignPatternDetectorTest {
                     "\n";
 
     /**
-     * A rule to capture the output written to System.out.
+     * A rule to capture the output written to the console.
      */
     @Rule
     public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
@@ -173,7 +175,7 @@ public class DesignPatternDetectorTest {
                 "\nUsage: \n\tjava -t templateFile -x xmiFile -n maxNumberOfMissingEdges." +
                 "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0");
 
-        runApplicationRun(new String[]{"-y", "why"}, LEGACY_VERSION_COMPLEX_OUTPUT);
+        runApplicationRun(new String[]{"-y", "why"}, LEGACY_VERSION_DEFAULT_OUTPUT);
     }
 
     /**
@@ -186,7 +188,7 @@ public class DesignPatternDetectorTest {
                 "\nUsage: \n\tjava -t templateFile -x xmiFile -n maxNumberOfMissingEdges." +
                 "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0");
 
-        runApplicationRun(new String[]{"-y"}, LEGACY_VERSION_COMPLEX_OUTPUT);
+        runApplicationRun(new String[]{"-y"}, LEGACY_VERSION_DEFAULT_OUTPUT);
     }
 
     /**
@@ -199,7 +201,7 @@ public class DesignPatternDetectorTest {
         final String inputFile = createPathFromResource(INPUT_XMI);
         final String templatesFile = createPathFromResource(TEMPLATES_XML);
         final String[] args = {"-x", inputFile, "-t", templatesFile, "-n", "1"};
-        runApplicationRun(args, LEGACY_VERSION_COMPLEX_OUTPUT);
+        runApplicationRun(args, LEGACY_VERSION_DEFAULT_OUTPUT);
     }
 
     /**
@@ -306,7 +308,7 @@ public class DesignPatternDetectorTest {
     }
 
     private String createPathFromResource(String resourceName) {
-        return DesignPatternDetectorTest.class.getResource(resourceName).getPath();
+        return BackwardCompatibilityTest.class.getResource(resourceName).getPath();
     }
 
 

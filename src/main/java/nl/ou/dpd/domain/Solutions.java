@@ -47,7 +47,11 @@ public class Solutions {
     }
 
     /**
-     * @deprecated no System.out prints in this application!!
+     * This method is still available for backwards compatibility purposes. The original version of the application
+     * printed all the results to the console. In the next version we will not do that anymore. Instead a GUI is being
+     * considered to show feedback to the user.
+     *
+     * @deprecated no output to the console directly in this application!!
      */
     public void show() {
         for (Solution solution : solutions) {
@@ -55,24 +59,29 @@ public class Solutions {
             final MatchedClasses matchedClasses = solution.getMatchedClasses();
             final List<Edge> superfluousEdges = solution.getSuperfluousEdges();
 
+            final StringBuffer output = new StringBuffer();
+
             if (!designPatternName.isEmpty()) {
-                System.out.printf("Design Pattern: %s\n", designPatternName);
+                output.append("Design Pattern: ").append(designPatternName).append("\n");
             }
             for (Clazz key : matchedClasses.getBoundedSortedKeySet()) {
-                System.out.printf("%20s --> %25s\n", key.getName(), matchedClasses.get(key).getName());
+                output.append(String.format("%20s --> %25s\n", key.getName(), matchedClasses.get(key).getName()));
             }
-            System.out.println("------------------------");
+            output.append("------------------------\n");
 
             if (superfluousEdges.size() > 0) {
-                System.out.println("Edges which do not belong to this design pattern:");
+                output.append("Edges which do not belong to this design pattern:\n");
                 for (Edge edge : superfluousEdges) {
                     if (!edge.isVirtual()) {
-                        System.out.println(edge.getClass1().getName() + " --> " + edge.getClass2().getName());
+                        output.append(edge.getClass1().getName())
+                                .append(" --> ")
+                                .append(edge.getClass2().getName())
+                                .append("\n");
                     }
                 }
-                System.out.println("==================================================");
+                output.append("==================================================\n");
             }
-            System.out.println();
+            System.out.println(output.toString());
         }
     }
 }

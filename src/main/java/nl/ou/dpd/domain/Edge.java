@@ -63,33 +63,8 @@ public class Edge {
      *
      * @return {@code true} if virtual, or {@code false} otherwise.
      */
-    boolean isVirtual() {
+    public boolean isVirtual() {
         return virtual;
-    }
-
-    /**
-     * @deprecated All show methods must go. No more printing to System.out very soon.
-     */
-    void show() {
-        if (!virtual) {
-            System.out.printf(
-                    "(%15s, %15s, type relatie %2d, self ref: %3s, locked: %3s)\n",
-                    classInterface1.getName(),
-                    classInterface2.getName(),
-                    typeRelation.getCode(),
-                    selfRef ? "ja" : "nee",
-                    locked ? "ja" : "nee");
-        }
-
-    }
-
-    /**
-     * @deprecated All show methods must go. No more printing to System.out very soon.
-     */
-    void showSimple() {
-        if (!virtual) {
-            System.out.println(classInterface1.getName() + " --> " + classInterface2.getName());
-        }
     }
 
     /**
@@ -103,7 +78,7 @@ public class Edge {
         return edge.getClass1().equals(classInterface1)
                 && edge.getClass2().equals(classInterface2)
                 && edge.getTypeRelation() == typeRelation
-                && edge.getSelfRef() == selfRef;
+                && edge.isSelfRef() == selfRef;
     }
 
     /**
@@ -131,7 +106,7 @@ public class Edge {
      *
      * @return {@code true} when it is locked, or {@code false} if it is not.
      */
-    boolean isLocked() {
+    public boolean isLocked() {
         return this.locked;
     }
 
@@ -140,7 +115,7 @@ public class Edge {
      *
      * @return the first class/interface.
      */
-    Clazz getClass1() {
+    public Clazz getClass1() {
         return classInterface1;
     }
 
@@ -149,7 +124,7 @@ public class Edge {
      *
      * @return the second class/interface.
      */
-    Clazz getClass2() {
+    public Clazz getClass2() {
         return classInterface2;
     }
 
@@ -158,7 +133,7 @@ public class Edge {
      *
      * @return the edge type.
      */
-    EdgeType getTypeRelation() {
+    public EdgeType getTypeRelation() {
         return typeRelation;
     }
 
@@ -168,7 +143,7 @@ public class Edge {
      *
      * @return {@code true} if this edge references itself, or {@code false} otherwise.
      */
-    boolean getSelfRef() {
+    public boolean isSelfRef() {
         return selfRef;
     }
 

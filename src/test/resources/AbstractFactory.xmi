@@ -115,14 +115,14 @@
           </UML:ModelElement.clientDependency>
         </UML:Class>
         <UML:Class xmi.id = '127-0-1-1--8c90902:1535b940d66:-8000:0000000000000871'
-          name = 'Prob2B' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          name = 'Prod2B' visibility = 'public' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
           <UML:ModelElement.clientDependency>
             <UML:Abstraction xmi.idref = '127-0-1-1--8c90902:1535b940d66:-8000:0000000000000882'/>
           </UML:ModelElement.clientDependency>
         </UML:Class>
         <UML:Class xmi.id = '127-0-1-1--8c90902:1535b940d66:-8000:0000000000000872'
-          name = 'Prob1B' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          name = 'Prod1B' visibility = 'public' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
           <UML:ModelElement.clientDependency>
             <UML:Abstraction xmi.idref = '127-0-1-1--8c90902:1535b940d66:-8000:0000000000000880'/>

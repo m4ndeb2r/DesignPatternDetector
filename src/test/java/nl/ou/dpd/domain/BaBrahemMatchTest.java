@@ -30,11 +30,11 @@ public class BaBrahemMatchTest {
      * "System under consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if
      * the prototype pattern is detected.
      * <p>
-     * TODO: currently this test is always successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectPrototype() {
-        matcher.match(TestHelper.createPrototypePattern(), createBaBrahemExample(), 0);
+        final Solutions solutions = matcher.match(TestHelper.createPrototypePattern(), createBaBrahemExample(), 0);
+        // TODO: test solutions
     }
 
     /**
@@ -42,11 +42,11 @@ public class BaBrahemMatchTest {
      * "System under consideration", based on the BaBrahem-example in Ed van Doorn's article, and will check here if the
      * bridge pattern is detected.
      * <p>
-     * TODO: currently this test is always successful. We cannot check the output (yet), since it is printed to System.out.
      */
     @Test
     public void testDetectBridge() {
-        matcher.match(createBridgePattern(), createBaBrahemExample(), 1);
+        final Solutions solutions = matcher.match(createBridgePattern(), createBaBrahemExample(), 1);
+        // TODO: test solutions
     }
 
     private SystemUnderConsideration createBaBrahemExample() {

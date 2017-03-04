@@ -147,7 +147,7 @@ public class MatchedClasses {
             }
         }
 
-        if (patternEdge.getSelfRef() != systemEdge.getSelfRef()) {
+        if (patternEdge.isSelfRef() != systemEdge.isSelfRef()) {
             return false;
         }
 
