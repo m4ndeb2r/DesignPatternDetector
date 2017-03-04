@@ -74,7 +74,7 @@ public class Matcher {
                 // This is an acceptable solution. Let's gather the information and keep it.
 
                 final Solution solution = createSolution(pattern, system, matchedClasses);
-                if (solutions.isUniq(solution)) {
+                if (!solution.isEmpty() && solutions.isUniq(solution)) {
                     solutions.add(solution);
                 }
                 return true;

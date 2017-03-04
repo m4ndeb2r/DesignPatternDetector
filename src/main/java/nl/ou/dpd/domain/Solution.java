@@ -70,4 +70,13 @@ public class Solution {
     public List<Edge> getSuperfluousEdges() {
         return superfluousEdges;
     }
+
+    /**
+     * Indicates whether or not this {@link Solution} has any matches. No matches means an empty solution.
+     *
+     * @return {@code true} when the are no matches (no solutions), or {@code false} otherwise.
+     */
+    public boolean isEmpty() {
+        return this.getMatchedClasses().getBoundedSortedKeySet().isEmpty();
+    }
 }

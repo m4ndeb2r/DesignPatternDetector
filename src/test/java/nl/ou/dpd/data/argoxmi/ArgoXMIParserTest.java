@@ -29,6 +29,8 @@ public class ArgoXMIParserTest {
     private static final String INVALID_XMI = "/invalid.xmi";
     // A test file containing the Ba Brahem "system under consideration" example.
     private static final String BA_BRAHEM_TEST_XMI = "/Ba_Brahem.xmi";
+    // A test file containing the default input.xmi
+    private static final String DEFAUL_INPUT_XMI = "/input.xmi";
 
     // Test files containing XMI exports of strategy UMLs.
     private static final String STRATEGY_XMI = "/Strategy.xmi";

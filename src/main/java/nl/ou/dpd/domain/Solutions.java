@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Solutions {
 
-    private List<Solution> solutions;
+    private final List<Solution> solutions;
 
     /**
      * Default constructor. Constructs a {@link Solution}s instance containing an empty list of {@link Solution}s.
@@ -44,6 +44,15 @@ public class Solutions {
             }
         }
         return result;
+    }
+
+    /**
+     * Returns the list of {@link Solution}s.
+     *
+     * @return the list of  {@link Solution}s.
+     */
+    public List<Solution> getSolutions() {
+        return solutions;
     }
 
     /**
