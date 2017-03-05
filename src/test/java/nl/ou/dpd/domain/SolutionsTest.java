@@ -1,8 +1,17 @@
 package nl.ou.dpd.domain;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the class {@link Solution}.
@@ -19,59 +28,111 @@ public class SolutionsTest {
     private Solution solution2a;
     private Solution solution2b;
 
-    // TODO: fix this test
+    /**
+     * Initialise the test(s).
+     */
+    @Before
+    public void initSolution() {
+        solution1a = new Solution(
+                "Pattern1a",
+                createMatchedClasses_AB_CD_AC(),
+                createSuperfluousEdges(),
+                createMissingEdges());
+        solution1b = new Solution(
+                "Pattern1b",
+                createMatchedClasses_AC_CD_AB(),
+                createSuperfluousEdges(),
+                createMissingEdges());
 
-//    @Before
-//    public void initSolution() {
-//        solution1a = new Solution(createClasses("A", "B", "C"));
-//        solution1b = new Solution(createClasses("A", "B", "D"));
-//        solutions1 = new Solutions();
-//        solutions1.add(solution1a);
-//        solutions1.add(solution1b);
-//
-//        solution2a = new Solution(createClasses("A", "B", "X"));
-//        solution2b = new Solution(createClasses("A", "C", "X"));
-//        solutions2 = new Solutions();
-//        solutions2.add(solution2a);
-//        solutions2.add(solution2b);
-//    }
-//
-//    @Test
-//    public void testIsUnique() {
-//        assertThat(solutions1.isUniq(createClasses("A", "B", "C")), is(false));
-//        assertThat(solutions1.isUniq(createClasses("A", "C", "B")), is(false));
-//        assertThat(solutions1.isUniq(createClasses("C", "B", "A")), is(false));
-//        assertThat(solutions1.isUniq(createClasses("C", "A", "B")), is(false));
-//        assertThat(solutions1.isUniq(createClasses("F", "B", "C")), is(true));
-//        assertThat(solutions1.isUniq(createClasses("F", "C", "B")), is(true));
-//        assertThat(solutions1.isUniq(createClasses("C", "B", "F")), is(true));
-//        assertThat(solutions1.isUniq(createClasses("C", "F", "B")), is(true));
-//
-//        assertThat(solutions2.isUniq(createClasses("A", "B", "X")), is(false));
-//        assertThat(solutions2.isUniq(createClasses("A", "X", "B")), is(false));
-//        assertThat(solutions2.isUniq(createClasses("X", "B", "A")), is(false));
-//        assertThat(solutions2.isUniq(createClasses("X", "A", "B")), is(false));
-//        assertThat(solutions2.isUniq(createClasses("F", "B", "C")), is(true));
-//        assertThat(solutions2.isUniq(createClasses("F", "C", "B")), is(true));
-//        assertThat(solutions2.isUniq(createClasses("C", "B", "F")), is(true));
-//        assertThat(solutions2.isUniq(createClasses("C", "F", "B")), is(true));
-//    }
+        solutions1 = new Solutions();
+        solutions1.add(solution1a);
 
-    private SortedSet<Clazz> createClasses(String... names) {
-        SortedSet<Clazz> set = new TreeSet<>();
-        for (String name : names) {
-            set.add(new Clazz(name));
-        }
-        return set;
+        solution2a = new Solution(
+                "Pattern2a",
+                createMatchedClasses_WX_WY_YZ(),
+                createSuperfluousEdges(),
+                createMissingEdges());
+        solution2b = new Solution(
+                "Pattern2b",
+                createMatchedClasses_WX_YZ_WY(),
+                createSuperfluousEdges(),
+                createMissingEdges());
+
+        solutions2 = new Solutions();
+        solutions2.add(solution2a);
     }
 
-    private Solution createSolution(String designPatternName, MatchedClasses matchedClasses, Set<Edge> superfluousEdges, Set<Edge> missingEdges) {
-        return new Solution(designPatternName, matchedClasses, superfluousEdges, missingEdges);
+    /**
+     * Tests the {@link Solutions#isUniq(Solution)} method.
+     */
+    @Test
+    public void testIsUnique() {
+        assertFalse(solutions1.isUniq(solution1b));
+        assertTrue(solutions1.isUniq(solution2a));
+        assertTrue(solutions1.isUniq(solution2b));
+
+        assertFalse(solutions2.isUniq(solution2b));
+        assertTrue(solutions2.isUniq(solution1a));
+        assertTrue(solutions2.isUniq(solution1b));
+
+        solutions1.add(solution2a);
+        assertFalse(solutions1.isUniq(solution2a));
+        assertFalse(solutions1.isUniq(solution2b));
+
+        solutions2.add(solution1a);
+        assertFalse(solutions2.isUniq(solution1a));
+        assertFalse(solutions2.isUniq(solution1b));
     }
 
-//    private MatchedClasses createMatchedClasses(String[] systemClasses, String[] designPatternClasses) {
-//        MatchedClasses result = new MatchedClasses();
-//        result.makeMatch();
-//    }
+    private Set<Edge> createSuperfluousEdges() {
+        Set<Edge> result = new HashSet<>();
+        result.add(new Edge(new Clazz("sysE"), new Clazz("sysB"), EdgeType.ASSOCIATION_DIRECTED));
+        return result;
+    }
+
+    private Set<Edge> createMissingEdges() {
+        Set<Edge> result = new HashSet<>();
+        result.add(new Edge(new Clazz("dpP"), new Clazz("dpQ"), EdgeType.AGGREGATE));
+        return result;
+    }
+
+    private MatchedClasses createMatchedClasses_WX_WY_YZ() {
+        MatchedClasses result = new MatchedClasses();
+        createMatch(result, "W", "X");
+        createMatch(result, "W", "Y");
+        createMatch(result, "Y", "Z");
+        return result;
+    }
+
+    private MatchedClasses createMatchedClasses_WX_YZ_WY() {
+        MatchedClasses result = new MatchedClasses();
+        createMatch(result, "W", "X");
+        createMatch(result, "Y", "Z");
+        createMatch(result, "W", "Y");
+        return result;
+    }
+
+    private MatchedClasses createMatchedClasses_AB_CD_AC() {
+        MatchedClasses result = new MatchedClasses();
+        createMatch(result, "A", "B");
+        createMatch(result, "C", "D");
+        createMatch(result, "A", "C");
+        return result;
+    }
+
+    private MatchedClasses createMatchedClasses_AC_CD_AB() {
+        MatchedClasses result = new MatchedClasses();
+        createMatch(result, "A", "C");
+        createMatch(result, "C", "D");
+        createMatch(result, "A", "B");
+        return result;
+    }
+
+    private void createMatch(MatchedClasses matchedClasses, String a, String b) {
+        matchedClasses.makeMatch(
+                new Edge(new Clazz("sys" + a), new Clazz("sys" + b), EdgeType.AGGREGATE),
+                new Edge(new Clazz("dp" + a), new Clazz("dp" + b), EdgeType.DEPENDENCY)
+        );
+    }
 
 }

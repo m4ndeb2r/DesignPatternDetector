@@ -31,10 +31,10 @@ public class Solutions {
     }
 
     /**
-     * TODO....
+     * Indicates whether the specified {@link Solution} is not already present in this {@link Solutions}.
      *
-     * @param sol
-     * @return
+     * @param sol the {@link Solution} to determine uniqueness for.
+     * @return {@code true} if {@code sol} is not already present, or {@code false} otherwise.
      */
     public boolean isUniq(Solution sol) {
         boolean result = true;
