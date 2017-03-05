@@ -8,6 +8,7 @@ import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the class {@link Solution}.
@@ -48,6 +49,23 @@ public class SolutionTest {
                 createMatchedClasses_WX_YZ_WY(),
                 createSuperfluousEdges(),
                 createMissingEdges());
+    }
+
+    /**
+     * Test the constructor and getters of the {@link Solution} class.
+     */
+    @Test
+    public void testConstructor() {
+        assertThat(solution1a.getDesignPatternName(), is("Pattern1a"));
+
+        assertThat(solution1a.getMissingEdges().size(), is(1));
+        final Edge expMissing = new Edge(new Clazz("dpP"), new Clazz("dpQ"), EdgeType.AGGREGATE);
+        assertTrue(solution1a.getMissingEdges().contains(expMissing));
+
+        assertThat(solution1a.getSuperfluousEdges().size(), is(1));
+        final Edge expSuperfluous = new Edge(new Clazz("sysE"), new Clazz("sysB"), EdgeType.ASSOCIATION_DIRECTED);
+        assertTrue(solution1a.getSuperfluousEdges().contains(expSuperfluous));
+
     }
 
     /**
