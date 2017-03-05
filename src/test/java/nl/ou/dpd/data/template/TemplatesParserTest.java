@@ -4,10 +4,8 @@ import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.Edge;
 import nl.ou.dpd.domain.EdgeType;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.rules.ExpectedException;
 import org.xml.sax.SAXParseException;
 

@@ -3,8 +3,8 @@ package nl.ou.dpd.domain;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -28,10 +28,26 @@ public class SolutionTest {
      */
     @Before
     public void initSolution() {
-        solution1a = new Solution("Pattern1a", createMatchedClasses_AB_CD_AC(), createSuperfluousEdges());
-        solution1b = new Solution("Pattern1b", createMatchedClasses_AC_CD_AB(), createSuperfluousEdges());
-        solution2a = new Solution("Pattern2a", createMatchedClasses_WX_WY_YZ(), createSuperfluousEdges());
-        solution2b = new Solution("Pattern2b", createMatchedClasses_WX_YZ_WY(), createSuperfluousEdges());
+        solution1a = new Solution(
+                "Pattern1a",
+                createMatchedClasses_AB_CD_AC(),
+                createSuperfluousEdges(),
+                createMissingEdges());
+        solution1b = new Solution(
+                "Pattern1b",
+                createMatchedClasses_AC_CD_AB(),
+                createSuperfluousEdges(),
+                createMissingEdges());
+        solution2a = new Solution(
+                "Pattern2a",
+                createMatchedClasses_WX_WY_YZ(),
+                createSuperfluousEdges(),
+                createMissingEdges());
+        solution2b = new Solution(
+                "Pattern2b",
+                createMatchedClasses_WX_YZ_WY(),
+                createSuperfluousEdges(),
+                createMissingEdges());
     }
 
     /**
@@ -51,9 +67,15 @@ public class SolutionTest {
         assertThat(solution2a.isEqual(solution2b), is(true));
     }
 
-    private List<Edge> createSuperfluousEdges() {
-        List<Edge> result = new ArrayList<>();
+    private Set<Edge> createSuperfluousEdges() {
+        Set<Edge> result = new HashSet<>();
         result.add(new Edge(new Clazz("sysE"), new Clazz("sysB"), EdgeType.ASSOCIATION_DIRECTED));
+        return result;
+    }
+
+    private Set<Edge> createMissingEdges() {
+        Set<Edge> result = new HashSet<>();
+        result.add(new Edge(new Clazz("dpP"), new Clazz("dpQ"), EdgeType.AGGREGATE));
         return result;
     }
 

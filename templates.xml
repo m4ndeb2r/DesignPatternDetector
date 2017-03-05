@@ -91,8 +91,8 @@
    </template>			              				        
 				              				        
    <template name ="Factory Method">          				        
-       <edge node1="Product"                   node2="ConcreteProduct"           type="INHERITANCE"/>
-       <edge node1="ConcreteCreator"           node2="Product"                   type="DEPENDENCY"/>
+       <edge node1="ConcreteProduct"           node2="Product"                   type="INHERITANCE"/>
+       <edge node1="ConcreteCreator"           node2="ConcreteProduct"           type="DEPENDENCY"/>
        <edge node1="ConcreteCreator"           node2="Creator"                   type="INHERITANCE"/>
    </template>
 

@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -39,8 +41,11 @@ public class Matcher {
         // Initialise the solutions. These will be populated during the recursive match.
         solutions = new Solutions();
 
-        // Do the matching recursively.
-        recursiveMatch(pattern, system, maxNotMatchable, 0, matchedClasses);
+        // Do the matching recursively. Initially regard all pattern edges as missing.
+        // We will remove them from the missing edges list as soon as they are matched.
+        final HashSet<Edge> missingEdges = new HashSet<>();
+        missingEdges.addAll(pattern.getEdges());
+        recursiveMatch(pattern, system, maxNotMatchable, 0, matchedClasses, missingEdges);
 
         // Return feedback
         return solutions;
@@ -61,19 +66,15 @@ public class Matcher {
             SystemUnderConsideration system,
             int maxNotMatchable,
             int startIndex,
-            MatchedClasses matchedClasses) {
-
-        // --this-- should contain the edges of the design pattern !!
-        // For a particular edge (fourtuple.get(startIndex) in the design pattern
-        // try to find the corresponding edge(s) in system under consideration.
+            MatchedClasses matchedClasses,
+            Set<Edge> missingEdges) {
 
         if (startIndex >= pattern.getEdges().size()) {
             // The detecting process is completed
 
             if (maxNotMatchable >= 0) {
                 // This is an acceptable solution. Let's gather the information and keep it.
-
-                final Solution solution = createSolution(pattern, system, matchedClasses);
+                final Solution solution = createSolution(pattern, system, matchedClasses, missingEdges);
                 if (!solution.isEmpty() && solutions.isUniq(solution)) {
                     solutions.add(solution);
                 }
@@ -100,6 +101,7 @@ public class Matcher {
 
                 // Make match in copyMatchedClasses, and lock the matched edges to prevent them from being matched twice
                 copyMatchedClasses.makeMatch(systemEdge, patternEdge);
+                missingEdges.remove(patternEdge);
                 lockEdges(patternEdge, systemEdge);
 
                 if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
@@ -111,6 +113,7 @@ public class Matcher {
                                 && skEdge.getClass2().equals(systemEdge.getClass2())
                                 && matchedClasses.canMatch(skEdge, patternEdge)) {
                             copyMatchedClasses.makeMatch(skEdge, patternEdge);
+                            missingEdges.remove(patternEdge);
                             extraMatched.add(new Integer(k));
                             skEdge.lock();
                         }
@@ -118,8 +121,12 @@ public class Matcher {
                 }
 
                 // Recursive matching
-                boolean foundRecursively = recursiveMatch(pattern, system, maxNotMatchable,
-                        startIndex + 1, copyMatchedClasses);
+                boolean foundRecursively = recursiveMatch(
+                        pattern,
+                        system,
+                        maxNotMatchable,
+                        startIndex + 1,
+                        copyMatchedClasses, missingEdges);
                 found = found || foundRecursively;
 
                 // Unlock all locked edges, including the multiple inherited ones
@@ -139,11 +146,15 @@ public class Matcher {
         if (!found) {
 
             // Is the number of not matched edges acceptable? Can we proceed recursively?
-            if (--maxNotMatchable >= 0) {
-                return recursiveMatch(pattern, system, maxNotMatchable,
-                        startIndex + 1, matchedClasses);
-            }
+            if (maxNotMatchable > 0) {
 
+                return recursiveMatch(
+                        pattern,
+                        system,
+                        maxNotMatchable - 1,
+                        startIndex + 1,
+                        matchedClasses, missingEdges);
+            }
             return false;
         }
 
@@ -159,11 +170,21 @@ public class Matcher {
      * @param matchedClasses
      * @return
      */
-    private Solution createSolution(DesignPattern pattern, SystemUnderConsideration system, MatchedClasses matchedClasses) {
+    private Solution createSolution(
+            DesignPattern pattern,
+            SystemUnderConsideration system,
+            MatchedClasses matchedClasses,
+            Set<Edge> missingEdges) {
+
+        // Patter name
         final String dpName = pattern.getName();
+
+        // Classes that have been matched
         final SortedSet<Clazz> boundedKeys = matchedClasses.getBoundedSortedKeySet();
         final MatchedClasses involvedClasses = matchedClasses.filter(boundedKeys);
-        final List<Edge> superfluousEdges = new ArrayList<>();
+
+        // Superfluous classes
+        final Set<Edge> superfluousEdges = new HashSet<>();
         for (Edge edge : system.getEdges()) {
             if (matchedClasses.keyIsBounded(edge.getClass1())
                     && matchedClasses.keyIsBounded(edge.getClass2())
@@ -171,7 +192,7 @@ public class Matcher {
                 superfluousEdges.add(edge);
             }
         }
-        return new Solution(dpName, involvedClasses, superfluousEdges);
+        return new Solution(dpName, involvedClasses, superfluousEdges, missingEdges);
     }
 
     /**

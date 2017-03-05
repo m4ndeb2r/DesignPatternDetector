@@ -1,5 +1,6 @@
 package nl.ou.dpd.domain;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -88,6 +89,15 @@ public class MatchedClasses {
      */
     Set<Clazz> getKeySet() {
         return classes.keySet();
+    }
+
+    /**
+     * TODO...
+     *
+     * @return
+     */
+    Collection<Clazz> values() {
+        return classes.values();
     }
 
     /**

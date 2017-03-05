@@ -1,6 +1,6 @@
 package nl.ou.dpd.domain;
 
-import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -15,7 +15,8 @@ public class Solution {
 
     private final String designPatternName;
     private final MatchedClasses matchedClasses;
-    private final List<Edge> superfluousEdges;
+    private final Set<Edge> superfluousEdges;
+    private final Set<Edge> missingEdges;
 
     /**
      * Constructs a {@link Solution} instance with a set of {@code classes} (representing vertices in a graph). Two
@@ -25,16 +26,19 @@ public class Solution {
      *
      * @param classes a set of classes/interfaces. These classes are part of a matching matchedClasses.
      */
-    public Solution(String designPatternName, MatchedClasses matchedClasses, List<Edge> superfluousEdges) {
+    public Solution(
+            String designPatternName,
+            MatchedClasses matchedClasses,
+            Set<Edge> superfluousEdges,
+            Set<Edge> missingEdges) {
         this.designPatternName = designPatternName;
         this.matchedClasses = matchedClasses;
         this.superfluousEdges = superfluousEdges;
+        this.missingEdges = missingEdges;
     }
 
     /**
-     * Returns whether this {@link Solution} contains the same class names as the {@code other} one. In other words:
-     * the same set of classes from the "system under consideration" (the keys in the {@link MatchedClasses} object)
-     * must be present in both {@link Solution}s.
+     * TODO...
      *
      * @param other
      * @return
@@ -65,10 +69,19 @@ public class Solution {
      * Getter for the superfluous edges: the edges that are found, but do not necessarily belong to the detected design
      * pattern.
      *
-     * @return a list of {@link Edge}s that do not belong to the detected pattern.
+     * @return a set of {@link Edge}s that do not belong to the detected pattern.
      */
-    public List<Edge> getSuperfluousEdges() {
+    public Set<Edge> getSuperfluousEdges() {
         return superfluousEdges;
+    }
+
+    /**
+     * Getter for the missing edges: the edges that are in the pattern, but are not found in the system design.
+     *
+     * @return a set of {@link Edge}s that are missing, but do belong to the detected pattern.
+     */
+    public Set<Edge> getMissingEdges() {
+        return missingEdges;
     }
 
     /**

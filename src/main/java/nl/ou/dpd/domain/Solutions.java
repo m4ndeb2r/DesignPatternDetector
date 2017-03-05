@@ -2,6 +2,7 @@ package nl.ou.dpd.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a list of {@link Solution}s.
@@ -66,7 +67,7 @@ public class Solutions {
         for (Solution solution : solutions) {
             final String designPatternName = solution.getDesignPatternName();
             final MatchedClasses matchedClasses = solution.getMatchedClasses();
-            final List<Edge> superfluousEdges = solution.getSuperfluousEdges();
+            final Set<Edge> superfluousEdges = solution.getSuperfluousEdges();
 
             final StringBuffer output = new StringBuffer();
 
@@ -91,6 +92,8 @@ public class Solutions {
                 output.append("==================================================\n");
             }
             System.out.println(output.toString());
+
+            // Note: we are not printing missing edges for backward compatibility (they were not printed in the original version)
         }
     }
 }

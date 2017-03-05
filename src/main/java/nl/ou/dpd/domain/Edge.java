@@ -1,5 +1,7 @@
 package nl.ou.dpd.domain;
 
+import java.util.Objects;
+
 /**
  * A {@link Edge} represents an edge in a {@link DesignPattern} or a {@link SystemUnderConsideration}.
  * <p>
@@ -68,20 +70,6 @@ public class Edge {
     }
 
     /**
-     * Determines whether the specified {@link Edge} has the same classes/interfaces, type of relation and
-     * self reference. In that case they are being considered equal.
-     *
-     * @param edge the {@link Edge} to compare {@code this} with
-     * @return {@code true} if {@code this} equals {@code edge}, {@code false} otherwise
-     */
-    boolean equals(Edge edge) {
-        return edge.getClass1().equals(classInterface1)
-                && edge.getClass2().equals(classInterface2)
-                && edge.getTypeRelation() == typeRelation
-                && edge.isSelfRef() == selfRef;
-    }
-
-    /**
      * Locks a {@link Edge} to prevent it from being matched (again).
      *
      * @return {@code true} if the lock succeeded, or {@code false} otherwise.
@@ -147,5 +135,30 @@ public class Edge {
         return selfRef;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Edge edge = (Edge) o;
+        return selfRef == edge.selfRef
+                && virtual == edge.virtual
+                && Objects.equals(classInterface1, edge.classInterface1)
+                && Objects.equals(classInterface2, edge.classInterface2)
+                && typeRelation == edge.typeRelation;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(classInterface1, classInterface2, typeRelation, selfRef, virtual);
+    }
 }

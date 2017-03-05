@@ -1,6 +1,10 @@
 package nl.ou.dpd.utils;
 
-import nl.ou.dpd.domain.*;
+import nl.ou.dpd.domain.Clazz;
+import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.Edge;
+import nl.ou.dpd.domain.EdgeType;
+import nl.ou.dpd.domain.SystemUnderConsideration;
 
 import java.util.ArrayList;
 
@@ -150,9 +154,20 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a FactoryMethod pattern.
      */
     public static DesignPattern createFactoryMethodPattern() {
+
+        /*
+       <edge node1="ConcreteProduct"           node2="Product"                   type="INHERITANCE"/>
+       <edge node1="ConcreteCreator"           node2="ConcreteProduct"           type="DEPENDENCY"/>
+       <edge node1="ConcreteCreator"           node2="Creator"                   type="INHERITANCE"/>
+        */
+
+
+
+
+
         final DesignPattern factoryMethod = new DesignPattern("Factory Method");
-        factoryMethod.add(createEdge("Product", "ConcreteProduct", EdgeType.INHERITANCE));
-        factoryMethod.add(createEdge("ConcreteCreator", "Product", EdgeType.DEPENDENCY));
+        factoryMethod.add(createEdge("ConcreteProduct", "Product", EdgeType.INHERITANCE));
+        factoryMethod.add(createEdge("ConcreteCreator", "ConcreteProduct", EdgeType.DEPENDENCY));
         factoryMethod.add(createEdge("ConcreteCreator", "Creator", EdgeType.INHERITANCE));
         return factoryMethod;
     }
@@ -267,11 +282,10 @@ public class TestHelper {
      */
     public static DesignPattern createBridgePattern() {
         final DesignPattern bridge = new DesignPattern("Bridge");
-        bridge.add(createEdge("Client", "Abstraction", EdgeType.ASSOCIATION));
+        bridge.add(createEdge("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
+        bridge.add(createEdge("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE_MULTI));
         bridge.add(createEdge("Implementor", "Abstraction", EdgeType.AGGREGATE));
-        bridge.add(createEdge("ConcreteImplementorA", "Implementor", EdgeType.INHERITANCE));
-        bridge.add(createEdge("ConcreteImplementorB", "Implementor", EdgeType.INHERITANCE));
-        bridge.add(createEdge("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE));
+        bridge.add(createEdge("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE_MULTI));
         return bridge;
     }
 

@@ -3,7 +3,14 @@ package nl.ou.dpd.domain;
 import org.hamcrest.core.Is;
 import org.junit.Test;
 
-import static nl.ou.dpd.domain.EdgeType.*;
+import static nl.ou.dpd.domain.EdgeType.AGGREGATE;
+import static nl.ou.dpd.domain.EdgeType.ASSOCIATION;
+import static nl.ou.dpd.domain.EdgeType.ASSOCIATION_DIRECTED;
+import static nl.ou.dpd.domain.EdgeType.COMPOSITE;
+import static nl.ou.dpd.domain.EdgeType.DEPENDENCY;
+import static nl.ou.dpd.domain.EdgeType.EMPTY;
+import static nl.ou.dpd.domain.EdgeType.INHERITANCE;
+import static nl.ou.dpd.domain.EdgeType.INHERITANCE_MULTI;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
