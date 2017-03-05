@@ -38,10 +38,12 @@ public class Solution {
     }
 
     /**
-     * TODO...
+     * Indicates whether the matched classes of this {@link Solution} are equal to the matched classes of another
+     * {@link Solution}.
      *
-     * @param other
-     * @return
+     * @param other the {@link Solution} to compare to this {@link Solution}.
+     * @return {@code true} if the matched classes of this {@link Solution} are equal to the matched classes of
+     * {@code other}, or {@code false} otherwise.
      */
     public boolean isEqual(Solution other) {
         return this.matchedClasses.getBoundedSortedKeySet().equals(other.matchedClasses.getBoundedSortedKeySet());

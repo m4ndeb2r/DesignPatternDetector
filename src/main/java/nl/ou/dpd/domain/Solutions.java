@@ -37,14 +37,12 @@ public class Solutions {
      * @return {@code true} if {@code sol} is not already present, or {@code false} otherwise.
      */
     public boolean isUniq(Solution sol) {
-        boolean result = true;
         for (Solution s : solutions) {
-            result = result && !s.isEqual(sol);
-            if (!result) {
+            if (s.isEqual(sol)) {
                 return false;
             }
         }
-        return result;
+        return true;
     }
 
     /**
