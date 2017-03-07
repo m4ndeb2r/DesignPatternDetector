@@ -67,11 +67,11 @@ public class Clazz implements Comparable<Clazz> {
      */
     @Override
     public int compareTo(Clazz other) {
+        if (other == null || other.getName() == null) {
+            return 1;
+        }
         if (getName() == null) {
             return -1;
-        }
-        if (other.getName() == null) {
-            return 1;
         }
         return this.getName().compareTo(other.getName());
     }

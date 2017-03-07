@@ -96,15 +96,6 @@ public class MatchedClasses {
      *
      * @return
      */
-    Collection<Clazz> values() {
-        return classes.values();
-    }
-
-    /**
-     * TODO...
-     *
-     * @return
-     */
     SortedSet<Clazz> getBoundedSortedKeySet() {
         return new TreeSet(getKeySet()
                 .stream()

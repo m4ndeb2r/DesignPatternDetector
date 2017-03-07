@@ -154,17 +154,6 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a FactoryMethod pattern.
      */
     public static DesignPattern createFactoryMethodPattern() {
-
-        /*
-       <edge node1="ConcreteProduct"           node2="Product"                   type="INHERITANCE"/>
-       <edge node1="ConcreteCreator"           node2="ConcreteProduct"           type="DEPENDENCY"/>
-       <edge node1="ConcreteCreator"           node2="Creator"                   type="INHERITANCE"/>
-        */
-
-
-
-
-
         final DesignPattern factoryMethod = new DesignPattern("Factory Method");
         factoryMethod.add(createEdge("ConcreteProduct", "Product", EdgeType.INHERITANCE));
         factoryMethod.add(createEdge("ConcreteCreator", "ConcreteProduct", EdgeType.DEPENDENCY));

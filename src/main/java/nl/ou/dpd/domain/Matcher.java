@@ -95,7 +95,7 @@ public class Matcher {
 
             final Edge systemEdge = system.getEdges().get(j);
             final MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
-            final List<Integer> extraMatched = new ArrayList<Integer>();
+            final List<Integer> extraMatched = new ArrayList<>();
 
             if (!systemEdge.isLocked() && matchedClasses.canMatch(systemEdge, patternEdge)) {
 
