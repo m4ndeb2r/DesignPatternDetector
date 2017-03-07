@@ -26,6 +26,7 @@ public class EdgeTest {
         Edge edge1 = TestHelper.createEdge("class1", "class2", EdgeType.DEPENDENCY);
         Edge edge2 = new Edge(edge1);
         assertTrue(edge1.equals(edge2));
+        assertTrue(edge1.equals(edge1));
 
         // A locked edge is still regarded as equal to an unlocked one
         edge2.lock();
