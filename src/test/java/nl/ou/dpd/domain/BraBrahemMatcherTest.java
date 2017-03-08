@@ -360,7 +360,6 @@ public class BraBrahemMatcherTest {
                         EdgeType.ASSOCIATION_DIRECTED)));
 
         // Check missing edges
-        // TODO: BUG in the application? We are finding a missing edge: dependency. But it is actually there, so not missing at all....
         assertThat(me0.size(), is(0));
     }
 
