@@ -45,8 +45,6 @@ public class FlyweightMatcherTest {
         final Solutions matchResult = matcher.match(pattern, system, 0);
         final List<Solution> solutions = matchResult.getSolutions();
 
-        matchResult.show();
-
         // Check number of times the pattern is detected.
         assertThat(solutions.size(), is(1));
 
