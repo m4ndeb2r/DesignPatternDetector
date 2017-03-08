@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link Matcher} class.
- *
+ * <p>
  * TODO:
  * Detection of a flyweight works well when only one UnsharedConcreteFlyweight exists. But the GoF book provides an
  * example on page 211 that does not work. This example contains two unsharedConcreteFlyweights (row and column). When

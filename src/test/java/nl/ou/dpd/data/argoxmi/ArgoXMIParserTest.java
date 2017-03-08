@@ -136,9 +136,9 @@ public class ArgoXMIParserTest {
 
         assertThat(edges.size(), is(4));
         assertEdge(edges.get(0), "ConcrStratB", "Strat", EdgeType.INHERITANCE);
-        assertEdge(edges.get(1), "ConcrStratC","Strat", EdgeType.INHERITANCE);
-        assertEdge(edges.get(2), "ConcrStratA","Strat", EdgeType.INHERITANCE);
-        assertEdge(edges.get(3), "Strat","Cont", EdgeType.AGGREGATE);
+        assertEdge(edges.get(1), "ConcrStratC", "Strat", EdgeType.INHERITANCE);
+        assertEdge(edges.get(2), "ConcrStratA", "Strat", EdgeType.INHERITANCE);
+        assertEdge(edges.get(3), "Strat", "Cont", EdgeType.AGGREGATE);
     }
 
     private void assertEdge(Edge edge, String class1, String class2, EdgeType edgeType) {

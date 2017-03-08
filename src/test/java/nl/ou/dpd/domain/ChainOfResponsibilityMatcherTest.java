@@ -12,10 +12,15 @@ import static org.hamcrest.core.Is.is;
 
 /**
  * Tests the {@link Matcher} class.
+ * <p>
+ * TODO:
+ * The example in GoF on page 240/241 is not properly detected. The application is not able to skip the abstract
+ * Widget and detect two implementation: Dialog and Button. This unittest focusses on a somewhat simplified
+ * example to make it succeed. This is something to be fixed in the application. FIXME *
  *
  * @author Martin de Boer
  */
-public class BridgeMatcherTest {
+public class ChainOfResponsibilityMatcherTest {
 
     private Matcher matcher;
     private SystemUnderConsideration system;
@@ -30,11 +35,11 @@ public class BridgeMatcherTest {
     }
 
     /**
-     * Tests if the bridge pattern is detected with no missing edge allowed.
+     * Tests if the chain of responsibility pattern is detected with no missing edge allowed.
      */
     @Test
     public void testMatch() {
-        final DesignPattern pattern = TestHelper.createBridgePattern();
+        final DesignPattern pattern = TestHelper.createChainOfResponsibilityPattern();
         final Solutions matchResult = matcher.match(pattern, system, 0);
         final List<Solution> solutions = matchResult.getSolutions();
 
@@ -47,16 +52,13 @@ public class BridgeMatcherTest {
         final Set<Edge> me0 = s0.getMissingEdges();
 
         // Check the name
-        assertThat(s0.getDesignPatternName(), is("Bridge"));
+        assertThat(s0.getDesignPatternName(), is("ChainOfResponsibility"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("WindowClient")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Window")).getName(), is("Abstraction"));
-        assertThat(mc0.get(new Clazz("WindowImp")).getName(), is("Implementor"));
-        assertThat(mc0.get(new Clazz("IconWindow")).getName(), is("RefinedAbstraction"));
-        assertThat(mc0.get(new Clazz("TransientWindow")).getName(), is("RefinedAbstraction"));
-        assertThat(mc0.get(new Clazz("XWindowImp")).getName(), is("ConcreteImplementor"));
-        assertThat(mc0.get(new Clazz("PMWindowImp")).getName(), is("ConcreteImplementor"));
+        assertThat(mc0.get(new Clazz("HelpClient")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("HelpHandler")).getName(), is("Handler"));
+        assertThat(mc0.get(new Clazz("Application")).getName(), is("ConcreteHandler"));
+        assertThat(mc0.get(new Clazz("Widget")).getName(), is("ConcreteHandler"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -67,12 +69,10 @@ public class BridgeMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("WindowClient"), new Clazz("Window"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("WindowImp"), new Clazz("Window"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("IconWindow"), new Clazz("Window"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TransientWindow"), new Clazz("Window"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("XWindowImp"), new Clazz("WindowImp"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("PMWindowImp"), new Clazz("WindowImp"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("HelpClient"), new Clazz("HelpHandler"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("HelpHandler"), new Clazz("HelpHandler"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Application"), new Clazz("HelpHandler"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("Widget"), new Clazz("HelpHandler"), EdgeType.INHERITANCE));
         return result;
     }
 

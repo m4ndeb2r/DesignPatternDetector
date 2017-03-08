@@ -14,12 +14,12 @@ import static org.hamcrest.core.Is.is;
 
 /**
  * Tests the {@link Matcher} class for a complex systeem.
- *
+ * <p>
  * TODO: This test detects a tremendous number of patterns. We must rethink this one before implementing it in-depth.
  *
  * @author Martin de Boer
  */
-@Ignore ("Is this useful for a unittest? E. van Doorn used this for performance testing.")
+@Ignore("Is this useful for a unittest? E. van Doorn used this for performance testing.")
 public class ComplexMatchTest {
 
     // Template containing GoF design patterns

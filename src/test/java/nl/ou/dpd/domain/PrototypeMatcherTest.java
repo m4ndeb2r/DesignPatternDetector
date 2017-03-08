@@ -9,11 +9,10 @@ import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link Matcher} class.
- *
+ * <p>
  * TODO:
  * The example in GoF on page 128/129 is not properly detected. The application is not able to skip the abstract
  * MusicalNote and detect two implementation: WholeNote and HalfNote. This unittest focusses on a somewhat simplified

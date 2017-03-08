@@ -32,7 +32,7 @@ public class BuilderMatcherTest {
 
     /**
      * Tests if the builder pattern is detected with no missing edge allowed.
-     *
+     * <p>
      * TODO:
      * Here, a problem occurs. I would expect one single pattern to be detected, but I get 3. This is due to the fact
      * that the pattern is defined incorrect. It should contain an INHERITANCE_MULTI where it has an INHERITANCE.
