@@ -19,7 +19,12 @@ We are currently working on:
 * extension of recognized patterns
 
 ## Some known problems
-During unittesting we discovered some issues when detecting the following patterns
+During unittesting we tried to apply the examples given in the 
+Gang of Four book "Design Patterns, De Nederlands Editie - Elementen 
+van herbruikbare objectgeorienteerde software" in our unittests, but 
+discoverd some of the examples were not properly detected, or had some
+foreseeable problems, when applying larger system designs. These issues
+concern the following design patterns:
 * AbstractFactory
 * Builder
 * Prototype
@@ -29,9 +34,6 @@ During unittesting we discovered some issues when detecting the following patter
 * Mediator
 * ... (work in progress)
 
-We tried to apply the examples given in the Gang of Four book "Design Patterns, 
-De Nederlands Editie - Elementen van herbruikbare objectgeorienteerde software" in 
-our unittests, but discoverd some of the examples were not properly detected.
 
 ## Other future work ...
 Besides detecting patterns in UML, we foresee:
