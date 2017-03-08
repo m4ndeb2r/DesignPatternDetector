@@ -72,7 +72,7 @@ public class Solutions {
             if (!designPatternName.isEmpty()) {
                 output.append("Design Pattern: ").append(designPatternName).append("\n");
             }
-            for (Clazz key : matchedClasses.getBoundedSortedKeySet()) {
+            for (Clazz key : matchedClasses.getBoundSystemClassesSorted()) {
                 output.append(String.format("%20s --> %25s\n", key.getName(), matchedClasses.get(key).getName()));
             }
             output.append("------------------------\n");

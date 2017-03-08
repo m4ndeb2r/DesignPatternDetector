@@ -1,6 +1,5 @@
 package nl.ou.dpd.domain;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class MatchedClasses {
 
+    // A Map to connect classes. Key: system class; value: design pattern class
     private Map<Clazz, Clazz> classes;
 
     /**
@@ -33,105 +33,69 @@ public class MatchedClasses {
      */
     MatchedClasses(MatchedClasses classes) {
         this();
-        for (Clazz c : classes.getKeySet()) {
+        for (Clazz c : classes.classes.keySet()) {
             add(c, classes.get(c));
         }
     }
 
     /**
-     * Determines whether a {@link Clazz}, specified by {@code key}, is matched with an empty class (or, in other words,
-     * is not yet connected to another {@link Clazz}.
+     * Gets a value {@link Clazz} for the specified system {@link Clazz}. In other words: finds a design pattern class
+     * that is matched to the specified system under consideration's class.
      *
-     * @param key the {@link Clazz} to lookup and find a mathed {@link Clazz} for.
-     * @return {@code true} when {@code key}s matched {@link Clazz} is {@link Clazz#EMPTY_CLASS}.
+     * @param systemClass the system {@link Clazz} to look for.
+     * @return the matching design pattern {@link Clazz}.
      */
-    boolean isEmpty(Clazz key) {
-        return classes.get(key).equals(Clazz.EMPTY_CLASS);
+    Clazz get(Clazz systemClass) {
+        return classes.get(systemClass);
     }
 
     /**
-     * TODO...
+     * Filters this {@link MatchedClasses} and returns only the entries with the specified {@code systemClasses}.
      *
-     * @param key
-     * @param value
-     * @return
+     * @param systemClasses the systemClasses to filter
+     * @return a new instance of {@link MatchedClasses} containing the entries that were filtered.
      */
-    boolean equals(Clazz key, Clazz value) {
-        return get(key).equals(value);
-    }
-
-    /**
-     * TODO...
-     *
-     * @param key
-     * @return
-     */
-    Clazz get(Clazz key) {
-        return classes.get(key);
-    }
-
-    /**
-     * TODO...
-     *
-     * @param key
-     * @return
-     */
-    MatchedClasses filter(Set<Clazz> keys) {
+    MatchedClasses filter(Set<Clazz> systemClasses) {
         MatchedClasses filtered = new MatchedClasses();
-        keys.forEach(key -> filtered.add(key, get(key)));
+        systemClasses.forEach(key -> filtered.add(key, get(key)));
         return filtered;
     }
 
     /**
-     * TODO...
+     * Returns all the system unders construction's classes that are bound to a design patter class, in a sorted order.
      *
-     * @return
+     * @return a {@link SortedSet} of system under consideration {@link Clazz}'s
      */
-    Set<Clazz> getKeySet() {
-        return classes.keySet();
-    }
-
-    /**
-     * TODO...
-     *
-     * @return
-     */
-    SortedSet<Clazz> getBoundedSortedKeySet() {
-        return new TreeSet(getKeySet()
+    SortedSet<Clazz> getBoundSystemClassesSorted() {
+        return new TreeSet(classes.keySet()
                 .stream()
-                .filter(key -> keyIsBounded(key))
+                .filter(key -> isSystemClassBound(key))
                 .collect(Collectors.toSet()));
     }
 
     /**
-     * TODO...
+     * Returns whether the system under construction's class is bound to a design pattern class.
      *
-     * @param key
-     * @return
+     * @param systemClass the system under construction's class to check
+     * @return {@code true} is {@code systemClass} is bound to a design pattern class.
      */
-    boolean keyIsBounded(Clazz key) {
-        return !classes.get(key).equals(Clazz.EMPTY_CLASS);
+    boolean isSystemClassBound(Clazz systemClass) {
+        return !classes.get(systemClass).equals(Clazz.EMPTY_CLASS);
     }
 
     /**
-     * TODO...
+     * Returns whether the specified {@link Edge}s can be matched. Edges can be matched when the following rules apply:
+     * <ol>
+     * <li>
+     * the edge types must match (be equal or design pattern having INHERITANCE_MULTI and system under
+     * consideration having INHERITANCE
+     * </li><li>
+     * the edges should have the same selfRef value
+     * </li>
+     * <li>
      *
-     * @param v
-     * @return
-     */
-    boolean valueIsBounded(Clazz v) {
-
-        for (Clazz dpc : classes.values()) {
-            if (dpc.equals(v)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns whether the specified {@link Edge}s can be matched.
+     * </li>
+     * </ol>
      * TODO: explain this is bit more extensively
      *
      * @param systemEdge  the "system under consideration" edge
@@ -139,6 +103,8 @@ public class MatchedClasses {
      * @return {@code true} if a match can be made, or {@code false} otherwise.
      */
     boolean canMatch(Edge systemEdge, Edge patternEdge) {
+
+        // Edgetypes should be compatible
         if (patternEdge.getTypeRelation() != systemEdge.getTypeRelation()) {
             if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI
                     && systemEdge.getTypeRelation() == EdgeType.INHERITANCE)
@@ -148,35 +114,41 @@ public class MatchedClasses {
             }
         }
 
+        // SelfRef should be compatible (equal)
         if (patternEdge.isSelfRef() != systemEdge.isSelfRef()) {
             return false;
         }
 
+        final Clazz systemClass1 = systemEdge.getClass1();
+        final Clazz systemClass2 = systemEdge.getClass2();
+        final Clazz designPatternClass1 = patternEdge.getClass1();
+        final Clazz designPatternClass2 = patternEdge.getClass2();
+
         // two empty names
-        if (this.isEmpty(systemEdge.getClass1())
-                && this.isEmpty(systemEdge.getClass2())
-                && !this.valueIsBounded(patternEdge.getClass1())
-                && !this.valueIsBounded(patternEdge.getClass2())) {
+        if (this.isUnbound(systemClass1)
+                && this.isUnbound(systemClass2)
+                && !this.designPatternClassIsBound(designPatternClass1)
+                && !this.designPatternClassIsBound(designPatternClass2)) {
             return true;
         }
 
         // first name matched, second name empty
-        if (this.equals(systemEdge.getClass1(), patternEdge.getClass1())
-                && this.isEmpty(systemEdge.getClass2())
-                && !this.valueIsBounded(patternEdge.getClass2())) {
+        if (this.isMatched(systemClass1, designPatternClass1)
+                && this.isUnbound(systemClass2)
+                && !this.designPatternClassIsBound(designPatternClass2)) {
             return true;
         }
 
         // first name empty, second name matched
-        if (this.isEmpty(systemEdge.getClass1())
-                && !this.valueIsBounded(patternEdge.getClass1())
-                && this.equals(systemEdge.getClass2(), patternEdge.getClass2())) {
+        if (this.isUnbound(systemClass1)
+                && !this.designPatternClassIsBound(designPatternClass1)
+                && this.isMatched(systemClass2, designPatternClass2)) {
             return true;
         }
 
         // both names are already matched.
-        if (this.equals(systemEdge.getClass1(), patternEdge.getClass1())
-                && this.equals(systemEdge.getClass2(), patternEdge.getClass2())) {
+        if (this.isMatched(systemClass1, designPatternClass1)
+                && this.isMatched(systemClass2, designPatternClass2)) {
             return true;
         }
 
@@ -207,6 +179,44 @@ public class MatchedClasses {
     void prepareMatch(Edge systemEdge) {
         add(systemEdge.getClass1());
         add(systemEdge.getClass2());
+    }
+
+    /**
+     * Determines whether a {@link Clazz}, specified by {@code key}, is matched with an empty class (or, in other words,
+     * is not yet connected to another {@link Clazz}.
+     *
+     * @param key the {@link Clazz} to lookup and find a mathed {@link Clazz} for.
+     * @return {@code true} when {@code key}s matched {@link Clazz} is {@link Clazz#EMPTY_CLASS}.
+     */
+    private boolean isUnbound(Clazz key) {
+        return classes.get(key).equals(Clazz.EMPTY_CLASS);
+    }
+
+    /**
+     * Determines whether two classes are already matched.
+     *
+     * @param key   the {@link Clazz} to lookup and find a mathed {@link Clazz} for.
+     * @param value the {@link Clazz} we hope to find
+     * @return {@code true} is a match was found, or {@code false} otherwise.
+     */
+    private boolean isMatched(Clazz key, Clazz value) {
+        return get(key).equals(value);
+    }
+
+    /**
+     * Detemines whether the specified design pattern {@link Clazz} is already matched with some "system under
+     * consideration" {@link Clazz}.
+     *
+     * @param designPatternClass the design pattern class to check for being bound.
+     * @return {@code true} if the specified {@code designPatternClass} is already bound, or {@code false} otherwise.
+     */
+    private boolean designPatternClassIsBound(Clazz designPatternClass) {
+        for (Clazz dpClass : classes.values()) {
+            if (dpClass.equals(designPatternClass)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void add(Clazz key, Clazz value) {

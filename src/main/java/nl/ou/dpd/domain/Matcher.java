@@ -163,12 +163,12 @@ public class Matcher {
 
 
     /**
-     * TODO...
+     * Create a {@link Solution} instance containing (feedback) information about a detected design pattern.
      *
-     * @param pattern
-     * @param system
-     * @param matchedClasses
-     * @return
+     * @param pattern        the detected design pattern
+     * @param system         the system under consideration that was analysed
+     * @param matchedClasses matched classes
+     * @return feedback information about the detected design pattern
      */
     private Solution createSolution(
             DesignPattern pattern,
@@ -176,20 +176,20 @@ public class Matcher {
             MatchedClasses matchedClasses,
             Set<Edge> missingEdges) {
 
-        // Patter name
+        // Pattern name
         final String dpName = pattern.getName();
 
         // Classes that have been matched
-        final SortedSet<Clazz> boundedKeys = matchedClasses.getBoundedSortedKeySet();
+        final SortedSet<Clazz> boundedKeys = matchedClasses.getBoundSystemClassesSorted();
         final MatchedClasses involvedClasses = matchedClasses.filter(boundedKeys);
 
         // Superfluous classes
         final Set<Edge> superfluousEdges = new HashSet<>();
-        for (Edge edge : system.getEdges()) {
-            if (matchedClasses.keyIsBounded(edge.getClass1())
-                    && matchedClasses.keyIsBounded(edge.getClass2())
-                    && !edge.isLocked()) {
-                superfluousEdges.add(edge);
+        for (Edge systemEdge : system.getEdges()) {
+            if (matchedClasses.isSystemClassBound(systemEdge.getClass1())
+                    && matchedClasses.isSystemClassBound(systemEdge.getClass2())
+                    && !systemEdge.isLocked()) {
+                superfluousEdges.add(systemEdge);
             }
         }
         return new Solution(dpName, involvedClasses, superfluousEdges, missingEdges);

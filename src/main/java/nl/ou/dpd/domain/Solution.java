@@ -46,7 +46,7 @@ public class Solution {
      * {@code other}, or {@code false} otherwise.
      */
     public boolean isEqual(Solution other) {
-        return this.matchedClasses.getBoundedSortedKeySet().equals(other.matchedClasses.getBoundedSortedKeySet());
+        return this.matchedClasses.getBoundSystemClassesSorted().equals(other.matchedClasses.getBoundSystemClassesSorted());
     }
 
     /**
@@ -92,6 +92,6 @@ public class Solution {
      * @return {@code true} when the are no matches (no solutions), or {@code false} otherwise.
      */
     public boolean isEmpty() {
-        return this.getMatchedClasses().getBoundedSortedKeySet().isEmpty();
+        return this.getMatchedClasses().getBoundSystemClassesSorted().isEmpty();
     }
 }
