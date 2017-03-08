@@ -18,6 +18,18 @@ We are currently working on:
 * a user-friendly GUI
 * extension of recognized patterns
 
+## Some known problems
+During unittesting we discovered some issues when detecting the following patterns
+* Prototype
+* Flyweight
+* Chain of responsibility
+* Interpreter
+* ... (work in progress)
+
+We tried to apply the examples given in the Gang of Four book "Design Patterns, 
+De Nederlands Editie - Elementen van herbruikbare objectgeorienteerde software" in 
+our unittests, but discoverd some of the examples were not properly detected.
+
 ## Other future work ...
 Besides detecting patterns in UML, we foresee:
 * detection of patterns in Java-code
