@@ -20,10 +20,13 @@ We are currently working on:
 
 ## Some known problems
 During unittesting we discovered some issues when detecting the following patterns
+* AbstractFactory
+* Builder
 * Prototype
 * Flyweight
 * Chain of responsibility
 * Interpreter
+* Mediator
 * ... (work in progress)
 
 We tried to apply the examples given in the Gang of Four book "Design Patterns, 
