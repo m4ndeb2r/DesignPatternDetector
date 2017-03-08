@@ -33,7 +33,7 @@ public class TestHelper {
         dps.add(createCompositePattern());
         dps.add(createDecoratorPattern());
         dps.add(createFactoryMethodPattern());
-        dps.add(createIteratorPattern());
+        dps.add(createInterpreterPattern());
         dps.add(createChainOfResponsibilityPattern());
         dps.add(createAbstractFactoryPattern());
         dps.add(createAdapterPattern());
@@ -192,6 +192,21 @@ public class TestHelper {
         iterator.add(createEdge("ConcreteIterator", "ConcreteAggregate", EdgeType.ASSOCIATION_DIRECTED));
         iterator.add(createEdge("ConcreteAggregate", "ConcreteIterator", EdgeType.DEPENDENCY));
         return iterator;
+    }
+
+    /**
+     * Creates an Interpreter design pattern.
+     *
+     * @return a {@link DesignPattern} representing an Interpreter pattern.
+     */
+    public static DesignPattern createInterpreterPattern() {
+        final DesignPattern interpreter = new DesignPattern("Interpreter");
+        interpreter.add(createEdge("Client", "AbstractExpression", EdgeType.ASSOCIATION_DIRECTED));
+        interpreter.add(createEdge("Client", "Context", EdgeType.ASSOCIATION_DIRECTED));
+        interpreter.add(createEdge("TerminalExpression", "AbstractExpression", EdgeType.INHERITANCE));
+        interpreter.add(createEdge("NonTerminalExpression", "AbstractExpression", EdgeType.INHERITANCE));
+        interpreter.add(createEdge("AbstractExpression", "NonTerminalExpression", EdgeType.AGGREGATE));
+        return interpreter;
     }
 
     /**
