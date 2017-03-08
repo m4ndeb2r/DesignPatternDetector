@@ -27,7 +27,7 @@ public class BuilderMatcherTest {
     @Before
     public void initMatcher() {
         matcher = new Matcher();
-        system = createSystemUnderConsiderationContainingBridge();
+        system = createSystemUnderConsideration();
     }
 
     /**
@@ -37,10 +37,10 @@ public class BuilderMatcherTest {
      * Here, a problem occurs. I would expect one single pattern to be detected, but I get 3. This is due to the fact
      * that the pattern is defined incorrect. It should contain an INHERITANCE_MULTI where it has an INHERITANCE.
      * However, after correcting that relation in the pettern template, we see a bug coming to the surface: we STILL
-     * get 3 patterns: one for each DEPENDENCY relation (product) of the (multiple) concrete builders! This shoul be
+     * get 3 patterns: one for each DEPENDENCY relation (product) of the (multiple) concrete builders! This should be
      * fixed. Until than, this test is @ignored.
      */
-    @Ignore
+    @Ignore("Detects too many instances of the pattern. This was already the case in the initial prototype") // FIXME
     @Test
     public void testMatch() {
         final DesignPattern pattern = TestHelper.createBuilderPattern();
@@ -77,7 +77,7 @@ public class BuilderMatcherTest {
         assertThat(me0.size(), is(0));
     }
 
-    private SystemUnderConsideration createSystemUnderConsiderationContainingBridge() {
+    private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
         result.add(new Edge(new Clazz("TextConverter"), new Clazz("RTFReader"), EdgeType.AGGREGATE));
         result.add(new Edge(new Clazz("ASCIIConverter"), new Clazz("TextConverter"), EdgeType.INHERITANCE));

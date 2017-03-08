@@ -285,8 +285,8 @@ public class TestHelper {
      */
     public static DesignPattern createPrototypePattern() {
         final DesignPattern prototype = new DesignPattern("Prototype");
-        prototype.add(createEdge("P", "Q", EdgeType.ASSOCIATION_DIRECTED));
-        prototype.add(createEdge("R", "Q", EdgeType.INHERITANCE));
+        prototype.add(createEdge("Client", "Prototype", EdgeType.ASSOCIATION_DIRECTED));
+        prototype.add(createEdge("ConcretePrototype", "Prototype", EdgeType.INHERITANCE_MULTI));
         return prototype;
     }
 

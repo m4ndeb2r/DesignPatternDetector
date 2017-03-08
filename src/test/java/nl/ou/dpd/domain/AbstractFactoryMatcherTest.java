@@ -2,6 +2,7 @@ package nl.ou.dpd.domain;
 
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,13 +13,24 @@ import static org.hamcrest.core.Is.is;
 
 /**
  * Tests the {@link Matcher} class.
+ * <p>
+ * TODO:
+ * There is a small problem with the current pattern definition. It is defined with exactly 2 ConcreteFactory's (and
+ * hence, two ProductA's and two ProductB's. When the system under consideration has three or more ConcreteFactory's
+ * the application will find several instances of the pattern, which is not actually the case. There is still one
+ * instance of the pattern, but one with three ConcreteFactories. For the current test, only two are ConcreteFactory
+ * instances are defined in the system under control, so the test will succeed. We should improve the application,
+ * and fix this bug.
+ * <p>
+ * TODO:
+ * The same applies to the number of AbstractProducts. When a third AbstractProduct is added, more than 1 instances
+ * of the pattern are found.
  *
  * @author Martin de Boer
  */
 public class AbstractFactoryMatcherTest {
 
     private Matcher matcher;
-    private SystemUnderConsideration system;
 
     /**
      * Initialises the test(s).
@@ -26,15 +38,34 @@ public class AbstractFactoryMatcherTest {
     @Before
     public void initMatcher() {
         matcher = new Matcher();
-        system = createSystemUnderConsiderationContainingBridge();
     }
 
     /**
-     * Tests if the abstract factory pattern is detected with no missing edge allowed.
+     * Tests if the abstract factory pattern is detected with no missing edge allowed. This test performs the
+     * {@link Matcher#match(DesignPattern, SystemUnderConsideration, int)} method for a system with 2 ConcreteFactories
+     * and 2 AbstractProducts.
      */
     @Test
-    public void testMatch() {
+    public void testMatch_2_2() {
+        assertMatch(2, 2);
+    }
+
+    /**
+     * Tests if the abstract factory pattern is detected with no missing edge allowed. This test performs the
+     * {@link Matcher#match(DesignPattern, SystemUnderConsideration, int)} method for a system with 3 ConcreteFactories
+     * and 2 AbstractProducts.
+     */
+    @Ignore("This test fails because 3 patterns are detected instead of one. This was already the case in the " +
+            "initial prototype. FIX THIS") // FIXME
+    @Test
+    public void testMatch_3_2() {
+        assertMatch(3, 2);
+    }
+
+    private void assertMatch(int factories, int products) {
         final DesignPattern pattern = TestHelper.createAbstractFactoryPattern();
+        final SystemUnderConsideration system = createSystemUnderConsideration(factories, products);
+
         final Solutions matchResult = matcher.match(pattern, system, 1);
         final List<Solution> solutions = matchResult.getSolutions();
 
@@ -53,16 +84,20 @@ public class AbstractFactoryMatcherTest {
         assertThat(mc0.get(new Clazz("FactoryClient")).getName(), is("Client"));
         assertThat(mc0.get(new Clazz("WidgetFactory")).getName(), is("AbstractFactory"));
 
-        assertThat(mc0.get(new Clazz("Window")).getName(), is("AbstractProductA"));
-        assertThat(mc0.get(new Clazz("PMWindow")).getName(), is("ProductA1"));
-        assertThat(mc0.get(new Clazz("MotifWindow")).getName(), is("ProductA2"));
-
-        assertThat(mc0.get(new Clazz("ScrollBar")).getName(), is("AbstractProductB"));
-        assertThat(mc0.get(new Clazz("PMScrollBar")).getName(), is("ProductB1"));
-        assertThat(mc0.get(new Clazz("MotifScrollBar")).getName(), is("ProductB2"));
-
-        assertThat(mc0.get(new Clazz("PMWidgetFactory")).getName(), is("ConcreteFact1"));
-        assertThat(mc0.get(new Clazz("MotifWidgetFactory")).getName(), is("ConcreteFact2"));
+        for (int i = 0; i < factories; i++) {
+            assertThat(
+                    mc0.get(new Clazz("ConcreteWidgetFactory" + (i + 1))).getName(),
+                    is("ConcreteFact" + (i + 1)));
+            for (int j = 0; j < products; j++) {
+                String postfix = Character.toString((char) (65 + j));
+                assertThat(
+                        mc0.get(new Clazz("AbstractWidget" + postfix)).getName(),
+                        is("AbstractProduct" + postfix));
+                assertThat(
+                        mc0.get(new Clazz("ConcreteWidget" + postfix + (i + 1))).getName(),
+                        is("Product" + postfix + (i + 1)));
+            }
+        }
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -71,25 +106,41 @@ public class AbstractFactoryMatcherTest {
         assertThat(me0.size(), is(0));
     }
 
-    private SystemUnderConsideration createSystemUnderConsiderationContainingBridge() {
+    private SystemUnderConsideration createSystemUnderConsideration(int factories, int products) {
         SystemUnderConsideration result = new SystemUnderConsideration();
 
-        result.add(new Edge(new Clazz("FactoryClient"), new Clazz("WidgetFactory"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("FactoryClient"), new Clazz("Window"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("FactoryClient"), new Clazz("ScrollBar"), EdgeType.ASSOCIATION_DIRECTED));
+        // Add directed associations from the client to the WidgetFactory and every every abstract product
+        // Add concrete products (inheritances to abstract products, and dependencies to concrete factories)
+        result.add(new Edge(new Clazz("FactoryClient"), new Clazz("AbstractWidgetFactory"), EdgeType.ASSOCIATION_DIRECTED));
+        for (int i = 0; i < products; i++) {
+            String postfix = Character.toString((char) (65 + i));
+            result.add(
+                    new Edge(
+                            new Clazz("FactoryClient"),
+                            new Clazz("AbstractWidget" + postfix),
+                            EdgeType.ASSOCIATION_DIRECTED));
+            for (int j = 0; j < factories; j++) {
+                result.add(
+                        new Edge(
+                                new Clazz("ConcreteWidget" + postfix + (j + 1)),
+                                new Clazz("AbstractWidget" + postfix),
+                                EdgeType.INHERITANCE));
+                result.add(
+                        new Edge(
+                                new Clazz("ConcreteWidgetFactory" + (j + 1)),
+                                new Clazz("ConcreteWidget" + postfix + (j + 1)),
+                                EdgeType.DEPENDENCY));
+            }
+        }
 
-        result.add(new Edge(new Clazz("PMWindow"), new Clazz("Window"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MotifWindow"), new Clazz("Window"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("PMScrollBar"), new Clazz("ScrollBar"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MotifScrollBar"), new Clazz("ScrollBar"), EdgeType.INHERITANCE));
-
-        result.add(new Edge(new Clazz("PMWidgetFactory"), new Clazz("WidgetFactory"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("PMWidgetFactory"), new Clazz("PMWindow"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("PMWidgetFactory"), new Clazz("PMScrollBar"), EdgeType.DEPENDENCY));
-
-        result.add(new Edge(new Clazz("MotifWidgetFactory"), new Clazz("WidgetFactory"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MotifWidgetFactory"), new Clazz("MotifWindow"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("MotifWidgetFactory"), new Clazz("MotifScrollBar"), EdgeType.DEPENDENCY));
+        // Add dependencies from every ConcreteWidgetFactory to the AbstractWidgetFactory
+        for (int i = 0; i < factories; i++) {
+            result.add(
+                    new Edge(
+                            new Clazz("ConcreteWidgetFactory" + (i + 1)),
+                            new Clazz("WidgetFactory"),
+                            EdgeType.INHERITANCE));
+        }
 
         return result;
     }
