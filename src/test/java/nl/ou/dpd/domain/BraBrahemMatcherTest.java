@@ -456,7 +456,6 @@ public class BraBrahemMatcherTest {
         assertThat(matchResult.getSolutions().size(), is(0));
     }
 
-
     /**
      * Tests if the memento pattern is detected with 1 missing edge allowed.
      */
@@ -499,6 +498,60 @@ public class BraBrahemMatcherTest {
     @Test
     public void testMatchMementoNoMissingEdges() {
         final DesignPattern pattern = TestHelper.createMementoPattern();
+        final Solutions matchResult = matcher.match(pattern, system, 0);
+        // The pattern is not expected to be detected
+        assertThat(matchResult.getSolutions().size(), is(0));
+    }
+
+    /**
+     * Tests if the observer pattern is detected with 1 missing edge allowed.
+     */
+    @Test
+    public void testMatchObserver() {
+        final DesignPattern pattern = TestHelper.createObserverPattern();
+        final Solutions matchResult = matcher.match(pattern, system, 1);
+        final List<Solution> solutions = matchResult.getSolutions();
+
+        // Check number of times the pattern was detected
+        assertThat(solutions.size(), is(1));
+
+        final Solution s0 = solutions.get(0);
+        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final Set<Edge> se0 = s0.getSuperfluousEdges();
+        final Set<Edge> me0 = s0.getMissingEdges();
+
+        // Check the name
+        assertThat(s0.getDesignPatternName(), is("Observer"));
+
+        // Check the matching classes
+        assertThat(mc0.get(new Clazz("B")).getName(), is("Observer"));
+        assertThat(mc0.get(new Clazz("C")).getName(), is("Subject"));
+        assertThat(mc0.get(new Clazz("D")).getName(), is("ConcreteObserver"));
+        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteSubject"));
+
+        // Check the superfluous edges
+        assertThat(se0.size(), is(1));
+        assertTrue(se0.contains(
+                new Edge(
+                        new Clazz("D"),
+                        new Clazz("E"),
+                        EdgeType.DEPENDENCY)));
+
+        // Check the missing edges
+        assertThat(me0.size(), is(1));
+        assertTrue(me0.contains(
+                new Edge(
+                        new Clazz("ConcreteObserver"),
+                        new Clazz("ConcreteSubject"),
+                        EdgeType.ASSOCIATION_DIRECTED)));
+    }
+
+    /**
+     * Tests if the observer pattern is detected with 0 missing edges allowed.
+     */
+    @Test
+    public void testMatchObserverNoMissingEdges() {
+        final DesignPattern pattern = TestHelper.createObserverPattern();
         final Solutions matchResult = matcher.match(pattern, system, 0);
         // The pattern is not expected to be detected
         assertThat(matchResult.getSolutions().size(), is(0));
