@@ -34,13 +34,11 @@ public class BuilderMatcherTest {
      * Tests if the builder pattern is detected with no missing edge allowed.
      * <p>
      * TODO:
-     * Here, a problem occurs. I would expect one single pattern to be detected, but I get 3. This is due to the fact
-     * that the pattern is defined incorrect. It should contain an INHERITANCE_MULTI where it has an INHERITANCE.
-     * However, after correcting that relation in the pettern template, we see a bug coming to the surface: we STILL
-     * get 3 patterns: one for each DEPENDENCY relation (product) of the (multiple) concrete builders! This should be
-     * fixed. Until than, this test is @ignored.
+     * I would expect one single pattern to be detected, but I get 3. One for every COncreteBuilder. Can we fix this
+     * with an INHERITANCE_MULTI instead of an INHERITANCE? After trying that options in the pattern template, we see
+     * another bug coming to the surface: we STILL get 3 patterns: one for each DEPENDENCY relation (product) of the
+     * (multiple) concrete builders! This should be fixed. FIXME.
      */
-    @Ignore("Detects too many instances of the pattern. This was already the case in the initial prototype") // FIXME
     @Test
     public void testMatch() {
         final DesignPattern pattern = TestHelper.createBuilderPattern();
@@ -48,31 +46,54 @@ public class BuilderMatcherTest {
         final List<Solution> solutions = matchResult.getSolutions();
 
         // Check number of times the pattern is detected.
-        assertThat(solutions.size(), is(1));
+        assertThat(solutions.size(), is(3));
 
         final Solution s0 = solutions.get(0);
+        final Solution s1 = solutions.get(1);
+        final Solution s2 = solutions.get(2);
+
         final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedClasses mc1 = s1.getMatchedClasses();
+        final MatchedClasses mc2 = s2.getMatchedClasses();
+
         final Set<Edge> se0 = s0.getSuperfluousEdges();
+        final Set<Edge> se1 = s1.getSuperfluousEdges();
+        final Set<Edge> se2 = s2.getSuperfluousEdges();
+
         final Set<Edge> me0 = s0.getMissingEdges();
+        final Set<Edge> me1 = s1.getMissingEdges();
+        final Set<Edge> me2 = s2.getMissingEdges();
 
         // Check the name
         assertThat(s0.getDesignPatternName(), is("Builder"));
+        assertThat(s1.getDesignPatternName(), is("Builder"));
+        assertThat(s2.getDesignPatternName(), is("Builder"));
 
         // Check matching classes
         assertThat(mc0.get(new Clazz("RTFReader")).getName(), is("Director"));
         assertThat(mc0.get(new Clazz("TextConverter")).getName(), is("Builder"));
         assertThat(mc0.get(new Clazz("ASCIIConverter")).getName(), is("ConcreteBuilder"));
-        assertThat(mc0.get(new Clazz("TeXConverter")).getName(), is("ConcreteBuilder"));
-        assertThat(mc0.get(new Clazz("TextWidgetConverter")).getName(), is("ConcreteBuilder"));
         assertThat(mc0.get(new Clazz("ASCIIText")).getName(), is("Product"));
-        assertThat(mc0.get(new Clazz("TeXText")).getName(), is("Product"));
-        assertThat(mc0.get(new Clazz("TextWidgetText")).getName(), is("Product"));
+
+        assertThat(mc1.get(new Clazz("RTFReader")).getName(), is("Director"));
+        assertThat(mc1.get(new Clazz("TextConverter")).getName(), is("Builder"));
+        assertThat(mc1.get(new Clazz("TeXConverter")).getName(), is("ConcreteBuilder"));
+        assertThat(mc1.get(new Clazz("TeXText")).getName(), is("Product"));
+
+        assertThat(mc2.get(new Clazz("RTFReader")).getName(), is("Director"));
+        assertThat(mc2.get(new Clazz("TextConverter")).getName(), is("Builder"));
+        assertThat(mc2.get(new Clazz("TextWidgetConverter")).getName(), is("ConcreteBuilder"));
+        assertThat(mc2.get(new Clazz("TextWidgetText")).getName(), is("Product"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
+        assertThat(se1.size(), is(0));
+        assertThat(se2.size(), is(0));
 
         // Check missing edges
         assertThat(me0.size(), is(0));
+        assertThat(me1.size(), is(0));
+        assertThat(me2.size(), is(0));
     }
 
     private SystemUnderConsideration createSystemUnderConsideration() {
