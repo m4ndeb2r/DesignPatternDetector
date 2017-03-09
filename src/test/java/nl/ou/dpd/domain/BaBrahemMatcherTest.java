@@ -12,11 +12,12 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Tests the {@link Matcher} class.
+ * Tests the {@link Matcher} class. This test uses the BaBrahem system design as input and attempts to detect a number
+ * of patterns.
  *
  * @author Martin de Boer
  */
-public class BraBrahemMatcherTest {
+public class BaBrahemMatcherTest {
 
     private Matcher matcher;
     private SystemUnderConsideration system;
