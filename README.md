@@ -32,7 +32,7 @@ concern the following design patterns:
 * Chain of responsibility
 * Interpreter
 * Mediator
-* ... (work in progress)
+* Observer
 
 
 ## Other future work ...
