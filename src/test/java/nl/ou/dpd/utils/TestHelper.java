@@ -247,7 +247,7 @@ public class TestHelper {
     public static DesignPattern createObserverPattern() {
         final DesignPattern observer = new DesignPattern("Observer");
         observer.add(createEdge("ConcreteSubject", "Subject", EdgeType.INHERITANCE));
-        observer.add(createEdge("Subject", "Observer", EdgeType.AGGREGATE));
+        observer.add(createEdge("Subject", "Observer", EdgeType.ASSOCIATION_DIRECTED));
         observer.add(createEdge("ConcreteObserver", "Observer", EdgeType.INHERITANCE));
         observer.add(createEdge("ConcreteObserver", "ConcreteSubject", EdgeType.ASSOCIATION_DIRECTED));
         return observer;

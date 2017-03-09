@@ -33,119 +33,129 @@ public class BackwardCompatibilityTest {
 
     private static final String LEGACY_VERSION_DEFAULT_OUTPUT =
             "Design Pattern: Adapter\n" +
-                    "                   B -->                    Target\n" +
-                    "                   C -->                    Client\n" +
-                    "                   D -->                   Adapter\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: Adapter\n" +
-                    "                   A -->                    Client\n" +
-                    "                   B -->                    Target\n" +
-                    "                   D -->                   Adapter\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: Adapter\n" +
-                    "                   A -->                    Client\n" +
-                    "                   C -->                    Target\n" +
-                    "                   E -->                   Adapter\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: Bridge\n" +
-                    "                   A -->                    Client\n" +
-                    "                   B -->               Abstraction\n" +
-                    "                   C -->               Implementor\n" +
-                    "                   D -->        RefinedAbstraction\n" +
-                    "                   E -->       ConcreteImplementor\n" +
-                    "------------------------\n" +
-                    "Edges which do not belong to this design pattern:\n" +
-                    "C --> B\n" +
-                    "D --> E\n" +
-                    "A --> C\n" +
-                    "==================================================\n" +
-                    "\n" +
-                    "Design Pattern: Builder\n" +
-                    "                   B -->                   Builder\n" +
-                    "                   D -->           ConcreteBuilder\n" +
-                    "                   E -->                   Product\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: ChainOfResponsibility\n" +
-                    "                   A -->                    Client\n" +
-                    "                   C -->                   Handler\n" +
-                    "                   E -->           ConcreteHandler\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: ChainOfResponsibility\n" +
-                    "                   B -->                   Handler\n" +
-                    "                   C -->                    Client\n" +
-                    "                   D -->           ConcreteHandler\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: ChainOfResponsibility\n" +
-                    "                   A -->                    Client\n" +
-                    "                   B -->                   Handler\n" +
-                    "                   D -->           ConcreteHandler\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: Factory Method\n" +
-                    "                   B -->                   Creator\n" +
-                    "                   C -->                   Product\n" +
-                    "                   D -->           ConcreteCreator\n" +
-                    "                   E -->           ConcreteProduct\n" +
-                    "------------------------\n" +
-                    "Edges which do not belong to this design pattern:\n" +
-                    "C --> B\n" +
-                    "==================================================\n" +
-                    "\n" +
-                    "Design Pattern: Iterator\n" +
-                    "                   A -->                    Client\n" +
-                    "                   B -->                 Aggregate\n" +
-                    "                   C -->                  Iterator\n" +
-                    "                   D -->         ConcreteAggregate\n" +
-                    "                   E -->          ConcreteIterator\n" +
-                    "------------------------\n" +
-                    "Edges which do not belong to this design pattern:\n" +
-                    "C --> B\n" +
-                    "==================================================\n" +
-                    "\n" +
-                    "Design Pattern: Memento\n" +
-                    "                   D -->                Originator\n" +
-                    "                   E -->                   Memento\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: State - Strategy\n" +
-                    "                   C -->                  Strategy\n" +
-                    "                   E -->          ConcreteStrategy\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: State - Strategy\n" +
-                    "                   B -->                  Strategy\n" +
-                    "                   D -->          ConcreteStrategy\n" +
-                    "------------------------\n" +
-                    "\n";
+            "                   B -->                    Target\n" +
+            "                   C -->                    Client\n" +
+            "                   D -->                   Adapter\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: Adapter\n" +
+            "                   A -->                    Client\n" +
+            "                   B -->                    Target\n" +
+            "                   D -->                   Adapter\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: Adapter\n" +
+            "                   A -->                    Client\n" +
+            "                   C -->                    Target\n" +
+            "                   E -->                   Adapter\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: Bridge\n" +
+            "                   A -->                    Client\n" +
+            "                   B -->               Abstraction\n" +
+            "                   C -->               Implementor\n" +
+            "                   D -->        RefinedAbstraction\n" +
+            "                   E -->       ConcreteImplementor\n" +
+            "------------------------\n" +
+            "Edges which do not belong to this design pattern:\n" +
+            "D --> E\n" +
+            "C --> B\n" +
+            "A --> C\n" +
+            "==================================================\n" +
+            "\n" +
+            "Design Pattern: Builder\n" +
+            "                   B -->                   Builder\n" +
+            "                   D -->           ConcreteBuilder\n" +
+            "                   E -->                   Product\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: ChainOfResponsibility\n" +
+            "                   A -->                    Client\n" +
+            "                   C -->                   Handler\n" +
+            "                   E -->           ConcreteHandler\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: ChainOfResponsibility\n" +
+            "                   B -->                   Handler\n" +
+            "                   C -->                    Client\n" +
+            "                   D -->           ConcreteHandler\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: ChainOfResponsibility\n" +
+            "                   A -->                    Client\n" +
+            "                   B -->                   Handler\n" +
+            "                   D -->           ConcreteHandler\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: Factory Method\n" +
+            "                   B -->                   Creator\n" +
+            "                   C -->                   Product\n" +
+            "                   D -->           ConcreteCreator\n" +
+            "                   E -->           ConcreteProduct\n" +
+            "------------------------\n" +
+            "Edges which do not belong to this design pattern:\n" +
+            "C --> B\n" +
+            "==================================================\n" +
+            "\n" +
+            "Design Pattern: Iterator\n" +
+            "                   A -->                    Client\n" +
+            "                   B -->                 Aggregate\n" +
+            "                   C -->                  Iterator\n" +
+            "                   D -->         ConcreteAggregate\n" +
+            "                   E -->          ConcreteIterator\n" +
+            "------------------------\n" +
+            "Edges which do not belong to this design pattern:\n" +
+            "C --> B\n" +
+            "==================================================\n" +
+            "\n" +
+            "Design Pattern: Memento\n" +
+            "                   D -->                Originator\n" +
+            "                   E -->                   Memento\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: Observer\n" +
+            "                   B -->                  Observer\n" +
+            "                   C -->                   Subject\n" +
+            "                   D -->          ConcreteObserver\n" +
+            "                   E -->           ConcreteSubject\n" +
+            "------------------------\n" +
+            "Edges which do not belong to this design pattern:\n" +
+            "D --> E\n" +
+            "==================================================\n" +
+            "\n" +
+            "Design Pattern: State - Strategy\n" +
+            "                   C -->                  Strategy\n" +
+            "                   E -->          ConcreteStrategy\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: State - Strategy\n" +
+            "                   B -->                  Strategy\n" +
+            "                   D -->          ConcreteStrategy\n" +
+            "------------------------\n" +
+            "\n";
 
     private static final String BA_BRAHEM_INPUT_XMI = "/Ba_Brahem.xmi";
     private static final String BA_BRAHEM_TEMPLATES_XML = "/Ba_Brahem.xml";
 
     private static final String LEGACY_VERSION_BA_BRAHEM_OUTPUT =
             "Design Pattern: Ba_Brahem\n" +
-                    "                   B -->                         Q\n" +
-                    "                   C -->                         P\n" +
-                    "                   D -->                         R\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: Ba_Brahem\n" +
-                    "                   A -->                         P\n" +
-                    "                   B -->                         Q\n" +
-                    "                   D -->                         R\n" +
-                    "------------------------\n" +
-                    "\n" +
-                    "Design Pattern: Ba_Brahem\n" +
-                    "                   A -->                         P\n" +
-                    "                   C -->                         Q\n" +
-                    "                   E -->                         R\n" +
-                    "------------------------\n" +
-                    "\n";
+            "                   B -->                         Q\n" +
+            "                   C -->                         P\n" +
+            "                   D -->                         R\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: Ba_Brahem\n" +
+            "                   A -->                         P\n" +
+            "                   B -->                         Q\n" +
+            "                   D -->                         R\n" +
+            "------------------------\n" +
+            "\n" +
+            "Design Pattern: Ba_Brahem\n" +
+            "                   A -->                         P\n" +
+            "                   C -->                         Q\n" +
+            "                   E -->                         R\n" +
+            "------------------------\n" +
+            "\n";
 
     /**
      * A rule to capture the output written to the console.

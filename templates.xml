@@ -145,7 +145,7 @@
 					       				         
    <template name ="Observer">	       				         
        <edge node1="ConcreteSubject"           node2="Subject"                   type="INHERITANCE"/>
-       <edge node1="Subject"                   node2="Observer"                  type="AGGREGATE"/>
+       <edge node1="Subject"                   node2="Observer"                  type="ASSOCIATION_DIRECTED"/>
        <edge node1="ConcreteObserver"          node2="Observer"                  type="INHERITANCE"/>
        <edge node1="ConcreteObserver"          node2="ConcreteSubject"           type="ASSOCIATION_DIRECTED"/>
    </template>				       

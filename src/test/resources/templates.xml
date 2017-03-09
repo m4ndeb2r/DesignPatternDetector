@@ -23,6 +23,12 @@
      Beneath are 16 GoF design patterns which can be detected.
      The structures of the state pattern and the strategy pattern are identical.
      The 6 remaining patterns have implementing issues, which can not be denoted by the structure beneath.
+
+     TODO: Prototype is not available in this templates file. Add it?
+     <template name ="Prototype">
+         <edge node1="Client"                    node2="Prototype"                 type="ASSOCIATION_DIRECTED"/>
+         <edge node1="ConcretePrototype"         node2="Prototype"                 type="INHERITANCE_MULTI"/>
+     </template>
 -->
 
 
@@ -138,7 +144,7 @@
 					       				         
    <template name ="Observer">	       				         
        <edge node1="ConcreteSubject"           node2="Subject"                   type="INHERITANCE"/>
-       <edge node1="Subject"                   node2="Observer"                  type="AGGREGATE"/>
+       <edge node1="Subject"                   node2="Observer"                  type="ASSOCIATION_DIRECTED"/>
        <edge node1="ConcreteObserver"          node2="Observer"                  type="INHERITANCE"/>
        <edge node1="ConcreteObserver"          node2="ConcreteSubject"           type="ASSOCIATION_DIRECTED"/>
    </template>				       
