@@ -1,11 +1,11 @@
 package nl.ou.dpd.data.template;
 
 import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.Edge;
+import nl.ou.dpd.domain.EdgeType;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.rules.ExpectedException;
 import org.xml.sax.SAXParseException;
 
@@ -28,24 +28,12 @@ public class TemplatesParserTest {
     private static final String INVALID_XML = "/invalid.xml";
     // A test file containing the Ba Brahem templates example.
     private static final String BA_BRAHEM_TEST_XML = "/Ba_Brahem.xml";
-    /**
-     * A rule to capture the output written to System.out.
-     */
-    @Rule
-    public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
+
     /**
      * Exception rule.
      */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    /**
-     * Clean the captured output after every test.
-     */
-    @After
-    public void clearLog() {
-        systemOutRule.clearLog();
-    }
 
     /**
      * Tests the exception handling in case of a {@link SAXParseException} during parsing input by a
@@ -87,22 +75,23 @@ public class TemplatesParserTest {
         final String path = getPath(BA_BRAHEM_TEST_XML);
 
         final List<DesignPattern> parseResult = templatesParser.parse(path);
+
         assertThat(parseResult.size(), is(1));
-
-        final String expectedOutput =
-                "Design pattern: Ba_Brahem\n" +
-                        "(              P,               Q, type relatie 10, self ref: nee, matched: nee)\n" +
-                        "(              R,               Q, type relatie  4, self ref: nee, matched: nee)\n" +
-                        "\n";
-
-        // Print the fourTuples to the stdout
-        parseResult.get(0).show();
-
-        // Assert the output, and compare it to our expectations
-        assertThat(systemOutRule.getLog(), is(expectedOutput));
+        assertThat(parseResult.get(0).getEdges().size(), is(2));
+        assertEdge(parseResult.get(0).getEdges().get(0), "P", "Q", EdgeType.ASSOCIATION_DIRECTED);
+        assertEdge(parseResult.get(0).getEdges().get(1), "R", "Q", EdgeType.INHERITANCE);
     }
 
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
+    }
+
+    private void assertEdge(Edge edge, String class1, String class2, EdgeType edgeType) {
+        assertThat(edge.getClass1().getName(), is(class1));
+        assertThat(edge.getClass2().getName(), is(class2));
+        assertThat(edge.getTypeRelation(), is(edgeType));
+        assertThat(edge.isSelfRef(), is(false));
+        assertThat(edge.isVirtual(), is(false));
+        assertThat(edge.isLocked(), is(false));
     }
 }

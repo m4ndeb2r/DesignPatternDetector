@@ -1,8 +1,9 @@
 package nl.ou.dpd.data.argoxmi;
 
 import nl.ou.dpd.data.parser.ElementHandler;
+import nl.ou.dpd.domain.Clazz;
+import nl.ou.dpd.domain.Edge;
 import nl.ou.dpd.domain.EdgeType;
-import nl.ou.dpd.domain.SystemUnderConsiderationEdge;
 import org.xml.sax.Attributes;
 
 /**
@@ -85,11 +86,11 @@ public final class AssociationElement implements Constants, ElementHandler {
     }
 
     /**
-     * Return a {@link SystemUnderConsiderationEdge} representation of this element.
+     * Return an {@link Edge} representation of this element.
      *
-     * @return a {@link SystemUnderConsiderationEdge} representation of this element.
+     * @return an {@link Edge} representation of this element.
      */
-    public SystemUnderConsiderationEdge getSystemUnderConsiderationEdge() {
+    public Edge getEdge() {
         final EdgeType type;
 
         if (isAggregate) {
@@ -102,9 +103,9 @@ public final class AssociationElement implements Constants, ElementHandler {
             type = EdgeType.ASSOCIATION_DIRECTED;
         }
 
-        return new SystemUnderConsiderationEdge(
-                ArgoXMIParser.classElements.get(leftElement).getName(),
-                ArgoXMIParser.classElements.get(rightElement).getName(),
+        return new Edge(
+                new Clazz(ArgoXMIParser.classElements.get(leftElement).getName()),
+                new Clazz(ArgoXMIParser.classElements.get(rightElement).getName()),
                 type);
     }
 }

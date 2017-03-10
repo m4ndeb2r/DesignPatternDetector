@@ -1,26 +1,30 @@
 package nl.ou.dpd.data.template;
 
+import nl.ou.dpd.data.parser.ElementHandler;
+import nl.ou.dpd.domain.DesignPattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
 /**
  * Represents a template element in the design pattern templates XML file.
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
  */
-
-import nl.ou.dpd.data.parser.ElementHandler;
-import nl.ou.dpd.domain.DesignPattern;
-import org.xml.sax.Attributes;
-
 public final class TemplateElement implements ElementHandler {
+
+    private static final Logger LOGGER = LogManager.getLogger(TemplateElement.class);
 
     private ElementHandler handler;
     private DesignPattern designPattern;
     private EdgeElement edgeElement;
 
     /**
-     * Protected constructor to prevent access form outside the package.
+     * Package protected constructor to prevent access form outside the package.
      */
-    protected TemplateElement() {
+    TemplateElement() {
         handler = null;
         designPattern = null;
     }
@@ -28,7 +32,7 @@ public final class TemplateElement implements ElementHandler {
     /**
      * {@inheritDoc}
      */
-    public void startElement(String qName, Attributes attributes) {
+    public void startElement(String qName, Attributes attributes) throws SAXException {
         if (designPattern == null) {
             designPattern = new DesignPattern(attributes.getValue("name"));
         } else {
@@ -40,8 +44,9 @@ public final class TemplateElement implements ElementHandler {
                     break;
 
                 default:
-                    System.out.println("Unexpected tag: " + qName);
-                    break;
+                    final String msg = "Unexpected tag: " + qName + ".";
+                    LOGGER.error(msg);
+                    throw new SAXException(msg);
             }
         }
     }

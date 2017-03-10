@@ -3,7 +3,10 @@ package nl.ou.dpd;
 import nl.ou.dpd.data.argoxmi.ArgoXMIParser;
 import nl.ou.dpd.data.template.TemplatesParser;
 import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.Matcher;
 import nl.ou.dpd.domain.SystemUnderConsideration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -15,9 +18,11 @@ import java.util.List;
  */
 public final class DesignPatternDetector {
 
+    private static final Logger LOGGER = LogManager.getLogger(DesignPatternDetector.class);
+
     private static final String USAGE_TXT =
             "\nUsage: \n\tjava -t templateFile -x xmiFile -n maxNumberOfMissingEdges." +
-            "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0";
+                    "\n\tDefault values for templateFile and xmiFile are templates.xml, input.xmi and 0";
 
 
     private String templateFileName, xmiFileName;
@@ -55,6 +60,10 @@ public final class DesignPatternDetector {
 
     private void run(String[] args) {
         try {
+            LOGGER.info("Application DesignPatternDetector started.");
+            LOGGER.debug("Current directory: " + System.getProperty("user.dir"));
+
+            // TODO: remove console output. This is still here for backbward compatibility
             System.out.println("Current directory: " + System.getProperty("user.dir"));
 
             // Parse the arguments
@@ -65,13 +74,13 @@ public final class DesignPatternDetector {
             final List<DesignPattern> designPatterns = new TemplatesParser().parse(templateFileName);
 
             // Find a match for each design pattern in dsp
-            designPatterns.forEach(dp -> dp.match(system, maxMissingEdges));
+            final Matcher matcher = new Matcher();
+            // TODO: the show() method is called tmeporarily for backaward compatibility
+            designPatterns.forEach(pattern -> matcher.match(pattern, system, maxMissingEdges).show());
 
         } catch (Throwable t) {
-
             // Acknowledge the user of the unrecoverable error situation
-            t.printStackTrace();
-            System.out.println("An unexpected error occurred. Exiting...");
+            LOGGER.error("An unexpected error occurred. Exiting...", t);
 
             // Do not call System.ext(). It is a bad habit.
             throw (t);
@@ -81,7 +90,9 @@ public final class DesignPatternDetector {
     private void parseArgs(String[] args) {
         // Every flag should be followed by a value
         if (args.length > 6 || args.length % 2 == 1) {
-            throw new IllegalArgumentException("Illegal number of parameters. " + USAGE_TXT);
+            final String msg = "Illegal number of parameters: " + args.length + ". " + USAGE_TXT;
+            LOGGER.error(msg);
+            throw new IllegalArgumentException(msg);
         }
 
         for (int i = 0; i < args.length; i += 2) {
@@ -92,7 +103,9 @@ public final class DesignPatternDetector {
             } else if (args[i].equals("-n")) {
                 maxMissingEdges = Integer.parseInt(args[i + 1]);
             } else {
-                throw new IllegalArgumentException("Incorrect parameter: " + args[i] + ". " + USAGE_TXT);
+                final String msg = "Incorrect parameter: " + args[i] + ". " + USAGE_TXT;
+                LOGGER.error(msg);
+                throw new IllegalArgumentException(msg);
             }
         }
     }
