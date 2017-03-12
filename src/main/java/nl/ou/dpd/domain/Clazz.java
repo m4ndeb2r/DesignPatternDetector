@@ -9,8 +9,10 @@ import java.util.Objects;
  * design pattern or a system design. {@link Edge}s can have an {@link EdgeType}, defining the type of relation between
  * the {@link Clazz}'s.
  * <p>
- * <p>
  * A {@link Clazz} is a {@link Comparable} because it must be possible to add instances to a sorted set.
+ *
+ * TODO: add an id field (XMI provides id fields for classes that are unique. Names are not stricktly unique)
+ * TODO: equals should compare the id's not the names. compareTo can compare names, and stay as is....
  *
  * @author Martin de Boer
  */

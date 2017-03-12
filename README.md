@@ -43,3 +43,5 @@ Besides detecting patterns in UML, we foresee:
 Build tool: Maven 3.3.9 (Bundled with IntelliJ)
 
 Compiler: Java 1.8
+
+JavaFX SceneBuilder 2.0 for Mac OSX

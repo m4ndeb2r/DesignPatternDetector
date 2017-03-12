@@ -93,7 +93,7 @@ public class MatchedClasses {
      * the edges should have the same selfRef value
      * </li>
      * <li>
-     *
+     * ...
      * </li>
      * </ol>
      * TODO: explain this is bit more extensively

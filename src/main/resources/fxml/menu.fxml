@@ -1,0 +1,40 @@
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<MenuBar fx:id="menuBar"
+         xmlns="http://javafx.com/javafx/8"
+         xmlns:fx="http://javafx.com/fxml/1"
+         prefHeight="25.0"
+         stylesheets="@../style/style.css"
+         fx:controller="nl.ou.dpd.gui.controller.MenuController">
+    <menus>
+        <Menu mnemonicParsing="false" text="File">
+            <items>
+                <MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProjectAction" text="New project"/>
+                <MenuItem fx:id="openProject" mnemonicParsing="false" onAction="#openProjectAction" text="Open project"/>
+                <MenuItem fx:id="saveProject" mnemonicParsing="false" onAction="#saveProjectAction" text="Save project"/>
+                <MenuItem fx:id="saveProjectAs" mnemonicParsing="false" onAction="#saveProjectAsAction" text="Save project as..."/>
+                <MenuItem fx:id="closeProject" mnemonicParsing="false" onAction="#closeProjectAction" text="Close project"/>
+                <SeparatorMenuItem />
+                <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#exitAction" text="Exit"/>
+            </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Language">
+            <items>
+                <MenuItem fx:id="dutchLanguage" mnemonicParsing="false" onAction="#dutchLanguageAction" text="Dutch"/>
+                <MenuItem fx:id="englishLanguage" mnemonicParsing="false" onAction="#englishLanguageAction" text="English"/>
+            </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <items>
+                <MenuItem fx:id="help" mnemonicParsing="false" onAction="#helpAction" text="Help"/>
+                <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutAction" text="About"/>
+            </items>
+        </Menu>
+    </menus>
+</MenuBar>
+
+
+
+
