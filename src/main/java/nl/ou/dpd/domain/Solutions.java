@@ -57,24 +57,6 @@ public class Solutions {
     }
 
     /**
-     * Returns the {@link Solution}s formatted as a {@link Map}, with the pattern name as key and a sublist of
-     * {@link Solution}s for every pattern.
-     *
-     * @return a {@link Map} representation of this {@link Solutions}.
-     */
-    public Map<String, List<Solution>> getSolutionsAsMap() {
-        Map<String, List<Solution>> solutionsMap = new HashMap<>();
-        solutions.forEach(solution -> {
-            final String key = solution.getDesignPatternName();
-            if (!solutionsMap.containsKey(key)) {
-                solutionsMap.put(key, new ArrayList<>());
-            }
-            solutionsMap.get(key).add(solution);
-        });
-        return solutionsMap;
-    }
-
-    /**
      * This method is still available for backwards compatibility purposes. The original version of the application
      * printed all the results to the console. In the next version we will not do that anymore. Instead a GUI is being
      * considered to show feedback to the user.
