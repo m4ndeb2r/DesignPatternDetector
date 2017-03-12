@@ -2,10 +2,17 @@ package nl.ou.dpd.gui.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import nl.ou.dpd.domain.Solution;
 import nl.ou.dpd.gui.model.Model;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -23,6 +30,15 @@ public class ProjectViewController extends Controller {
 
     @FXML
     private TextField templateFileTextField;
+
+    @FXML
+    private Button analyseButton;
+
+    @FXML
+    private ComboBox<String> maxMissingEdgesComboBox;
+
+    @FXML
+    private TreeView<String> designPatternTreeView;
 
     /**
      * Constructs a {@link ProjectViewController} with a reference to the specified {@link Model}.
@@ -43,7 +59,6 @@ public class ProjectViewController extends Controller {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 
     /**
@@ -70,6 +85,47 @@ public class ProjectViewController extends Controller {
         if (path != null) {
             templateFileTextField.setText(path);
         }
+        final boolean templateFileEmpty = templateFileTextField == null || templateFileTextField.getText().isEmpty();
+        final boolean systemFileEmpty = systemFileTextField == null || systemFileTextField.getText().isEmpty();
+        analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
+    }
+
+    /**
+     * Starts the analysis of the system under consideration, and processes the feedback data.
+     *
+     * TODO: store the matched classes, and edge information in an attribute to show when an item in the TreeView is clicked
+     */
+    @FXML
+    protected void analyse() {
+        final int maxMissingEdges = Integer.parseInt(this.maxMissingEdgesComboBox.getValue());
+        final Map<String, List<Solution>> result = getModel().analyse(maxMissingEdges);
+
+        designPatternTreeView.setRoot(new TreeItem<>("Design patterns"));
+        final TreeItem<String> treeRoot = designPatternTreeView.getRoot();
+
+        int patternCount = 0;
+        for (String patternName : result.keySet()) {
+            final List<Solution> solutions = result.get(patternName);
+            final TreeItem<String> patternRoot = new TreeItem<>(patternName + " (" + solutions.size() + ")");
+            treeRoot.getChildren().add(patternRoot);
+
+            int i = 0;
+            for(Solution solution : solutions) {
+                final TreeItem<String> patternItem = new TreeItem<>(solution.getDesignPatternName() + (++i));
+                patternItem.getChildren().add(new TreeItem("Classes"));
+                if(solution.getSuperfluousEdges().size() > 0) {
+                    patternItem.getChildren().add(new TreeItem("Superfluous Edges"));
+                }
+                if(solution.getMissingEdges().size() > 0) {
+                    patternItem.getChildren().add(new TreeItem("Missing Edges"));
+                }
+                patternRoot.getChildren().add(patternItem);
+            }
+
+            patternCount += i;
+        }
+
+        treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
     }
 
 }

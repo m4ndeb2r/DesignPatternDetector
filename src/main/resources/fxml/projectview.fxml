@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -21,6 +22,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.collections.FXCollections?>
 
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.ou.dpd.gui.controller.ProjectViewController">
     <top>
@@ -47,7 +49,7 @@
                         <RowConstraints maxHeight="26.0" minHeight="26.0" prefHeight="26.0" vgrow="NEVER" />
                     </rowConstraints>
                     <children>
-                        <Label fx:id="systemFileLabel" text="Input file (*.xmi, Argo UML export)" />
+                        <Label fx:id="systemFileLabel" text="Input file (*.xmi, Argo UML export):" />
                         <TextField fx:id="systemFileTextField" editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" />
                         <Button fx:id="systemFileButton" mnemonicParsing="false" onAction="#chooseSystemFile" text="..." GridPane.columnIndex="2">
                             <tooltip>
@@ -55,7 +57,7 @@
                             </tooltip>
                         </Button>
 
-                        <Label fx:id="templateFileLabel" text="Design pattern template (*.xml)" GridPane.rowIndex="1" />
+                        <Label fx:id="templateFileLabel" text="Design pattern template (*.xml):" GridPane.rowIndex="1" />
                         <TextField fx:id="templateFileTextField" editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                         <Button fx:id="templateFileButton" mnemonicParsing="false" onAction="#chooseTemplateFile" text="..." GridPane.columnIndex="2" GridPane.rowIndex="1">
                             <tooltip>
@@ -63,11 +65,20 @@
                             </tooltip>
                         </Button>
 
-                        <Label id="maxNrMissingLabel" text="Maximum number of missing edges allowed" GridPane.rowIndex="2" />
-                        <ComboBox fx:id="maxNrMissingComboBox" prefHeight="26.0" prefWidth="115.0" promptText="Pick one" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label id="maxNrMissingLabel" text="Maximum number of missing edges allowed:" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="maxMissingEdgesComboBox" prefHeight="26.0" prefWidth="115.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <tooltip>
                                 <Tooltip contentDisplay="TOP" text="Choose the max. allowed number of missing edges" wrapText="true" />
                             </tooltip>
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="0" />
+                                    <String fx:value="1" />
+                                </FXCollections>
+                            </items>
+                            <value>
+                                <String fx:value="0" />
+                            </value>
                         </ComboBox>
                     </children>
                     <padding>
@@ -83,7 +94,7 @@
 
                 <HBox alignment="TOP_RIGHT">
                     <children>
-                        <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" pickOnBounds="false" text="Analyze" />
+                        <Button fx:id="analyseButton" disable="true" mnemonicParsing="false" onAction="#analyse" pickOnBounds="false" text="Analyse" />
                     </children>
                     <padding>
                         <Insets bottom="7.0" left="10.0" right="10.0" top="5.0" />
@@ -94,7 +105,7 @@
                     <items>
                         <AnchorPane SplitPane.resizableWithParent="false">
                             <children>
-                                <TreeView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                <TreeView fx:id="designPatternTreeView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                             </children>
                         </AnchorPane>
                         <AnchorPane>
