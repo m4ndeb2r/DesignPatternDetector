@@ -6,6 +6,9 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -78,6 +81,33 @@ public class SolutionsTest {
         solutions2.add(solution1a);
         assertFalse(solutions2.isUniq(solution1a));
         assertFalse(solutions2.isUniq(solution1b));
+    }
+
+    /**
+     * Tests the {@link Solutions#getSolutionsAsMap()} method.
+     */
+    @Test
+    public void testGetAsMap() {
+        assertThat(solutions1.getSolutionsAsMap().keySet().size(), is(1));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1a").size(), is(1));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1a").get(0), is(solution1a));
+
+        solutions1.add(solution1b);
+        assertThat(solutions1.getSolutionsAsMap().keySet().size(), is(2));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1a").size(), is(1));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1a").get(0), is(solution1a));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1b").size(), is(1));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1b").get(0), is(solution1b));
+
+        final Solution solution1b_2 = new Solution(
+                "Pattern1b",
+                createMatchedClasses_WX_YZ_WY(),
+                createSuperfluousEdges(),
+                createMissingEdges());
+        solutions1.add(solution1b_2);
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1b").size(), is(2));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1b").get(0), is(solution1b));
+        assertThat(solutions1.getSolutionsAsMap().get("Pattern1b").get(1), is(solution1b_2));
     }
 
     private Set<Edge> createSuperfluousEdges() {

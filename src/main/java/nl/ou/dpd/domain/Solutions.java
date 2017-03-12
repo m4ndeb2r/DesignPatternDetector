@@ -1,7 +1,9 @@
 package nl.ou.dpd.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,6 +54,24 @@ public class Solutions {
      */
     public List<Solution> getSolutions() {
         return solutions;
+    }
+
+    /**
+     * Returns the {@link Solution}s formatted as a {@link Map}, with the pattern name as key and a sublist of
+     * {@link Solution}s for every pattern.
+     *
+     * @return a {@link Map} representation of this {@link Solutions}.
+     */
+    public Map<String, List<Solution>> getSolutionsAsMap() {
+        Map<String, List<Solution>> solutionsMap = new HashMap<>();
+        solutions.forEach(solution -> {
+            final String key = solution.getDesignPatternName();
+            if (!solutionsMap.containsKey(key)) {
+                solutionsMap.put(key, new ArrayList<>());
+            }
+            solutionsMap.get(key).add(solution);
+        });
+        return solutionsMap;
     }
 
     /**
