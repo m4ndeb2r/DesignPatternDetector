@@ -1,16 +1,22 @@
 package nl.ou.dpd.gui.controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import nl.ou.dpd.domain.Solution;
 import nl.ou.dpd.gui.model.Model;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -40,6 +46,11 @@ public class ProjectViewController extends Controller {
     @FXML
     private TreeView<String> designPatternTreeView;
 
+    @FXML
+    private ScrollPane feedbackDetailsPane;
+
+    private Map<String, Solution> feedbackMap;
+
     /**
      * Constructs a {@link ProjectViewController} with a reference to the specified {@link Model}.
      *
@@ -50,8 +61,7 @@ public class ProjectViewController extends Controller {
     }
 
     /**
-     * Called to initialize a controller after its root element has been
-     * completely processed.
+     * Called to initialize a controller after its root element has been completely processed.
      *
      * @param location  The location used to resolve relative paths for the root object, or
      *                  <tt>null</tt> if the location is not known.
@@ -59,6 +69,7 @@ public class ProjectViewController extends Controller {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        designPatternTreeView.setOnMouseClicked(createMouseHandler());
     }
 
     /**
@@ -92,17 +103,18 @@ public class ProjectViewController extends Controller {
 
     /**
      * Starts the analysis of the system under consideration, and processes the feedback data.
-     *
-     * TODO: store the matched classes, and edge information in an attribute to show when an item in the TreeView is clicked
      */
     @FXML
     protected void analyse() {
         final int maxMissingEdges = Integer.parseInt(this.maxMissingEdgesComboBox.getValue());
         final Map<String, List<Solution>> result = getModel().analyse(maxMissingEdges);
 
-        designPatternTreeView.setRoot(new TreeItem<>("Design patterns"));
-        final TreeItem<String> treeRoot = designPatternTreeView.getRoot();
+        final TreeItem<String> treeRoot = new TreeItem<>("Design patterns");
+        treeRoot.setExpanded(true);
 
+        designPatternTreeView.setRoot(treeRoot);
+
+        feedbackMap = new HashMap<>();
         int patternCount = 0;
         for (String patternName : result.keySet()) {
             final List<Solution> solutions = result.get(patternName);
@@ -110,22 +122,48 @@ public class ProjectViewController extends Controller {
             treeRoot.getChildren().add(patternRoot);
 
             int i = 0;
-            for(Solution solution : solutions) {
-                final TreeItem<String> patternItem = new TreeItem<>(solution.getDesignPatternName() + (++i));
-                patternItem.getChildren().add(new TreeItem("Classes"));
-                if(solution.getSuperfluousEdges().size() > 0) {
-                    patternItem.getChildren().add(new TreeItem("Superfluous Edges"));
+            boolean postFix = solutions.size() > 1;
+            for (Solution solution : solutions) {
+                String dpn = solution.getDesignPatternName();
+                ++i;
+                if (postFix) {
+                    dpn += (i);
                 }
-                if(solution.getMissingEdges().size() > 0) {
-                    patternItem.getChildren().add(new TreeItem("Missing Edges"));
-                }
+                final TreeItem<String> patternItem = new TreeItem<>(dpn);
                 patternRoot.getChildren().add(patternItem);
+                feedbackMap.put(dpn, solution);
             }
 
             patternCount += i;
         }
 
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
+    }
+
+    /**
+     * Creates an {@link EventHandler} to handle mouse clicks in the {@link TreeView} containing the detected patterns.
+     * This handler shows feedback details in the scroll pane, for any the pattern that is clicked in the tree view.
+     *
+     * @return a mouseclick handler
+     */
+    private EventHandler<MouseEvent> createMouseHandler() {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(final MouseEvent event) {
+                final Node node = event.getPickResult().getIntersectedNode();
+                if (node instanceof Text) {
+                    showFeedbackDetails(((Text) node).getText());
+                }
+            }
+        };
+    }
+
+    private void showFeedbackDetails(String key) {
+        Solution solution = feedbackMap.get(key);
+        if (solution != null) {
+            // TODO
+            feedbackDetailsPane.setContent(new Text("Name: " + key + " - pattern: " + solution.getDesignPatternName()));
+        }
     }
 
 }

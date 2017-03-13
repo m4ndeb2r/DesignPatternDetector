@@ -66,7 +66,7 @@
                         </Button>
 
                         <Label id="maxNrMissingLabel" text="Maximum number of missing edges allowed:" GridPane.rowIndex="2" />
-                        <ComboBox fx:id="maxMissingEdgesComboBox" prefHeight="26.0" prefWidth="115.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <ComboBox fx:id="maxMissingEdgesComboBox" prefHeight="26.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <tooltip>
                                 <Tooltip contentDisplay="TOP" text="Choose the max. allowed number of missing edges" wrapText="true" />
                             </tooltip>
@@ -110,9 +110,15 @@
                         </AnchorPane>
                         <AnchorPane>
                             <children>
-                                <ScrollPane hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <ScrollPane fx:id="feedbackDetailsPane" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <content>
-                                        <Label id="test" text="test test test test" />
+                                        <Label fx:id="feedbackPatternTitle" styleClass="feedback-title" text="" />
+                                        <Label fx:id="feedbackPatternTitle" styleClass="feedback-subtitle" text="" />
+                                        <!--<TableView></TableView>-->
+                                        <Label fx:id="feedbackMissingEdgesTitle" styleClass="feedback-subtitle" text="" />
+                                        <!--<TableView></TableView>-->
+                                        <Label fx:id="feedbackSuperfluousEdgesTitle" styleClass="feedback-subtitle" text="" />
+                                        <!--<TableView></TableView>-->
                                     </content>
                                     <padding>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
