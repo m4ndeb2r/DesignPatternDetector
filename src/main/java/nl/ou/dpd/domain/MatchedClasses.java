@@ -45,7 +45,7 @@ public class MatchedClasses {
      * @param systemClass the system {@link Clazz} to look for.
      * @return the matching design pattern {@link Clazz}.
      */
-    Clazz get(Clazz systemClass) {
+    public Clazz get(Clazz systemClass) {
         return classes.get(systemClass);
     }
 
@@ -66,7 +66,7 @@ public class MatchedClasses {
      *
      * @return a {@link SortedSet} of system under consideration {@link Clazz}'s
      */
-    SortedSet<Clazz> getBoundSystemClassesSorted() {
+    public SortedSet<Clazz> getBoundSystemClassesSorted() {
         return new TreeSet(classes.keySet()
                 .stream()
                 .filter(key -> isSystemClassBound(key))

@@ -1,17 +1,22 @@
 package nl.ou.dpd.gui.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import nl.ou.dpd.domain.Clazz;
+import nl.ou.dpd.domain.Edge;
+import nl.ou.dpd.domain.MatchedClasses;
 import nl.ou.dpd.domain.Solution;
 import nl.ou.dpd.gui.model.Model;
 
@@ -20,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * A {@link Controller} for the project view of the application.
@@ -47,7 +53,28 @@ public class ProjectViewController extends Controller {
     private TreeView<String> designPatternTreeView;
 
     @FXML
-    private ScrollPane feedbackDetailsPane;
+    private Label feedbackPatternNameLabel;
+
+    @FXML
+    private Label feedbackPatternLabel;
+
+    @FXML
+    private Label feedbackMatchedClassesLabel;
+
+    @FXML
+    private GridPane feedbackMatchedClassesGridPane;
+
+    @FXML
+    private Label feedbackSuperfluousEdgesLabel;
+
+    @FXML
+    private GridPane feedbackSuperfluousEdgesGridPane;
+
+    @FXML
+    private Label feedbackMissingEdgesLabel;
+
+    @FXML
+    private GridPane feedbackMissingEdgesGridPane;
 
     private Map<String, Solution> feedbackMap;
 
@@ -158,11 +185,68 @@ public class ProjectViewController extends Controller {
         };
     }
 
-    private void showFeedbackDetails(String key) {
+    private void showFeedbackDetails(final String key) {
         Solution solution = feedbackMap.get(key);
         if (solution != null) {
-            // TODO
-            feedbackDetailsPane.setContent(new Text("Name: " + key + " - pattern: " + solution.getDesignPatternName()));
+            feedbackPatternNameLabel.setText("Feedback information for " + key);
+            feedbackPatternLabel.setText("Design pattern: " + solution.getDesignPatternName());
+
+            // Show matching classes
+            feedbackMatchedClassesLabel.setText("Matched classes");
+            clearGridPane(feedbackMatchedClassesGridPane);
+            int row = 0;
+            final MatchedClasses matchedClasses = solution.getMatchedClasses();
+            feedbackMatchedClassesGridPane.add(new Text("System class"), 0, row);
+            feedbackMatchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: bold");
+            feedbackMatchedClassesGridPane.add(new Text("Design pattern class"), 2, row);
+            feedbackMatchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: bold");
+            for (Clazz cls : matchedClasses.getBoundSystemClassesSorted()) {
+                int col = 0;
+                row++;
+                feedbackMatchedClassesGridPane.add(new Text(cls.getName()), col++, row);
+                feedbackMatchedClassesGridPane.add(new Text("-->"), col++, row);
+                feedbackMatchedClassesGridPane.add(new Text(matchedClasses.get(cls).getName()), col, row);
+            }
+
+            // Show superfluous edges
+            feedbackSuperfluousEdgesLabel.setText("Edges that do not belong to the design pattern");
+            clearGridPane(feedbackSuperfluousEdgesGridPane);
+            row = 0;
+            final Set<Edge> superfluousEdges = solution.getSuperfluousEdges();
+            if (superfluousEdges.size() == 0) {
+                feedbackSuperfluousEdgesGridPane.add(new Text("No superfluous edges found."), 0, row);
+            }
+            for (Edge edge : superfluousEdges) {
+                int col = 0;
+                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getClass1().getName()), col++, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text("-->"), col++, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getClass2().getName()), col, row);
+                row++;
+            }
+
+            // Show missing edges
+            feedbackMissingEdgesLabel.setText("Missing edges");
+            clearGridPane(feedbackMissingEdgesGridPane);
+            row = 0;
+            final Set<Edge> missingEdges = solution.getMissingEdges();
+            if (missingEdges.size() == 0) {
+                feedbackMissingEdgesGridPane.add(new Text("No missing edges found."), 0, row);
+            }
+            for (Edge edge : missingEdges) {
+                int col = 0;
+                feedbackMissingEdgesGridPane.add(new Text(edge.getClass1().getName()), col++, row);
+                feedbackMissingEdgesGridPane.add(new Text("-->"), col++, row);
+                feedbackMissingEdgesGridPane.add(new Text(edge.getClass2().getName()), col, row);
+                row++;
+            }
+
+        }
+    }
+
+    private void clearGridPane(final GridPane gridPane) {
+        final ObservableList<Node> children = gridPane.getChildren();
+        if (children != null && children.size() != 0) {
+            children.clear();
         }
     }
 

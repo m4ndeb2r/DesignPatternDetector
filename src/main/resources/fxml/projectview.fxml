@@ -24,6 +24,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.collections.FXCollections?>
 
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.Box?>
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.ou.dpd.gui.controller.ProjectViewController">
     <top>
         <fx:include fx:id="menu" source="menu.fxml" />
@@ -110,18 +112,26 @@
                         </AnchorPane>
                         <AnchorPane>
                             <children>
-                                <ScrollPane fx:id="feedbackDetailsPane" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <ScrollPane hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <content>
-                                        <Label fx:id="feedbackPatternTitle" styleClass="feedback-title" text="" />
-                                        <Label fx:id="feedbackPatternTitle" styleClass="feedback-subtitle" text="" />
-                                        <!--<TableView></TableView>-->
-                                        <Label fx:id="feedbackMissingEdgesTitle" styleClass="feedback-subtitle" text="" />
-                                        <!--<TableView></TableView>-->
-                                        <Label fx:id="feedbackSuperfluousEdgesTitle" styleClass="feedback-subtitle" text="" />
-                                        <!--<TableView></TableView>-->
+                                        <VBox>
+                                            <children>
+                                                <Label fx:id="feedbackPatternNameLabel" styleClass="feedback-title" text="" />
+                                                <Label fx:id="feedbackPatternLabel" styleClass="feedback-subsubtitle" text="" />
+
+                                                <Label fx:id="feedbackMatchedClassesLabel" styleClass="feedback-subtitle" text="" />
+                                                <GridPane fx:id="feedbackMatchedClassesGridPane" styleClass="feedback-gridpane"></GridPane>
+
+                                                <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle" text="" />
+                                                <GridPane fx:id="feedbackSuperfluousEdgesGridPane" styleClass="feedback-gridpane"></GridPane>
+
+                                                <Label fx:id="feedbackMissingEdgesLabel" styleClass="feedback-subtitle" text="" />
+                                                <GridPane fx:id="feedbackMissingEdgesGridPane" styleClass="feedback-gridpane"></GridPane>
+                                            </children>
+                                        </VBox>
                                     </content>
                                     <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                     </padding>
                                 </ScrollPane>
                             </children>
