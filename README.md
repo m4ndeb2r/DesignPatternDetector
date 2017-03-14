@@ -1,21 +1,36 @@
 # DesignPatternDetector
 
-## Current version
-The current version only works as a command line application. 
-It analyses exports from ArgoUML (\*.xmi) and attempts to find 
-design patterns, specied in templates file (\*.xml).
+## Original version
+The original version was a command line application. It was developed
+as a prototype by E. van Doorn. it analyses exports from ArgoUML (\*.xmi) 
+and attempts to find design patterns, specied in templates file (\*.xml).
+The input files were provided to the application as command line arguments,
+along with a third argument, the maximum number of allowed missing edges 
+(-n flag).
 
 **Example**
 
 `$ java -jar ./target/DesignPatternDetector.jar -x input.xmi -t templates.xml -n 1
 `
 
+With -n 0 the application is very strict when detecting patterns. With higher values
+it is less strict, and accepts n missing edges in detected patterns. Typical values 
+for -n are 0 (strict)or 1 (not so strict).
+
+## Current version
+The current version is a JavaFX application with a graphic userinterface. 
+Just like the original prototype, it analyses exports from ArgoUML (\*.xmi) 
+and attempts to find design patterns, specied in templates file (\*.xml).
+All arguments can be entered in the GUI. Pattern detection is currently no
+different from the original prototype, fundamentally.
+
+
 ## Working on ...
 We are currently working on:
 * unittests
 * documentation
 * refactoring
-* a user-friendly GUI
+* perfection of the user-friendly GUI
 * extension of recognized patterns
 
 ## Some known problems
