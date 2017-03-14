@@ -3,7 +3,7 @@
     -fx-font-size: 18px;
 }
 .page-title {
-    -fx-font-weight: 400;
+    -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill : rgb(0,0,0);
@@ -11,27 +11,27 @@
 }
 .feedback-title {
     -fx-padding: 0 0 5px 0;
-    -fx-font-weight: 400;
+    -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill : rgb(0,0,0);
     -fx-font-size: 22px;
 }
 .feedback-subtitle {
-    -fx-padding: 15px 0 5px 0;
-    -fx-font-weight: 400;
-    -fx-font-family: sans-serif;
+    -fx-padding: 20px 0 5px 0;
+    -fx-font-weight: 600;
+    -fx-font-family: fantasy;
     -fx-font-style: normal;
     -fx-text-fill : rgb(0,0,0);
     -fx-font-size: 18px;
 }
 .feedback-subsubtitle {
     -fx-padding: 2px 0 2px 0;
-    -fx-font-weight: 400;
+    -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill : rgb(0,0,0);
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
 }
 .feedback-gridpane {
     -fx-padding: 5px 10px 5px 15px;

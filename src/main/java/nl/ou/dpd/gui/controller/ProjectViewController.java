@@ -197,9 +197,9 @@ public class ProjectViewController extends Controller {
             int row = 0;
             final MatchedClasses matchedClasses = solution.getMatchedClasses();
             feedbackMatchedClassesGridPane.add(new Text("System class"), 0, row);
-            feedbackMatchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: bold");
+            feedbackMatchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: 600");
             feedbackMatchedClassesGridPane.add(new Text("Design pattern class"), 2, row);
-            feedbackMatchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: bold");
+            feedbackMatchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: 600");
             for (Clazz cls : matchedClasses.getBoundSystemClassesSorted()) {
                 int col = 0;
                 row++;
