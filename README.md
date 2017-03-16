@@ -10,7 +10,7 @@ along with a third argument, the maximum number of allowed missing edges
 
 **Example**
 
-`$ java -jar ./target/DesignPatternDetector.jar -x input.xmi -t templates.xml -n 1
+`$ java -jar ./target/patterndetectionArgouml.jar -x input.xmi -t templates.xml -n 1
 `
 
 With -n 0 the application is very strict when detecting patterns. With higher values
@@ -24,6 +24,12 @@ and attempts to find design patterns, specied in templates file (\*.xml).
 All arguments can be entered in the GUI. Pattern detection is currently no
 different from the original prototype, fundamentally.
 
+**Example**
+
+`$ java -jar ./target/DesignPatternDetector.jar -x input.xmi -t templates.xml -n 1
+`
+
+(Note that the name of the application has changed from patterndetectionArgouml to DesignPatternDedector.)
 
 ## Working on ...
 We are currently working on:
