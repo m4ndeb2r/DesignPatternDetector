@@ -8,7 +8,9 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.Constructor;
 
 /**
- * TODO.
+ * A unitility class that contains a method for creating en controller factory. A controller factory is a
+ * {@link Callback} instance that creates a {@link Controller} when the {@link Callback#call(Object)} method
+ * is invoked, expecting a {@link Model} instance for an argument.
  *
  * @author Martin de Boer
  */
