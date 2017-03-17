@@ -34,8 +34,9 @@ public final class ControllerFactoryCreator {
                 final Controller controller = (Controller) constructor.newInstance(model);
                 return controller;
             } catch (Exception exc) {
-                LOGGER.error("Unable to create controller factory.", exc);
-                throw new RuntimeException(exc); // fatal, just bail...
+                final String msg = "Unable to create controller factory.";
+                LOGGER.error(msg, exc);
+                throw new RuntimeException(msg, exc); // fatal, just bail...
             }
         };
     }
