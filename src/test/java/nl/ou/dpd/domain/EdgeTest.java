@@ -22,8 +22,11 @@ public class EdgeTest {
      */
     @Test
     public void testEquals() {
-        // Two duplicate edges. They are equal.
+        // Compare with null. Not equal.
         Edge edge1 = TestHelper.createEdge("class1", "class2", EdgeType.DEPENDENCY);
+        assertFalse(edge1.equals(null));
+
+        // Two duplicate edges. They are equal.
         Edge edge2 = new Edge(edge1);
         assertTrue(edge1.equals(edge2));
         assertTrue(edge1.equals(edge1));

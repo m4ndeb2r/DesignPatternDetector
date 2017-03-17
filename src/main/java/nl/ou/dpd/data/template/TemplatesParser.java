@@ -42,11 +42,11 @@ public class TemplatesParser implements Parser<List<DesignPattern>> {
             saxParser.parse(xmlInput, handler);
             return handler.getTemplates();
         } catch (SAXException | ParserConfigurationException e) {
-            final String msg = "Het bestand " + filename + " kon niet worden geparsed.";
+            final String msg = "The pattern template file " + filename + " could not be parsed.";
             LOGGER.error(msg, e);
             throw new DesignPatternDetectorException(msg, e);
         } catch (IOException e) {
-            final String msg = "Het bestand " + filename + " kon niet worden gevonden.";
+            final String msg = "The pattern template file " + filename + " could not be found.";
             LOGGER.error(msg, e);
             throw new DesignPatternDetectorException(msg, e);
         }

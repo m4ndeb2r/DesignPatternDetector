@@ -56,44 +56,4 @@ public class Solutions {
         return solutions;
     }
 
-    /**
-     * This method is still available for backwards compatibility purposes. The original version of the application
-     * printed all the results to the console. In the next version we will not do that anymore. Instead a GUI is being
-     * considered to show feedback to the user.
-     *
-     * @deprecated no output to the console directly in this application!!
-     */
-    public void show() {
-        for (Solution solution : solutions) {
-            final String designPatternName = solution.getDesignPatternName();
-            final MatchedClasses matchedClasses = solution.getMatchedClasses();
-            final Set<Edge> superfluousEdges = solution.getSuperfluousEdges();
-
-            final StringBuffer output = new StringBuffer();
-
-            if (!designPatternName.isEmpty()) {
-                output.append("Design Pattern: ").append(designPatternName).append("\n");
-            }
-            for (Clazz key : matchedClasses.getBoundSystemClassesSorted()) {
-                output.append(String.format("%20s --> %25s\n", key.getName(), matchedClasses.get(key).getName()));
-            }
-            output.append("------------------------\n");
-
-            if (superfluousEdges.size() > 0) {
-                output.append("Edges which do not belong to this design pattern:\n");
-                for (Edge edge : superfluousEdges) {
-                    if (!edge.isVirtual()) {
-                        output.append(edge.getClass1().getName())
-                                .append(" --> ")
-                                .append(edge.getClass2().getName())
-                                .append("\n");
-                    }
-                }
-                output.append("==================================================\n");
-            }
-            System.out.println(output.toString());
-
-            // Note: we are not printing missing edges for backward compatibility (they were not printed in the original version)
-        }
-    }
 }

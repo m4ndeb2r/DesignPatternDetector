@@ -7,6 +7,7 @@ import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import java.io.FileNotFoundException;
@@ -18,14 +19,17 @@ import static org.hamcrest.core.Is.is;
 
 /**
  * Tests the {@link TemplatesParser} class.
- * TODO: The current verion of TemplatesParser is not very testable, except when we capture the output to stdout ...
  *
  * @author Martin de Boer
  */
 public class TemplatesParserTest {
 
-    // A test file containing invalid XMI.
+    // A test file containing invalid XML.
     private static final String INVALID_XML = "/invalid.xml";
+    // A test file containing an invalid edge tag.
+    private static final String INVALID_EDGE_TAG_XML = "/invalid-edge-tag.xml";
+    // A test file containing an invalid edge tag.
+    private static final String INVALID_TEMPLATE_TAG_XML = "/invalid-template-tag.xml";
     // A test file containing the Ba Brahem templates example.
     private static final String BA_BRAHEM_TEST_XML = "/Ba_Brahem.xml";
 
@@ -36,8 +40,8 @@ public class TemplatesParserTest {
     public ExpectedException thrown = ExpectedException.none();
 
     /**
-     * Tests the exception handling in case of a {@link SAXParseException} during parsing input by a
-     * {@link TemplatesParser} instance.
+     * Tests the exception handling in case of incorrect XML resulting in a {@link SAXParseException} during parsing
+     * a template file by a {@link TemplatesParser}.
      */
     @Test
     public void testSAXParseException() {
@@ -46,14 +50,46 @@ public class TemplatesParserTest {
 
         thrown.expect(DesignPatternDetectorException.class);
         thrown.expectCause(is(SAXParseException.class));
-        thrown.expectMessage("Het bestand " + path + " kon niet worden geparsed.");
+        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
 
         templatesParser.parse(path);
     }
 
     /**
-     * Tests the exception handling in case of a {@link IOException} during parsing input by an {@link ArgoXMI}
-     * instance.
+     * Tests the exception handling in case of an unexpected edge tag, resulting in a {@link SAXException} during
+     * parsing a template file by a {@link TemplatesParser}.
+     */
+    @Test
+    public void testSAXException1() {
+        final String path = getPath(INVALID_EDGE_TAG_XML);
+        final TemplatesParser templatesParser = new TemplatesParser();
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(SAXException.class));
+        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+
+        templatesParser.parse(path);
+    }
+
+    /**
+     * Tests the exception handling in case of an unexpected template tag, resulting in a {@link SAXException} during
+     * parsing a template file by a {@link TemplatesParser}.
+     */
+    @Test
+    public void testSAXException2() {
+        final String path = getPath(INVALID_TEMPLATE_TAG_XML);
+        final TemplatesParser templatesParser = new TemplatesParser();
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(SAXException.class));
+        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+
+        templatesParser.parse(path);
+    }
+
+    /**
+     * Tests the exception handling in case of a {@link IOException} during parsing a template file by a
+     * {@link TemplatesParser}.
      */
     @Test
     public void testFileNotFoundException() {
@@ -61,13 +97,13 @@ public class TemplatesParserTest {
 
         thrown.expect(DesignPatternDetectorException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("Het bestand oops.xmi kon niet worden gevonden.");
+        thrown.expectMessage("The pattern template file missing.xml could not be found.");
 
-        templatesParser.parse("oops.xmi");
+        templatesParser.parse("missing.xml");
     }
 
     /**
-     * Test the happy flow of parsing an XMI input file by the {@link ArgoXMI}.
+     * Test the happy flow of parsing an XMI input file by the {@link TemplatesParser}.
      */
     @Test
     public void testParse() {
