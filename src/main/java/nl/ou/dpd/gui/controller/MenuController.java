@@ -71,6 +71,9 @@ public class MenuController extends Controller {
      */
     @FXML
     protected void saveProjectAction(ActionEvent event) {
+
+        // TODO: show dialog success or failure
+
         getModel().saveProject();
     }
 
@@ -81,6 +84,9 @@ public class MenuController extends Controller {
      */
     @FXML
     protected void saveProjectAsAction(ActionEvent event) {
+
+        // TODO: show dialog success or failure
+
         getModel().saveProjectAs();
     }
 
@@ -133,6 +139,15 @@ public class MenuController extends Controller {
     }
 
     /**
+     * Refreshes the menu items, by synchronizing with the model.
+     */
+    public void refresh() {
+        this.closeProject.setDisable(!getModel().hasOpenProject());
+        this.saveProject.setDisable(!getModel().canSaveOpenProject());
+        this.saveProjectAs.setDisable(!getModel().canSaveOpenProject());
+    }
+
+    /**
      * Called to initialize a controller after its root element has been
      * completely processed.
      *
@@ -142,9 +157,7 @@ public class MenuController extends Controller {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.closeProject.setDisable(!getModel().hasOpenProject());
-        this.saveProject.setDisable(!getModel().hasOpenProject());
-        this.saveProjectAs.setDisable(!getModel().hasOpenProject());
+        refresh();
     }
 
 }

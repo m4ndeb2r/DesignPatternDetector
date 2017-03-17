@@ -37,8 +37,7 @@ public class Model {
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
 
-    // TODO: replace with the actual open project
-    private Object openProject = null;
+    private Project openProject = null;
 
     private File systemFile;
     private File templateFile;
@@ -69,7 +68,7 @@ public class Model {
      * Shows the project view of the application.
      */
     public void newProject() {
-        openProject = "DUMMY";
+        openProject = new Project();
         showView(PROJECTVIEW_FXML);
     }
 
@@ -77,32 +76,51 @@ public class Model {
      * Opens an existing project.
      */
     public void openProject() {
-        openProject = "DUMMY";
+        final File projectFile = this.chooseFile("Project files (*.dpd)", "*.dpd");
+        if (projectFile != null) {
+            openProject = new Project(projectFile);
+        }
         showView(PROJECTVIEW_FXML);
     }
 
     /**
      * Saves the current project.
+     *
+     * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
-    public void saveProject() {
+    public boolean saveProject() {
+        if (openProject.getProjectFile() == null) {
+            return saveProjectAs();
+        }
+        return openProject.save();
     }
 
     /**
      * Saves the current project as ...
+     *
+     * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
-    public void saveProjectAs() {
+    public boolean saveProjectAs() {
+        final FileChooser fileChooser = new FileChooser();
+        final FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project files (*.dpd)", "*.dpd");
+
+        fileChooser.setTitle("Save Project");
+        fileChooser.setSelectedExtensionFilter(filter);
+
+        return openProject.save(fileChooser.showSaveDialog(scene.getWindow()));
     }
 
     /**
      * Closes the current project.
      */
     public void closeProject() {
+        // TODO: determine if any changes were made. If so, show a dialog to propose saving it first....
         openProject = null;
         showView(MAINVIEW_FXML);
     }
 
     /**
-     * Determins whether there is a project that is currently open.
+     * Determines whether there is a project that is currently open.
      *
      * @return {@code true} if a project is currently open, or (@code false} otherwise.
      */
@@ -111,15 +129,28 @@ public class Model {
     }
 
     /**
+     * Determines whether there is a project that is currently open and that can be saved.
+     *
+     * @return {@code true} if a project is currently open and can be saved, or (@code false} otherwise.
+     */
+    public boolean canSaveOpenProject() {
+        return openProject != null
+                && openProject.getDesignPatternTemplatePath() != null
+                && openProject.getSystemUnderConsiderationPath() != null;
+    }
+
+    /**
      * Opens a dialog to choose a file with extension {@code *.xmi}.
      *
      * @return a string representation of the file path, or {@code null} if no file was selected.
      */
     public String chooseSystemFile() {
-        systemFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
-        if (systemFile == null) {
+        File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
+        if (chosenFile == null) {
             return null;
         } else {
+            systemFile = chosenFile;
+            openProject.setSystemUnderConsiderationPath(systemFile.getPath());
             return systemFile.getPath();
         }
     }
@@ -130,10 +161,12 @@ public class Model {
      * @return a string representation of the file path, or {@code null} if no file was selected.
      */
     public String chooseTemplateFile() {
-        templateFile = this.chooseFile("XML template files (*.xml)", "*.xml");
-        if (templateFile == null) {
+        File chosenFile = this.chooseFile("XML template files (*.xml)", "*.xml");
+        if (chosenFile == null) {
             return null;
         } else {
+            templateFile = chosenFile;
+            openProject.setDesignPatternTemplatePath(templateFile.getPath());
             return templateFile.getPath();
         }
     }

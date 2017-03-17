@@ -4,9 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,9 +15,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import nl.ou.dpd.domain.Clazz;
 import nl.ou.dpd.domain.Edge;
 import nl.ou.dpd.domain.MatchedClasses;
@@ -44,9 +39,8 @@ public class ProjectViewController extends Controller {
 
     private static final Logger LOGGER = LogManager.getLogger(ProjectViewController.class);
 
-
-//    @FXML
-//    private MenuController menuController;
+    @FXML
+    private MenuController menuController;
 
     @FXML
     private TextField systemFileTextField;
@@ -120,6 +114,11 @@ public class ProjectViewController extends Controller {
         String path = getModel().chooseSystemFile();
         if (path != null) {
             systemFileTextField.setText(path);
+            menuController.refresh();
+
+            final boolean templateFileEmpty = templateFileTextField == null || templateFileTextField.getText().isEmpty();
+            final boolean systemFileEmpty = systemFileTextField == null || systemFileTextField.getText().isEmpty();
+            analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
         }
     }
 
@@ -133,10 +132,12 @@ public class ProjectViewController extends Controller {
         String path = getModel().chooseTemplateFile();
         if (path != null) {
             templateFileTextField.setText(path);
+            menuController.refresh();
+
+            final boolean templateFileEmpty = templateFileTextField == null || templateFileTextField.getText().isEmpty();
+            final boolean systemFileEmpty = systemFileTextField == null || systemFileTextField.getText().isEmpty();
+            analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
         }
-        final boolean templateFileEmpty = templateFileTextField == null || templateFileTextField.getText().isEmpty();
-        final boolean systemFileEmpty = systemFileTextField == null || systemFileTextField.getText().isEmpty();
-        analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
     }
 
     /**
