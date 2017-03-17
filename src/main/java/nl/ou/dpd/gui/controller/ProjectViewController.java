@@ -50,7 +50,7 @@ public class ProjectViewController extends Controller {
     private ComboBox<String> maxMissingEdgesComboBox;
 
     @FXML
-    private TreeView<String> designPatternTreeView;
+    private TreeView<String> feedbackTreeView;
 
     @FXML
     private Label feedbackPatternNameLabel;
@@ -96,7 +96,7 @@ public class ProjectViewController extends Controller {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        designPatternTreeView.setOnMouseClicked(createMouseHandler());
+        feedbackTreeView.setOnMouseClicked(createMouseHandler());
     }
 
     /**
@@ -139,7 +139,7 @@ public class ProjectViewController extends Controller {
         final TreeItem<String> treeRoot = new TreeItem<>("Design patterns");
         treeRoot.setExpanded(true);
 
-        designPatternTreeView.setRoot(treeRoot);
+        feedbackTreeView.setRoot(treeRoot);
 
         feedbackMap = new HashMap<>();
         int patternCount = 0;
