@@ -51,7 +51,7 @@ public class ArgoXMIParserTest {
 
         thrown.expect(DesignPatternDetectorException.class);
         thrown.expectCause(is(SAXParseException.class));
-        thrown.expectMessage("Het bestand " + path + " kon niet worden geparsed.");
+        thrown.expectMessage("The file " + path + " could not be parsed.");
 
         argoXMIParser.parse(path);
     }
@@ -66,7 +66,7 @@ public class ArgoXMIParserTest {
 
         thrown.expect(DesignPatternDetectorException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("Het bestand oops.xmi kon niet worden gevonden.");
+        thrown.expectMessage("The file oops.xmi could not be found.");
 
         argoXMIParser.parse("oops.xmi");
     }

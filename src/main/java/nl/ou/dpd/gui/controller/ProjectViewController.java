@@ -4,7 +4,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -14,11 +17,16 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import nl.ou.dpd.domain.Clazz;
 import nl.ou.dpd.domain.Edge;
 import nl.ou.dpd.domain.MatchedClasses;
 import nl.ou.dpd.domain.Solution;
 import nl.ou.dpd.gui.model.Model;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -33,6 +41,9 @@ import java.util.Set;
  * @author Martin de Boer
  */
 public class ProjectViewController extends Controller {
+
+    private static final Logger LOGGER = LogManager.getLogger(ProjectViewController.class);
+
 
 //    @FXML
 //    private MenuController menuController;
@@ -134,7 +145,22 @@ public class ProjectViewController extends Controller {
     @FXML
     protected void analyse() {
         final int maxMissingEdges = Integer.parseInt(this.maxMissingEdgesComboBox.getValue());
-        final Map<String, List<Solution>> result = getModel().analyse(maxMissingEdges);
+
+        Map<String, List<Solution>> result = null;
+        try {
+            result = getModel().analyse(maxMissingEdges);
+        } catch (Exception e) {
+            LOGGER.error("Error during analysis: ", e);
+
+            // Show error to the user.
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not analyse input data");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+
+            return;
+        }
 
         final TreeItem<String> treeRoot = new TreeItem<>("Design patterns");
         treeRoot.setExpanded(true);

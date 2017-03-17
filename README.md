@@ -63,6 +63,6 @@ Besides detecting patterns in UML, we foresee:
 # Tooling
 Build tool: Maven 3.3.9 (Bundled with IntelliJ)
 
-Compiler: Java 1.8
+Compiler: jdk1.8.0_121
 
 JavaFX SceneBuilder 2.0 for Mac OSX

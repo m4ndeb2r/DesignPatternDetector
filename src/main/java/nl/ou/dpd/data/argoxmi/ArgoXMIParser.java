@@ -59,12 +59,12 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
             saxParser.parse(xmlInput, handler);
             return getSystemUnderConsideration();
         } catch (SAXException | ParserConfigurationException e) {
-            final String msg = "Het bestand " + fileName + " kon niet worden geparsed.";
-            LOGGER.error(msg);
+            final String msg = "The file " + fileName + " could not be parsed.";
+            LOGGER.error("***" + msg, e);
             throw new DesignPatternDetectorException(msg, e);
         } catch (IOException e) {
-            final String msg = "Het bestand " + fileName + " kon niet worden gevonden.";
-            LOGGER.error(msg);
+            final String msg = "The file " + fileName + " could not be found.";
+            LOGGER.error(msg, e);
             throw new DesignPatternDetectorException(msg, e);
         }
     }
