@@ -27,12 +27,25 @@ public class Clazz implements Comparable<Clazz> {
 
     private final String name;
 
+    private final String id;
+
     /**
      * Constructs a {@link Class} instance with the specified {@code name}.
      *
      * @param name the classname of this {@link Clazz}
      */
-    public Clazz(String name) {
+    public Clazz(final String name) {
+        this(name, name);
+    }
+
+    /**
+     * Constructs a {@link Class} instance with the specified {@code id} and {@code name}.
+     *
+     * @param id the id of this {@link Clazz}
+     * @param name the classname of this {@link Clazz}
+     */
+    public Clazz(final String id, final String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -46,14 +59,24 @@ public class Clazz implements Comparable<Clazz> {
     }
 
     /**
+     * Gets the id of the class.
+     *
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Clazz clazz = (Clazz) o;
-        return Objects.equals(name, clazz.name);
+        return Objects.equals(name, clazz.name)
+                && Objects.equals(id, clazz.id);
     }
 
     /**
@@ -61,21 +84,48 @@ public class Clazz implements Comparable<Clazz> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name, id);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(Clazz other) {
-        if (other == null || other.getName() == null) {
+    public int compareTo(final Clazz other) {
+        if (other == null) {
             return 1;
         }
-        if (getName() == null) {
+        final int compareByName = compareByName(other);
+        if (compareByName == 0) {
+            return compareById(other);
+        }
+        return compareByName;
+    }
+
+    private int compareByName(final Clazz other) {
+        if (getName() == null && other.getName() != null) {
             return -1;
         }
+        if (getName() != null && other.getName() == null) {
+            return 1;
+        }
+        if (getName() == null && other.getName() == null) {
+            return 0;
+        }
         return this.getName().compareTo(other.getName());
+    }
+
+    private int compareById(final Clazz other) {
+        if (getId() == null && other.getId() != null) {
+            return -1;
+        }
+        if (getId() != null && other.getId() == null) {
+            return 1;
+        }
+        if (getId() == null && other.getId() == null) {
+            return 0;
+        }
+        return this.getId().compareTo(other.getId());
     }
 
 }
