@@ -68,7 +68,7 @@
                         </Button>
 
                         <Label id="maxNrMissingLabel" text="Maximum number of missing edges allowed:" GridPane.rowIndex="2" />
-                        <ComboBox fx:id="maxMissingEdgesComboBox" prefHeight="26.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <ComboBox fx:id="maxMissingEdgesComboBox" prefHeight="26.0" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#maxMissingEdgesChanged">
                             <tooltip>
                                 <Tooltip contentDisplay="TOP" text="Choose the max. allowed number of missing edges" wrapText="true" />
                             </tooltip>

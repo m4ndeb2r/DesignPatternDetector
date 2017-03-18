@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -74,8 +75,10 @@ public class Model {
 
     /**
      * Opens an existing project.
+     *
+     * @throws FileNotFoundException when the project file does not exits.
      */
-    public void openProject() {
+    public void openProject() throws FileNotFoundException {
         final File projectFile = this.chooseFile("Project files (*.dpd)", "*.dpd");
         if (projectFile != null) {
             openProject = new Project(projectFile);
@@ -114,9 +117,17 @@ public class Model {
      * Closes the current project.
      */
     public void closeProject() {
-        // TODO: determine if any changes were made. If so, show a dialog to propose saving it first....
         openProject = null;
         showView(MAINVIEW_FXML);
+    }
+
+    /**
+     * Determines if the project can be closed without loosing any changes to it.
+     *
+     * @return {@code true} if the project can be closed without loosing changes, or {@code false} otherwise.
+     */
+    public boolean canCloseProjectWithoutDataLoss() {
+        return openProject != null && openProject.isPristine();
     }
 
     /**
@@ -129,14 +140,12 @@ public class Model {
     }
 
     /**
-     * Determines whether there is a project that is currently open and that can be saved.
+     * Sets the max numnber of allowed edges missing for the currently opened project.
      *
-     * @return {@code true} if a project is currently open and can be saved, or (@code false} otherwise.
+     * @param m the new number of max allowed missing edges
      */
-    public boolean canSaveOpenProject() {
-        return openProject != null
-                && openProject.getDesignPatternTemplatePath() != null
-                && openProject.getSystemUnderConsiderationPath() != null;
+    public void setMaxMissingEdges(int m) {
+        openProject.setMaxMissingEdges(m);
     }
 
     /**

@@ -105,6 +105,16 @@ public class ProjectViewController extends Controller {
     }
 
     /**
+     * Notifies the model the value of the max missing edges is updated.
+     *
+     * @param event is ignored
+     */
+    @FXML
+    protected void maxMissingEdgesChanged(ActionEvent event) {
+        getModel().setMaxMissingEdges(Integer.parseInt(maxMissingEdgesComboBox.getValue()));
+    }
+
+    /**
      * Select a "system under consideration" file from disk.
      *
      * @param event is ignored
