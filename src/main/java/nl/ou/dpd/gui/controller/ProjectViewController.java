@@ -20,6 +20,7 @@ import nl.ou.dpd.domain.Edge;
 import nl.ou.dpd.domain.MatchedClasses;
 import nl.ou.dpd.domain.Solution;
 import nl.ou.dpd.gui.model.Model;
+import nl.ou.dpd.gui.model.Project;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,20 +28,24 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
  * A {@link Controller} for the project view of the application.
+ * <p>
+ * TODO: this should not be a singleton, but there should also not be multiple instance of this class!! Fix it in the ControllerFactoryCreator if possible.
  *
  * @author Martin de Boer
  */
-public class ProjectViewController extends Controller {
+public class ProjectViewController extends Controller implements Observer {
 
     private static final Logger LOGGER = LogManager.getLogger(ProjectViewController.class);
 
     @FXML
-    private MenuController menuController;
+    private Label projectNameLabel;
 
     @FXML
     private TextField systemFileTextField;
@@ -83,13 +88,30 @@ public class ProjectViewController extends Controller {
 
     private Map<String, Solution> feedbackMap;
 
+    // Singleton
+    private static ProjectViewController instance = null;
+
     /**
-     * Constructs a {@link ProjectViewController} with a reference to the specified {@link Model}.
+     * Returns the single instance of this class, or creates it if it does not exist.
+     *
+     * @param model the {@link Model} this controller updates
+     * @return the singleton instance of the {@link ProjectViewController}.
+     */
+    public static ProjectViewController getInstance(Model model) {
+        if (instance == null) {
+            instance = new ProjectViewController(model);
+        }
+        return instance;
+    }
+
+    /**
+     * A private constructor because the {@link ProjectViewController} is a singleton.
      *
      * @param model the model of the MVC pattern
      */
-    public ProjectViewController(Model model) {
+    private ProjectViewController(Model model) {
         super(model);
+        model.addObserver(this);
     }
 
     /**
@@ -115,39 +137,27 @@ public class ProjectViewController extends Controller {
     }
 
     /**
-     * Select a "system under consideration" file from disk.
+     * Select a "system under consideration" file from disk, and store it in the currently open
+     * {@link Project}. The {@link Model} will notify its {@link Observer}s (among which this
+     * {@link ProjectViewController}).
      *
      * @param event is ignored
      */
     @FXML
     protected void chooseSystemFile(ActionEvent event) {
-        String path = getModel().chooseSystemFile();
-        if (path != null) {
-            systemFileTextField.setText(path);
-            menuController.refresh();
-
-            final boolean templateFileEmpty = templateFileTextField == null || templateFileTextField.getText().isEmpty();
-            final boolean systemFileEmpty = systemFileTextField == null || systemFileTextField.getText().isEmpty();
-            analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
-        }
+        getModel().chooseSystemFile();
     }
 
     /**
-     * Select a dsisng pattern template file from disk.
+     * Let the model select a desing pattern template file from disk, and store it in the currently open
+     * {@link Project}. The {@link Model} will notify its {@link Observer}s (among which this
+     * {@link ProjectViewController}).
      *
      * @param event is ignored
      */
     @FXML
     protected void chooseTemplateFile(ActionEvent event) {
-        String path = getModel().chooseTemplateFile();
-        if (path != null) {
-            templateFileTextField.setText(path);
-            menuController.refresh();
-
-            final boolean templateFileEmpty = templateFileTextField == null || templateFileTextField.getText().isEmpty();
-            final boolean systemFileEmpty = systemFileTextField == null || systemFileTextField.getText().isEmpty();
-            analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
-        }
+        getModel().chooseTemplateFile();
     }
 
     /**
@@ -277,6 +287,45 @@ public class ProjectViewController extends Controller {
                 row++;
             }
 
+        }
+    }
+
+    /**
+     * This method is called when an {@link Observable} calls the {@code notifyObservers} method. At that moment this
+     * {@link ProjectViewController}, being an instance of the {@link Observer} interface, will be updated.
+     *
+     * @param o   the observable object
+     * @param arg a {@link Project} that is opened by the user (or {@code null} if none is currently opened.
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg != null) {
+            // Synchronise fields with the open project
+            final Project project = (Project) arg;
+            if (project.isPristine()) {
+                projectNameLabel.setText(project.getName());
+            } else {
+                projectNameLabel.setText(project.getName() + " *");
+            }
+            systemFileTextField.setText(project.getSystemUnderConsiderationPath());
+            templateFileTextField.setText(project.getDesignPatternTemplatePath());
+            this.maxMissingEdgesComboBox.setValue(Integer.toString(project.getMaxMissingEdges()));
+
+            // Enable/disable the analyse button
+            final boolean templateFileEmpty = templateFileTextField == null
+                    || templateFileTextField.getText() == null
+                    || templateFileTextField.getText().isEmpty();
+            final boolean systemFileEmpty = systemFileTextField == null
+                    || systemFileTextField.getText() == null
+                    || systemFileTextField.getText().isEmpty();
+            analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
+        } else {
+            // Whipe the fields' values
+            projectNameLabel.setText(null);
+            systemFileTextField.setText(null);
+            templateFileTextField.setText(null);
+            this.maxMissingEdgesComboBox.setValue("0");
+            analyseButton.setDisable(true);
         }
     }
 

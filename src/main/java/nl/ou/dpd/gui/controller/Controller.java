@@ -2,6 +2,10 @@ package nl.ou.dpd.gui.controller;
 
 import javafx.fxml.Initializable;
 import nl.ou.dpd.gui.model.Model;
+import nl.ou.dpd.gui.model.Project;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * An abstract controller for the views of the application. All controllers must extend this abstract controller, making

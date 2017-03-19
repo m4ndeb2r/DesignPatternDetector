@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
 
 /**
@@ -28,7 +29,7 @@ import java.util.Map;
  *
  * @author Martin de Boer
  */
-public class Model {
+public class Model extends Observable {
 
     private static final Logger LOGGER = LogManager.getLogger(Model.class);
 
@@ -40,11 +41,7 @@ public class Model {
 
     private Project openProject = null;
 
-    private File systemFile;
-    private File templateFile;
-
     private final Matcher matcher;
-
 
     /**
      * Constructor expecting a {@link Scene} as input parameter.
@@ -58,23 +55,27 @@ public class Model {
     }
 
     /**
-     * Shows the main view of the application.
+     * Shows the main view of the application and notifies the {@link java.util.Observer}s.
      */
     public void showMainView() {
         openProject = null;
         showView(MAINVIEW_FXML);
+        setChanged();
+        notifyObservers(openProject);
     }
 
     /**
-     * Shows the project view of the application.
+     * Shows the project view of the application and notifies the {@link java.util.Observer}s.
      */
     public void newProject() {
         openProject = new Project();
         showView(PROJECTVIEW_FXML);
+        setChanged();
+        notifyObservers(openProject);
     }
 
     /**
-     * Opens an existing project.
+     * Opens an existing project and notifies the {@link java.util.Observer}s.
      *
      * @throws FileNotFoundException when the project file does not exits.
      */
@@ -84,6 +85,8 @@ public class Model {
             openProject = new Project(projectFile);
         }
         showView(PROJECTVIEW_FXML);
+        setChanged();
+        notifyObservers(openProject);
     }
 
     /**
@@ -99,7 +102,7 @@ public class Model {
     }
 
     /**
-     * Saves the current project as ...
+     * Saves the current project as ...  and notifies the {@link java.util.Observer}s.
      *
      * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
@@ -110,15 +113,22 @@ public class Model {
         fileChooser.setTitle("Save Project");
         fileChooser.setSelectedExtensionFilter(filter);
 
-        return openProject.save(fileChooser.showSaveDialog(scene.getWindow()));
+        if (openProject.save(fileChooser.showSaveDialog(scene.getWindow()))) {
+            setChanged();
+            notifyObservers(openProject);
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Closes the current project.
+     * Closes the current project and notifies the {@link java.util.Observer}s.
      */
     public void closeProject() {
         openProject = null;
         showView(MAINVIEW_FXML);
+        setChanged();
+        notifyObservers(openProject);
     }
 
     /**
@@ -145,38 +155,36 @@ public class Model {
      * @param m the new number of max allowed missing edges
      */
     public void setMaxMissingEdges(int m) {
-        openProject.setMaxMissingEdges(m);
-    }
-
-    /**
-     * Opens a dialog to choose a file with extension {@code *.xmi}.
-     *
-     * @return a string representation of the file path, or {@code null} if no file was selected.
-     */
-    public String chooseSystemFile() {
-        File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
-        if (chosenFile == null) {
-            return null;
-        } else {
-            systemFile = chosenFile;
-            openProject.setSystemUnderConsiderationPath(systemFile.getPath());
-            return systemFile.getPath();
+        if (openProject != null) {
+            openProject.setMaxMissingEdges(m);
+            setChanged();
+            notifyObservers(openProject);
         }
     }
 
     /**
-     * Opens a dialog to choose a file with extension {@code *.xml}.
-     *
-     * @return a string representation of the file path, or {@code null} if no file was selected.
+     * Opens a dialog to choose a file with extension {@code *.xmi}. Notifies {@link java.util.Observer}s when a
+     * file was chosen.
      */
-    public String chooseTemplateFile() {
+    public void chooseSystemFile() {
+        File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
+        if (chosenFile != null && !chosenFile.equals(openProject.getSystemUnderConsiderationPath())) {
+            openProject.setSystemUnderConsiderationPath(chosenFile.getPath());
+            setChanged();
+            notifyObservers(openProject);
+        }
+    }
+
+    /**
+     * Opens a dialog to choose a file with extension {@code *.xml}. Notifies {@link java.util.Observer}s when a
+     * file was chosen.
+     */
+    public void chooseTemplateFile() {
         File chosenFile = this.chooseFile("XML template files (*.xml)", "*.xml");
-        if (chosenFile == null) {
-            return null;
-        } else {
-            templateFile = chosenFile;
-            openProject.setDesignPatternTemplatePath(templateFile.getPath());
-            return templateFile.getPath();
+        if (chosenFile != null && !chosenFile.equals(openProject.getDesignPatternTemplatePath())) {
+            openProject.setDesignPatternTemplatePath(chosenFile.getPath());
+            setChanged();
+            notifyObservers(openProject);
         }
     }
 
@@ -190,8 +198,8 @@ public class Model {
      */
     public Map<String, List<Solution>> analyse(int maxMissingEdges) {
         // Parse the input files
-        final SystemUnderConsideration system = new ArgoXMIParser().parse(systemFile.getAbsolutePath());
-        final List<DesignPattern> designPatterns = new TemplatesParser().parse(templateFile.getAbsolutePath());
+        final SystemUnderConsideration system = new ArgoXMIParser().parse(openProject.getSystemUnderConsiderationPath());
+        final List<DesignPattern> designPatterns = new TemplatesParser().parse(openProject.getDesignPatternTemplatePath());
 
         Map<String, List<Solution>> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {

@@ -1,8 +1,5 @@
 package nl.ou.dpd.gui.controller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.text.Text;
 import nl.ou.dpd.gui.model.Model;
 
 import java.net.URL;
@@ -12,6 +9,8 @@ import java.util.ResourceBundle;
 /**
  * A {@link Controller} for the main view of the application.
  *
+ * TODO: this should not be a singleton, but there should also not be multiple instance of this class!! Fix it in the ControllerFactoryCreator if possible.
+ *
  * @author Martin de Boer
  */
 public class MainViewController extends Controller {
@@ -19,35 +18,29 @@ public class MainViewController extends Controller {
 //    @FXML
 //    private MenuController menuController;
 
-    @FXML
-    private Text actiontarget;
+    // Singleton
+    private static MainViewController instance = null;
 
     /**
-     * Constructs a {@link MainViewController} with a reference to the specified {@link Model}.
+     * Returns the single instance of this class, or creates it if it does not exist.
+     *
+     * @param model the {@link Model} this controller updates
+     * @return the singleton instance of the {@link MainViewController}.
+     */
+    public static MainViewController getInstance(Model model) {
+        if (instance == null) {
+            instance = new MainViewController(model);
+        }
+        return instance;
+    }
+
+    /**
+     * Private constructor, because this {@link MainViewController} is a singleton.
      *
      * @param model the model of the MVC pattern
      */
-    public MainViewController(Model model) {
+    private MainViewController(Model model) {
         super(model);
-    }
-
-    @FXML
-    protected void toggleButtonAction(ActionEvent event) {
-        if (actiontarget.getText() == null || actiontarget.getText().length() == 0) {
-            actiontarget.setText("Click again!");
-        } else {
-            actiontarget.setText("");
-        }
-    }
-
-    @FXML
-    protected void leftButtonAction(ActionEvent event) {
-        actiontarget.setText("You clicked 'Left'");
-    }
-
-    @FXML
-    protected void rightButtonAction(ActionEvent event) {
-        actiontarget.setText("You clicked 'Right'");
     }
 
     /**

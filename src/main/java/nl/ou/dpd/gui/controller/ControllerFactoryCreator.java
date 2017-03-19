@@ -5,8 +5,6 @@ import nl.ou.dpd.gui.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Constructor;
-
 /**
  * A unitility class that contains a method for creating en controller factory. A controller factory is a
  * {@link Callback} instance that creates a {@link Controller} when the {@link Callback#call(Object)} method
@@ -32,9 +30,16 @@ public final class ControllerFactoryCreator {
     public static Callback<Class<?>, Object> createControllerFactory(final Model model) {
         return type -> {
             try {
-                final Constructor<?> constructor = type.getDeclaredConstructor(Model.class);
-                final Controller controller = (Controller) constructor.newInstance(model);
-                return controller;
+                if (type == MenuController.class) {
+                    return MenuController.getInstance(model);
+                }
+                if (type == MainViewController.class) {
+                    return MainViewController.getInstance(model);
+                }
+                if (type == ProjectViewController.class) {
+                    return ProjectViewController.getInstance(model);
+                }
+                throw new IllegalArgumentException("Unknown type: " + type.getName());
             } catch (Exception exc) {
                 final String msg = "Unable to create controller factory.";
                 LOGGER.error(msg, exc);

@@ -1,9 +1,12 @@
 package nl.ou.dpd;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import nl.ou.dpd.gui.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +52,18 @@ public final class DesignPatternDetector extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.setTitle(APP_TITLE);
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO: handle this like the exit button in the menu. Perhaps this is not the right place either .....
+                        System.out.println("Application Closed by click to Close Button(X)");
+                    }
+                });
+            }
+        });
         primaryStage.show();
     }
 

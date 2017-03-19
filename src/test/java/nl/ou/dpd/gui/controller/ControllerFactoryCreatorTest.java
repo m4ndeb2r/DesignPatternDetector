@@ -39,14 +39,9 @@ public class ControllerFactoryCreatorTest {
     @Test
     public void testCreateControllerFactory() {
         final Callback<Class<?>, Object> controllerFactory = ControllerFactoryCreator.createControllerFactory(model);
-        final Controller controller = (ProjectViewController)controllerFactory.call(ProjectViewController.class);
+        final Controller controller = (ProjectViewController) controllerFactory.call(ProjectViewController.class);
         assertThat(controller.getModel(), is(model));
         assertThat(controller.getModel(), not(is(otherModel)));
-
-        final Callback<Class<?>, Object> otherControllerFactory = ControllerFactoryCreator.createControllerFactory(otherModel);
-        final Controller otherController = (ProjectViewController)otherControllerFactory.call(ProjectViewController.class);
-        assertThat(otherController.getModel(), is(otherModel));
-        assertThat(otherController.getModel(), not(is(model)));
     }
 
     /**
@@ -56,7 +51,7 @@ public class ControllerFactoryCreatorTest {
     public void testCreateControllerFactoryException() {
         thrown.expect(RuntimeException.class);
         thrown.expectMessage("Unable to create controller factory.");
-        thrown.expectCause(is(NoSuchMethodException.class));
+        thrown.expectCause(is(IllegalArgumentException.class));
         ControllerFactoryCreator.createControllerFactory(model).call(String.class);
     }
 }

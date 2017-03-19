@@ -48,7 +48,7 @@ public class ProjectTest {
     @Test
     public void testDefaultConstructor() {
         Project project = new Project();
-        assertThat(project.getName(), is("New project *"));
+        assertThat(project.getName(), is("[New project]"));
         assertThat(project.getSystemUnderConsiderationPath(), isEmptyOrNullString());
         assertThat(project.getDesignPatternTemplatePath(), isEmptyOrNullString());
         assertThat(project.getMaxMissingEdges(), is(0));

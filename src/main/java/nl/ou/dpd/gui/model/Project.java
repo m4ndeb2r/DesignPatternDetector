@@ -36,7 +36,7 @@ public class Project {
      * scratch (not loaded from a file project). The newly created project is not yet linked to a file.
      */
     public Project() {
-        this.name = "New project *";
+        this.name = "[New project]";
         this.pristine = true;
         this.projectFile = null;
         this.maxMissingEdges = 0;
@@ -112,6 +112,7 @@ public class Project {
 
         } catch (Exception ex) {
             LOGGER.error("Saving project failed.", ex);
+            throw new RuntimeException(ex);
 
         } finally {
             if (out != null) {
