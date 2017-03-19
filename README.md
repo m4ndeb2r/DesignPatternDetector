@@ -26,7 +26,7 @@ different from the original prototype, fundamentally.
 
 **Example**
 
-`$ java -jar ./target/DesignPatternDetector.jar -x input.xmi -t templates.xml -n 1
+`$ java -jar ./target/DesignPatternDetector.jar
 `
 
 (Note that the name of the application has changed from patterndetectionArgouml to DesignPatternDedector.)
