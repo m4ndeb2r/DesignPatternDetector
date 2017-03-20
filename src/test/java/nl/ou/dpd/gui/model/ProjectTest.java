@@ -1,9 +1,13 @@
 package nl.ou.dpd.gui.model;
 
+import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import javax.security.auth.DestroyFailedException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,6 +36,11 @@ public class ProjectTest {
     private File testProjectFile;
     private File saveProjectFile;
 
+    /**
+     * Exception rule.
+     */
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     /**
      * Initialise a project files for each test.
@@ -53,12 +62,15 @@ public class ProjectTest {
         assertThat(project.getDesignPatternTemplatePath(), isEmptyOrNullString());
         assertThat(project.getMaxMissingEdges(), is(0));
 
-        // There have been no changes yet, so the project is still pristine
-        assertTrue(project.isPristine());
+        // A new project is not pristine
+        assertFalse(project.isPristine());
 
         // A new project has no file yet; when a file is also not specified as an argument
         // then saving the project will fail
-        assertFalse(project.save());
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectMessage("Saving project failed.");
+        thrown.expectCause(is(NullPointerException.class));
+        project.save();
     }
 
     /**
@@ -78,20 +90,20 @@ public class ProjectTest {
      * Tests the {@link Project#isPristine()} method.
      */
     @Test
-    public void testIsPristine() {
-        Project project1 = new Project();
+    public void testIsPristine() throws FileNotFoundException {
+        Project project1 = new Project(testProjectFile);
         assertTrue(project1.isPristine());
         project1.setSystemUnderConsiderationPath("newPath");
         assertFalse(project1.isPristine());
 
-        Project project2 = new Project();
+        Project project2 = new Project(testProjectFile);
         assertTrue(project2.isPristine());
         project2.setDesignPatternTemplatePath("newPath");
         assertFalse(project2.isPristine());
 
-        Project project3 = new Project();
+        Project project3 = new Project(testProjectFile);
         assertTrue(project3.isPristine());
-        project3.setMaxMissingEdges(1);
+        project3.setMaxMissingEdges(0);
         assertFalse(project3.isPristine());
     }
 

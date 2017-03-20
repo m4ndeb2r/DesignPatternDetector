@@ -1,5 +1,6 @@
 package nl.ou.dpd.gui.model;
 
+import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +38,7 @@ public class Project {
      */
     public Project() {
         this.name = "[New project]";
-        this.pristine = true;
+        this.pristine = false;
         this.projectFile = null;
         this.maxMissingEdges = 0;
         this.designPatternTemplatePath = null;
@@ -84,11 +85,7 @@ public class Project {
      * @param file the file to store the project to.
      * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
-    public boolean save(File file) {
-        if (file == null) {
-            return false;
-        }
-
+    public boolean save(final File file) {
         boolean success = false;
         BufferedWriter out = null;
         try {
@@ -112,7 +109,7 @@ public class Project {
 
         } catch (Exception ex) {
             LOGGER.error("Saving project failed.", ex);
-            throw new RuntimeException(ex);
+            throw new DesignPatternDetectorException("Saving project failed.", ex);
 
         } finally {
             if (out != null) {
@@ -122,6 +119,7 @@ public class Project {
                 }
             }
         }
+        LOGGER.info("Project " + file.getName() + " saved successfully to file " + file.getPath() + ".");
         return success;
     }
 

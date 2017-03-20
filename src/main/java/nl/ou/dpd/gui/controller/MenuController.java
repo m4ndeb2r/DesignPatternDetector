@@ -134,39 +134,50 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * Saves the currently open project to a file with the same name it was previously stored in.
+     * Saves the currently open project to a file with the same name it was previously stored in. When the project is
+     * successfully saved, a confirmation alert message is shown; when an error occurs, an error alter message is shown.
+     * When somewhere along the way the action is cancelled, no messages is shown.
      *
      * @param event is ignored
      */
     @FXML
     protected void saveProjectAction(ActionEvent event) {
-        boolean success;
+        boolean success = true;
         String detailMsg = null;
         try {
-            success = getModel().saveProject();
+            if (!getModel().saveProject()) {
+                // Cancelled
+                return;
+            }
         } catch (Exception ex) {
             success = false;
             detailMsg = ex.getMessage();
         }
-
+        // Show success or error message
         showSaveFileAlert(success, detailMsg);
     }
 
     /**
-     * Saves the currently open project to a file with a different name it was previously stored in.
+     * Saves the currently open project to a file with a different name it was previously stored in. When the project is
+     * successfully saved, a confirmation alert message is shown; when an error occurs, an error alter message is shown.
+     * When somewhere along the way the action is cancelled, no messages is shown.
      *
      * @param event is ignored
      */
     @FXML
     protected void saveProjectAsAction(ActionEvent event) {
-        boolean success;
+        boolean success = true;
         String detailMsg = null;
         try {
-            success = getModel().saveProjectAs();
+            if (!getModel().saveProjectAs()) {
+                // Cancelled
+                return;
+            }
         } catch (Exception ex) {
             success = false;
             detailMsg = ex.getMessage();
         }
+        // Show success or error message
         showSaveFileAlert(success, detailMsg);
     }
 

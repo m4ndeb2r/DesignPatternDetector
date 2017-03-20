@@ -113,7 +113,8 @@ public class Model extends Observable {
         fileChooser.setTitle("Save Project");
         fileChooser.setSelectedExtensionFilter(filter);
 
-        if (openProject.save(fileChooser.showSaveDialog(scene.getWindow()))) {
+        final File file = fileChooser.showSaveDialog(scene.getWindow());
+        if (file != null && openProject.save(file)) {
             setChanged();
             notifyObservers(openProject);
             return true;
