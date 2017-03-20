@@ -31,6 +31,16 @@ different from the original prototype, fundamentally.
 
 (Note that the name of the application has changed from patterndetectionArgouml to DesignPatternDedector.)
 
+**Using the application (the happy flow)**
+
+After starting the application choose *File* > *New project* from the menu. A new project opens with the default name 
+[New Project]. To run an analysis, three input parameters have to be provided: (1) select an input (an export from
+ArgoUML, an `*.xmi` file), (2) select a desing pattern templates file (`*.xml`) and (3) choose one of the two
+possible values from the max. allowed missing edges combobox (0 or 1). After that, hit the analyse button, and
+the application will attempt to detect design patterns defined in templates file (2) in the in input file (1).
+
+Save the project via *File > Save* or *File > Save as*. Saved projects can be re-opened via *File > Open*.
+
 ## Working on ...
 We are currently working on:
 * unittests
