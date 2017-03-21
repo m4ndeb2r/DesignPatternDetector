@@ -3,7 +3,7 @@
 ## TODO's in the code
 * Controllers in GUI are singlteon's that are not instantiated nicely. (Should Model also be a singleton?)
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-* Test-coverage went down when writing GUI. Test-coverage should be better
+* Test-coverage went down when writing GUI. Test-coverage should be better (currently 62% of lines)
 * Styling in CSS instead of FXML
 * Scrollbars in project view are not working 100% okay
 * Force saving project files as *.dpd
