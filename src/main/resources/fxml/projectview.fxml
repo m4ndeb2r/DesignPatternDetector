@@ -105,37 +105,29 @@
 
                 <SplitPane fx:id="feedbackSplitPane" dividerPositions="0.2" VBox.vgrow="ALWAYS">
                     <items>
-                        <!--<AnchorPane SplitPane.resizableWithParent="false">-->
-                            <!--<children>-->
-                                <TreeView fx:id="feedbackTreeView"  />
-                            <!--</children>-->
-                        <!--</AnchorPane>-->
-                        <!--<AnchorPane>-->
-                            <!--<children>-->
-                                <ScrollPane fx:id="feedbackScrollPane">
-                                    <content>
-                                        <VBox>
-                                            <children>
-                                                <Label fx:id="feedbackPatternNameLabel" styleClass="feedback-title" text="" />
-                                                <Label fx:id="feedbackPatternLabel" styleClass="feedback-subsubtitle" text="" />
+                        <TreeView fx:id="feedbackTreeView"  />
+                        <ScrollPane fx:id="feedbackScrollPane">
+                            <content>
+                                <VBox>
+                                    <children>
+                                        <Label fx:id="feedbackPatternNameLabel" styleClass="feedback-title" text="" />
+                                        <Label fx:id="feedbackPatternLabel" styleClass="feedback-subsubtitle" text="" />
 
-                                                <Label fx:id="feedbackMatchedClassesLabel" styleClass="feedback-subtitle" text="" />
-                                                <GridPane fx:id="feedbackMatchedClassesGridPane" styleClass="feedback-gridpane"></GridPane>
+                                        <Label fx:id="feedbackMatchedClassesLabel" styleClass="feedback-subtitle" text="" />
+                                        <GridPane fx:id="feedbackMatchedClassesGridPane" styleClass="feedback-gridpane"></GridPane>
 
-                                                <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle" text="" />
-                                                <GridPane fx:id="feedbackSuperfluousEdgesGridPane" styleClass="feedback-gridpane"></GridPane>
+                                        <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle" text="" />
+                                        <GridPane fx:id="feedbackSuperfluousEdgesGridPane" styleClass="feedback-gridpane"></GridPane>
 
-                                                <Label fx:id="feedbackMissingEdgesLabel" styleClass="feedback-subtitle" text="" />
-                                                <GridPane fx:id="feedbackMissingEdgesGridPane" styleClass="feedback-gridpane"></GridPane>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                    <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                    </padding>
-                                </ScrollPane>
-                            <!--</children>-->
-                        <!--</AnchorPane>-->
+                                        <Label fx:id="feedbackMissingEdgesLabel" styleClass="feedback-subtitle" text="" />
+                                        <GridPane fx:id="feedbackMissingEdgesGridPane" styleClass="feedback-gridpane"></GridPane>
+                                    </children>
+                                </VBox>
+                            </content>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </ScrollPane>
                     </items>
                 </SplitPane>
 
