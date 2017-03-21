@@ -1,8 +1,10 @@
 package nl.ou.dpd.utils;
 
-import nl.ou.dpd.fourtuples.FT_constants;
-import nl.ou.dpd.fourtuples.FourTuple;
-import nl.ou.dpd.fourtuples.FourTupleArray;
+import nl.ou.dpd.domain.Clazz;
+import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.Edge;
+import nl.ou.dpd.domain.EdgeType;
+import nl.ou.dpd.domain.SystemUnderConsideration;
 
 import java.util.ArrayList;
 
@@ -15,12 +17,12 @@ public class TestHelper {
 
     /**
      * Creates a "template" containing 17 GoF design patterns represented by an {@link ArrayList} of
-     * {@link FourTupleArray} instances.
+     * {@link DesignPattern} instances.
      *
      * @return an {@link ArrayList} containing 17 GoF design patterns.
      */
-    public static ArrayList<FourTupleArray> createDesignPatternsTemplate() {
-        final ArrayList<FourTupleArray> dps = new ArrayList<>();
+    public static ArrayList<DesignPattern> createDesignPatternsTemplates() {
+        final ArrayList<DesignPattern> dps = new ArrayList<>();
         dps.add(createBridgePattern());
         dps.add(createStateStrategyPattern());
         dps.add(createMediatorPattern());
@@ -31,7 +33,7 @@ public class TestHelper {
         dps.add(createCompositePattern());
         dps.add(createDecoratorPattern());
         dps.add(createFactoryMethodPattern());
-        dps.add(createIteratorPattern());
+        dps.add(createInterpreterPattern());
         dps.add(createChainOfResponsibilityPattern());
         dps.add(createAbstractFactoryPattern());
         dps.add(createAdapterPattern());
@@ -41,166 +43,371 @@ public class TestHelper {
         return dps;
     }
 
-    private static FourTupleArray createAbstractFactoryPattern() {
-        final FourTupleArray abstractFactory = new FourTupleArray("Abstract Factory");
-        abstractFactory.add(new FourTuple("Client", "AbstractFactory", FT_constants.ASSOCIATION_DIRECTED));
-        abstractFactory.add(new FourTuple("Client", "AbstractProductA", FT_constants.ASSOCIATION_DIRECTED));
-        abstractFactory.add(new FourTuple("Client", "AbstractProductB", FT_constants.ASSOCIATION_DIRECTED));
-        abstractFactory.add(new FourTuple("ConcreteFact1", "AbstractFactory", FT_constants.INHERITANCE));
-        abstractFactory.add(new FourTuple("ConcreteFact2", "AbstractFactory", FT_constants.INHERITANCE));
-        abstractFactory.add(new FourTuple("ConcreteFact1", "ProductA1", FT_constants.DEPENDENCY));
-        abstractFactory.add(new FourTuple("ConcreteFact2", "ProductA2", FT_constants.DEPENDENCY));
-        abstractFactory.add(new FourTuple("ConcreteFact1", "ProductB1", FT_constants.DEPENDENCY));
-        abstractFactory.add(new FourTuple("ConcreteFact2", "ProductB2", FT_constants.DEPENDENCY));
-        abstractFactory.add(new FourTuple("ProductA1", "AbstractProductA", FT_constants.INHERITANCE));
-        abstractFactory.add(new FourTuple("ProductA2", "AbstractProductA", FT_constants.INHERITANCE));
-        abstractFactory.add(new FourTuple("ProductB1", "AbstractProductB", FT_constants.INHERITANCE));
-        abstractFactory.add(new FourTuple("ProductB2", "AbstractProductB", FT_constants.INHERITANCE));
+    /**
+     * Creates an AbstractFactory design pattern.
+     *
+     * @return a {@link DesignPattern} representing an AbstractFactory pattern.
+     */
+    public static DesignPattern createAbstractFactoryPattern() {
+        final DesignPattern abstractFactory = new DesignPattern("Abstract Factory");
+        abstractFactory.add(createEdge("Client", "AbstractFactory", EdgeType.ASSOCIATION_DIRECTED));
+        abstractFactory.add(createEdge("Client", "AbstractProductA", EdgeType.ASSOCIATION_DIRECTED));
+        abstractFactory.add(createEdge("Client", "AbstractProductB", EdgeType.ASSOCIATION_DIRECTED));
+        abstractFactory.add(createEdge("ConcreteFact1", "AbstractFactory", EdgeType.INHERITANCE));
+        abstractFactory.add(createEdge("ConcreteFact2", "AbstractFactory", EdgeType.INHERITANCE));
+        abstractFactory.add(createEdge("ConcreteFact1", "ProductA1", EdgeType.DEPENDENCY));
+        abstractFactory.add(createEdge("ConcreteFact2", "ProductA2", EdgeType.DEPENDENCY));
+        abstractFactory.add(createEdge("ConcreteFact1", "ProductB1", EdgeType.DEPENDENCY));
+        abstractFactory.add(createEdge("ConcreteFact2", "ProductB2", EdgeType.DEPENDENCY));
+        abstractFactory.add(createEdge("ProductA1", "AbstractProductA", EdgeType.INHERITANCE));
+        abstractFactory.add(createEdge("ProductA2", "AbstractProductA", EdgeType.INHERITANCE));
+        abstractFactory.add(createEdge("ProductB1", "AbstractProductB", EdgeType.INHERITANCE));
+        abstractFactory.add(createEdge("ProductB2", "AbstractProductB", EdgeType.INHERITANCE));
         return abstractFactory;
     }
 
-    private static FourTupleArray createAdapterPattern() {
-        final FourTupleArray adapter = new FourTupleArray("Adapter");
-        adapter.add(new FourTuple("Client", "Target", FT_constants.ASSOCIATION_DIRECTED));
-        adapter.add(new FourTuple("Adapter", "Target", FT_constants.INHERITANCE));
-        adapter.add(new FourTuple("Adapter", "Adaptee", FT_constants.ASSOCIATION_DIRECTED));
+    /**
+     * Creates an Adapter design pattern.
+     *
+     * @return a {@link DesignPattern} representing an Adapter pattern.
+     */
+    public static DesignPattern createAdapterPattern() {
+        final DesignPattern adapter = new DesignPattern("Adapter");
+        adapter.add(createEdge("Client", "Target", EdgeType.ASSOCIATION_DIRECTED));
+        adapter.add(createEdge("Adapter", "Target", EdgeType.INHERITANCE));
+        adapter.add(createEdge("Adapter", "Adaptee", EdgeType.ASSOCIATION_DIRECTED));
         return adapter;
     }
 
-    private static FourTupleArray createBuilderPattern() {
-        final FourTupleArray builder = new FourTupleArray("Builder");
-        builder.add(new FourTuple("Builder", "Director", FT_constants.AGGREGATE));
-        builder.add(new FourTuple("ConcreteBuilder", "Builder", FT_constants.INHERITANCE));
-        builder.add(new FourTuple("ConcreteBuilder", "Product", FT_constants.DEPENDENCY));
+    /**
+     * Creates a Builder design pattern.
+     *
+     * @return a {@link DesignPattern} representing a Builder pattern.
+     */
+    public static DesignPattern createBuilderPattern() {
+        final DesignPattern builder = new DesignPattern("Builder");
+        builder.add(createEdge("Builder", "Director", EdgeType.AGGREGATE));
+        builder.add(createEdge("ConcreteBuilder", "Builder", EdgeType.INHERITANCE));
+        builder.add(createEdge("ConcreteBuilder", "Product", EdgeType.DEPENDENCY));
         return builder;
     }
 
-    private static FourTupleArray createChainOfResponsibilityPattern() {
-        final FourTupleArray chainOfResponsibility = new FourTupleArray("ChainOfResponsibility");
-        chainOfResponsibility.add(new FourTuple("ConcreteHandler", "Handler", FT_constants.INHERITANCE_MULTI));
-        chainOfResponsibility.add(new FourTuple("Handler", "Handler", FT_constants.ASSOCIATION_DIRECTED));
-        chainOfResponsibility.add(new FourTuple("Client", "Handler", FT_constants.ASSOCIATION_DIRECTED));
+    /**
+     * Creates a ChainOfResponsibility design pattern.
+     *
+     * @return a {@link DesignPattern} representing a ChainOfResponsibility pattern.
+     */
+    public static DesignPattern createChainOfResponsibilityPattern() {
+        final DesignPattern chainOfResponsibility = new DesignPattern("ChainOfResponsibility");
+        chainOfResponsibility.add(createEdge("ConcreteHandler", "Handler", EdgeType.INHERITANCE_MULTI));
+        chainOfResponsibility.add(createEdge("Handler", "Handler", EdgeType.ASSOCIATION_DIRECTED));
+        chainOfResponsibility.add(createEdge("Client", "Handler", EdgeType.ASSOCIATION_DIRECTED));
         return chainOfResponsibility;
     }
 
-    private static FourTupleArray createCommandPattern() {
-        final FourTupleArray command = new FourTupleArray("Command");
-        command.add(new FourTuple("Client", "Receiver", FT_constants.ASSOCIATION_DIRECTED));
-        command.add(new FourTuple("Client", "ConcreteCommand", FT_constants.DEPENDENCY));
-        command.add(new FourTuple("ConcreteCommand", "Receiver", FT_constants.ASSOCIATION_DIRECTED));
-        command.add(new FourTuple("ConcreteCommand", "Command", FT_constants.INHERITANCE));
-        command.add(new FourTuple("Command", "Invoker", FT_constants.AGGREGATE));
+    /**
+     * Creates a Command design pattern.
+     *
+     * @return a {@link DesignPattern} representing a Command pattern.
+     */
+    public static DesignPattern createCommandPattern() {
+        final DesignPattern command = new DesignPattern("Command");
+        command.add(createEdge("Client", "Receiver", EdgeType.ASSOCIATION_DIRECTED));
+        command.add(createEdge("Client", "ConcreteCommand", EdgeType.DEPENDENCY));
+        command.add(createEdge("ConcreteCommand", "Receiver", EdgeType.ASSOCIATION_DIRECTED));
+        command.add(createEdge("ConcreteCommand", "Command", EdgeType.INHERITANCE));
+        command.add(createEdge("Command", "Invoker", EdgeType.AGGREGATE));
         return command;
     }
 
-    private static FourTupleArray createCompositePattern() {
-        final FourTupleArray composite = new FourTupleArray("Composite");
-        composite.add(new FourTuple("Client", "Component", FT_constants.ASSOCIATION_DIRECTED));
-        composite.add(new FourTuple("Leaf", "Component", FT_constants.INHERITANCE));
-        composite.add(new FourTuple("Composite", "Component", FT_constants.INHERITANCE));
-        composite.add(new FourTuple("Component", "Composite", FT_constants.AGGREGATE));
+    /**
+     * Creates a Composite design pattern.
+     *
+     * @return a {@link DesignPattern} representing a Composite pattern.
+     */
+    public static DesignPattern createCompositePattern() {
+        final DesignPattern composite = new DesignPattern("Composite");
+        composite.add(createEdge("Client", "Component", EdgeType.ASSOCIATION_DIRECTED));
+        composite.add(createEdge("Leaf", "Component", EdgeType.INHERITANCE));
+        composite.add(createEdge("Composite", "Component", EdgeType.INHERITANCE));
+        composite.add(createEdge("Component", "Composite", EdgeType.AGGREGATE));
         return composite;
     }
 
-    private static FourTupleArray createDecoratorPattern() {
-        final FourTupleArray decorator = new FourTupleArray("Decorator");
-        decorator.add(new FourTuple("ConcreteComponent", "Component", FT_constants.INHERITANCE));
-        decorator.add(new FourTuple("Decorator", "Component", FT_constants.INHERITANCE));
-        decorator.add(new FourTuple("Component", "Decorator", FT_constants.AGGREGATE));
-        decorator.add(new FourTuple("ConcreteDecorator", "Decorator", FT_constants.INHERITANCE_MULTI));
+    /**
+     * Creates a Decorator design pattern.
+     *
+     * @return a {@link DesignPattern} representing a Decorator pattern.
+     */
+    public static DesignPattern createDecoratorPattern() {
+        final DesignPattern decorator = new DesignPattern("Decorator");
+        decorator.add(createEdge("ConcreteComponent", "Component", EdgeType.INHERITANCE));
+        decorator.add(createEdge("Decorator", "Component", EdgeType.INHERITANCE));
+        decorator.add(createEdge("Component", "Decorator", EdgeType.AGGREGATE));
+        decorator.add(createEdge("ConcreteDecorator", "Decorator", EdgeType.INHERITANCE_MULTI));
         return decorator;
     }
 
-    private static FourTupleArray createFactoryMethodPattern() {
-        final FourTupleArray factoryMethod = new FourTupleArray("Factory Method");
-        factoryMethod.add(new FourTuple("Product", "ConcreteProduct", FT_constants.INHERITANCE));
-        factoryMethod.add(new FourTuple("ConcreteCreator", "Product", FT_constants.DEPENDENCY));
-        factoryMethod.add(new FourTuple("ConcreteCreator", "Creator", FT_constants.INHERITANCE));
+    /**
+     * Creates a FactoryMethod design pattern.
+     *
+     * @return a {@link DesignPattern} representing a FactoryMethod pattern.
+     */
+    public static DesignPattern createFactoryMethodPattern() {
+        final DesignPattern factoryMethod = new DesignPattern("Factory Method");
+        factoryMethod.add(createEdge("ConcreteProduct", "Product", EdgeType.INHERITANCE));
+        factoryMethod.add(createEdge("ConcreteCreator", "ConcreteProduct", EdgeType.DEPENDENCY));
+        factoryMethod.add(createEdge("ConcreteCreator", "Creator", EdgeType.INHERITANCE));
         return factoryMethod;
     }
 
     /**
      * Creates a flyweight pattern. Checked with the UML diagram in [GoF].
      *
-     * @return a {@link FourTupleArray} representing a flyweight pattern
+     * @return a {@link DesignPattern} representing a flyweight pattern.
      */
-    private static FourTupleArray createFlyweightPattern() {
-        final FourTupleArray flyweight = new FourTupleArray("Flyweight");
-        flyweight.add(new FourTuple("Client", "FlyweightFactory", FT_constants.ASSOCIATION_DIRECTED));
-        flyweight.add(new FourTuple("Client", "ConcreteFlyweight", FT_constants.ASSOCIATION_DIRECTED));
-        flyweight.add(new FourTuple("Client", "UnsharedConcreteFlyweight", FT_constants.ASSOCIATION_DIRECTED));
-        flyweight.add(new FourTuple("Flyweight", "FlyweightFactory", FT_constants.AGGREGATE));
-        flyweight.add(new FourTuple("ConcreteFlyweight", "Flyweight", FT_constants.INHERITANCE));
-        flyweight.add(new FourTuple("UnsharedConcreteFlyweight", "Flyweight", FT_constants.INHERITANCE));
+    public static DesignPattern createFlyweightPattern() {
+        final DesignPattern flyweight = new DesignPattern("Flyweight");
+        flyweight.add(createEdge("Client", "FlyweightFactory", EdgeType.ASSOCIATION_DIRECTED));
+        flyweight.add(createEdge("Client", "ConcreteFlyweight", EdgeType.ASSOCIATION_DIRECTED));
+        flyweight.add(createEdge("Client", "UnsharedConcreteFlyweight", EdgeType.ASSOCIATION_DIRECTED));
+        flyweight.add(createEdge("Flyweight", "FlyweightFactory", EdgeType.AGGREGATE));
+        flyweight.add(createEdge("ConcreteFlyweight", "Flyweight", EdgeType.INHERITANCE));
+        flyweight.add(createEdge("UnsharedConcreteFlyweight", "Flyweight", EdgeType.INHERITANCE));
         return flyweight;
     }
 
-    private static FourTupleArray createIteratorPattern() {
-        final FourTupleArray iterator = new FourTupleArray("Iterator");
-        iterator.add(new FourTuple("ConcreteAggregate", "Aggregate", FT_constants.INHERITANCE));
-        iterator.add(new FourTuple("Client", "Aggregate", FT_constants.ASSOCIATION_DIRECTED));
-        iterator.add(new FourTuple("Client", "Iterator", FT_constants.ASSOCIATION_DIRECTED));
-        iterator.add(new FourTuple("ConcreteIterator", "Iterator", FT_constants.INHERITANCE));
-        iterator.add(new FourTuple("ConcreteIterator", "ConcreteAggregate", FT_constants.ASSOCIATION_DIRECTED));
-        iterator.add(new FourTuple("ConcreteAggregate", "ConcreteIterator", FT_constants.DEPENDENCY));
+    /**
+     * Creates an Iterator design pattern.
+     *
+     * @return a {@link DesignPattern} representing an Iterator pattern.
+     */
+
+    public static DesignPattern createIteratorPattern() {
+        final DesignPattern iterator = new DesignPattern("Iterator");
+        iterator.add(createEdge("ConcreteAggregate", "Aggregate", EdgeType.INHERITANCE));
+        iterator.add(createEdge("Client", "Aggregate", EdgeType.ASSOCIATION_DIRECTED));
+        iterator.add(createEdge("Client", "Iterator", EdgeType.ASSOCIATION_DIRECTED));
+        iterator.add(createEdge("ConcreteIterator", "Iterator", EdgeType.INHERITANCE));
+        iterator.add(createEdge("ConcreteIterator", "ConcreteAggregate", EdgeType.ASSOCIATION_DIRECTED));
+        iterator.add(createEdge("ConcreteAggregate", "ConcreteIterator", EdgeType.DEPENDENCY));
         return iterator;
     }
 
-    private static FourTupleArray createMediatorPattern() {
-        final FourTupleArray mediator = new FourTupleArray("Mediator");
-        mediator.add(new FourTuple("ConcreteMediator", "Mediator", FT_constants.INHERITANCE));
-        mediator.add(new FourTuple("Colleague", "Mediator", FT_constants.ASSOCIATION_DIRECTED));
-        mediator.add(new FourTuple("ConcreteColleague1", "Colleague", FT_constants.INHERITANCE));
-        mediator.add(new FourTuple("ConcreteColleague2", "Colleague", FT_constants.INHERITANCE));
-        mediator.add(new FourTuple("ConcreteMediator", "ConcreteColleague1", FT_constants.ASSOCIATION_DIRECTED));
-        mediator.add(new FourTuple("ConcreteMediator", "ConcreteColleague2", FT_constants.ASSOCIATION_DIRECTED));
+    /**
+     * Creates an Interpreter design pattern.
+     *
+     * @return a {@link DesignPattern} representing an Interpreter pattern.
+     */
+    public static DesignPattern createInterpreterPattern() {
+        final DesignPattern interpreter = new DesignPattern("Interpreter");
+        interpreter.add(createEdge("Client", "AbstractExpression", EdgeType.ASSOCIATION_DIRECTED));
+        interpreter.add(createEdge("Client", "Context", EdgeType.ASSOCIATION_DIRECTED));
+        interpreter.add(createEdge("TerminalExpression", "AbstractExpression", EdgeType.INHERITANCE));
+        interpreter.add(createEdge("NonTerminalExpression", "AbstractExpression", EdgeType.INHERITANCE));
+        interpreter.add(createEdge("AbstractExpression", "NonTerminalExpression", EdgeType.AGGREGATE));
+        return interpreter;
+    }
+
+    /**
+     * Creates a Mediator design pattern.
+     *
+     * @return a {@link DesignPattern} representing a Mediator pattern.
+     */
+
+    public static DesignPattern createMediatorPattern() {
+        final DesignPattern mediator = new DesignPattern("Mediator");
+        mediator.add(createEdge("ConcreteMediator", "Mediator", EdgeType.INHERITANCE));
+        mediator.add(createEdge("Colleague", "Mediator", EdgeType.ASSOCIATION_DIRECTED));
+        mediator.add(createEdge("ConcreteColleague1", "Colleague", EdgeType.INHERITANCE));
+        mediator.add(createEdge("ConcreteColleague2", "Colleague", EdgeType.INHERITANCE));
+        mediator.add(createEdge("ConcreteMediator", "ConcreteColleague1", EdgeType.ASSOCIATION_DIRECTED));
+        mediator.add(createEdge("ConcreteMediator", "ConcreteColleague2", EdgeType.ASSOCIATION_DIRECTED));
         return mediator;
     }
 
-    private static FourTupleArray createMementoPattern() {
-        final FourTupleArray memento = new FourTupleArray("Memento");
-        memento.add(new FourTuple("Memento", "Caretaker", FT_constants.AGGREGATE));
-        memento.add(new FourTuple("Originator", "Memento", FT_constants.DEPENDENCY));
+    /**
+     * Creates a Memento design pattern.
+     *
+     * @return a {@link DesignPattern} representing a Memento pattern.
+     */
+
+    public static DesignPattern createMementoPattern() {
+        final DesignPattern memento = new DesignPattern("Memento");
+        memento.add(createEdge("Memento", "Caretaker", EdgeType.AGGREGATE));
+        memento.add(createEdge("Originator", "Memento", EdgeType.DEPENDENCY));
         return memento;
     }
 
-    private static FourTupleArray createObserverPattern() {
-        final FourTupleArray observer = new FourTupleArray("Observer");
-        observer.add(new FourTuple("ConcreteSubject", "Subject", FT_constants.INHERITANCE));
-        observer.add(new FourTuple("Subject", "Observer", FT_constants.AGGREGATE));
-        observer.add(new FourTuple("ConcreteObserver", "Observer", FT_constants.INHERITANCE));
-        observer.add(new FourTuple("ConcreteObserver", "ConcreteSubject", FT_constants.ASSOCIATION_DIRECTED));
+    /**
+     * Creates an Observer design pattern.
+     *
+     * @return a {@link DesignPattern} representing an Observer pattern.
+     */
+    public static DesignPattern createObserverPattern() {
+        final DesignPattern observer = new DesignPattern("Observer");
+        observer.add(createEdge("ConcreteSubject", "Subject", EdgeType.INHERITANCE));
+        observer.add(createEdge("Subject", "Observer", EdgeType.ASSOCIATION_DIRECTED));
+        observer.add(createEdge("ConcreteObserver", "Observer", EdgeType.INHERITANCE));
+        observer.add(createEdge("ConcreteObserver", "ConcreteSubject", EdgeType.ASSOCIATION_DIRECTED));
         return observer;
     }
 
-    private static FourTupleArray createProxyPattern() {
-        final FourTupleArray proxy = new FourTupleArray("Proxy");
-        proxy.add(new FourTuple("Client", "Subject", FT_constants.ASSOCIATION_DIRECTED));
-        proxy.add(new FourTuple("Proxy", "Subject", FT_constants.INHERITANCE));
-        proxy.add(new FourTuple("RealSubject", "Subject", FT_constants.INHERITANCE));
-        proxy.add(new FourTuple("Proxy", "RealSubject", FT_constants.ASSOCIATION_DIRECTED));
+    /**
+     * Creates a Proxy design pattern.
+     *
+     * @return a {@link DesignPattern} representing a Proxy pattern.
+     */
+    public static DesignPattern createProxyPattern() {
+        final DesignPattern proxy = new DesignPattern("Proxy");
+        proxy.add(createEdge("Client", "Subject", EdgeType.ASSOCIATION_DIRECTED));
+        proxy.add(createEdge("Proxy", "Subject", EdgeType.INHERITANCE));
+        proxy.add(createEdge("RealSubject", "Subject", EdgeType.INHERITANCE));
+        proxy.add(createEdge("Proxy", "RealSubject", EdgeType.ASSOCIATION_DIRECTED));
         return proxy;
     }
 
-    private static FourTupleArray createStateStrategyPattern() {
-        final FourTupleArray strategy = new FourTupleArray("State - Strategy");
-        strategy.add(new FourTuple("Strategy", "Context", FT_constants.AGGREGATE));
-        strategy.add(new FourTuple("ConcreteStrategy", "Strategy", FT_constants.INHERITANCE_MULTI));
+    /**
+     * Creates a State/Strategy design pattern.
+     *
+     * @return a {@link DesignPattern} representing a State/Strategy pattern.
+     */
+    public static DesignPattern createStateStrategyPattern() {
+        final DesignPattern strategy = new DesignPattern("State - Strategy");
+        strategy.add(createEdge("Strategy", "Context", EdgeType.AGGREGATE));
+        strategy.add(createEdge("ConcreteStrategy", "Strategy", EdgeType.INHERITANCE_MULTI));
         return strategy;
     }
 
     /**
-     * Creates a bridge pattern. Checked with the UML diagram in [GoF]
+     * Creates a bridge pattern. Checked with the UML diagram in [GoF].
      *
-     * @return a {@link FourTupleArray} representing a bridge pattern
+     * @return a {@link DesignPattern} representing a bridge pattern.
      */
-    private static FourTupleArray createBridgePattern() {
-        final FourTupleArray bridge = new FourTupleArray("Bridge");
-        bridge.add(new FourTuple("Client", "Abstraction", FT_constants.ASSOCIATION));
-        bridge.add(new FourTuple("Implementor", "Abstraction", FT_constants.AGGREGATE));
-        bridge.add(new FourTuple("ConcreteImplementorA", "Implementor", FT_constants.INHERITANCE));
-        bridge.add(new FourTuple("ConcreteImplementorB", "Implementor", FT_constants.INHERITANCE));
-        bridge.add(new FourTuple("RefinedAbstraction", "Abstraction", FT_constants.INHERITANCE));
+    public static DesignPattern createBridgePattern() {
+        final DesignPattern bridge = new DesignPattern("Bridge");
+        bridge.add(createEdge("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
+        bridge.add(createEdge("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE_MULTI));
+        bridge.add(createEdge("Implementor", "Abstraction", EdgeType.AGGREGATE));
+        bridge.add(createEdge("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE_MULTI));
         return bridge;
+    }
+
+    /**
+     * Creates a prototype pattern.
+     *
+     * @return a {@link DesignPattern} representing a protoype pattern.
+     */
+    public static DesignPattern createPrototypePattern() {
+        final DesignPattern prototype = new DesignPattern("Prototype");
+        prototype.add(createEdge("Client", "Prototype", EdgeType.ASSOCIATION_DIRECTED));
+        prototype.add(createEdge("ConcretePrototype", "Prototype", EdgeType.INHERITANCE_MULTI));
+        return prototype;
+    }
+
+    /**
+     * Creates a "system under consideration" containing quite a number of patterns that the application should be able
+     * to detect. This system is depicted Figure 4.5 in E.M. van Doorns article on page 29 (4.3 - Experiments).
+     *
+     * @return a {@link DesignPattern} representing the design of a "system under consideration".
+     */
+    public static SystemUnderConsideration createComplexSystemUnderConsideration() {
+        final SystemUnderConsideration system = new SystemUnderConsideration();
+
+        // Bridge
+        system.add(createEdge("Client", "Ab", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcAb1", "Ab", EdgeType.INHERITANCE));
+        system.add(createEdge("ConcAb2", "Ab", EdgeType.INHERITANCE));
+        system.add(createEdge("ConcAb2", "F_Factory", EdgeType.ASSOCIATION));
+        system.add(createEdge("Impl", "Ab", EdgeType.AGGREGATE));
+        system.add(createEdge("F_Factory", "Impl", EdgeType.INHERITANCE));
+        system.add(createEdge("P_Subject", "Impl", EdgeType.INHERITANCE));
+        system.add(createEdge("ConcImpl3", "Impl", EdgeType.INHERITANCE));
+
+        // Factory Method
+        system.add(createEdge("F_ConcreteFactory", "F_Factory", EdgeType.INHERITANCE));
+        system.add(createEdge("F_ConcreteFactory", "F_Product", EdgeType.ASSOCIATION));
+        system.add(createEdge("F_Product", "F_ProdInterface", EdgeType.INHERITANCE));
+
+        // Proxy
+        system.add(createEdge("P_Proxy", "P_Subject", EdgeType.INHERITANCE));
+        system.add(createEdge("P_RealSubject", "P_Subject", EdgeType.INHERITANCE));
+        system.add(createEdge("P_Proxy", "P_RealSubject", EdgeType.ASSOCIATION));
+
+        // Decorator
+        system.add(createEdge("DecInterface", "ConcImpl3", EdgeType.ASSOCIATION));
+        system.add(createEdge("DecBasis", "DecInterface", EdgeType.INHERITANCE));
+        system.add(createEdge("DecInterface", "DecWrapper", EdgeType.COMPOSITE));
+        system.add(createEdge("DecOption1", "DecWrapper", EdgeType.INHERITANCE));
+        system.add(createEdge("DecOption2", "DecWrapper", EdgeType.INHERITANCE));
+        system.add(createEdge("DecWrapper", "DecInterface", EdgeType.INHERITANCE));
+
+        // Memento
+        system.add(createEdge("Client", "Maintainer", EdgeType.DEPENDENCY));
+        system.add(createEdge("Status", "Maintainer", EdgeType.AGGREGATE));
+
+        // Adapter
+        system.add(createEdge("Client", "T_Interface", EdgeType.ASSOCIATION));
+        system.add(createEdge("Aanpasser", "T_Interface", EdgeType.INHERITANCE));
+        system.add(createEdge("Aanpasser", "NietPassend", EdgeType.ASSOCIATION));
+
+        // Composite
+        system.add(createEdge("Leaflet", "T_Interface", EdgeType.INHERITANCE));
+        system.add(createEdge("Union", "T_Interface", EdgeType.INHERITANCE));
+        system.add(createEdge("T_Interface", "Union", EdgeType.AGGREGATE));
+
+        // Mediator
+        system.add(createEdge("DecInterface", "Med", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcMed", "Med", EdgeType.INHERITANCE));
+        system.add(createEdge("ConcMed", "DecBasis", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcMed", "DecWrapper", EdgeType.ASSOCIATION));
+
+        // Command
+        system.add(createEdge("Maintainer", "Opdracht", EdgeType.INHERITANCE));
+        system.add(createEdge("Client", "Ontvanger", EdgeType.ASSOCIATION));
+        system.add(createEdge("Opdracht", "Aanroeper", EdgeType.AGGREGATE));
+        system.add(createEdge("Maintainer", "Ontvanger", EdgeType.ASSOCIATION));
+
+        // Iterator
+        system.add(createEdge("User", "DecInterface", EdgeType.ASSOCIATION));
+        system.add(createEdge("User", "Med", EdgeType.ASSOCIATION));
+
+        // ChainOfResponsibility
+        system.add(createEdge("Aanroeper", "Behandelaar", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcreteBehandelaar_1", "Behandelaar", EdgeType.INHERITANCE));
+        system.add(createEdge("Behandelaar", "Behandelaar", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcreteBehandelaar_2", "Behandelaar", EdgeType.INHERITANCE));
+
+        // AbstractFactory
+        system.add(createEdge("DecOption1", "AbstrFact", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcrFact1", "AbstrFact", EdgeType.INHERITANCE));
+        system.add(createEdge("ConcrFact2", "AbstrFact", EdgeType.INHERITANCE));
+        system.add(createEdge("DecOption1", "AbstrProA", EdgeType.ASSOCIATION));
+        system.add(createEdge("DecOption1", "AbstrProB", EdgeType.ASSOCIATION));
+        system.add(createEdge("Pro1A", "AbstrProA", EdgeType.INHERITANCE));
+        system.add(createEdge("Pro2A", "AbstrProA", EdgeType.INHERITANCE));
+        system.add(createEdge("Pro1B", "AbstrProB", EdgeType.INHERITANCE));
+        system.add(createEdge("Pro2B", "AbstrProB", EdgeType.INHERITANCE));
+        system.add(createEdge("ConcrFact1", "Pro1A", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcrFact2", "Pro2A", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcrFact1", "Pro1B", EdgeType.ASSOCIATION));
+        system.add(createEdge("ConcrFact2", "Pro2B", EdgeType.ASSOCIATION));
+
+        // Flyweight
+        system.add(createEdge("FW_Cl", "FlywFact", EdgeType.ASSOCIATION));
+        system.add(createEdge("FW_Cl", "ConcFlyw", EdgeType.ASSOCIATION));
+        system.add(createEdge("FW_Cl", "UnshConcFlyw", EdgeType.ASSOCIATION));
+        system.add(createEdge("Flyw", "NietPassend", EdgeType.AGGREGATE));
+        system.add(createEdge("ConcFlyw", "Flyw", EdgeType.INHERITANCE));
+        system.add(createEdge("UnshConcFlyw", "Flyw", EdgeType.INHERITANCE));
+
+        return system;
+    }
+
+    public static Edge createEdge(String classname1, String classname2, EdgeType edgeType) {
+        final Clazz cl1 = new Clazz(classname1);
+        final Clazz cl2 = new Clazz(classname2);
+        return new Edge(cl1, cl2, edgeType);
+
     }
 }
