@@ -54,6 +54,9 @@ public class ProjectViewController extends Controller implements Observer {
     private TextField templateFileTextField;
 
     @FXML
+    private Button clearButton;
+
+    @FXML
     private Button analyseButton;
 
     @FXML
@@ -161,6 +164,14 @@ public class ProjectViewController extends Controller implements Observer {
     }
 
     /**
+     * Clears the feedback on the screen.
+     */
+    @FXML
+    protected void clear() {
+        clearFeedback();
+    }
+
+    /**
      * Starts the analysis of the system under consideration, and processes the feedback data.
      */
     @FXML
@@ -212,6 +223,7 @@ public class ProjectViewController extends Controller implements Observer {
         }
 
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
+        clearButton.setDisable(false);
     }
 
     /**
@@ -286,7 +298,6 @@ public class ProjectViewController extends Controller implements Observer {
                 feedbackMissingEdgesGridPane.add(new Text(edge.getClass2().getName()), col, row);
                 row++;
             }
-
         }
     }
 
@@ -349,6 +360,8 @@ public class ProjectViewController extends Controller implements Observer {
 
         feedbackMissingEdgesLabel.setText(null);
         clearGridPane(feedbackMissingEdgesGridPane);
+
+        clearButton.setDisable(true);
     }
 
     private void clearTreeView(TreeView<String> treeView) {
