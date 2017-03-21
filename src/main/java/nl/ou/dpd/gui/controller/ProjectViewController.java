@@ -223,6 +223,8 @@ public class ProjectViewController extends Controller implements Observer {
         }
 
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
+
+        // Enable clear button
         clearButton.setDisable(false);
     }
 
@@ -361,10 +363,11 @@ public class ProjectViewController extends Controller implements Observer {
         feedbackMissingEdgesLabel.setText(null);
         clearGridPane(feedbackMissingEdgesGridPane);
 
+        // Disable clear button
         clearButton.setDisable(true);
     }
 
-    private void clearTreeView(TreeView<String> treeView) {
+    private void clearTreeView(final TreeView<String> treeView) {
         final TreeItem<String> root = treeView.getRoot();
         if (root != null) {
             final ObservableList<TreeItem<String>> children = root.getChildren();

@@ -89,8 +89,16 @@
 
                 <HBox fx:id="buttonBox" alignment="TOP_RIGHT">
                     <children>
-                        <Button fx:id="clearButton" disable="true" mnemonicParsing="false" onAction="#clear" pickOnBounds="false" text="Clear feedback" />
-                        <Button fx:id="analyseButton" disable="true" mnemonicParsing="false" onAction="#analyse" pickOnBounds="false" text="Analyse" />
+                        <Button fx:id="clearButton" disable="true" mnemonicParsing="false" onAction="#clear" pickOnBounds="false" text="Clear feedback">
+                             <HBox.margin>
+                                <Insets left="5.0" />
+                             </HBox.margin>
+                        </Button>
+                        <Button fx:id="analyseButton" disable="true" mnemonicParsing="false" onAction="#analyse" pickOnBounds="false" text="Analyse">
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Button>
                     </children>
                     <padding>
                         <Insets bottom="7.0" left="10.0" right="10.0" top="5.0" />
