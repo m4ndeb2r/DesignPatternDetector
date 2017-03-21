@@ -39,8 +39,8 @@ public class DesignPattern extends Edges {
      * This method orders the array of {@link Edge}'s. It guarantees that every edge in the graph has at least one
      * vertex that is also present in one or more preceding edges. One exception to this rule is the first edge in the
      * graph, obviously because it has no preceding edge. In other words: for every edge E(v1 -> v2) in the graph
-     * (except the first one), a previous edge E(v1 -> x2) or E(x1 -> v2) is present. This way every edge is connected
-     * to a vertex of a preceding edge.
+     * (except the first one), a previous edge E(v1 -> x2), E(x1 -> v1), E(x1 -> v2) or E(v2 -> x2) is present. This way
+     * every edge is connected to a vertex of a preceding edge.
      * <p/>
      * Example: A->B, C->D, A->C becomes A->B, A->C, C->D.
      */
