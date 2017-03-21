@@ -49,6 +49,28 @@ public class DesignPatternTest {
         assertThat(dp.getEdges().get(3).getClass2().getName(), is("E"));
         assertThat(dp.getEdges().get(4).getClass1().getName(), is("E"));
         assertThat(dp.getEdges().get(4).getClass2().getName(), is("F"));
+        
+        DesignPattern dp2 = new DesignPattern("test");
+        dp2.add(new Edge(new Clazz("C"), new Clazz("D"), EdgeType.AGGREGATE));
+        dp2.add(new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE));
+        dp2.add(new Edge(new Clazz("A"), new Clazz("C"), EdgeType.AGGREGATE));
+
+        assertThat(dp2.getEdges().get(0).getClass1().getName(), is("C"));
+        assertThat(dp2.getEdges().get(0).getClass2().getName(), is("D"));
+        assertThat(dp2.getEdges().get(1).getClass1().getName(), is("A"));
+        assertThat(dp2.getEdges().get(1).getClass2().getName(), is("B"));
+        assertThat(dp2.getEdges().get(2).getClass1().getName(), is("A"));
+        assertThat(dp2.getEdges().get(2).getClass2().getName(), is("C"));
+        
+        dp2.order();
+
+        assertThat(dp2.getEdges().get(0).getClass1().getName(), is("A"));
+        assertThat(dp2.getEdges().get(0).getClass2().getName(), is("B"));
+        assertThat(dp2.getEdges().get(1).getClass1().getName(), is("A"));
+        assertThat(dp2.getEdges().get(1).getClass2().getName(), is("C"));
+        assertThat(dp2.getEdges().get(2).getClass1().getName(), is("C"));
+        assertThat(dp2.getEdges().get(2).getClass2().getName(), is("D"));
+
     }
 
     /**
