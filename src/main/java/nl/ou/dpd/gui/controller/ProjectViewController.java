@@ -327,6 +327,39 @@ public class ProjectViewController extends Controller implements Observer {
             this.maxMissingEdgesComboBox.setValue("0");
             analyseButton.setDisable(true);
         }
+        clearFeedback();
+    }
+
+    private void clearFeedback() {
+        // Clear data
+        feedbackMap = new HashMap<>();
+
+        // Clear treeview
+        clearTreeView(feedbackTreeView);
+
+        // Clear details
+        feedbackPatternLabel.setText(null);
+        feedbackPatternNameLabel.setText(null);
+
+        feedbackMatchedClassesLabel.setText(null);
+        clearGridPane(feedbackMatchedClassesGridPane);
+
+        feedbackSuperfluousEdgesLabel.setText(null);
+        clearGridPane(feedbackSuperfluousEdgesGridPane);
+
+        feedbackMissingEdgesLabel.setText(null);
+        clearGridPane(feedbackMissingEdgesGridPane);
+    }
+
+    private void clearTreeView(TreeView<String> treeView) {
+        final TreeItem<String> root = treeView.getRoot();
+        if (root != null) {
+            final ObservableList<TreeItem<String>> children = root.getChildren();
+            if (children != null && children.size() > 0) {
+                children.clear();
+            }
+            treeView.setRoot(null);
+        }
     }
 
     private void clearGridPane(final GridPane gridPane) {
