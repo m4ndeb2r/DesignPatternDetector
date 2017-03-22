@@ -1,12 +1,14 @@
 # TODO's
 
 ## TODO's in the code
+* The main view should contain some info and/or basic options to click, or a logo or ... whatever. Something.
 * Controllers in GUI are singlteon's that are not instantiated nicely. (Should Model also be a singleton?)
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
 * Test-coverage went down when writing GUI. Test-coverage should be better (currently 62% of lines)
 * Styling in CSS instead of FXML
 * Scrollbars in project view are not working 100% okay
 * Force saving project files as *.dpd
+* Handle close-window event like the File > Exit menu option (show alert etc.)
 * Memorize the latest save/open directory (is now always the app root directory)
 * Strange behaviour when: [1] start application [2] File > Open [3] cancel; project name is empty?
 * Remark Peter: in het detailvenster worden de resultaten getoond van de classes van de system class 
