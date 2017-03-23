@@ -216,7 +216,6 @@ public class MenuController extends Controller implements Observer {
     @FXML
     protected void helpAction(ActionEvent event) {
         showNotImplementedAlert("Help");
-        //actiontarget.setText("You clicked 'About'");
     }
 
     /**
@@ -246,12 +245,19 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * Ends the application gracefully after user confirmation.
+     * Handles the file > exit action in the menu.
      *
      * @param event is ignored
      */
     @FXML
     protected void exitAction(ActionEvent event) {
+        shutdown();
+    }
+
+    /**
+     * Ends the application gracefully after user confirmation.
+     */
+    public void shutdown() {
         if (getModel().hasOpenProject() && !getModel().canCloseProjectWithoutDataLoss()) {
             if (canCloseWithoutSaving()) {
                 Platform.exit();

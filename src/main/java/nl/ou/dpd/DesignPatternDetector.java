@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import nl.ou.dpd.gui.controller.MenuController;
 import nl.ou.dpd.gui.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,27 +45,30 @@ public final class DesignPatternDetector extends Application {
      */
     @Override
     public void start(final Stage primaryStage) throws Exception {
+        Platform.setImplicitExit(false);
+
         final Scene scene = new Scene(new StackPane());
         final Model model = new Model(scene);
 
+        // Set the scene to the main view of the application
         model.showMainView();
 
+        // Set the primary stage settings and show it
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.setTitle(APP_TITLE);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        primaryStage.show();
+
+        // Set a handler for the window close button
+        scene.getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO: handle this like the exit button in the menu. Perhaps this is not the right place either .....
-                        System.out.println("Application Closed by click to Close Button(X)");
-                    }
-                });
+                LOGGER.info("Application Closed by click on window close button (X)");
+                event.consume();
+                MenuController.getInstance(model).shutdown();
             }
         });
-        primaryStage.show();
+
     }
 
 }
