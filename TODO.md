@@ -2,7 +2,6 @@
 
 ## TODO's in the code
 * The main view should contain some info and/or basic options to click, or a logo or ... whatever. Something.
-* Controllers in GUI are singlteon's that are not instantiated nicely. (Should Model also be a singleton?)
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
 * Test-coverage went down when writing GUI. Test-coverage should be better (currently 62% of lines)
 * Styling in CSS instead of FXML
