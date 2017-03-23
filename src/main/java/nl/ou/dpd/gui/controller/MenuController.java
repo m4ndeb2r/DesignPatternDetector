@@ -76,6 +76,22 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
+     * Called to initialize a controller after its root element has been completely processed. It sets some of the
+     * menu items' state to disabled (the initial state), because those menu items work on open projects, and initially
+     * no project has been opened
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  <tt>null</tt> if the location is not known.
+     * @param resources The resources used to localize the root object, or <tt>null</tt> if
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.closeProject.setDisable(true);
+        this.saveProject.setDisable(true);
+        this.saveProjectAs.setDisable(true);
+    }
+
+    /**
      * Opens a new (blank) project. Prompts the user if the project has any changes that might get lost.
      *
      * @param event is ignored
@@ -220,6 +236,7 @@ public class MenuController extends Controller implements Observer {
 
     /**
      * TODO
+     *
      * @param actionEvent
      */
     @FXML
@@ -229,6 +246,7 @@ public class MenuController extends Controller implements Observer {
 
     /**
      * TODO
+     *
      * @param actionEvent
      */
     @FXML
@@ -255,15 +273,15 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * Ends the application gracefully after user confirmation.
+     * Ends the application gracefully after user confirmation. This method is called from the
+     * {@link #exitAction(ActionEvent)} method as well as from the onClose event from the application window.
      */
     public void shutdown() {
         if (getModel().hasOpenProject() && !getModel().canCloseProjectWithoutDataLoss()) {
             if (canCloseWithoutSaving()) {
                 Platform.exit();
             }
-        }
-        else if (okayToExit()) {
+        } else if (okayToExit()) {
             Platform.exit();
         }
     }
@@ -276,22 +294,6 @@ public class MenuController extends Controller implements Observer {
         alert.setContentText("Are you sure you want exit the application?");
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
-    }
-
-    /**
-     * Called to initialize a controller after its root element has been completely processed. It sets some of the
-     * menu items' state to disabled (the initial state), because those menu items work on open projects, and initially
-     * no project has been opened
-     *
-     * @param location  The location used to resolve relative paths for the root object, or
-     *                  <tt>null</tt> if the location is not known.
-     * @param resources The resources used to localize the root object, or <tt>null</tt> if
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.closeProject.setDisable(true);
-        this.saveProject.setDisable(true);
-        this.saveProjectAs.setDisable(true);
     }
 
     /**

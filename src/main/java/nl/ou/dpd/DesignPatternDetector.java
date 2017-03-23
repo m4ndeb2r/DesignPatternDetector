@@ -59,7 +59,8 @@ public final class DesignPatternDetector extends Application {
         primaryStage.setTitle(APP_TITLE);
         primaryStage.show();
 
-        // Set a handler for the window close button
+        // Set a handler for the window close button. Lets the menu controller handle the closing of the application
+        // in the same way a File > Exit action is handled.
         scene.getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
