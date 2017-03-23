@@ -18,8 +18,6 @@ import java.util.ResourceBundle;
 
 /**
  * A {@link Controller} for the menu of the application.
- * <p>
- * TODO: this should not be a singleton, but there should also not be multiple instance of this class!! Fix it in the ControllerFactoryCreator if possible.
  *
  * @author Martin de Boer
  */
@@ -49,28 +47,12 @@ public class MenuController extends Controller implements Observer {
     @FXML
     private MenuItem about;
 
-    // Singleton
-    private static MenuController instance = null;
-
     /**
-     * Returns the single instance of this class, or creates it if it does not exist.
+     * Constructs a {@link MenuController} with the specified {@link Model}.
      *
-     * @param model the {@link Model} this controller updates
-     * @return the singleton instance of the {@link MenuController}.
+     * @param model the model of the MVC pattern
      */
-    public static MenuController getInstance(Model model) {
-        if (instance == null) {
-            instance = new MenuController(model);
-        }
-        return instance;
-    }
-
-    /**
-     * A private constructor because the {@link MenuController} is a singleton.
-     *
-     * @param model he {@link Model} this controller updates
-     */
-    private MenuController(Model model) {
+    public MenuController(Model model) {
         super(model);
         model.addObserver(this);
     }

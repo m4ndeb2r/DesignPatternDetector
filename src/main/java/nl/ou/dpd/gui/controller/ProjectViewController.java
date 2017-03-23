@@ -35,8 +35,6 @@ import java.util.Set;
 
 /**
  * A {@link Controller} for the project view of the application.
- * <p>
- * TODO: this should not be a singleton, but there should also not be multiple instance of this class!! Fix it in the ControllerFactoryCreator if possible.
  *
  * @author Martin de Boer
  */
@@ -91,28 +89,12 @@ public class ProjectViewController extends Controller implements Observer {
 
     private Map<String, Solution> feedbackMap;
 
-    // Singleton
-    private static ProjectViewController instance = null;
-
     /**
-     * Returns the single instance of this class, or creates it if it does not exist.
-     *
-     * @param model the {@link Model} this controller updates
-     * @return the singleton instance of the {@link ProjectViewController}.
-     */
-    public static ProjectViewController getInstance(Model model) {
-        if (instance == null) {
-            instance = new ProjectViewController(model);
-        }
-        return instance;
-    }
-
-    /**
-     * A private constructor because the {@link ProjectViewController} is a singleton.
+     * Constructs a {@link ProjectViewController} with the specified {@link Model}.
      *
      * @param model the model of the MVC pattern
      */
-    private ProjectViewController(Model model) {
+    public ProjectViewController(Model model) {
         super(model);
         model.addObserver(this);
     }

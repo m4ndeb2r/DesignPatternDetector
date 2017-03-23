@@ -5,41 +5,19 @@ import nl.ou.dpd.gui.model.Model;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 /**
  * A {@link Controller} for the main view of the application.
- *
- * TODO: this should not be a singleton, but there should also not be multiple instance of this class!! Fix it in the ControllerFactoryCreator if possible.
  *
  * @author Martin de Boer
  */
 public class MainViewController extends Controller {
 
-//    @FXML
-//    private MenuController menuController;
-
-    // Singleton
-    private static MainViewController instance = null;
-
     /**
-     * Returns the single instance of this class, or creates it if it does not exist.
-     *
-     * @param model the {@link Model} this controller updates
-     * @return the singleton instance of the {@link MainViewController}.
-     */
-    public static MainViewController getInstance(Model model) {
-        if (instance == null) {
-            instance = new MainViewController(model);
-        }
-        return instance;
-    }
-
-    /**
-     * Private constructor, because this {@link MainViewController} is a singleton.
+     * Constructs a {@link MainViewController} with the specified {@link Model}.
      *
      * @param model the model of the MVC pattern
      */
-    private MainViewController(Model model) {
+    public MainViewController(Model model) {
         super(model);
     }
 

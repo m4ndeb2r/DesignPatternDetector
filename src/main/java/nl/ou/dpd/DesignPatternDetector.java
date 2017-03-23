@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
+import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
 import nl.ou.dpd.gui.controller.MenuController;
 import nl.ou.dpd.gui.model.Model;
 import org.apache.logging.log4j.LogManager;
@@ -59,14 +61,16 @@ public final class DesignPatternDetector extends Application {
         primaryStage.setTitle(APP_TITLE);
         primaryStage.show();
 
-        // Set a handler for the window close button. Lets the menu controller handle the closing of the application
+        // Set a handler for the window close button. Lets the MenuController handle the closing of the application
         // in the same way a File > Exit action is handled.
+        final Callback<Class<?>, Object> factory = ControllerFactoryCreator.createControllerFactory(model);
+        final MenuController menuController = (MenuController) factory.call(MenuController.class);
         scene.getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 LOGGER.info("Application Closed by click on window close button (X)");
                 event.consume();
-                MenuController.getInstance(model).shutdown();
+                menuController.shutdown();
             }
         });
 
