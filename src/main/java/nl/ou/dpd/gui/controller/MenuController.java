@@ -217,22 +217,24 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * TODO
+     * Sets the active language to Dutch.
      *
      * @param actionEvent
      */
     @FXML
     protected void dutchLanguageAction(ActionEvent actionEvent) {
+        // TODO: implement this
         showNotImplementedAlert("Language");
     }
 
     /**
-     * TODO
+     * Sets the active language to English.
      *
      * @param actionEvent
      */
     @FXML
     protected void englishLanguageAction(ActionEvent actionEvent) {
+        // TODOL implement this
         showNotImplementedAlert("Language");
     }
 
