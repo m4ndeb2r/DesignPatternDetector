@@ -24,7 +24,7 @@ public final class EdgeElement implements ElementHandler {
     /**
      * {@inheritDoc}
      */
-    public void startElement(String qName, Attributes attributes) {
+    public void startElement(final String qName, final Attributes attributes) {
         edge = new Edge(
                 new Clazz(attributes.getValue("node1")),
                 new Clazz(attributes.getValue("node2")),
@@ -34,10 +34,15 @@ public final class EdgeElement implements ElementHandler {
     /**
      * {@inheritDoc}
      */
-    public ElementHandler endElement(String qName) {
+    public ElementHandler endElement(final String qName) {
         return null;
     }
 
+    /**
+     * Returns the edge in this element.
+     *
+     * @return an {@link Edge} instance.
+     */
     public Edge getEdge() {
         return edge;
     }
