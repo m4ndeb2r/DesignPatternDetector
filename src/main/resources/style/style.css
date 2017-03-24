@@ -5,11 +5,20 @@
     -fx-text-fill : rgb(0,0,0);
     -fx-font-size: 18px;
 }
+.app-title {
+    -fx-font-weight: 600;
+    -fx-font-family: sans-serif;
+    -fx-font-style: normal;
+    -fx-text-fill: rgb(10, 94, 118);
+    -fx-color-label-visible: true;
+    -fx-font-size: 42px;
+}
+
 .page-title {
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill : rgb(0,0,0);
+    -fx-text-fill: rgb(10, 94, 118);
     -fx-font-size: 22px;
 }
 
@@ -72,6 +81,15 @@
 }
 #feedbackScrollPane VBox {
     -fx-padding: 10px;
+}
+.error {
+    -fx-text-fill: crimson;
+}
+.warning {
+    -fx-text-fill: darkorange;
+}
+.okay {
+    -fx-text-fill: darkgreen;
 }
 
 
