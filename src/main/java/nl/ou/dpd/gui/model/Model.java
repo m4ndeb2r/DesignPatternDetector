@@ -112,7 +112,7 @@ public class Model extends Observable {
         final FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project files (*.dpd)", "*.dpd");
 
         fileChooser.setTitle("Save Project");
-        fileChooser.setSelectedExtensionFilter(filter);
+        fileChooser.getExtensionFilters().add(filter);
 
         final File file = fileChooser.showSaveDialog(scene.getWindow());
         if (file != null && openProject.save(file)) {

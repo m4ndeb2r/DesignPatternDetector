@@ -6,7 +6,6 @@
 * Test-coverage went down when writing GUI. Test-coverage should be better (currently 62% of lines)
 * Styling in CSS instead of FXML
 * Scrollbars in project view are not working 100% okay
-* Force saving project files as *.dpd
 * Memorize the latest save/open directory (is now always the app root directory)
 * Remark Peter: in het detailvenster worden de resultaten getoond van de classes van de system class 
   (in alfabetische volgorde) naar de classes van de target. Ik zou het logischer vinden om eerst (links) 
