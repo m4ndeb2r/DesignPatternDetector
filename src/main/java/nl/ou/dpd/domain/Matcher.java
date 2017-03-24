@@ -138,7 +138,7 @@ public final class Matcher {
                 }
 
                 if (found && extraMatched.size() > 0) {
-                    // In case of inheritance with multiple children, all matching edges has been found.
+                    // In case of inheritance with multiple children, all matching edges have been found.
                     // Therefore searching for more edges may be stopped.
                     j = system.getEdges().size();
                 }
