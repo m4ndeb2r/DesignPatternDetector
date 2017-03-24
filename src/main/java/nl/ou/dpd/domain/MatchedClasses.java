@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * @author Martin de Boer
  */
 
-public class MatchedClasses {
+public final class MatchedClasses {
 
     // A Map to connect classes. Key: system class; value: design pattern class
     private Map<Clazz, Clazz> classes;
@@ -27,15 +27,13 @@ public class MatchedClasses {
     }
 
     /**
-     * Creates a duplicate of the specified {@code classes}.
+     * Creates a duplicate of the specified {@code other}.
      *
-     * @param classes the object to duplicate.
+     * @param other the object to duplicate.
      */
-    MatchedClasses(MatchedClasses classes) {
+    MatchedClasses(final MatchedClasses other) {
         this();
-        for (Clazz c : classes.classes.keySet()) {
-            add(c, classes.get(c));
-        }
+        other.classes.keySet().forEach(c -> add(c, other.get(c)));
     }
 
     /**
@@ -45,7 +43,7 @@ public class MatchedClasses {
      * @param systemClass the system {@link Clazz} to look for.
      * @return the matching design pattern {@link Clazz}.
      */
-    public Clazz get(Clazz systemClass) {
+    public Clazz get(final Clazz systemClass) {
         return classes.get(systemClass);
     }
 
@@ -55,7 +53,7 @@ public class MatchedClasses {
      * @param systemClasses the systemClasses to filter
      * @return a new instance of {@link MatchedClasses} containing the entries that were filtered.
      */
-    MatchedClasses filter(Set<Clazz> systemClasses) {
+    MatchedClasses filter(final Set<Clazz> systemClasses) {
         MatchedClasses filtered = new MatchedClasses();
         systemClasses.forEach(key -> filtered.add(key, get(key)));
         return filtered;
@@ -79,80 +77,81 @@ public class MatchedClasses {
      * @param systemClass the system under construction's class to check
      * @return {@code true} is {@code systemClass} is bound to a design pattern class.
      */
-    boolean isSystemClassBound(Clazz systemClass) {
+    boolean isSystemClassBound(final Clazz systemClass) {
         return !classes.get(systemClass).equals(Clazz.EMPTY_CLASS);
     }
 
     /**
-     * Returns whether the specified {@link Edge}s can be matched. Edges can be matched when the following rules apply:
+     * Returns whether the specified {@link Edge}s can be matched. Edges can be matched when one of the following rules
+     * applies:
      * <ol>
      * <li>
      * the edge types must match (be equal or design pattern having INHERITANCE_MULTI and system under
-     * consideration having INHERITANCE
+     * consideration having INHERITANCE), and
      * </li><li>
-     * the edges should have the same selfRef value
+     * the edges should have the same selfRef value, and
      * </li>
      * <li>
-     * ...
+     * <ul>
+     * <li>
+     * both edges (system and design pattern) are unbound on both sides (no class is bound), or
      * </li>
+     * <li>
+     * one side of the system edge is already matched to one side of the design pattern edge, and the other sides of
+     * both (system and design pattern edge are unbound), or
+     * </li>
+     * <li>
+     * the system edge is alaready matched (both sides) to the design pattern edge
+     * </li>
+     * </ul>
      * </ol>
-     * TODO: explain this is bit more extensively
      *
      * @param systemEdge  the "system under consideration" edge
      * @param patternEdge the design pattern edge
-     * @return {@code true} if a match can be made, or {@code false} otherwise.
+     * @return {@code true} if a match is possible (or already made), or {@code false} otherwise.
      */
-    boolean canMatch(Edge systemEdge, Edge patternEdge) {
+    boolean canMatch(final Edge systemEdge, final Edge patternEdge) {
 
-        // Edgetypes should be compatible
-        if (patternEdge.getTypeRelation() != systemEdge.getTypeRelation()) {
-            if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI
-                    && systemEdge.getTypeRelation() == EdgeType.INHERITANCE)
-                ; // break; generates a warning.
-            else {
-                return false;
-            }
-        }
+        return areEdgeTypesCompatible(systemEdge, patternEdge)
+                && patternEdge.isSelfRef() == systemEdge.isSelfRef()
+                && (hasAllClassesUnbound(systemEdge, patternEdge)
+                || hasLeftClassBound(systemEdge, patternEdge)
+                || hasRightClassBound(systemEdge, patternEdge)
+                || hasBothClassesMatched(systemEdge, patternEdge)
+        );
+    }
 
-        // SelfRef should be compatible (equal)
-        if (patternEdge.isSelfRef() != systemEdge.isSelfRef()) {
-            return false;
-        }
+    private boolean hasBothClassesMatched(final Edge systemEdge, final Edge patternEdge) {
+        return this.isMatched(systemEdge.getClass1(), patternEdge.getClass1())
+                && this.isMatched(systemEdge.getClass2(), patternEdge.getClass2());
+    }
 
-        final Clazz systemClass1 = systemEdge.getClass1();
-        final Clazz systemClass2 = systemEdge.getClass2();
-        final Clazz designPatternClass1 = patternEdge.getClass1();
-        final Clazz designPatternClass2 = patternEdge.getClass2();
+    private boolean hasRightClassBound(final Edge systemEdge, final Edge patternEdge) {
+        return this.isUnbound(systemEdge.getClass1())
+                && !this.designPatternClassIsBound(patternEdge.getClass1())
+                && this.isMatched(systemEdge.getClass2(), patternEdge.getClass2());
+    }
 
-        // two empty names
-        if (this.isUnbound(systemClass1)
-                && this.isUnbound(systemClass2)
-                && !this.designPatternClassIsBound(designPatternClass1)
-                && !this.designPatternClassIsBound(designPatternClass2)) {
-            return true;
-        }
+    private boolean hasLeftClassBound(final Edge systemEdge, final Edge patternEdge) {
+        return this.isMatched(systemEdge.getClass1(), patternEdge.getClass1())
+                && this.isUnbound(systemEdge.getClass2())
+                && !this.designPatternClassIsBound(patternEdge.getClass2());
+    }
 
-        // first name matched, second name empty
-        if (this.isMatched(systemClass1, designPatternClass1)
-                && this.isUnbound(systemClass2)
-                && !this.designPatternClassIsBound(designPatternClass2)) {
-            return true;
-        }
+    private boolean hasAllClassesUnbound(final Edge systemEdge, final Edge patternEdge) {
+        return this.isUnbound(systemEdge.getClass1())
+                && this.isUnbound(systemEdge.getClass2())
+                && !this.designPatternClassIsBound(patternEdge.getClass1())
+                && !this.designPatternClassIsBound(patternEdge.getClass2());
+    }
 
-        // first name empty, second name matched
-        if (this.isUnbound(systemClass1)
-                && !this.designPatternClassIsBound(designPatternClass1)
-                && this.isMatched(systemClass2, designPatternClass2)) {
-            return true;
-        }
+    private boolean areEdgeTypesCompatible(final Edge sysEdge, final Edge dpEdge) {
+        return dpEdge.getTypeRelation() == sysEdge.getTypeRelation() || isInheritanceMultiMatch(sysEdge, dpEdge);
+    }
 
-        // both names are already matched.
-        if (this.isMatched(systemClass1, designPatternClass1)
-                && this.isMatched(systemClass2, designPatternClass2)) {
-            return true;
-        }
-
-        return false;
+    private boolean isInheritanceMultiMatch(final Edge sysEdge, final Edge dpEdge) {
+        return dpEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI
+                && sysEdge.getTypeRelation() == EdgeType.INHERITANCE;
     }
 
     /**
@@ -164,7 +163,7 @@ public class MatchedClasses {
      * @param systemEdge  the edge for the "system under consideration" to match.
      * @param patternEdge the edge from the design pattern to match.
      */
-    void makeMatch(Edge systemEdge, Edge patternEdge) {
+    void makeMatch(final Edge systemEdge, final Edge patternEdge) {
         add(systemEdge.getClass1(), patternEdge.getClass1());
         add(systemEdge.getClass2(), patternEdge.getClass2());
         systemEdge.lock();
@@ -176,7 +175,7 @@ public class MatchedClasses {
      *
      * @param systemEdge the edge to prepare space for.
      */
-    void prepareMatch(Edge systemEdge) {
+    void prepareMatch(final Edge systemEdge) {
         add(systemEdge.getClass1());
         add(systemEdge.getClass2());
     }
@@ -188,7 +187,7 @@ public class MatchedClasses {
      * @param key the {@link Clazz} to lookup and find a mathed {@link Clazz} for.
      * @return {@code true} when {@code key}s matched {@link Clazz} is {@link Clazz#EMPTY_CLASS}.
      */
-    private boolean isUnbound(Clazz key) {
+    private boolean isUnbound(final Clazz key) {
         return classes.get(key).equals(Clazz.EMPTY_CLASS);
     }
 
@@ -199,7 +198,7 @@ public class MatchedClasses {
      * @param value the {@link Clazz} we hope to find
      * @return {@code true} is a match was found, or {@code false} otherwise.
      */
-    private boolean isMatched(Clazz key, Clazz value) {
+    private boolean isMatched(final Clazz key, final Clazz value) {
         return get(key).equals(value);
     }
 
@@ -210,7 +209,7 @@ public class MatchedClasses {
      * @param designPatternClass the design pattern class to check for being bound.
      * @return {@code true} if the specified {@code designPatternClass} is already bound, or {@code false} otherwise.
      */
-    private boolean designPatternClassIsBound(Clazz designPatternClass) {
+    private boolean designPatternClassIsBound(final Clazz designPatternClass) {
         for (Clazz dpClass : classes.values()) {
             if (dpClass.equals(designPatternClass)) {
                 return true;
@@ -219,11 +218,11 @@ public class MatchedClasses {
         return false;
     }
 
-    private void add(Clazz key, Clazz value) {
+    private void add(final Clazz key, final Clazz value) {
         classes.put(key, value);
     }
 
-    private void add(Clazz key) {
+    private void add(final Clazz key) {
         add(key, Clazz.EMPTY_CLASS);
     }
 
