@@ -252,12 +252,12 @@ public class ProjectViewController extends Controller implements Observer {
             }
 
             // Show superfluous edges
-            feedbackSuperfluousEdgesLabel.setText("Edges that do not belong to the design pattern");
+            feedbackSuperfluousEdgesLabel.setText("Relations that do not belong to the design pattern");
             clearGridPane(feedbackSuperfluousEdgesGridPane);
             row = 0;
             final Set<Edge> superfluousEdges = solution.getSuperfluousEdges();
             if (superfluousEdges.size() == 0) {
-                feedbackSuperfluousEdgesGridPane.add(new Text("No superfluous edges found."), 0, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text("No superfluous relations found."), 0, row);
             }
             for (Edge edge : superfluousEdges) {
                 int col = 0;
@@ -268,12 +268,12 @@ public class ProjectViewController extends Controller implements Observer {
             }
 
             // Show missing edges
-            feedbackMissingEdgesLabel.setText("Missing edges");
+            feedbackMissingEdgesLabel.setText("Missing relations");
             clearGridPane(feedbackMissingEdgesGridPane);
             row = 0;
             final Set<Edge> missingEdges = solution.getMissingEdges();
             if (missingEdges.size() == 0) {
-                feedbackMissingEdgesGridPane.add(new Text("No missing edges found."), 0, row);
+                feedbackMissingEdgesGridPane.add(new Text("No missing relations found."), 0, row);
             }
             for (Edge edge : missingEdges) {
                 int col = 0;

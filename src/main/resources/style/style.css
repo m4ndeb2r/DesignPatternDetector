@@ -9,8 +9,9 @@
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill: rgb(10, 94, 118);
-    -fx-color-label-visible: true;
+    -fx-text-fill: rgb(51, 151, 187);
+    -fx-stroke: black;
+    -fx-stroke-width: 1px;
     -fx-font-size: 42px;
 }
 
@@ -18,7 +19,9 @@
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill: rgb(10, 94, 118);
+    -fx-text-fill: rgb(51, 151, 187);
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
     -fx-font-size: 22px;
 }
 
@@ -30,7 +33,7 @@
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill : rgb(0,0,0);
+    -fx-text-fill: rgb(51, 151, 187);
     -fx-font-size: 22px;
 }
 .feedback-subtitle {
