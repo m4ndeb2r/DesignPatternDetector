@@ -1,18 +1,17 @@
 package nl.ou.dpd.data.template;
 
-/**
- * Represents an element in a templates XML file, that represents an edge in the underlying design pattern.
- *
- * @author E.M. van Doorn
- * @author Martin de Boer
- */
-
 import nl.ou.dpd.data.parser.ElementHandler;
 import nl.ou.dpd.domain.Clazz;
 import nl.ou.dpd.domain.Edge;
 import nl.ou.dpd.domain.EdgeType;
 import org.xml.sax.Attributes;
 
+/**
+ * Represents an element in a templates XML file, that represents an edge in the underlying design pattern.
+ *
+ * @author E.M. van Doorn
+ * @author Martin de Boer
+ */
 public final class EdgeElement implements ElementHandler {
     private Edge edge;
 
