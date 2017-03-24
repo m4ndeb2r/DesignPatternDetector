@@ -48,7 +48,7 @@
                         <TextField fx:id="systemFileTextField" editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" />
                         <Button fx:id="systemFileButton" mnemonicParsing="false" onAction="#chooseSystemFile" text="..." GridPane.columnIndex="2">
                             <tooltip>
-                                <Tooltip contentDisplay="LEFT" text="Choose an XMI-file (Argo-UML export)" />
+                                <Tooltip text="Choose an XMI-file (Argo-UML export)" />
                             </tooltip>
                         </Button>
 
@@ -56,7 +56,7 @@
                         <TextField fx:id="templateFileTextField" editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                         <Button fx:id="templateFileButton" mnemonicParsing="false" onAction="#chooseTemplateFile" text="..." GridPane.columnIndex="2" GridPane.rowIndex="1">
                             <tooltip>
-                                <Tooltip contentDisplay="LEFT" text="Choose a design pattern template (XML)" />
+                                <Tooltip text="Choose a design pattern template (XML)" />
                             </tooltip>
                         </Button>
 
@@ -112,16 +112,16 @@
                             <content>
                                 <VBox>
                                     <children>
-                                        <Label fx:id="feedbackPatternNameLabel" styleClass="feedback-title" text="" />
-                                        <Label fx:id="feedbackPatternLabel" styleClass="feedback-subsubtitle" text="" />
+                                        <Label fx:id="feedbackPatternNameLabel" styleClass="feedback-title"/>
+                                        <Label fx:id="feedbackPatternLabel" styleClass="feedback-subsubtitle"/>
 
-                                        <Label fx:id="feedbackMatchedClassesLabel" styleClass="feedback-subtitle" text="" />
+                                        <Label fx:id="feedbackMatchedClassesLabel" styleClass="feedback-subtitle"/>
                                         <GridPane fx:id="feedbackMatchedClassesGridPane" styleClass="feedback-gridpane" />
 
-                                        <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle" text="" />
+                                        <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle"/>
                                         <GridPane fx:id="feedbackSuperfluousEdgesGridPane" styleClass="feedback-gridpane" />
 
-                                        <Label fx:id="feedbackMissingEdgesLabel" styleClass="feedback-subtitle" text="" />
+                                        <Label fx:id="feedbackMissingEdgesLabel" styleClass="feedback-subtitle"/>
                                         <GridPane fx:id="feedbackMissingEdgesGridPane" styleClass="feedback-gridpane" />
                                     </children>
                                 </VBox>
