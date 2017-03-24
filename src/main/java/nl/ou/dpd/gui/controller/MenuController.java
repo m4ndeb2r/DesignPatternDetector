@@ -100,9 +100,10 @@ public class MenuController extends Controller implements Observer {
             try {
                 getModel().openProject();
             } catch (FileNotFoundException fnfe) {
-
-                // TODO: show error dialog
-
+                final Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("The file could not be saved");
+                alert.setContentText(fnfe.getMessage());
             }
         }
     }
