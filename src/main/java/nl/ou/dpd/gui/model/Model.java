@@ -38,10 +38,9 @@ public class Model extends Observable {
 
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
-
     private Project openProject = null;
-
     private final Matcher matcher;
+    private final RetentionFileChooser fileChooser;
 
     /**
      * Constructor expecting a {@link Scene} as input parameter.
@@ -52,6 +51,7 @@ public class Model extends Observable {
         this.scene = scene;
         this.controllerFactory = ControllerFactoryCreator.createControllerFactory(this);
         this.matcher = new Matcher();
+        this.fileChooser = new RetentionFileChooser(new FileChooser());
     }
 
     /**
@@ -108,10 +108,10 @@ public class Model extends Observable {
      * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
     public boolean saveProjectAs() {
-        final FileChooser fileChooser = new FileChooser();
         final FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project files (*.dpd)", "*.dpd");
 
         fileChooser.setTitle("Save Project");
+        fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(filter);
 
         final File file = fileChooser.showSaveDialog(scene.getWindow());
@@ -210,8 +210,8 @@ public class Model extends Observable {
     }
 
     private File chooseFile(String filterDescription, String... filterExtension) {
-        FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filterDescription, filterExtension);
+        fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(extFilter);
         return fileChooser.showOpenDialog(scene.getWindow());
     }
