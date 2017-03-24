@@ -8,7 +8,6 @@
 * Scrollbars in project view are not working 100% okay
 * Force saving project files as *.dpd
 * Memorize the latest save/open directory (is now always the app root directory)
-* Strange behaviour when: [1] start application [2] File > Open [3] cancel; project name is empty?
 * Remark Peter: in het detailvenster worden de resultaten getoond van de classes van de system class 
   (in alfabetische volgorde) naar de classes van de target. Ik zou het logischer vinden om eerst (links) 
   de pattern classes te tonen in een vaste volgorde (bvb client, target, adapter, adaptee) en die te 

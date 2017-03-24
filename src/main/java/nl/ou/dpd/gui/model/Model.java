@@ -60,8 +60,7 @@ public class Model extends Observable {
     public void showMainView() {
         openProject = null;
         showView(MAINVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        setChangedAndNotifyObservers();
     }
 
     /**
@@ -70,8 +69,7 @@ public class Model extends Observable {
     public void newProject() {
         openProject = new Project();
         showView(PROJECTVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        setChangedAndNotifyObservers();
     }
 
     /**
@@ -84,9 +82,12 @@ public class Model extends Observable {
         if (projectFile != null) {
             openProject = new Project(projectFile);
         }
-        showView(PROJECTVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        if (hasOpenProject()) {
+            showView(PROJECTVIEW_FXML);
+        } else {
+            showView(MAINVIEW_FXML);
+        }
+        setChangedAndNotifyObservers();
     }
 
     /**
@@ -115,8 +116,7 @@ public class Model extends Observable {
 
         final File file = fileChooser.showSaveDialog(scene.getWindow());
         if (file != null && openProject.save(file)) {
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
             return true;
         }
         return false;
@@ -128,8 +128,7 @@ public class Model extends Observable {
     public void closeProject() {
         openProject = null;
         showView(MAINVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        setChangedAndNotifyObservers();
     }
 
     /**
@@ -158,8 +157,7 @@ public class Model extends Observable {
     public void setMaxMissingEdges(int m) {
         if (openProject != null) {
             openProject.setMaxMissingEdges(m);
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
         }
     }
 
@@ -171,8 +169,7 @@ public class Model extends Observable {
         File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
         if (chosenFile != null && !chosenFile.equals(openProject.getSystemUnderConsiderationPath())) {
             openProject.setSystemUnderConsiderationPath(chosenFile.getPath());
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
         }
     }
 
@@ -184,8 +181,7 @@ public class Model extends Observable {
         File chosenFile = this.chooseFile("XML template files (*.xml)", "*.xml");
         if (chosenFile != null && !chosenFile.equals(openProject.getDesignPatternTemplatePath())) {
             openProject.setDesignPatternTemplatePath(chosenFile.getPath());
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
         }
     }
 
@@ -229,6 +225,11 @@ public class Model extends Observable {
         } catch (Exception e) {
             LOGGER.error("Unable to open resource " + resource + ".", e);
         }
+    }
+
+    private void setChangedAndNotifyObservers() {
+        setChanged();
+        notifyObservers(openProject);
     }
 
 }
