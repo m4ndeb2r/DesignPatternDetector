@@ -2,13 +2,16 @@ package nl.ou.dpd.gui.controller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Observable;
@@ -28,6 +31,9 @@ public class MenuController extends Controller implements Observer {
 
     @FXML
     private MenuItem openProject;
+
+    @FXML
+    private Menu recentProjectsMenu;
 
     @FXML
     private MenuItem saveProject;
@@ -60,17 +66,14 @@ public class MenuController extends Controller implements Observer {
     /**
      * Called to initialize a controller after its root element has been completely processed. It sets some of the
      * menu items' state to disabled (the initial state), because those menu items work on open projects, and initially
-     * no project has been opened
+     * no project has been opened.
      *
      * @param location  The location used to resolve relative paths for the root object, or
      *                  <tt>null</tt> if the location is not known.
-     * @param resources The resources used to localize the root object, or <tt>null</tt> if
+     * @param resources The resources used to localize the root object, or <tt>null</tt>
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.closeProject.setDisable(true);
-        this.saveProject.setDisable(true);
-        this.saveProjectAs.setDisable(true);
     }
 
     /**
@@ -290,10 +293,50 @@ public class MenuController extends Controller implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        // Synchronize the menu with the state of the opened project
-        this.closeProject.setDisable(arg == null);
-        this.saveProject.setDisable(arg == null);
-        this.saveProjectAs.setDisable(arg == null);
+        synchronizeFileMenu((Project) arg);
+    }
+
+    /**
+     * Synchronize the menu with the state of the currently opened {@link Project} and the {@link ProjectFileHistory}.
+     *
+     * @param project the currently open {@link Project} or {@code null} if no {@link Project} is currently opened.
+     */
+    private synchronized void synchronizeFileMenu(Project project) {
+        this.closeProject.setDisable(project == null);
+        this.saveProject.setDisable(project == null);
+        this.saveProjectAs.setDisable(project == null);
+
+        if (project != null && project.getProjectFile() != null) {
+            ProjectFileHistory.INSTANCE.addProjectFile(project.getProjectFile());
+        }
+
+        recentProjectsMenu.getItems().removeAll();
+        if (recentProjectsMenu.getItems().size() == 0) {
+            for (File projectFile : ProjectFileHistory.INSTANCE.getProjectFiles()) {
+                if (projectFile.getPath().equals(getModel().getOpenProjectFilePath())) {
+                    continue;
+                }
+                final String menuText = projectFile.getName();
+                final MenuItem menuItem = new MenuItem(menuText);
+                menuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        try {
+                            getModel().openProject(projectFile);
+                        } catch (FileNotFoundException ex) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText("Project file not found");
+                            alert.setContentText(ex.getMessage());
+                            alert.showAndWait();
+                        }
+                    }
+                });
+                recentProjectsMenu.getItems().add(menuItem);
+            }
+        }
+
+        this.recentProjectsMenu.setDisable(this.recentProjectsMenu.getItems().size() == 0);
     }
 }
 

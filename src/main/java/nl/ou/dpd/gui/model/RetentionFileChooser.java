@@ -16,7 +16,7 @@ import java.io.File;
 public class RetentionFileChooser {
 
     private FileChooser fileChooser;
-    private SimpleObjectProperty<File> lastKnownDirectoryProperty = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<File> lastKnownDirectoryProperty;
 
     public RetentionFileChooser(FileChooser fileChooser) {
         this.fileChooser = fileChooser;

@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import java.lang.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.control.Label?>
-
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.ou.dpd.gui.controller.MainViewController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="nl.ou.dpd.gui.controller.MainViewController">
     <top>
-        <fx:include fx:id="menu" source="menu.fxml" />
+        <fx:include fx:id="menu" source="menu.fxml"/>
     </top>
     <center>
         <StackPane>
-           <children>
-               <ImageView opacity="0.2" preserveRatio="true" BorderPane.alignment="CENTER">
-                   <image>
-                       <Image url="@../img/triangle.gif" />
-                   </image>
-               <effect>
-                  <BoxBlur />
-               </effect>
-               </ImageView>
-               <Label styleClass="app-title" text="Design Pattern Detector" StackPane.alignment="CENTER" />
-           </children>
+            <children>
+                <ImageView opacity="0.2" preserveRatio="true" BorderPane.alignment="CENTER">
+                    <image>
+                        <Image url="@../img/triangle.gif"/>
+                    </image>
+                    <effect>
+                        <BoxBlur/>
+                    </effect>
+                </ImageView>
+                <Label styleClass="app-title" text="Design Pattern Detector" StackPane.alignment="CENTER"/>
+            </children>
         </StackPane>
     </center>
 </BorderPane>

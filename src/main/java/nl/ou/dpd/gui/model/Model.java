@@ -35,6 +35,7 @@ public class Model extends Observable {
 
     private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
     private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
+    private static final String _DPD__PROJ_MRU = "";
 
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
@@ -73,12 +74,23 @@ public class Model extends Observable {
     }
 
     /**
-     * Opens an existing project and notifies the {@link java.util.Observer}s.
+     * Lets the user pick a {@link Project} {@link File} from the system, opens that {@link Project} and notifies the
+     * {@link java.util.Observer}s.
      *
      * @throws FileNotFoundException when the project file does not exits.
      */
     public void openProject() throws FileNotFoundException {
-        final File projectFile = this.chooseFile("Project files (*.dpd)", "*.dpd");
+        this.openProject(this.chooseFile("Project files (*.dpd)", "*.dpd"));
+    }
+
+    /**
+     * Opens an existing {@link Project}, based on the contents of the specified {@link File} and notifies the
+     * {@link java.util.Observer}s.
+     *
+     * @param projectFile a project file containing {@link Project} information
+     * @throws FileNotFoundException when the project file does not exits.
+     */
+    public void openProject(File projectFile) throws FileNotFoundException {
         if (projectFile != null) {
             openProject = new Project(projectFile);
         }
@@ -147,6 +159,21 @@ public class Model extends Observable {
      */
     public boolean hasOpenProject() {
         return openProject != null;
+    }
+
+    /**
+     * Returns the location of the {@link File} of the currently open {@link Project}, or {@code null} if no project
+     * is currently open, or when the {@link Project} was not yet saved to a {@link File}.
+     *
+     * @return the path of the project {@link File} or {@code null} if no such file exists or no {@link Project} is
+     * currently open.
+     */
+    public String getOpenProjectFilePath() {
+        if (this.openProject != null && this.openProject.getProjectFile() != null) {
+            return this.openProject.getProjectFile().getPath();
+        } else {
+            return null;
+        }
     }
 
     /**
