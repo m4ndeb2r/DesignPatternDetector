@@ -61,6 +61,7 @@ public class MenuController extends Controller implements Observer {
     public MenuController(Model model) {
         super(model);
         model.addObserver(this);
+        ProjectFileHistory.INSTANCE.restore();
     }
 
     /**
@@ -265,11 +266,16 @@ public class MenuController extends Controller implements Observer {
      * {@link #exitAction(ActionEvent)} method as well as from the onClose event from the application window.
      */
     public void shutdown() {
+        boolean canExit = false;
         if (getModel().hasOpenProject() && !getModel().canCloseProjectWithoutDataLoss()) {
             if (canCloseWithoutSaving()) {
-                Platform.exit();
+                canExit = true;
             }
         } else if (okayToExit()) {
+            canExit = true;
+        }
+        if (canExit) {
+            ProjectFileHistory.INSTANCE.store();
             Platform.exit();
         }
     }
@@ -301,7 +307,7 @@ public class MenuController extends Controller implements Observer {
      *
      * @param project the currently open {@link Project} or {@code null} if no {@link Project} is currently opened.
      */
-    private synchronized void synchronizeFileMenu(Project project) {
+    private void synchronizeFileMenu(Project project) {
         this.closeProject.setDisable(project == null);
         this.saveProject.setDisable(project == null);
         this.saveProjectAs.setDisable(project == null);

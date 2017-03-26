@@ -1,10 +1,23 @@
 package nl.ou.dpd.gui.controller;
 
+import nl.ou.dpd.DesignPatternDetector;
 import nl.ou.dpd.gui.model.Project;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 /**
@@ -21,6 +34,8 @@ public enum ProjectFileHistory {
     INSTANCE;
 
     private static final int MAX_LEN = 5;
+    private static final String _DPD_MRU = "/.dpdmru";
+    private static final Logger LOGGER = LogManager.getLogger(ProjectFileHistory.class);
 
     private List<File> projectFiles = new ArrayList<>();
 
@@ -73,5 +88,68 @@ public enum ProjectFileHistory {
                 .stream()
                 .filter(file -> file.exists())
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Reads the previously saved most recently used projects from the {@link File} {@code .dpdmru}.
+     */
+    public void restore() {
+        try {
+            final File projectHistoryFile = getProjectHistoryFile();
+            if (projectHistoryFile.exists()) {
+                final Scanner sc = new Scanner(projectHistoryFile);
+                while (sc.hasNextLine()) {
+                    this.projectFiles.add(new File(sc.nextLine()));
+                }
+            }
+            // Remove nonexistant project files
+            purgeProjectFiles();
+        } catch (Exception ex) {
+            LOGGER.warn("Restoring project history failed.", ex);
+        }
+    }
+
+    /**
+     * Stores most recently used projects to file.
+     */
+    public void store() {
+        BufferedWriter out = null;
+        try {
+            final File projectHistoryFile = getProjectHistoryFile();
+            if (!projectHistoryFile.exists()) {
+                LOGGER.debug("Creating project history file: " + projectHistoryFile.getPath() + ".");
+                projectHistoryFile.createNewFile();
+            }
+            out = new BufferedWriter(new FileWriter(projectHistoryFile));
+            int count = 0;
+            for (final File projFile : this.projectFiles) {
+                out.write(projFile.getPath());
+                out.newLine();
+                count++;
+            }
+            LOGGER.debug("Project history ("
+                    + count
+                    + " projects) saved to "
+                    + projectHistoryFile.getPath()
+                    + ".");
+        } catch (Exception ex) {
+            LOGGER.warn("Saving project history failed.", ex);
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+
+    private File getProjectHistoryFile() throws UnsupportedEncodingException, URISyntaxException {
+        final CodeSource codeSource = DesignPatternDetector.class.getProtectionDomain().getCodeSource();
+        final File jarFile = new File(codeSource.getLocation().toURI().getPath());
+        final String jarDir = jarFile.getParentFile().getPath();
+        final String projHistPath = jarDir + _DPD_MRU;
+        final String decodedProjHistPath = URLDecoder.decode(projHistPath, "UTF-8");
+        return new File(decodedProjHistPath);
     }
 }
