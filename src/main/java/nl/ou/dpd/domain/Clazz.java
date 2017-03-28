@@ -1,5 +1,7 @@
 package nl.ou.dpd.domain;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -21,10 +23,15 @@ public class Clazz implements Comparable<Clazz> {
      * identified.
      */
     public static final Clazz EMPTY_CLASS = new Clazz("");
-
-    private final String name;
+    
 
     private final String id;
+    private final String name;
+    private ClazzConstant objecttype;
+    private ArrayList<Attribute> attributes;
+    private HashMap<ClazzConstant, Boolean> modifiers;
+    private ClazzConstant visibility;
+  
 
     /**
      * Constructs a {@link Class} instance with the specified {@code name}.
@@ -32,11 +39,12 @@ public class Clazz implements Comparable<Clazz> {
      * @param name the classname of this {@link Clazz}
      */
     public Clazz(final String name) {
-        this(name, name);
-    }
+        this(name, name);        
+   }
 
     /**
      * Constructs a {@link Class} instance with the specified {@code id} and {@code name}.
+     * Initializes the attributes type, attributes, modifiers and visibility.
      *
      * @param id the id of this {@link Clazz}
      * @param name the classname of this {@link Clazz}
@@ -44,9 +52,26 @@ public class Clazz implements Comparable<Clazz> {
     public Clazz(final String id, final String name) {
         this.id = id;
         this.name = name;
+        this.objecttype = ClazzConstant.TYPE_NOTSET;
+        this.attributes = new ArrayList<Attribute>();
+        this.modifiers = initializeModifiers();
+        this.visibility = ClazzConstant.VISIBILITY_NOTSET;        
     }
 
     /**
+     * Creates a HashMap to keep track of the modifiers of the {@Clazz} and initializes it setting all values to <code>false</code>.
+	 * @return the initialized HashMap
+	 */
+	private HashMap<ClazzConstant, Boolean> initializeModifiers() {
+		HashMap<ClazzConstant, Boolean> temp = new HashMap<ClazzConstant, Boolean>();
+		temp.put(ClazzConstant.MODIFIER_ISABSTRACT, null);
+		temp.put(ClazzConstant.MODIFIER_ISACTIVE, null);
+		temp.put(ClazzConstant.MODIFIER_ISLEAF, null);
+		temp.put(ClazzConstant.MODIFIER_ISROOT, null);
+		return temp;
+	}
+
+	/**
      * Gets the name of the class.
      *
      * @return the classname
@@ -62,6 +87,121 @@ public class Clazz implements Comparable<Clazz> {
      */
     public String getId() {
         return id;
+    }
+    
+    /**
+     * Gets the type of the class.
+     *
+     * @return the classtype
+     */
+    public ClazzConstant getObjecttype() {
+        return objecttype;
+    }
+
+    /**
+     * Sets the type of the class.
+     *
+     * @param the classtype
+     */
+    public void setObjecttype(ClazzConstant type) {
+        this.objecttype =  type;
+    }
+    
+    /**
+     * Gets the visibility of the class.
+     *
+     * @return the visibility
+     */
+    public ClazzConstant getVisibility() {
+        return visibility;
+    }
+
+    /**
+     * Sets the visibiliy of the class.
+     *
+     * @param the visibility
+     */
+    public void setVisibility(ClazzConstant visibility) {
+        this.visibility =  visibility;
+    }
+
+    /**
+     * Gets the modifiers.
+     *
+     * @return the HashMap of the modifiers.
+     */
+    public HashMap<ClazzConstant, Boolean> getModifiers() {
+        return modifiers;
+    }
+
+    
+    /**
+     * Gets the status of the modifier.
+     *
+     * @return <code>True</code> if the modifier is set. <code> False</code> otherwise.
+     */
+    public Boolean getModifierStatus(ClazzConstant modifier) {
+        return modifiers.get(modifier);
+    }
+
+    /**
+     * Sets the status of a modifier.
+     *
+     * @param modifier the modifier
+     * @param status the new status
+     * @return the new status
+     */
+    public boolean setModifier(ClazzConstant modifier, boolean status) {
+    	modifiers.put(modifier, status);
+        return status;
+    }  
+    
+    /**
+     * Sets an attribute of the class.
+     *
+     * @param the attribute
+     */
+    public void setAttribute(Attribute attribute) {
+        this.attributes.add(attribute);
+    }
+    
+    /**
+     * Gets the attributes of the class.
+     *
+     * @return the attributes of the class
+     */
+    public ArrayList<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    /**
+     * Gets the attributes with the given name.
+     *
+     * @return the attributes of the class which names equal the given name
+     */
+    public ArrayList<Attribute> getAttributesByName(String attributeName) {
+    	ArrayList<Attribute> temp = new ArrayList<Attribute>();
+    	for (Attribute attr : attributes) {
+    		if (attr.getName().equals(attributeName)) {
+    			temp.add(attr);
+    		}
+    	}    	
+        return temp;
+    }
+
+    /**
+     * Gets the attributes with the given type.
+     *
+     * @return the attributes of the class which names equal the given type
+     */
+    public ArrayList<Attribute> getAttributesByType(Clazz attributeType) {
+    	ArrayList<Attribute> temp = new ArrayList<Attribute>();
+    	for (Attribute attr : attributes) {
+    		if (attr.getType().equals(attributeType)) {
+    			temp.add(attr);
+    		}
+    	}    	
+        return temp;
     }
 
     /**
