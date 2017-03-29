@@ -10,13 +10,17 @@ import java.util.Objects;
  *
  * @author E.M. van Doorn
  * @author Martin de Boer
+ * @author Peter Vansweevelt
  */
 
 public class Edge {
 
+	private String name;
     private Clazz classInterface1, classInterface2;
-    private EdgeType typeRelation;
+    private EdgeType relationType;
     private boolean selfRef, locked, virtual;
+    private Cardinality cardinality_front = null; //cardinality on classInterface1
+    private Cardinality cardinality_end = null; //cardinality on classInterface2
 
     /**
      * Constructs an instance of a {@link Edge} with the specified class names and edge type. The classes
@@ -30,20 +34,40 @@ public class Edge {
     public Edge(Clazz cl1, Clazz cl2, EdgeType type) {
         classInterface1 = cl1;
         classInterface2 = cl2;
-        typeRelation = type;
+        relationType = type;
         selfRef = cl1.equals(cl2);
-
         locked = false;
         virtual = false;
     }
 
+
     /**
+     * Constructs an instance of a {@link Edge} with the specified class names, edge type and a name of the edge. The classes
+     * represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type represents
+     * the relation type between the classes.
+     *
+     * @param cl1  the "left" class or interface in the relation
+     * @param cl2  the "right" class or interface in the relation
+     * @param type the type of relation
+     * @param name the name of the edge. Recommended as being unique (in a pattern). 
+     */
+    public Edge(Clazz cl1, Clazz cl2, EdgeType type, String name) {
+    	this.name = name;
+        classInterface1 = cl1;
+        classInterface2 = cl2;
+        relationType = type;
+        selfRef = cl1.equals(cl2);
+        locked = false;
+        virtual = false;
+    }
+
+/**
      * This constructor returns a duplicate of the specified {@link Edge}.
      *
      * @param edge an {@link Edge} to construct a duplicate of.
      */
     public Edge(Edge edge) {
-        this(edge.classInterface1, edge.classInterface2, edge.typeRelation);
+        this(edge.classInterface1, edge.classInterface2, edge.relationType);
         locked = edge.locked;
     }
 
@@ -60,6 +84,22 @@ public class Edge {
         virtual = true;
     }
 
+    /**
+     * Set the name of this edge.
+     * @param name
+     */
+    public void setName(String name) {
+    	this.name = name;
+    }
+    
+    /**
+     * Set the name of this edge.
+     * @return name
+     */
+    public String getName() {
+    	return name;
+    }    
+    
     /**
      * Indicates whether or not this {@link Edge} is virtual (non-visible).
      *
@@ -121,8 +161,8 @@ public class Edge {
      *
      * @return the edge type.
      */
-    public EdgeType getTypeRelation() {
-        return typeRelation;
+    public EdgeType getRelationType() {
+        return relationType;
     }
 
     /**
@@ -135,6 +175,65 @@ public class Edge {
         return selfRef;
     }
 
+    /**
+     * Set the cardinality of classinterface1. 
+     * @param lower
+     * @param upper
+     */
+    public void setCardinality_front(int lower, int upper) {
+    	if (cardinality_front == null) {
+            cardinality_front = new Cardinality(lower, upper);
+    	} else {
+    		cardinality_front.lower = lower;
+    		cardinality_front.upper = upper;    		
+    	}
+    }
+    
+    /**
+     * Set the cardinality of classinterface1. 
+     * @param lower
+     * @param upper
+     */
+    public void setCardinality_end(int lower, int upper) {
+    	if (cardinality_end == null) {
+            cardinality_end = new Cardinality(lower, upper);
+    	} else {
+    		cardinality_end.lower = lower;
+    		cardinality_end.upper = upper;    		
+    	}
+    }
+ 
+    /**
+     * Get the cardinality of classinterface1. 
+     * @return the cardinality
+     */
+    public Cardinality getCardinality_front() {
+    	return cardinality_front;
+    }
+    
+    /**
+     * Get the cardinality of classinterface1. 
+     * @return the cardinality
+     */
+    public Cardinality getCardinality_end() {
+    	return cardinality_end;
+    }
+    
+    /**
+     * Remove the cardinality of classinterface1. 
+     * @return the cardinality
+     */
+    public void removeCardinality_front() {
+    	cardinality_front = null;
+    }
+    
+    /**
+     * Remove the cardinality of classinterface1. 
+     * @return the cardinality
+     */
+    public void removeCardinality_end() {
+    	cardinality_end = null;
+    }
     /**
      * {@inheritDoc}
      */
@@ -151,7 +250,7 @@ public class Edge {
                 && virtual == edge.virtual
                 && Objects.equals(classInterface1, edge.classInterface1)
                 && Objects.equals(classInterface2, edge.classInterface2)
-                && typeRelation == edge.typeRelation;
+                && relationType == edge.relationType;
     }
 
     /**
@@ -159,6 +258,6 @@ public class Edge {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(classInterface1, classInterface2, typeRelation, selfRef, virtual);
+        return Objects.hash(classInterface1, classInterface2, relationType, selfRef, virtual);
     }
 }

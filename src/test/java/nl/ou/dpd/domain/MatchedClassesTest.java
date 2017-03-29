@@ -53,8 +53,8 @@ public class MatchedClassesTest {
      */
     @Test
     public void testCanNotMatchIncompatibleEdgeTypes() {
-        when(systemEdge.getTypeRelation()).thenReturn(EdgeType.AGGREGATE);
-        when(patternEdge.getTypeRelation()).thenReturn(EdgeType.ASSOCIATION);
+        when(systemEdge.getRelationType()).thenReturn(EdgeType.AGGREGATE);
+        when(patternEdge.getRelationType()).thenReturn(EdgeType.ASSOCIATION);
 
         matchedClasses.prepareMatch(systemEdge);
         assertFalse(matchedClasses.canMatch(systemEdge, patternEdge));
@@ -65,10 +65,10 @@ public class MatchedClassesTest {
      */
     @Test
     public void testCanNotMatchIncompatibleSelfRefs() {
-        when(systemEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE);
+        when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(true);
 
-        when(patternEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE_MULTI);
+        when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
 
         matchedClasses.prepareMatch(systemEdge);
@@ -81,12 +81,12 @@ public class MatchedClassesTest {
      */
     @Test
     public void testCanMatchUnboundPatternEdges() {
-        when(systemEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE);
+        when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
         when(systemEdge.getClass1()).thenReturn(Clazz.EMPTY_CLASS);
         when(systemEdge.getClass2()).thenReturn(Clazz.EMPTY_CLASS);
 
-        when(patternEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE_MULTI);
+        when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
         when(patternEdge.getClass1()).thenReturn(patternClass1);
         when(patternEdge.getClass2()).thenReturn(patternClass2);
@@ -102,12 +102,12 @@ public class MatchedClassesTest {
      */
     @Test
     public void testCanNotMatchBoundPatternEdges() {
-        when(systemEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE);
+        when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
         when(systemEdge.getClass1()).thenReturn(Clazz.EMPTY_CLASS);
         when(systemEdge.getClass2()).thenReturn(Clazz.EMPTY_CLASS);
 
-        when(patternEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE_MULTI);
+        when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
         when(patternEdge.getClass1()).thenReturn(patternClass1);
         when(patternEdge.getClass2()).thenReturn(patternClass2);
@@ -129,12 +129,12 @@ public class MatchedClassesTest {
      */
     @Test
     public void testCanMatchBoundPatternEdges() {
-        when(systemEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE);
+        when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
         when(systemEdge.getClass1()).thenReturn(systemClass1);
         when(systemEdge.getClass2()).thenReturn(systemClass2);
 
-        when(patternEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE_MULTI);
+        when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
         when(patternEdge.getClass1()).thenReturn(patternClass1);
         when(patternEdge.getClass2()).thenReturn(patternClass2);
@@ -154,12 +154,12 @@ public class MatchedClassesTest {
      */
     @Test
     public void testCanMatchOnTheLeft() {
-        when(systemEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE);
+        when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
         when(systemEdge.getClass1()).thenReturn(systemClass1);
         when(systemEdge.getClass2()).thenReturn(systemClass2);
 
-        when(patternEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE_MULTI);
+        when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
         when(patternEdge.getClass1()).thenReturn(patternClass1);
         when(patternEdge.getClass2()).thenReturn(patternClass2);
@@ -184,12 +184,12 @@ public class MatchedClassesTest {
      */
     @Test
     public void testCanMatchOnTheRight() {
-        when(systemEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE);
+        when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
         when(systemEdge.getClass1()).thenReturn(systemClass1);
         when(systemEdge.getClass2()).thenReturn(systemClass2);
 
-        when(patternEdge.getTypeRelation()).thenReturn(EdgeType.INHERITANCE_MULTI);
+        when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
         when(patternEdge.getClass1()).thenReturn(patternClass1);
         when(patternEdge.getClass2()).thenReturn(patternClass2);

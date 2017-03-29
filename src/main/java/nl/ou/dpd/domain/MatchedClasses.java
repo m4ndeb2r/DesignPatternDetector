@@ -146,12 +146,12 @@ public final class MatchedClasses {
     }
 
     private boolean areEdgeTypesCompatible(final Edge sysEdge, final Edge dpEdge) {
-        return dpEdge.getTypeRelation() == sysEdge.getTypeRelation() || isInheritanceMultiMatch(sysEdge, dpEdge);
+        return dpEdge.getRelationType() == sysEdge.getRelationType() || isInheritanceMultiMatch(sysEdge, dpEdge);
     }
 
     private boolean isInheritanceMultiMatch(final Edge sysEdge, final Edge dpEdge) {
-        return dpEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI
-                && sysEdge.getTypeRelation() == EdgeType.INHERITANCE;
+        return dpEdge.getRelationType() == EdgeType.INHERITANCE_MULTI
+                && sysEdge.getRelationType() == EdgeType.INHERITANCE;
     }
 
     /**
