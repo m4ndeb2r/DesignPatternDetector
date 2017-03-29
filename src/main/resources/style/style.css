@@ -5,11 +5,23 @@
     -fx-text-fill : rgb(0,0,0);
     -fx-font-size: 18px;
 }
+.app-title {
+    -fx-font-weight: 600;
+    -fx-font-family: sans-serif;
+    -fx-font-style: normal;
+    -fx-text-fill: rgb(51, 151, 187);
+    -fx-stroke: black;
+    -fx-stroke-width: 1px;
+    -fx-font-size: 42px;
+}
+
 .page-title {
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill : rgb(0,0,0);
+    -fx-text-fill: rgb(51, 151, 187);
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
     -fx-font-size: 22px;
 }
 
@@ -21,7 +33,7 @@
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill : rgb(0,0,0);
+    -fx-text-fill: rgb(51, 151, 187);
     -fx-font-size: 22px;
 }
 .feedback-subtitle {
@@ -72,6 +84,15 @@
 }
 #feedbackScrollPane VBox {
     -fx-padding: 10px;
+}
+.error {
+    -fx-text-fill: crimson;
+}
+.warning {
+    -fx-text-fill: darkorange;
+}
+.okay {
+    -fx-text-fill: darkgreen;
 }
 
 

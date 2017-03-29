@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
+import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
+import nl.ou.dpd.gui.controller.MenuController;
 import nl.ou.dpd.gui.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,27 +47,35 @@ public final class DesignPatternDetector extends Application {
      */
     @Override
     public void start(final Stage primaryStage) throws Exception {
+        Platform.setImplicitExit(false);
+
         final Scene scene = new Scene(new StackPane());
         final Model model = new Model(scene);
 
+        // Set the scene to the main view of the application
         model.showMainView();
 
+        // Set the primary stage settings and show it
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
+        primaryStage.setWidth(1280.0);
+        primaryStage.setHeight(800.0);
         primaryStage.setTitle(APP_TITLE);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        primaryStage.show();
+
+        // Set a handler for the window close button. Lets the MenuController handle the closing of the application
+        // in the same way a File > Exit action is handled.
+        final Callback<Class<?>, Object> factory = ControllerFactoryCreator.createControllerFactory(model);
+        final MenuController menuController = (MenuController) factory.call(MenuController.class);
+        scene.getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO: handle this like the exit button in the menu. Perhaps this is not the right place either .....
-                        System.out.println("Application Closed by click to Close Button(X)");
-                    }
-                });
+                LOGGER.info("Application Closed by click on window close button (X)");
+                event.consume();
+                menuController.shutdown();
             }
         });
-        primaryStage.show();
+
     }
 
 }

@@ -35,13 +35,13 @@ public class Model extends Observable {
 
     private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
     private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
+    private static final String _DPD__PROJ_MRU = "";
 
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
-
     private Project openProject = null;
-
     private final Matcher matcher;
+    private final RetentionFileChooser fileChooser;
 
     /**
      * Constructor expecting a {@link Scene} as input parameter.
@@ -52,6 +52,7 @@ public class Model extends Observable {
         this.scene = scene;
         this.controllerFactory = ControllerFactoryCreator.createControllerFactory(this);
         this.matcher = new Matcher();
+        this.fileChooser = new RetentionFileChooser(new FileChooser());
     }
 
     /**
@@ -60,8 +61,7 @@ public class Model extends Observable {
     public void showMainView() {
         openProject = null;
         showView(MAINVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        setChangedAndNotifyObservers();
     }
 
     /**
@@ -70,23 +70,36 @@ public class Model extends Observable {
     public void newProject() {
         openProject = new Project();
         showView(PROJECTVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        setChangedAndNotifyObservers();
     }
 
     /**
-     * Opens an existing project and notifies the {@link java.util.Observer}s.
+     * Lets the user pick a {@link Project} {@link File} from the system, opens that {@link Project} and notifies the
+     * {@link java.util.Observer}s.
      *
      * @throws FileNotFoundException when the project file does not exits.
      */
     public void openProject() throws FileNotFoundException {
-        final File projectFile = this.chooseFile("Project files (*.dpd)", "*.dpd");
+        this.openProject(this.chooseFile("Project files (*.dpd)", "*.dpd"));
+    }
+
+    /**
+     * Opens an existing {@link Project}, based on the contents of the specified {@link File} and notifies the
+     * {@link java.util.Observer}s.
+     *
+     * @param projectFile a project file containing {@link Project} information
+     * @throws FileNotFoundException when the project file does not exits.
+     */
+    public void openProject(File projectFile) throws FileNotFoundException {
         if (projectFile != null) {
             openProject = new Project(projectFile);
         }
-        showView(PROJECTVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        if (hasOpenProject()) {
+            showView(PROJECTVIEW_FXML);
+        } else {
+            showView(MAINVIEW_FXML);
+        }
+        setChangedAndNotifyObservers();
     }
 
     /**
@@ -107,16 +120,15 @@ public class Model extends Observable {
      * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
     public boolean saveProjectAs() {
-        final FileChooser fileChooser = new FileChooser();
         final FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Project files (*.dpd)", "*.dpd");
 
         fileChooser.setTitle("Save Project");
-        fileChooser.setSelectedExtensionFilter(filter);
+        fileChooser.getExtensionFilters().clear();
+        fileChooser.getExtensionFilters().add(filter);
 
         final File file = fileChooser.showSaveDialog(scene.getWindow());
         if (file != null && openProject.save(file)) {
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
             return true;
         }
         return false;
@@ -128,8 +140,7 @@ public class Model extends Observable {
     public void closeProject() {
         openProject = null;
         showView(MAINVIEW_FXML);
-        setChanged();
-        notifyObservers(openProject);
+        setChangedAndNotifyObservers();
     }
 
     /**
@@ -151,6 +162,21 @@ public class Model extends Observable {
     }
 
     /**
+     * Returns the location of the {@link File} of the currently open {@link Project}, or {@code null} if no project
+     * is currently open, or when the {@link Project} was not yet saved to a {@link File}.
+     *
+     * @return the path of the project {@link File} or {@code null} if no such file exists or no {@link Project} is
+     * currently open.
+     */
+    public String getOpenProjectFilePath() {
+        if (this.openProject != null && this.openProject.getProjectFile() != null) {
+            return this.openProject.getProjectFile().getPath();
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Sets the max numnber of allowed edges missing for the currently opened project.
      *
      * @param m the new number of max allowed missing edges
@@ -158,8 +184,7 @@ public class Model extends Observable {
     public void setMaxMissingEdges(int m) {
         if (openProject != null) {
             openProject.setMaxMissingEdges(m);
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
         }
     }
 
@@ -171,8 +196,7 @@ public class Model extends Observable {
         File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
         if (chosenFile != null && !chosenFile.equals(openProject.getSystemUnderConsiderationPath())) {
             openProject.setSystemUnderConsiderationPath(chosenFile.getPath());
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
         }
     }
 
@@ -184,8 +208,7 @@ public class Model extends Observable {
         File chosenFile = this.chooseFile("XML template files (*.xml)", "*.xml");
         if (chosenFile != null && !chosenFile.equals(openProject.getDesignPatternTemplatePath())) {
             openProject.setDesignPatternTemplatePath(chosenFile.getPath());
-            setChanged();
-            notifyObservers(openProject);
+            setChangedAndNotifyObservers();
         }
     }
 
@@ -214,8 +237,8 @@ public class Model extends Observable {
     }
 
     private File chooseFile(String filterDescription, String... filterExtension) {
-        FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filterDescription, filterExtension);
+        fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(extFilter);
         return fileChooser.showOpenDialog(scene.getWindow());
     }
@@ -229,6 +252,11 @@ public class Model extends Observable {
         } catch (Exception e) {
             LOGGER.error("Unable to open resource " + resource + ".", e);
         }
+    }
+
+    private void setChangedAndNotifyObservers() {
+        setChanged();
+        notifyObservers(openProject);
     }
 
 }

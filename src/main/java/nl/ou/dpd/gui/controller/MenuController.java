@@ -2,13 +2,16 @@ package nl.ou.dpd.gui.controller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Observable;
@@ -18,8 +21,6 @@ import java.util.ResourceBundle;
 
 /**
  * A {@link Controller} for the menu of the application.
- * <p>
- * TODO: this should not be a singleton, but there should also not be multiple instance of this class!! Fix it in the ControllerFactoryCreator if possible.
  *
  * @author Martin de Boer
  */
@@ -30,6 +31,9 @@ public class MenuController extends Controller implements Observer {
 
     @FXML
     private MenuItem openProject;
+
+    @FXML
+    private Menu recentProjectsMenu;
 
     @FXML
     private MenuItem saveProject;
@@ -49,30 +53,28 @@ public class MenuController extends Controller implements Observer {
     @FXML
     private MenuItem about;
 
-    // Singleton
-    private static MenuController instance = null;
-
     /**
-     * Returns the single instance of this class, or creates it if it does not exist.
+     * Constructs a {@link MenuController} with the specified {@link Model}.
      *
-     * @param model the {@link Model} this controller updates
-     * @return the singleton instance of the {@link MenuController}.
+     * @param model the model of the MVC pattern
      */
-    public static MenuController getInstance(Model model) {
-        if (instance == null) {
-            instance = new MenuController(model);
-        }
-        return instance;
+    public MenuController(Model model) {
+        super(model);
+        model.addObserver(this);
+        ProjectFileHistory.INSTANCE.restore();
     }
 
     /**
-     * A private constructor because the {@link MenuController} is a singleton.
+     * Called to initialize a controller after its root element has been completely processed. It sets some of the
+     * menu items' state to disabled (the initial state), because those menu items work on open projects, and initially
+     * no project has been opened.
      *
-     * @param model he {@link Model} this controller updates
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  <tt>null</tt> if the location is not known.
+     * @param resources The resources used to localize the root object, or <tt>null</tt>
      */
-    private MenuController(Model model) {
-        super(model);
-        model.addObserver(this);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
     }
 
     /**
@@ -102,9 +104,10 @@ public class MenuController extends Controller implements Observer {
             try {
                 getModel().openProject();
             } catch (FileNotFoundException fnfe) {
-
-                // TODO: show error dialog
-
+                final Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("The file could not be saved");
+                alert.setContentText(fnfe.getMessage());
             }
         }
     }
@@ -216,24 +219,27 @@ public class MenuController extends Controller implements Observer {
     @FXML
     protected void helpAction(ActionEvent event) {
         showNotImplementedAlert("Help");
-        //actiontarget.setText("You clicked 'About'");
     }
 
     /**
-     * TODO
+     * Sets the active language to Dutch.
+     *
      * @param actionEvent
      */
     @FXML
     protected void dutchLanguageAction(ActionEvent actionEvent) {
+        // TODO: implement this
         showNotImplementedAlert("Language");
     }
 
     /**
-     * TODO
+     * Sets the active language to English.
+     *
      * @param actionEvent
      */
     @FXML
     protected void englishLanguageAction(ActionEvent actionEvent) {
+        // TODOL implement this
         showNotImplementedAlert("Language");
     }
 
@@ -246,18 +252,30 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * Ends the application gracefully after user confirmation.
+     * Handles the file > exit action in the menu.
      *
      * @param event is ignored
      */
     @FXML
     protected void exitAction(ActionEvent event) {
+        shutdown();
+    }
+
+    /**
+     * Ends the application gracefully after user confirmation. This method is called from the
+     * {@link #exitAction(ActionEvent)} method as well as from the onClose event from the application window.
+     */
+    public void shutdown() {
+        boolean canExit = false;
         if (getModel().hasOpenProject() && !getModel().canCloseProjectWithoutDataLoss()) {
             if (canCloseWithoutSaving()) {
-                Platform.exit();
+                canExit = true;
             }
+        } else if (okayToExit()) {
+            canExit = true;
         }
-        else if (okayToExit()) {
+        if (canExit) {
+            ProjectFileHistory.INSTANCE.store();
             Platform.exit();
         }
     }
@@ -273,22 +291,6 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * Called to initialize a controller after its root element has been completely processed. It sets some of the
-     * menu items' state to disabled (the initial state), because those menu items work on open projects, and initially
-     * no project has been opened
-     *
-     * @param location  The location used to resolve relative paths for the root object, or
-     *                  <tt>null</tt> if the location is not known.
-     * @param resources The resources used to localize the root object, or <tt>null</tt> if
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.closeProject.setDisable(true);
-        this.saveProject.setDisable(true);
-        this.saveProjectAs.setDisable(true);
-    }
-
-    /**
      * This method is called when an {@link Observable} calls the {@code notifyObservers} method. At that moment this
      * {@link MenuController}, being an instance of the {@link Observer} interface, will be updated.
      *
@@ -297,10 +299,50 @@ public class MenuController extends Controller implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        // Synchronize the menu with the state of the opened project
-        this.closeProject.setDisable(arg == null);
-        this.saveProject.setDisable(arg == null);
-        this.saveProjectAs.setDisable(arg == null);
+        synchronizeFileMenu((Project) arg);
+    }
+
+    /**
+     * Synchronize the menu with the state of the currently opened {@link Project} and the {@link ProjectFileHistory}.
+     *
+     * @param project the currently open {@link Project} or {@code null} if no {@link Project} is currently opened.
+     */
+    private void synchronizeFileMenu(Project project) {
+        this.closeProject.setDisable(project == null);
+        this.saveProject.setDisable(project == null);
+        this.saveProjectAs.setDisable(project == null);
+
+        if (project != null && project.getProjectFile() != null) {
+            ProjectFileHistory.INSTANCE.addProjectFile(project.getProjectFile());
+        }
+
+        recentProjectsMenu.getItems().removeAll();
+        if (recentProjectsMenu.getItems().size() == 0) {
+            for (File projectFile : ProjectFileHistory.INSTANCE.getProjectFiles()) {
+                if (projectFile.getPath().equals(getModel().getOpenProjectFilePath())) {
+                    continue;
+                }
+                final String menuText = projectFile.getName();
+                final MenuItem menuItem = new MenuItem(menuText);
+                menuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        try {
+                            getModel().openProject(projectFile);
+                        } catch (FileNotFoundException ex) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText("Project file not found");
+                            alert.setContentText(ex.getMessage());
+                            alert.showAndWait();
+                        }
+                    }
+                });
+                recentProjectsMenu.getItems().add(menuItem);
+            }
+        }
+
+        this.recentProjectsMenu.setDisable(this.recentProjectsMenu.getItems().size() == 0);
     }
 }
 

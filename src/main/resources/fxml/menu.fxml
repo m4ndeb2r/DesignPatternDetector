@@ -9,10 +9,14 @@
          stylesheets="@../style/style.css"
          fx:controller="nl.ou.dpd.gui.controller.MenuController">
     <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <items>
                 <MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProjectAction" text="New project"/>
                 <MenuItem fx:id="openProject" mnemonicParsing="false" onAction="#openProjectAction" text="Open project"/>
+                <Menu fx:id="recentProjectsMenu" mnemonicParsing="false" text="Recent projects">
+                    <!-- Items are added in the app -->
+                </Menu>
+                <SeparatorMenuItem />
                 <MenuItem fx:id="saveProject" mnemonicParsing="false" onAction="#saveProjectAction" text="Save project"/>
                 <MenuItem fx:id="saveProjectAs" mnemonicParsing="false" onAction="#saveProjectAsAction" text="Save project as..."/>
                 <MenuItem fx:id="closeProject" mnemonicParsing="false" onAction="#closeProjectAction" text="Close project"/>
@@ -20,13 +24,13 @@
                 <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#exitAction" text="Exit"/>
             </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Language">
+        <Menu fx:id="languageMenu" mnemonicParsing="false" text="Language">
             <items>
                 <MenuItem fx:id="dutchLanguage" mnemonicParsing="false" onAction="#dutchLanguageAction" text="Dutch"/>
                 <MenuItem fx:id="englishLanguage" mnemonicParsing="false" onAction="#englishLanguageAction" text="English"/>
             </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
             <items>
                 <MenuItem fx:id="help" mnemonicParsing="false" onAction="#helpAction" text="Help"/>
                 <MenuItem fx:id="about" mnemonicParsing="false" onAction="#aboutAction" text="About"/>

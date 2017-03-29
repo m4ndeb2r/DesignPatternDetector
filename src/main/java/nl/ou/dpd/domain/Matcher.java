@@ -16,7 +16,7 @@ import java.util.SortedSet;
  *
  * @author Martin de Boer
  */
-public class Matcher {
+public final class Matcher {
 
     private static final Logger LOGGER = LogManager.getLogger(Matcher.class);
 
@@ -59,15 +59,16 @@ public class Matcher {
      * @param maxNotMatchable
      * @param startIndex
      * @param matchedClasses
+     * @param missingEdges
      * @return
      */
     private boolean recursiveMatch(
-            DesignPattern pattern,
-            SystemUnderConsideration system,
-            int maxNotMatchable,
-            int startIndex,
-            MatchedClasses matchedClasses,
-            Set<Edge> missingEdges) {
+            final DesignPattern pattern,
+            final SystemUnderConsideration system,
+            final int maxNotMatchable,
+            final int startIndex,
+            final MatchedClasses matchedClasses,
+            final Set<Edge> missingEdges) {
 
         if (startIndex >= pattern.getEdges().size()) {
             // The detecting process is completed
@@ -82,8 +83,8 @@ public class Matcher {
             }
 
             // Should not occur. The search should be stopped before.
-            LOGGER.warn("Unexpected situation in DesignPattern#recursiveMatch(). " +
-                    "Value of maxNotMatchable = " + maxNotMatchable);
+            LOGGER.warn("Unexpected situation in DesignPattern#recursiveMatch(). "
+                    + "Value of maxNotMatchable = " + maxNotMatchable);
             return false;
         }
 
@@ -126,7 +127,8 @@ public class Matcher {
                         system,
                         maxNotMatchable,
                         startIndex + 1,
-                        copyMatchedClasses, missingEdges);
+                        copyMatchedClasses,
+                        missingEdges);
                 found = found || foundRecursively;
 
                 // Unlock all locked edges, including the multiple inherited ones
@@ -136,7 +138,7 @@ public class Matcher {
                 }
 
                 if (found && extraMatched.size() > 0) {
-                    // In case of inheritance with multiple children, all matching edges has been found.
+                    // In case of inheritance with multiple children, all matching edges have been found.
                     // Therefore searching for more edges may be stopped.
                     j = system.getEdges().size();
                 }
@@ -171,10 +173,10 @@ public class Matcher {
      * @return feedback information about the detected design pattern
      */
     private Solution createSolution(
-            DesignPattern pattern,
-            SystemUnderConsideration system,
-            MatchedClasses matchedClasses,
-            Set<Edge> missingEdges) {
+            final DesignPattern pattern,
+            final SystemUnderConsideration system,
+            final MatchedClasses matchedClasses,
+            final Set<Edge> missingEdges) {
 
         // Pattern name
         final String dpName = pattern.getName();
@@ -201,7 +203,7 @@ public class Matcher {
      * @param system the "system under consideration"
      * @return the prepared {@link MatchedClasses} instance.
      */
-    private MatchedClasses prepareMatchedClasses(SystemUnderConsideration system) {
+    private MatchedClasses prepareMatchedClasses(final SystemUnderConsideration system) {
         MatchedClasses matchedClasses = new MatchedClasses();
         system.getEdges().forEach(edge -> matchedClasses.prepareMatch(edge));
         return matchedClasses;
@@ -212,7 +214,7 @@ public class Matcher {
      *
      * @param edges the {@link Edge}s to lock.
      */
-    private void lockEdges(Edge... edges) {
+    private void lockEdges(final Edge... edges) {
         Arrays.asList(edges).forEach(edge -> edge.lock());
     }
 
@@ -221,7 +223,7 @@ public class Matcher {
      *
      * @param edges the {@link Edge}s to unlock.
      */
-    private void unlockEdges(Edge... edges) {
+    private void unlockEdges(final Edge... edges) {
         Arrays.asList(edges).forEach(edge -> edge.unlock());
     }
 }

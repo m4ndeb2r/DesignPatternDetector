@@ -15,7 +15,7 @@ along with a third argument, the maximum number of allowed missing edges
 
 With -n 0 the application is very strict when detecting patterns. With higher values
 it is less strict, and accepts n missing edges in detected patterns. Typical values 
-for -n are 0 (strict)or 1 (not so strict).
+for -n are 0 (strict) or 1 (not so strict).
 
 ## Current version
 The current version is a JavaFX application with a graphic userinterface. 
@@ -41,9 +41,12 @@ the application will attempt to detect design patterns defined in templates file
 
 Save the project via *File > Save* or *File > Save as*. Saved projects can be re-opened via *File > Open*.
 
+For info, warning and error messages, see the log files that are also new in the new application. Older log files
+are stored as *.gz files in subdirectories named after the date of creation.
+
 ## Working on ...
 We are currently working on:
-* unittests
+* unittests (on-going)
 * documentation
 * refactoring
 * perfection of the user-friendly GUI
@@ -75,4 +78,4 @@ Build tool: Maven 3.3.9 (Bundled with IntelliJ)
 
 Compiler: jdk1.8.0_121
 
-JavaFX SceneBuilder 2.0 for Mac OSX
+JavaFX SceneBuilder 2.0

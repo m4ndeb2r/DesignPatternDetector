@@ -35,8 +35,6 @@ import java.util.Set;
 
 /**
  * A {@link Controller} for the project view of the application.
- * <p>
- * TODO: this should not be a singleton, but there should also not be multiple instance of this class!! Fix it in the ControllerFactoryCreator if possible.
  *
  * @author Martin de Boer
  */
@@ -91,28 +89,12 @@ public class ProjectViewController extends Controller implements Observer {
 
     private Map<String, Solution> feedbackMap;
 
-    // Singleton
-    private static ProjectViewController instance = null;
-
     /**
-     * Returns the single instance of this class, or creates it if it does not exist.
-     *
-     * @param model the {@link Model} this controller updates
-     * @return the singleton instance of the {@link ProjectViewController}.
-     */
-    public static ProjectViewController getInstance(Model model) {
-        if (instance == null) {
-            instance = new ProjectViewController(model);
-        }
-        return instance;
-    }
-
-    /**
-     * A private constructor because the {@link ProjectViewController} is a singleton.
+     * Constructs a {@link ProjectViewController} with the specified {@link Model}.
      *
      * @param model the model of the MVC pattern
      */
-    private ProjectViewController(Model model) {
+    public ProjectViewController(Model model) {
         super(model);
         model.addObserver(this);
     }
@@ -257,25 +239,25 @@ public class ProjectViewController extends Controller implements Observer {
             clearGridPane(feedbackMatchedClassesGridPane);
             int row = 0;
             final MatchedClasses matchedClasses = solution.getMatchedClasses();
-            feedbackMatchedClassesGridPane.add(new Text("System class"), 0, row);
+            feedbackMatchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
+            feedbackMatchedClassesGridPane.add(new Text("System class"), 2, row);
             feedbackMatchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: 600");
-            feedbackMatchedClassesGridPane.add(new Text("Design pattern class"), 2, row);
             feedbackMatchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: 600");
             for (Clazz cls : matchedClasses.getBoundSystemClassesSorted()) {
                 int col = 0;
                 row++;
-                feedbackMatchedClassesGridPane.add(new Text(cls.getName()), col++, row);
+                feedbackMatchedClassesGridPane.add(new Text(matchedClasses.get(cls).getName()), col++, row);
                 feedbackMatchedClassesGridPane.add(new Text("-->"), col++, row);
-                feedbackMatchedClassesGridPane.add(new Text(matchedClasses.get(cls).getName()), col, row);
+                feedbackMatchedClassesGridPane.add(new Text(cls.getName()), col, row);
             }
 
             // Show superfluous edges
-            feedbackSuperfluousEdgesLabel.setText("Edges that do not belong to the design pattern");
+            feedbackSuperfluousEdgesLabel.setText("Relations that do not belong to the design pattern");
             clearGridPane(feedbackSuperfluousEdgesGridPane);
             row = 0;
             final Set<Edge> superfluousEdges = solution.getSuperfluousEdges();
             if (superfluousEdges.size() == 0) {
-                feedbackSuperfluousEdgesGridPane.add(new Text("No superfluous edges found."), 0, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text("No superfluous relations found."), 0, row);
             }
             for (Edge edge : superfluousEdges) {
                 int col = 0;
@@ -286,12 +268,12 @@ public class ProjectViewController extends Controller implements Observer {
             }
 
             // Show missing edges
-            feedbackMissingEdgesLabel.setText("Missing edges");
+            feedbackMissingEdgesLabel.setText("Missing relations");
             clearGridPane(feedbackMissingEdgesGridPane);
             row = 0;
             final Set<Edge> missingEdges = solution.getMissingEdges();
             if (missingEdges.size() == 0) {
-                feedbackMissingEdgesGridPane.add(new Text("No missing edges found."), 0, row);
+                feedbackMissingEdgesGridPane.add(new Text("No missing relations found."), 0, row);
             }
             for (Edge edge : missingEdges) {
                 int col = 0;
