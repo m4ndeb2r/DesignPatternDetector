@@ -105,7 +105,7 @@ public final class Matcher {
                 missingEdges.remove(patternEdge);
                 lockEdges(patternEdge, systemEdge);
 
-                if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
+                if (patternEdge.getRelationType() == EdgeType.INHERITANCE_MULTI) {
                     // There may be more edges of se that contain an inheritance to the same parent and
                     // have unmatched children
                     for (int k = j + 1; k < system.getEdges().size(); k++) {

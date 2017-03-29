@@ -125,7 +125,7 @@ public class TemplatesParserTest {
     private void assertEdge(Edge edge, String class1, String class2, EdgeType edgeType) {
         assertThat(edge.getClass1().getName(), is(class1));
         assertThat(edge.getClass2().getName(), is(class2));
-        assertThat(edge.getTypeRelation(), is(edgeType));
+        assertThat(edge.getRelationType(), is(edgeType));
         assertThat(edge.isSelfRef(), is(false));
         assertThat(edge.isVirtual(), is(false));
         assertThat(edge.isLocked(), is(false));
