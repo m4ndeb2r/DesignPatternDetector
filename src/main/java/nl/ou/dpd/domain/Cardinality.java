@@ -11,7 +11,7 @@ package nl.ou.dpd.domain;
  *
  */
 public class Cardinality {
-	public int INFINITY = -1;
+	public static final int INFINITY = -1;
 	public int lower, upper;
 	
 	/**
