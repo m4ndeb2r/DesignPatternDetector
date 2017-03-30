@@ -2,6 +2,7 @@ package nl.ou.dpd.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -24,15 +25,17 @@ public class Clazz implements Comparable<Clazz> {
      */
     public static final Clazz EMPTY_CLASS = new Clazz("");
     
-
+    public enum ClassType {CLASS, INTERFACE};
+    public enum Visibility {PUBLIC, PROTECTED, PACKAGE, PRIVATE};
+    
     private final String id;
     private final String name;
-    private ClazzConstant objecttype;
-    private ArrayList<Attribute> attributes;
-    private HashMap<ClazzConstant, Boolean> modifiers;
-    private ClazzConstant visibility;
-  
+    private ClassType classType;
 
+    private List<Attribute> attributes;
+    private HashMap<ClazzConstant, Boolean> modifiers;
+    private Visibility visibility;
+    
     /**
      * Constructs a {@link Class} instance with the specified {@code name}.
      *
@@ -52,10 +55,10 @@ public class Clazz implements Comparable<Clazz> {
     public Clazz(final String id, final String name) {
         this.id = id;
         this.name = name;
-        this.objecttype = ClazzConstant.TYPE_NOTSET;
+        this.classType = null;
         this.attributes = new ArrayList<Attribute>();
         this.modifiers = initializeModifiers();
-        this.visibility = ClazzConstant.VISIBILITY_NOTSET;        
+        this.visibility = null;        
     }
 
     /**
@@ -94,8 +97,8 @@ public class Clazz implements Comparable<Clazz> {
      *
      * @return the classtype
      */
-    public ClazzConstant getObjecttype() {
-        return objecttype;
+    public ClassType getClassType() {
+        return classType;
     }
 
     /**
@@ -103,8 +106,8 @@ public class Clazz implements Comparable<Clazz> {
      *
      * @param the classtype
      */
-    public void setObjecttype(ClazzConstant type) {
-        this.objecttype =  type;
+    public void setClassType(ClassType type) {
+        this.classType =  type;
     }
     
     /**
@@ -112,7 +115,7 @@ public class Clazz implements Comparable<Clazz> {
      *
      * @return the visibility
      */
-    public ClazzConstant getVisibility() {
+    public Visibility getVisibility() {
         return visibility;
     }
 
@@ -121,7 +124,7 @@ public class Clazz implements Comparable<Clazz> {
      *
      * @param the visibility
      */
-    public void setVisibility(ClazzConstant visibility) {
+    public void setVisibility(Visibility visibility) {
         this.visibility =  visibility;
     }
 
@@ -170,7 +173,7 @@ public class Clazz implements Comparable<Clazz> {
      *
      * @return the attributes of the class
      */
-    public ArrayList<Attribute> getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 

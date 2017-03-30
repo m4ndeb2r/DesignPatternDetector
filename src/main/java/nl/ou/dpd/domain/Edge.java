@@ -19,10 +19,11 @@ public class Edge {
     private Clazz classInterface1, classInterface2;
     private EdgeType relationType;
     private boolean selfRef, locked, virtual;
-    private Cardinality cardinality_front = null; //cardinality on classInterface1
-    private Cardinality cardinality_end = null; //cardinality on classInterface2
+    private Cardinality cardinalityFront = null; //cardinality on classInterface1
+    private Cardinality cardinalityEnd = null; //cardinality on classInterface2
 
     /**
+     * 
      * Constructs an instance of a {@link Edge} with the specified class names and edge type. The classes
      * represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type represents
      * the relation type between the classes.
@@ -181,11 +182,11 @@ public class Edge {
      * @param upper
      */
     public void setCardinality_front(int lower, int upper) {
-    	if (cardinality_front == null) {
-            cardinality_front = new Cardinality(lower, upper);
+    	if (cardinalityFront == null) {
+            cardinalityFront = new Cardinality(lower, upper);
     	} else {
-    		cardinality_front.lower = lower;
-    		cardinality_front.upper = upper;    		
+    		cardinalityFront.lower = lower;
+    		cardinalityFront.upper = upper;    		
     	}
     }
     
@@ -195,11 +196,11 @@ public class Edge {
      * @param upper
      */
     public void setCardinality_end(int lower, int upper) {
-    	if (cardinality_end == null) {
-            cardinality_end = new Cardinality(lower, upper);
+    	if (cardinalityEnd == null) {
+            cardinalityEnd = new Cardinality(lower, upper);
     	} else {
-    		cardinality_end.lower = lower;
-    		cardinality_end.upper = upper;    		
+    		cardinalityEnd.lower = lower;
+    		cardinalityEnd.upper = upper;    		
     	}
     }
  
@@ -208,7 +209,7 @@ public class Edge {
      * @return the cardinality
      */
     public Cardinality getCardinality_front() {
-    	return cardinality_front;
+    	return cardinalityFront;
     }
     
     /**
@@ -216,7 +217,7 @@ public class Edge {
      * @return the cardinality
      */
     public Cardinality getCardinality_end() {
-    	return cardinality_end;
+    	return cardinalityEnd;
     }
     
     /**
@@ -224,7 +225,7 @@ public class Edge {
      * @return the cardinality
      */
     public void removeCardinality_front() {
-    	cardinality_front = null;
+    	cardinalityFront = null;
     }
     
     /**
@@ -232,7 +233,7 @@ public class Edge {
      * @return the cardinality
      */
     public void removeCardinality_end() {
-    	cardinality_end = null;
+    	cardinalityEnd = null;
     }
     /**
      * {@inheritDoc}

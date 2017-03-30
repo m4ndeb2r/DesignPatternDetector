@@ -7,7 +7,8 @@ package nl.ou.dpd.domain;
  * @author Peter Vansweevelt
  */
 public enum ClazzConstant {
-	
+
+	/*
 	//type of the class
 	TYPE_NOTSET,
     TYPE_CLASS,
@@ -19,7 +20,7 @@ public enum ClazzConstant {
     VISIBILITY_PACKAGE,
     VISIBILITY_PROTECTED,
     VISIBILITY_PRIVATE,
-    
+*/    
     //modifiers.Can be set as boolean values
     MODIFIER_ISROOT,
     MODIFIER_ISLEAF,
@@ -31,7 +32,7 @@ public enum ClazzConstant {
     TOPIC_RELATION,
     TOPIC_OBJECT,
     TOPIC_ATTRIBUTE,
-    
+/*    
     //operators used in the Rules
     OP_NOTSET,
     OP_EQUALS,
@@ -43,5 +44,5 @@ public enum ClazzConstant {
     TARGET_VISIBILITY,
     TARGET_MODIFIER,
     TARGET_CARDINALITY
-    
+*/    
 }

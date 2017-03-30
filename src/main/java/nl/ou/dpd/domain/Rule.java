@@ -10,13 +10,15 @@ import java.util.Map;
  */
 public class Rule {
 	
+	public enum Operator {EQUALS, EXISTS};
+	public enum Target {TYPE, VISISBILITY, MODIFIER, CARDINALITY};
+
 	private final Clazz rulenode;
 	private final Edge ruleedge;
+	private Operator operator;
+	private Target target;
 	private ClazzConstant topic;
 //	private ClazzConstant rulenodetype;
-	private ClazzConstant operator;
-	private ClazzConstant target;
-	
 	 /**
      * Creates a rule with the {@link Clazz} node that implements the features needed to apply the rule.
      *
@@ -25,18 +27,18 @@ public class Rule {
 	public Rule(Clazz node) {
 		this.rulenode = node;
 		this.ruleedge = null;
-		setTopic(ClazzConstant.OP_NOTSET);
-		setOperator(ClazzConstant.OP_NOTSET);
-		setTarget(ClazzConstant.TARGET_NOTSET); //holds the feature to be evaluated
+		setTopic(null);
+		setOperator(null);
+		setTarget(null); //holds the feature to be evaluated
 		//		rulenodetype = node.getType();
 	}
 
 	public Rule(Edge edge) {
 		this.ruleedge = edge;
 		this.rulenode = null;
-		setTopic(ClazzConstant.OP_NOTSET);
-		setOperator(ClazzConstant.OP_NOTSET);
-		setTarget(ClazzConstant.TARGET_NOTSET); //holds the feature to be evaluated
+		setTopic(null);
+		setOperator(null);
+		setTarget(null); //holds the feature to be evaluated
 		//		rulenodetype = node.getType();
 	}
 
@@ -52,7 +54,7 @@ public class Rule {
 	 * Sets the operator of the {@link Rule}.
 	 * @param operator the desired operation of the rule. 
 	 */
-	private void setOperator(ClazzConstant operator) {
+	private void setOperator(Operator operator) {
 		this.operator = operator;
 	}
 	
@@ -60,7 +62,7 @@ public class Rule {
 	 * Sets the target of the {@link Rule}.
 	 * @param target of the rule. 
 	 */
-	private void setTarget(ClazzConstant target) {
+	private void setTarget(Target target) {
 		this.target = target;
 	}
 	
@@ -79,13 +81,13 @@ public class Rule {
 		//we always inspect a node of a given class-type
 		if (systemnode.getName().equalsIgnoreCase(rulenode.getName()) ) {
 			if (topic == ClazzConstant.TOPIC_OBJECT) {
-				if (target == ClazzConstant.TARGET_TYPE) {
-					return systemnode.getObjecttype() == rulenode.getObjecttype();
+				if (target == Target.TYPE) {					
+					return systemnode.getClassType() == rulenode.getClassType();
 				}
-				if (target == ClazzConstant.TARGET_VISIBILITY) {
+				if (target == Target.VISISBILITY) {
 					return systemnode.getVisibility() == rulenode.getVisibility();
 				}
-				if (target == ClazzConstant.TARGET_MODIFIER) {
+				if (target == Target.MODIFIER) {
 					for (Map.Entry<ClazzConstant, Boolean> me : rulenode.getModifiers().entrySet()) {
 						if (me.getValue() != null) {					//the value is set
 							if (systemnode.getModifierStatus(me.getKey()) != me.getValue()) {
@@ -111,12 +113,12 @@ public class Rule {
 /* this condition supposes an name-attribute in the edge-class as well as a cardinality	*/
 		if (systemedge.getName().equalsIgnoreCase(ruleedge.getName()) ) {
 			if (topic == ClazzConstant.TOPIC_RELATION) {
-				if (target == ClazzConstant.TARGET_TYPE) {
+				if (target == Target.TYPE) {
 					return systemedge.getRelationType() == ruleedge.getRelationType();
 				}
 			}
 			if (topic == ClazzConstant.TOPIC_OBJECT) {
-				if (target == ClazzConstant.TARGET_CARDINALITY) {
+				if (target == Target.CARDINALITY) {
 				}
 					boolean front = systemedge.getCardinality_front() == ruleedge.getCardinality_front();
 					boolean end = systemedge.getCardinality_end() == ruleedge.getCardinality_end();
