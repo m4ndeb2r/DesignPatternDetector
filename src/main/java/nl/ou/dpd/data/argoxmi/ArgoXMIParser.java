@@ -1,9 +1,9 @@
 package nl.ou.dpd.data.argoxmi;
 
 import nl.ou.dpd.data.parser.Parser;
-import nl.ou.dpd.domain.Clazz;
-import nl.ou.dpd.domain.Edge;
-import nl.ou.dpd.domain.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.apache.logging.log4j.LogManager;

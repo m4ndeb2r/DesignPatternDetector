@@ -1,4 +1,9 @@
-package nl.ou.dpd.domain;
+package nl.ou.dpd.domain.edge;
+
+import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.node.Node;
 
 import java.util.Objects;
 
@@ -15,92 +20,93 @@ import java.util.Objects;
 
 public class Edge {
 
-	private String name;
-    private Clazz classInterface1, classInterface2;
+    private String name;
+    private Node node1, node2;
     private EdgeType relationType;
     private boolean selfRef, locked, virtual;
-    private Cardinality cardinalityFront = null; //cardinality on classInterface1
-    private Cardinality cardinalityEnd = null; //cardinality on classInterface2
+    private Cardinality cardinalityFront = null; //cardinality on node1
+    private Cardinality cardinalityEnd = null; //cardinality on node2
 
     /**
-     * 
      * Constructs an instance of a {@link Edge} with the specified class names and edge type. The classes
      * represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type represents
      * the relation type between the classes.
      *
-     * @param cl1  the "left" class or interface in the relation
-     * @param cl2  the "right" class or interface in the relation
+     * @param node1  the "left" class or interface in the relation
+     * @param node2  the "right" class or interface in the relation
      * @param type the type of relation
      */
-    public Edge(Clazz cl1, Clazz cl2, EdgeType type) {
-        classInterface1 = cl1;
-        classInterface2 = cl2;
+    public Edge(Node node1, Node node2, EdgeType type) {
+        this.node1 = node1;
+        this.node2 = node2;
         relationType = type;
-        selfRef = cl1.equals(cl2);
+        selfRef = node1.equals(node2);
         locked = false;
         virtual = false;
     }
 
 
     /**
-     * Constructs an instance of a {@link Edge} with the specified class names, edge type and a name of the edge. The classes
-     * represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type represents
-     * the relation type between the classes.
+     * Constructs an instance of a {@link Edge} with the specified class names, edge type and a name of the edge. The
+     * nodes represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type
+     * represents the relation type between the nodes.
      *
-     * @param cl1  the "left" class or interface in the relation
-     * @param cl2  the "right" class or interface in the relation
+     * @param node1  the "left" class or interface in the relation
+     * @param node2  the "right" class or interface in the relation
      * @param type the type of relation
-     * @param name the name of the edge. Recommended as being unique (in a pattern). 
+     * @param name the name of the edge. Recommended as being unique (in a pattern).
      */
-    public Edge(Clazz cl1, Clazz cl2, EdgeType type, String name) {
-    	this.name = name;
-        classInterface1 = cl1;
-        classInterface2 = cl2;
+    public Edge(Node node1, Node node2, EdgeType type, String name) {
+        this.name = name;
+        this.node1 = node1;
+        this.node2 = node2;
         relationType = type;
-        selfRef = cl1.equals(cl2);
+        selfRef = node1.equals(node2);
         locked = false;
         virtual = false;
     }
 
-/**
+    /**
      * This constructor returns a duplicate of the specified {@link Edge}.
      *
      * @param edge an {@link Edge} to construct a duplicate of.
      */
     public Edge(Edge edge) {
-        this(edge.classInterface1, edge.classInterface2, edge.relationType);
+        this(edge.node1, edge.node2, edge.relationType);
         locked = edge.locked;
     }
 
     /**
      * Creates a virtual (none-visible) counterpart of a {@link Edge}.
      */
-    void makeVirtual() {
-        Clazz tmp;
+    public void makeVirtual() {
+        Node tmp;
 
-        tmp = classInterface1;
-        classInterface1 = classInterface2;
-        classInterface2 = tmp;
+        tmp = node1;
+        node1 = node2;
+        node2 = tmp;
 
         virtual = true;
     }
 
     /**
      * Set the name of this edge.
+     *
      * @param name
      */
     public void setName(String name) {
-    	this.name = name;
+        this.name = name;
     }
-    
+
     /**
      * Set the name of this edge.
+     *
      * @return name
      */
     public String getName() {
-    	return name;
-    }    
-    
+        return name;
+    }
+
     /**
      * Indicates whether or not this {@link Edge} is virtual (non-visible).
      *
@@ -115,7 +121,7 @@ public class Edge {
      *
      * @return {@code true} if the lock succeeded, or {@code false} otherwise.
      */
-    boolean lock() {
+    public boolean lock() {
         this.locked = true;
         return isLocked();
     }
@@ -125,7 +131,7 @@ public class Edge {
      *
      * @return {@code true} if unlocking succeeded, or {@code false} otherwise.
      */
-    boolean unlock() {
+    public boolean unlock() {
         this.locked = false;
         return !isLocked();
     }
@@ -140,25 +146,25 @@ public class Edge {
     }
 
     /**
-     * Returns the first class/interface.
+     * Returns the first {@link Node}.
      *
-     * @return the first class/interface.
+     * @return the first {@link Node}.
      */
-    public Clazz getClass1() {
-        return classInterface1;
+    public Node getNode1() {
+        return node1;
     }
 
     /**
-     * Returns the second class/interface.
+     * Returns the second {@link Node}.
      *
-     * @return the second class/interface.
+     * @return the second {@link Node}.
      */
-    public Clazz getClass2() {
-        return classInterface2;
+    public Node getNode2() {
+        return node2;
     }
 
     /**
-     * Returns the type of relation between the first and the second class/interface.
+     * Returns the type of relation between the first and the second {@link Node}.
      *
      * @return the edge type.
      */
@@ -167,7 +173,7 @@ public class Edge {
     }
 
     /**
-     * Returns whether this edge references to itself. In that case the first and the second class/inteface are the
+     * Returns whether this edge references to itself. In that case the first and the second {@link Node} are the
      * same.
      *
      * @return {@code true} if this edge references itself, or {@code false} otherwise.
@@ -177,66 +183,71 @@ public class Edge {
     }
 
     /**
-     * Set the cardinality of classinterface1. 
-     * @param lower
-     * @param upper
+     * Set the cardinality of {@link #node1}.
+     *
+     * @param lower the lower cardinality value
+     * @param upper the upper cardinality value
      */
     public void setCardinality_front(int lower, int upper) {
-    	if (cardinalityFront == null) {
+        if (cardinalityFront == null) {
             cardinalityFront = new Cardinality(lower, upper);
-    	} else {
-    		cardinalityFront.lower = lower;
-    		cardinalityFront.upper = upper;    		
-    	}
+        } else {
+            cardinalityFront.lower = lower;
+            cardinalityFront.upper = upper;
+        }
     }
-    
+
     /**
-     * Set the cardinality of classinterface1. 
-     * @param lower
-     * @param upper
+     * Set the cardinality of {@link #node2}.
+     *
+     * @param lower the lower cardinality value
+     * @param upper the upper cardinality value
      */
     public void setCardinality_end(int lower, int upper) {
-    	if (cardinalityEnd == null) {
+        if (cardinalityEnd == null) {
             cardinalityEnd = new Cardinality(lower, upper);
-    	} else {
-    		cardinalityEnd.lower = lower;
-    		cardinalityEnd.upper = upper;    		
-    	}
+        } else {
+            cardinalityEnd.lower = lower;
+            cardinalityEnd.upper = upper;
+        }
     }
- 
+
     /**
-     * Get the cardinality of classinterface1. 
+     * Get the cardinality of classinterface1.
+     *
      * @return the cardinality
      */
-    public Cardinality getCardinality_front() {
-    	return cardinalityFront;
+    public Cardinality getCardinalityFront() {
+        return cardinalityFront;
     }
-    
+
     /**
-     * Get the cardinality of classinterface1. 
+     * Get the cardinality of classinterface1.
+     *
      * @return the cardinality
      */
-    public Cardinality getCardinality_end() {
-    	return cardinalityEnd;
+    public Cardinality getCardinalityEnd() {
+        return cardinalityEnd;
     }
-    
+
     /**
-     * Remove the cardinality of classinterface1. 
-     * @return the cardinality
+     * Remove the cardinality of classinterface1.
      */
-    public void removeCardinality_front() {
-    	cardinalityFront = null;
+    public void removeCardinalityFront() {
+        cardinalityFront = null;
     }
-    
+
     /**
-     * Remove the cardinality of classinterface1. 
-     * @return the cardinality
+     * Remove the cardinality of classinterface1.
      */
-    public void removeCardinality_end() {
-    	cardinalityEnd = null;
+    public void removeCardinalityEnd() {
+        cardinalityEnd = null;
     }
+
     /**
      * {@inheritDoc}
+     *
+     * TODO: generate a new one? Cardinality is not included. Shouldn't that be included?
      */
     @Override
     public boolean equals(Object o) {
@@ -249,8 +260,8 @@ public class Edge {
         Edge edge = (Edge) o;
         return selfRef == edge.selfRef
                 && virtual == edge.virtual
-                && Objects.equals(classInterface1, edge.classInterface1)
-                && Objects.equals(classInterface2, edge.classInterface2)
+                && Objects.equals(node1, edge.node1)
+                && Objects.equals(node2, edge.node2)
                 && relationType == edge.relationType;
     }
 
@@ -259,6 +270,6 @@ public class Edge {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(classInterface1, classInterface2, relationType, selfRef, virtual);
+        return Objects.hash(node1, node2, relationType, selfRef, virtual);
     }
 }

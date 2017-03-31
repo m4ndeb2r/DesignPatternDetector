@@ -1,5 +1,7 @@
-package nl.ou.dpd.domain;
+package nl.ou.dpd.domain.edge;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Test;
 
