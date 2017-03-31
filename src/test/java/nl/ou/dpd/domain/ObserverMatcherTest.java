@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,9 +48,9 @@ public class ObserverMatcherTest {
         final Solution s1 = solutions.get(1);
         final Solution s2 = solutions.get(2);
 
-        final MatchedClasses mc0 = s0.getMatchedClasses();
-        final MatchedClasses mc1 = s1.getMatchedClasses();
-        final MatchedClasses mc2 = s2.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
+        final MatchedNodes mc1 = s1.getMatchedNodes();
+        final MatchedNodes mc2 = s2.getMatchedNodes();
 
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> se1 = s1.getSuperfluousEdges();

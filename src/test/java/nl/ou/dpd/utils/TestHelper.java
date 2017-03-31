@@ -1,9 +1,9 @@
 package nl.ou.dpd.utils;
 
-import nl.ou.dpd.domain.Clazz;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.domain.Edge;
-import nl.ou.dpd.domain.EdgeType;
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 
 import java.util.ArrayList;

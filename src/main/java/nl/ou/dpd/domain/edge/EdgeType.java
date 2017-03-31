@@ -1,4 +1,4 @@
-package nl.ou.dpd.domain;
+package nl.ou.dpd.domain.edge;
 
 /**
  * An enumeration for all edge types (types of relations between classes) in a graph (class diagram).

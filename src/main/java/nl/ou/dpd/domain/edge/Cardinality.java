@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.ou.dpd.domain;
+package nl.ou.dpd.domain.edge;
 
 /**
  * A Class representing the cardinality of a relation end.

@@ -1,5 +1,6 @@
-package nl.ou.dpd.domain;
+package nl.ou.dpd.domain.node;
 
+import nl.ou.dpd.domain.node.Clazz;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertFalse;

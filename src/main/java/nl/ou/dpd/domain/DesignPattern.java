@@ -1,5 +1,9 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.Edges;
+import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.node.Node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,10 +84,10 @@ public class DesignPattern extends Edges {
      * @return {@code true} if the edges are connected, or {@code false} otherwise
      */
     private boolean areEdgesConnected(Edge edge1, Edge edge2) {
-        final Clazz v1 = edge1.getClass1();
-        final Clazz v2 = edge1.getClass2();
-        final Clazz v3 = edge2.getClass1();
-        final Clazz v4 = edge2.getClass2();
+        final Node v1 = edge1.getNode1();
+        final Node v2 = edge1.getNode2();
+        final Node v3 = edge2.getNode1();
+        final Node v4 = edge2.getNode2();
         return v1.equals(v3) || v1.equals(v4) || v2.equals(v3) || v2.equals(v4);
     }
 
