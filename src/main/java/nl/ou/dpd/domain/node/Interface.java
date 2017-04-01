@@ -45,6 +45,6 @@ public class Interface extends Node {
      *                 undefined
      */
     public Interface(String id, String name, Boolean isRoot, Boolean isLeaf, Boolean isActive) {
-        super(id, name, NodeType.INTERFACE, Visibility.PUBLIC, isRoot, isLeaf, true, isActive);
+        super(id, name, NodeType.INTERFACE, Visibility.PUBLIC, null, isRoot, isLeaf, true, isActive);
     }
 }

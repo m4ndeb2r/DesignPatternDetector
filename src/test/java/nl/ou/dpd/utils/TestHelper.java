@@ -471,7 +471,7 @@ public class TestHelper {
      * @return the created {@link Clazz}
      */
     public static Clazz createAbstractClazz(String name) {
-        return new Clazz(name, name, Visibility.PUBLIC, false, false, true, false);
+        return new Clazz(name, name, Visibility.PUBLIC, null, false, false, true, false);
     }
 
     /**
@@ -481,7 +481,7 @@ public class TestHelper {
      * @return the created {@link Clazz}
      */
     public static Clazz createClazz(String name) {
-        return new Clazz(name, name, Visibility.PUBLIC, false, false, false, false);
+        return new Clazz(name, name, Visibility.PUBLIC, null, false, false, false, false);
     }
 
 }

@@ -2,7 +2,6 @@ package nl.ou.dpd.domain.edge;
 
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.node.Node;
 
 import java.util.Objects;
@@ -24,25 +23,27 @@ public class Edge {
     private Node node1, node2;
     private EdgeType relationType;
     private boolean selfRef, locked, virtual;
-    private Cardinality cardinalityFront = null; //cardinality on node1
-    private Cardinality cardinalityEnd = null; //cardinality on node2
+    private Cardinality cardinalityFront; //cardinality on node1
+    private Cardinality cardinalityEnd; //cardinality on node2
 
     /**
      * Constructs an instance of a {@link Edge} with the specified class names and edge type. The classes
      * represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type represents
      * the relation type between the classes.
      *
-     * @param node1  the "left" class or interface in the relation
-     * @param node2  the "right" class or interface in the relation
-     * @param type the type of relation
+     * @param node1 the "left" class or interface in the relation
+     * @param node2 the "right" class or interface in the relation
+     * @param type  the type of relation
      */
     public Edge(Node node1, Node node2, EdgeType type) {
         this.node1 = node1;
         this.node2 = node2;
-        relationType = type;
-        selfRef = node1.equals(node2);
-        locked = false;
-        virtual = false;
+        this.relationType = type;
+        this.selfRef = node1.equals(node2);
+        this.locked = false;
+        this.virtual = false;
+        this.cardinalityFront = null;
+        this.cardinalityEnd = null;
     }
 
 
@@ -51,19 +52,14 @@ public class Edge {
      * nodes represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type
      * represents the relation type between the nodes.
      *
-     * @param node1  the "left" class or interface in the relation
-     * @param node2  the "right" class or interface in the relation
-     * @param type the type of relation
-     * @param name the name of the edge. Recommended as being unique (in a pattern).
+     * @param node1 the "left" class or interface in the relation
+     * @param node2 the "right" class or interface in the relation
+     * @param type  the type of relation
+     * @param name  the name of the edge. Recommended as being unique (in a pattern).
      */
     public Edge(Node node1, Node node2, EdgeType type, String name) {
+        this(node1, node2, type);
         this.name = name;
-        this.node1 = node1;
-        this.node2 = node2;
-        relationType = type;
-        selfRef = node1.equals(node2);
-        locked = false;
-        virtual = false;
     }
 
     /**
@@ -72,8 +68,11 @@ public class Edge {
      * @param edge an {@link Edge} to construct a duplicate of.
      */
     public Edge(Edge edge) {
-        this(edge.node1, edge.node2, edge.relationType);
-        locked = edge.locked;
+        this(edge.node1, edge.node2, edge.relationType, edge.name);
+        this.cardinalityFront = edge.cardinalityFront;
+        this.cardinalityEnd = edge.cardinalityEnd;
+        this.locked = edge.locked;
+        this.virtual = edge.virtual;
     }
 
     /**
@@ -188,13 +187,8 @@ public class Edge {
      * @param lower the lower cardinality value
      * @param upper the upper cardinality value
      */
-    public void setCardinality_front(int lower, int upper) {
-        if (cardinalityFront == null) {
-            cardinalityFront = new Cardinality(lower, upper);
-        } else {
-            cardinalityFront.lower = lower;
-            cardinalityFront.upper = upper;
-        }
+    public void setCardinalityFront(int lower, int upper) {
+        this.cardinalityFront = new Cardinality(lower, upper);
     }
 
     /**
@@ -203,13 +197,8 @@ public class Edge {
      * @param lower the lower cardinality value
      * @param upper the upper cardinality value
      */
-    public void setCardinality_end(int lower, int upper) {
-        if (cardinalityEnd == null) {
-            cardinalityEnd = new Cardinality(lower, upper);
-        } else {
-            cardinalityEnd.lower = lower;
-            cardinalityEnd.upper = upper;
-        }
+    public void setCardinalityEnd(int lower, int upper) {
+        this.cardinalityEnd = new Cardinality(lower, upper);
     }
 
     /**
@@ -231,45 +220,51 @@ public class Edge {
     }
 
     /**
-     * Remove the cardinality of classinterface1.
+     * Remove the cardinality of {@link #node1}.
      */
     public void removeCardinalityFront() {
         cardinalityFront = null;
     }
 
     /**
-     * Remove the cardinality of classinterface1.
+     * Remove the cardinality of {@link #node2}.
      */
     public void removeCardinalityEnd() {
         cardinalityEnd = null;
     }
 
+
     /**
-     * {@inheritDoc}
+     * Checks if the specified {@link Object} equals this {@link Edge}. The attrbute {@link #locked} is omitted in the
+     * check, and is therefore irrelevant.
      *
-     * TODO: generate a new one? Cardinality is not included. Shouldn't that be included?
+     * @param o an {@link Edge} object to comapre with this one
+     * @return {@code true} if {@code o} equals this {@link Edge} (omitting the {@link #locked} attribute, or
+     * {@code false} otherwise.
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Edge edge = (Edge) o;
-        return selfRef == edge.selfRef
-                && virtual == edge.virtual
-                && Objects.equals(node1, edge.node1)
-                && Objects.equals(node2, edge.node2)
-                && relationType == edge.relationType;
+        return selfRef == edge.selfRef &&
+                virtual == edge.virtual &&
+                Objects.equals(name, edge.name) &&
+                Objects.equals(node1, edge.node1) &&
+                Objects.equals(node2, edge.node2) &&
+                relationType == edge.relationType &&
+                Objects.equals(cardinalityFront, edge.cardinalityFront) &&
+                Objects.equals(cardinalityEnd, edge.cardinalityEnd);
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a hashcode for this object, based on all the attributes, except {@link #locked}.
+     *
+     * @return the generated hashcode
      */
     @Override
     public int hashCode() {
-        return Objects.hash(node1, node2, relationType, selfRef, virtual);
+        return Objects.hash(name, node1, node2, relationType, selfRef, virtual, cardinalityFront, cardinalityEnd);
     }
+
 }

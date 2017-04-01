@@ -41,6 +41,7 @@ public abstract class Node implements Comparable<Node> {
      * @param name       the name of this {@link Node}
      * @param type       the type of this {@link Node}: class, abstract class or interface
      * @param visibility the visibility of this node (access modifiers: public, protected, package or private)
+     * @param attributes a list of attributes
      * @param isRoot     {@code true} is this {@link Node} is a root node, {@code false} if not, or {@code null} if
      *                   undefined
      * @param isLeaf     {@code true} is this {@link Node} is a leaf node, {@code false} if not, or {@code null} if
@@ -49,16 +50,21 @@ public abstract class Node implements Comparable<Node> {
      *                   {@code null} if undefined
      * @param isActive   {@code true} is this {@link Node} is active, {@code false} if not, or {@code null} if undefined
      */
-    protected Node(String id, String name, NodeType type, Visibility visibility, Boolean isRoot, Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
+    protected Node(String id, String name, NodeType type, Visibility visibility, List<Attribute> attributes,
+                   Boolean isRoot, Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.visibility = visibility;
+        if (attributes == null) {
+            this.attributes = new ArrayList<>();
+        } else {
+            this.attributes = attributes;
+        }
         this.isRoot = isRoot;
         this.isLeaf = isLeaf;
         this.isAbstract = isAbstract;
         this.isActive = isActive;
-        this.attributes = new ArrayList<>();
     }
 
     /**
@@ -246,7 +252,7 @@ public abstract class Node implements Comparable<Node> {
          * Creates an empty {@link Node}.
          */
         EmptyNode() {
-            super("", "", null, null, null, null, null, null);
+            super("", "", null, null, null, null, null, null, null);
         }
     }
 }
