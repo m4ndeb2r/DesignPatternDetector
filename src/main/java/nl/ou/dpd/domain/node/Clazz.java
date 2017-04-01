@@ -1,5 +1,9 @@
 package nl.ou.dpd.domain.node;
 
+import org.w3c.dom.Attr;
+
+import java.util.List;
+
 /**
  * Represents a class node in a system design or design pattern.
  * <p>
@@ -28,7 +32,7 @@ public class Clazz extends Node {
      * @param name the classname of this {@link Clazz}
      */
     public Clazz(String id, String name) {
-        this(id, name, null, null, null, null, null);
+        this(id, name, null, null, null, null, null, null);
     }
 
     /**
@@ -37,6 +41,7 @@ public class Clazz extends Node {
      * @param id         a unique id for this {@link Clazz}
      * @param name       the name of this {@link Clazz}
      * @param visibility the {@link Visibility} of this {@link Clazz}
+     * @param attributes the attributes of this {@link Clazz}
      * @param isRoot     {@code true} is this {@link Clazz} is a root node, {@code false} if not, or {@code null} if
      *                   undefined
      * @param isLeaf     {@code true} is this {@link Clazz} is a leaf node, {@code false} if not, or {@code null} if
@@ -46,8 +51,9 @@ public class Clazz extends Node {
      * @param isActive   {@code true} is this {@link Clazz} is active, {@code false} if not, or {@code null} if
      *                   undefined
      */
-    public Clazz(String id, String name, Visibility visibility, Boolean isRoot, Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
-        super(id, name, NodeType.CLASS, visibility, isRoot, isLeaf, isAbstract, isActive);
+    public Clazz(String id, String name, Visibility visibility, List<Attribute> attributes, Boolean isRoot,
+                 Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
+        super(id, name, NodeType.CLASS, visibility, attributes, isRoot, isLeaf, isAbstract, isActive);
     }
 
 }

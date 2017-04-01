@@ -3,6 +3,7 @@ package nl.ou.dpd.domain.edge;
 import nl.ou.dpd.domain.node.Clazz;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
@@ -14,6 +15,53 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  */
 public class EdgeTest {
+
+    /**
+     * Test the {@link Edge} constructor(s).
+     */
+    @Test
+    public void testConstructor() {
+        Edge edge = new Edge(new Clazz("class1"), new Clazz("class2"), EdgeType.DEPENDENCY, "edge");
+        Edge edge2 = new Edge(edge);
+
+        assertThat(edge.getName(), is("edge"));
+        assertNull(edge.getCardinalityFront());
+        assertNull(edge.getCardinalityEnd());
+        assertThat(edge.getNode1().getName(), is("class1"));
+        assertThat(edge.getNode2().getName(), is("class2"));
+        assertThat(edge.getRelationType(), is(EdgeType.DEPENDENCY));
+        assertFalse(edge.isLocked());
+        assertFalse(edge.isSelfRef());
+        assertFalse(edge.isVirtual());
+
+        assertThat(edge2.getName(), is("edge"));
+        assertNull(edge2.getCardinalityFront());
+        assertNull(edge2.getCardinalityEnd());
+        assertThat(edge2.getNode1().getName(), is("class1"));
+        assertThat(edge2.getNode2().getName(), is("class2"));
+        assertThat(edge2.getRelationType(), is(EdgeType.DEPENDENCY));
+        assertFalse(edge2.isLocked());
+        assertFalse(edge2.isSelfRef());
+        assertFalse(edge2.isVirtual());
+    }
+
+    /**
+     * Test(s) the {@link Edge#makeVirtual()} and {@link Edge#isVirtual()} methods.
+     */
+    @Test
+    public void testMakeVirtual() {
+        Edge edge = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name1");
+        assertThat(edge.getNode1().getName(), is("A"));
+        assertThat(edge.getNode2().getName(), is("B"));
+        assertFalse(edge.isVirtual());
+
+        edge.makeVirtual();
+
+        // Check that nodes a reversed and the isVirtual property is set to true
+        assertThat(edge.getNode1().getName(), is("B"));
+        assertThat(edge.getNode2().getName(), is("A"));
+        assertTrue(edge.isVirtual());
+    }
 
     /**
      * Tests the {@link Edge#equals(Object)} method explicitly. Implicitly the constructor and most
@@ -49,11 +97,35 @@ public class EdgeTest {
 
         // Check that a virtual edge is not equal to a non-virtual edge
         Edge edge6 = new Edge(edge5);
-        assertThat(edge5.equals(edge6), is(true));
+        assertTrue(edge5.equals(edge6));
         edge6.makeVirtual();
         assertTrue(edge6.isVirtual());
         assertFalse(edge5.isVirtual());
         assertFalse(edge5.equals(edge6));
+
+        // Check that edges with different cardinalities are not equal
+        Edge edge7 = new Edge(edge5);
+        assertTrue(edge7.equals(edge5));
+        edge7.setCardinalityEnd(0, Cardinality.INFINITY);
+        assertThat(edge7.getCardinalityEnd().getLower(), is(0));
+        assertThat(edge7.getCardinalityEnd().getUpper(), is(Cardinality.INFINITY));
+        assertNull(edge5.getCardinalityEnd());
+        assertFalse(edge7.equals(edge5));
+
+        edge5.setCardinalityEnd(0, Cardinality.INFINITY);
+        assertTrue(edge7.equals(edge5));
+        edge7.setCardinalityFront(1, 1);
+        assertThat(edge7.getCardinalityFront().getLower(), is(1));
+        assertThat(edge7.getCardinalityFront().getUpper(), is(1));
+        assertNull(edge5.getCardinalityFront());
+        assertFalse(edge7.equals(edge5));
+
+        // Check that two edges with different names are not equal
+        Edge edge8a = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name1");
+        Edge edge8b = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name1");
+        assertTrue(edge8a.equals(edge8b));
+        Edge edge9 = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name2");
+        assertFalse(edge9.equals(edge8b));
     }
 
     @Test
