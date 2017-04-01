@@ -1,8 +1,6 @@
 package nl.ou.dpd.domain.edge;
 
-import nl.ou.dpd.domain.edge.Edge;
-import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.utils.TestHelper;
+import nl.ou.dpd.domain.node.Clazz;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,7 +23,7 @@ public class EdgeTest {
     @Test
     public void testEquals() {
         // Compare with null. Not equal.
-        Edge edge1 = TestHelper.createEdge("class1", "class2", EdgeType.DEPENDENCY);
+        Edge edge1 = new Edge(new Clazz("class1"), new Clazz("class2"), EdgeType.DEPENDENCY);
         assertFalse(edge1.equals(null));
 
         // Two duplicate edges. They are equal.
@@ -40,13 +38,13 @@ public class EdgeTest {
         assertTrue(edge1.equals(edge2));
 
         // Check if different class names are detected -> not equal
-        Edge edge3 = TestHelper.createEdge("class3", "class2", EdgeType.DEPENDENCY);
+        Edge edge3 = new Edge(new Clazz("class3"), new Clazz("class2"), EdgeType.DEPENDENCY);
         assertFalse(edge1.equals(edge3));
-        Edge edge4 = TestHelper.createEdge("class1", "class3", EdgeType.DEPENDENCY);
+        Edge edge4 = new Edge(new Clazz("class1"), new Clazz("class3"), EdgeType.DEPENDENCY);
         assertFalse(edge1.equals(edge4));
 
         // Check if different edge types are detected -> not equal
-        Edge edge5 = TestHelper.createEdge("class1", "class2", EdgeType.AGGREGATE);
+        Edge edge5 = new Edge(new Clazz("class1"), new Clazz("class2"), EdgeType.AGGREGATE);
         assertFalse(edge1.equals(edge5));
 
         // Check that a virtual edge is not equal to a non-virtual edge
@@ -60,10 +58,9 @@ public class EdgeTest {
 
     @Test
     public void testIsSelfRef() {
-        Edge edge = TestHelper.createEdge("A", "A", EdgeType.INHERITANCE);
+        Edge edge = new Edge(new Clazz("A"), new Clazz("A"), EdgeType.INHERITANCE);
         assertTrue(edge.isSelfRef());
-
-        edge = TestHelper.createEdge("A", "B", EdgeType.INHERITANCE);
+        edge = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.INHERITANCE);
         assertFalse(edge.isSelfRef());
     }
 

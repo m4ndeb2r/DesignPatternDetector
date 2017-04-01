@@ -2,6 +2,7 @@ package nl.ou.dpd.domain.node;
 
 import nl.ou.dpd.domain.edge.Edge;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -57,6 +58,7 @@ public abstract class Node implements Comparable<Node> {
         this.isLeaf = isLeaf;
         this.isAbstract = isAbstract;
         this.isActive = isActive;
+        this.attributes = new ArrayList<>();
     }
 
     /**
