@@ -3,6 +3,7 @@ package nl.ou.dpd.domain;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class StateStrategyMatcherTest {
 
         // Check matching classes
         assertThat(mc0.get(new Clazz("TCPConnection")).getName(), is("Context"));
-        assertThat(mc0.get(new Clazz("TCPState")).getName(), is("Strategy"));
+        assertThat(mc0.get(new Interface("TCPState")).getName(), is("Strategy"));
         assertThat(mc0.get(new Clazz("TCPEstablished")).getName(), is("ConcreteStrategy"));
         assertThat(mc0.get(new Clazz("TCPListen")).getName(), is("ConcreteStrategy"));
         assertThat(mc0.get(new Clazz("TCPClosed")).getName(), is("ConcreteStrategy"));
@@ -67,11 +68,18 @@ public class StateStrategyMatcherTest {
     }
 
     private SystemUnderConsideration createSystemUnderConsideration() {
-        SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("TCPState"), new Clazz("TCPConnection"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("TCPEstablished"), new Clazz("TCPState"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TCPListen"), new Clazz("TCPState"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TCPClosed"), new Clazz("TCPState"), EdgeType.INHERITANCE));
+        final Interface tcpState = new Interface("TCPState");
+        final Clazz tcpConnection = new Clazz("TCPConnection");
+        final Clazz tcpEstablished = new Clazz("TCPEstablished");
+        final Clazz tcpListen = new Clazz("TCPListen");
+        final Clazz tcpClosed = new Clazz("TCPClosed");
+        final SystemUnderConsideration result = new SystemUnderConsideration();
+
+        result.add(new Edge(tcpState, tcpConnection, EdgeType.AGGREGATE));
+        result.add(new Edge(tcpEstablished, tcpState, EdgeType.INHERITANCE));
+        result.add(new Edge(tcpListen, tcpState, EdgeType.INHERITANCE));
+        result.add(new Edge(tcpClosed, tcpState, EdgeType.INHERITANCE));
+
         return result;
     }
 

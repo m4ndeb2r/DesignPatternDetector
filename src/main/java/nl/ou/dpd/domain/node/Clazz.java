@@ -9,14 +9,6 @@ package nl.ou.dpd.domain.node;
  */
 public class Clazz extends Node {
 
-//    /**
-//     * An "empty" {@link Node}. The {@link #EMPTY_NODE} is used to prepare a "match" (similarity) between a node in a
-//     * pattern and the system design. It is a placeholder for a matching {@link Node} that is not yet identified.
-//     *
-//     * @deprecated TODO: use {@link Node#EMPTY_NODE}
-//     */
-//    public static final Clazz EMPTY_CLASS = new Clazz("");
-
     /**
      * Constructs a {@link Clazz} instance with the specified {@code name} and similar {@code id}.
      * <p>
@@ -36,7 +28,7 @@ public class Clazz extends Node {
      * @param name the classname of this {@link Clazz}
      */
     public Clazz(String id, String name) {
-        this(id, name, Visibility.PUBLIC, null, null, null, null);
+        this(id, name, null, null, null, null, null);
     }
 
     /**

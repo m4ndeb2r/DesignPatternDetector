@@ -1,12 +1,15 @@
 package nl.ou.dpd.utils;
 
-import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.node.Interface;
+import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.node.Visibility;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A utility class for unittest support.
@@ -19,10 +22,10 @@ public class TestHelper {
      * Creates a "template" containing 17 GoF design patterns represented by an {@link ArrayList} of
      * {@link DesignPattern} instances.
      *
-     * @return an {@link ArrayList} containing 17 GoF design patterns.
+     * @return an {@link List} containing 17 GoF design patterns.
      */
-    public static ArrayList<DesignPattern> createDesignPatternsTemplates() {
-        final ArrayList<DesignPattern> dps = new ArrayList<>();
+    public static List<DesignPattern> createDesignPatternsTemplates() {
+        final List<DesignPattern> dps = new ArrayList<>();
         dps.add(createBridgePattern());
         dps.add(createStateStrategyPattern());
         dps.add(createMediatorPattern());
@@ -49,21 +52,38 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing an AbstractFactory pattern.
      */
     public static DesignPattern createAbstractFactoryPattern() {
-        final DesignPattern abstractFactory = new DesignPattern("Abstract Factory");
-        abstractFactory.add(createEdge("Client", "AbstractFactory", EdgeType.ASSOCIATION_DIRECTED));
-        abstractFactory.add(createEdge("Client", "AbstractProductA", EdgeType.ASSOCIATION_DIRECTED));
-        abstractFactory.add(createEdge("Client", "AbstractProductB", EdgeType.ASSOCIATION_DIRECTED));
-        abstractFactory.add(createEdge("ConcreteFact1", "AbstractFactory", EdgeType.INHERITANCE));
-        abstractFactory.add(createEdge("ConcreteFact2", "AbstractFactory", EdgeType.INHERITANCE));
-        abstractFactory.add(createEdge("ConcreteFact1", "ProductA1", EdgeType.DEPENDENCY));
-        abstractFactory.add(createEdge("ConcreteFact2", "ProductA2", EdgeType.DEPENDENCY));
-        abstractFactory.add(createEdge("ConcreteFact1", "ProductB1", EdgeType.DEPENDENCY));
-        abstractFactory.add(createEdge("ConcreteFact2", "ProductB2", EdgeType.DEPENDENCY));
-        abstractFactory.add(createEdge("ProductA1", "AbstractProductA", EdgeType.INHERITANCE));
-        abstractFactory.add(createEdge("ProductA2", "AbstractProductA", EdgeType.INHERITANCE));
-        abstractFactory.add(createEdge("ProductB1", "AbstractProductB", EdgeType.INHERITANCE));
-        abstractFactory.add(createEdge("ProductB2", "AbstractProductB", EdgeType.INHERITANCE));
-        return abstractFactory;
+        final DesignPattern abstractFactoryPattern = new DesignPattern("Abstract Factory");
+
+        final Node client = createClazz("Client");
+
+        final Node abstractFactory = createInterface("AbstractFactory");
+        final Node abstractProductA = createInterface("AbstractProductA");
+        final Node abstractProductB = createInterface("AbstractProductB");
+
+        final Node concreteFact1 = createClazz("ConcreteFact1");
+        final Node concreteFact2 = createClazz("ConcreteFact2");
+
+        final Node productA1 = createClazz("ProductA1");
+        final Node productA2 = createClazz("ProductA2");
+
+        final Node productB1 = createClazz("ProductB1");
+        final Node productB2 = createClazz("ProductB2");
+
+        abstractFactoryPattern.add(new Edge(client, abstractFactory, EdgeType.ASSOCIATION_DIRECTED));
+        abstractFactoryPattern.add(new Edge(client, abstractProductA, EdgeType.ASSOCIATION_DIRECTED));
+        abstractFactoryPattern.add(new Edge(client, abstractProductB, EdgeType.ASSOCIATION_DIRECTED));
+        abstractFactoryPattern.add(new Edge(concreteFact1, abstractFactory, EdgeType.INHERITANCE));
+        abstractFactoryPattern.add(new Edge(concreteFact2, abstractFactory, EdgeType.INHERITANCE));
+        abstractFactoryPattern.add(new Edge(concreteFact1, productA1, EdgeType.DEPENDENCY));
+        abstractFactoryPattern.add(new Edge(concreteFact2, productA2, EdgeType.DEPENDENCY));
+        abstractFactoryPattern.add(new Edge(concreteFact1, productB1, EdgeType.DEPENDENCY));
+        abstractFactoryPattern.add(new Edge(concreteFact2, productB2, EdgeType.DEPENDENCY));
+        abstractFactoryPattern.add(new Edge(productA1, abstractProductA, EdgeType.INHERITANCE));
+        abstractFactoryPattern.add(new Edge(productA2, abstractProductA, EdgeType.INHERITANCE));
+        abstractFactoryPattern.add(new Edge(productB1, abstractProductB, EdgeType.INHERITANCE));
+        abstractFactoryPattern.add(new Edge(productB2, abstractProductB, EdgeType.INHERITANCE));
+
+        return abstractFactoryPattern;
     }
 
     /**
@@ -72,11 +92,18 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing an Adapter pattern.
      */
     public static DesignPattern createAdapterPattern() {
-        final DesignPattern adapter = new DesignPattern("Adapter");
-        adapter.add(createEdge("Client", "Target", EdgeType.ASSOCIATION_DIRECTED));
-        adapter.add(createEdge("Adapter", "Target", EdgeType.INHERITANCE));
-        adapter.add(createEdge("Adapter", "Adaptee", EdgeType.ASSOCIATION_DIRECTED));
-        return adapter;
+        final DesignPattern adapterPattern = new DesignPattern("Adapter");
+
+        final Node client = createClazz("Client");
+        final Node target = createInterface("Target");
+        final Node adapter = createClazz("Adapter");
+        final Node adaptee = createClazz("Adaptee");
+
+        adapterPattern.add(new Edge(client, target, EdgeType.ASSOCIATION_DIRECTED));
+        adapterPattern.add(new Edge(adapter, target, EdgeType.INHERITANCE));
+        adapterPattern.add(new Edge(adapter, adaptee, EdgeType.ASSOCIATION_DIRECTED));
+
+        return adapterPattern;
     }
 
     /**
@@ -85,11 +112,18 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a Builder pattern.
      */
     public static DesignPattern createBuilderPattern() {
-        final DesignPattern builder = new DesignPattern("Builder");
-        builder.add(createEdge("Builder", "Director", EdgeType.AGGREGATE));
-        builder.add(createEdge("ConcreteBuilder", "Builder", EdgeType.INHERITANCE));
-        builder.add(createEdge("ConcreteBuilder", "Product", EdgeType.DEPENDENCY));
-        return builder;
+        final DesignPattern builderPattern = new DesignPattern("Builder");
+
+        final Node builder = createInterface("Builder");
+        final Node director = createClazz("Director");
+        final Node concreteBuilder = createClazz("ConcreteBuilder");
+        final Node product = createClazz("Product");
+
+        builderPattern.add(new Edge(builder, director, EdgeType.AGGREGATE));
+        builderPattern.add(new Edge(concreteBuilder, builder, EdgeType.INHERITANCE));
+        builderPattern.add(new Edge(concreteBuilder, product, EdgeType.DEPENDENCY));
+
+        return builderPattern;
     }
 
     /**
@@ -99,9 +133,15 @@ public class TestHelper {
      */
     public static DesignPattern createChainOfResponsibilityPattern() {
         final DesignPattern chainOfResponsibility = new DesignPattern("ChainOfResponsibility");
-        chainOfResponsibility.add(createEdge("ConcreteHandler", "Handler", EdgeType.INHERITANCE_MULTI));
-        chainOfResponsibility.add(createEdge("Handler", "Handler", EdgeType.ASSOCIATION_DIRECTED));
-        chainOfResponsibility.add(createEdge("Client", "Handler", EdgeType.ASSOCIATION_DIRECTED));
+
+        final Node concreteHandler = createClazz("ConcreteHandler");
+        final Node handler = createAbstractClazz("Handler");
+        final Node client = createClazz("Client");
+
+        chainOfResponsibility.add(new Edge(concreteHandler, handler, EdgeType.INHERITANCE_MULTI));
+        chainOfResponsibility.add(new Edge(handler, handler, EdgeType.ASSOCIATION_DIRECTED));
+        chainOfResponsibility.add(new Edge(client, handler, EdgeType.ASSOCIATION_DIRECTED));
+
         return chainOfResponsibility;
     }
 
@@ -111,13 +151,21 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a Command pattern.
      */
     public static DesignPattern createCommandPattern() {
-        final DesignPattern command = new DesignPattern("Command");
-        command.add(createEdge("Client", "Receiver", EdgeType.ASSOCIATION_DIRECTED));
-        command.add(createEdge("Client", "ConcreteCommand", EdgeType.DEPENDENCY));
-        command.add(createEdge("ConcreteCommand", "Receiver", EdgeType.ASSOCIATION_DIRECTED));
-        command.add(createEdge("ConcreteCommand", "Command", EdgeType.INHERITANCE));
-        command.add(createEdge("Command", "Invoker", EdgeType.AGGREGATE));
-        return command;
+        final DesignPattern commandPattern = new DesignPattern("Command");
+
+        final Node client = createClazz("Client");
+        final Node receiver = createClazz("Receiver");
+        final Node concreteCommand = createClazz("ConcreteCommand");
+        final Node command = createInterface("Command");
+        final Node invoker = createClazz("Invoker");
+
+        commandPattern.add(new Edge(client, receiver, EdgeType.ASSOCIATION_DIRECTED));
+        commandPattern.add(new Edge(client, concreteCommand, EdgeType.DEPENDENCY));
+        commandPattern.add(new Edge(concreteCommand, receiver, EdgeType.ASSOCIATION_DIRECTED));
+        commandPattern.add(new Edge(concreteCommand, command, EdgeType.INHERITANCE));
+        commandPattern.add(new Edge(command, invoker, EdgeType.AGGREGATE));
+
+        return commandPattern;
     }
 
     /**
@@ -126,12 +174,19 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a Composite pattern.
      */
     public static DesignPattern createCompositePattern() {
-        final DesignPattern composite = new DesignPattern("Composite");
-        composite.add(createEdge("Client", "Component", EdgeType.ASSOCIATION_DIRECTED));
-        composite.add(createEdge("Leaf", "Component", EdgeType.INHERITANCE));
-        composite.add(createEdge("Composite", "Component", EdgeType.INHERITANCE));
-        composite.add(createEdge("Component", "Composite", EdgeType.AGGREGATE));
-        return composite;
+        final DesignPattern compositePattern = new DesignPattern("Composite");
+
+        final Node client = createClazz("Client");
+        final Node component = createInterface("Component");
+        final Node leaf = createClazz("Leaf");
+        final Node composite = createClazz("Composite");
+
+        compositePattern.add(new Edge(client, component, EdgeType.ASSOCIATION_DIRECTED));
+        compositePattern.add(new Edge(leaf, component, EdgeType.INHERITANCE));
+        compositePattern.add(new Edge(composite, component, EdgeType.INHERITANCE));
+        compositePattern.add(new Edge(component, composite, EdgeType.AGGREGATE));
+
+        return compositePattern;
     }
 
     /**
@@ -140,12 +195,19 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a Decorator pattern.
      */
     public static DesignPattern createDecoratorPattern() {
-        final DesignPattern decorator = new DesignPattern("Decorator");
-        decorator.add(createEdge("ConcreteComponent", "Component", EdgeType.INHERITANCE));
-        decorator.add(createEdge("Decorator", "Component", EdgeType.INHERITANCE));
-        decorator.add(createEdge("Component", "Decorator", EdgeType.AGGREGATE));
-        decorator.add(createEdge("ConcreteDecorator", "Decorator", EdgeType.INHERITANCE_MULTI));
-        return decorator;
+        final DesignPattern decoratorPattern = new DesignPattern("Decorator");
+
+        final Node component = createInterface("Component");
+        final Node concreteComponent = createClazz("ConcreteComponent");
+        final Node decorator = createAbstractClazz("Decorator");
+        final Node concreteDecorator = createClazz("ConcreteDecorator");
+
+        decoratorPattern.add(new Edge(concreteComponent, component, EdgeType.INHERITANCE));
+        decoratorPattern.add(new Edge(decorator, component, EdgeType.INHERITANCE));
+        decoratorPattern.add(new Edge(component, decorator, EdgeType.AGGREGATE));
+        decoratorPattern.add(new Edge(concreteDecorator, decorator, EdgeType.INHERITANCE_MULTI));
+
+        return decoratorPattern;
     }
 
     /**
@@ -155,9 +217,16 @@ public class TestHelper {
      */
     public static DesignPattern createFactoryMethodPattern() {
         final DesignPattern factoryMethod = new DesignPattern("Factory Method");
-        factoryMethod.add(createEdge("ConcreteProduct", "Product", EdgeType.INHERITANCE));
-        factoryMethod.add(createEdge("ConcreteCreator", "ConcreteProduct", EdgeType.DEPENDENCY));
-        factoryMethod.add(createEdge("ConcreteCreator", "Creator", EdgeType.INHERITANCE));
+
+        final Node product = createInterface("Product");
+        final Node concreteProduct = createClazz("ConcreteProduct");
+        final Node creator = createInterface("Creator");
+        final Node concreteCreator = createClazz("ConcreteCreator");
+
+        factoryMethod.add(new Edge(concreteProduct, product, EdgeType.INHERITANCE));
+        factoryMethod.add(new Edge(concreteCreator, concreteProduct, EdgeType.DEPENDENCY));
+        factoryMethod.add(new Edge(concreteCreator, creator, EdgeType.INHERITANCE));
+
         return factoryMethod;
     }
 
@@ -167,14 +236,22 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a flyweight pattern.
      */
     public static DesignPattern createFlyweightPattern() {
-        final DesignPattern flyweight = new DesignPattern("Flyweight");
-        flyweight.add(createEdge("Client", "FlyweightFactory", EdgeType.ASSOCIATION_DIRECTED));
-        flyweight.add(createEdge("Client", "ConcreteFlyweight", EdgeType.ASSOCIATION_DIRECTED));
-        flyweight.add(createEdge("Client", "UnsharedConcreteFlyweight", EdgeType.ASSOCIATION_DIRECTED));
-        flyweight.add(createEdge("Flyweight", "FlyweightFactory", EdgeType.AGGREGATE));
-        flyweight.add(createEdge("ConcreteFlyweight", "Flyweight", EdgeType.INHERITANCE));
-        flyweight.add(createEdge("UnsharedConcreteFlyweight", "Flyweight", EdgeType.INHERITANCE));
-        return flyweight;
+        final DesignPattern flyweightPattern = new DesignPattern("Flyweight");
+
+        final Node client = createClazz("Client");
+        final Node flyweightFactory = createClazz("FlyweightFactory");
+        final Node concreteFlyweight = createClazz("ConcreteFlyweight");
+        final Node unsharedConcreteFlyweight = createClazz("UnsharedConcreteFlyweight");
+        final Node flyweight = createInterface("Flyweight");
+
+        flyweightPattern.add(new Edge(client, flyweightFactory, EdgeType.ASSOCIATION_DIRECTED));
+        flyweightPattern.add(new Edge(client, concreteFlyweight, EdgeType.ASSOCIATION_DIRECTED));
+        flyweightPattern.add(new Edge(client, unsharedConcreteFlyweight, EdgeType.ASSOCIATION_DIRECTED));
+        flyweightPattern.add(new Edge(flyweight, flyweightFactory, EdgeType.AGGREGATE));
+        flyweightPattern.add(new Edge(concreteFlyweight, flyweight, EdgeType.INHERITANCE));
+        flyweightPattern.add(new Edge(unsharedConcreteFlyweight, flyweight, EdgeType.INHERITANCE));
+
+        return flyweightPattern;
     }
 
     /**
@@ -184,14 +261,24 @@ public class TestHelper {
      */
 
     public static DesignPattern createIteratorPattern() {
-        final DesignPattern iterator = new DesignPattern("Iterator");
-        iterator.add(createEdge("ConcreteAggregate", "Aggregate", EdgeType.INHERITANCE));
-        iterator.add(createEdge("Client", "Aggregate", EdgeType.ASSOCIATION_DIRECTED));
-        iterator.add(createEdge("Client", "Iterator", EdgeType.ASSOCIATION_DIRECTED));
-        iterator.add(createEdge("ConcreteIterator", "Iterator", EdgeType.INHERITANCE));
-        iterator.add(createEdge("ConcreteIterator", "ConcreteAggregate", EdgeType.ASSOCIATION_DIRECTED));
-        iterator.add(createEdge("ConcreteAggregate", "ConcreteIterator", EdgeType.DEPENDENCY));
-        return iterator;
+        final DesignPattern iteratorPattern = new DesignPattern("Iterator");
+
+        final Node client = createClazz("Client");
+
+        final Node iterator = createInterface("Iterator");
+        final Node concreteIterator = createClazz("ConcreteIterator");
+
+        final Node aggregate = createInterface("Aggregate");
+        final Node concreteAggregate = createClazz("ConcreteAggregate");
+
+        iteratorPattern.add(new Edge(concreteAggregate, aggregate, EdgeType.INHERITANCE));
+        iteratorPattern.add(new Edge(client, aggregate, EdgeType.ASSOCIATION_DIRECTED));
+        iteratorPattern.add(new Edge(client, iterator, EdgeType.ASSOCIATION_DIRECTED));
+        iteratorPattern.add(new Edge(concreteIterator, iterator, EdgeType.INHERITANCE));
+        iteratorPattern.add(new Edge(concreteIterator, concreteAggregate, EdgeType.ASSOCIATION_DIRECTED));
+        iteratorPattern.add(new Edge(concreteAggregate, concreteIterator, EdgeType.DEPENDENCY));
+
+        return iteratorPattern;
     }
 
     /**
@@ -201,11 +288,20 @@ public class TestHelper {
      */
     public static DesignPattern createInterpreterPattern() {
         final DesignPattern interpreter = new DesignPattern("Interpreter");
-        interpreter.add(createEdge("Client", "AbstractExpression", EdgeType.ASSOCIATION_DIRECTED));
-        interpreter.add(createEdge("Client", "Context", EdgeType.ASSOCIATION_DIRECTED));
-        interpreter.add(createEdge("TerminalExpression", "AbstractExpression", EdgeType.INHERITANCE));
-        interpreter.add(createEdge("NonTerminalExpression", "AbstractExpression", EdgeType.INHERITANCE));
-        interpreter.add(createEdge("AbstractExpression", "NonTerminalExpression", EdgeType.AGGREGATE));
+
+        final Node client = createClazz("Client");
+        final Node context = createClazz("Context");
+
+        final Node abstractExpression = createInterface("AbstractExpression");
+        final Node terminalExpression = createClazz("TerminalExpression");
+        final Node nonTerminalExpression = createClazz("NonTerminalExpression");
+
+        interpreter.add(new Edge(client, abstractExpression, EdgeType.ASSOCIATION_DIRECTED));
+        interpreter.add(new Edge(client, context, EdgeType.ASSOCIATION_DIRECTED));
+        interpreter.add(new Edge(terminalExpression, abstractExpression, EdgeType.INHERITANCE));
+        interpreter.add(new Edge(nonTerminalExpression, abstractExpression, EdgeType.INHERITANCE));
+        interpreter.add(new Edge(abstractExpression, nonTerminalExpression, EdgeType.AGGREGATE));
+
         return interpreter;
     }
 
@@ -216,14 +312,23 @@ public class TestHelper {
      */
 
     public static DesignPattern createMediatorPattern() {
-        final DesignPattern mediator = new DesignPattern("Mediator");
-        mediator.add(createEdge("ConcreteMediator", "Mediator", EdgeType.INHERITANCE));
-        mediator.add(createEdge("Colleague", "Mediator", EdgeType.ASSOCIATION_DIRECTED));
-        mediator.add(createEdge("ConcreteColleague1", "Colleague", EdgeType.INHERITANCE));
-        mediator.add(createEdge("ConcreteColleague2", "Colleague", EdgeType.INHERITANCE));
-        mediator.add(createEdge("ConcreteMediator", "ConcreteColleague1", EdgeType.ASSOCIATION_DIRECTED));
-        mediator.add(createEdge("ConcreteMediator", "ConcreteColleague2", EdgeType.ASSOCIATION_DIRECTED));
-        return mediator;
+        final DesignPattern mediatorPattern = new DesignPattern("Mediator");
+
+        final Node mediator = createInterface("Mediator");
+        final Node concreteMediator = createClazz("ConcreteMediator");
+
+        final Node colleague = createAbstractClazz("Colleague");
+        final Node concreteColleague1 = createClazz("ConcreteColleague1");
+        final Node concreteColleague2 = createClazz("ConcreteColleague2");
+
+        mediatorPattern.add(new Edge(concreteMediator, mediator, EdgeType.INHERITANCE));
+        mediatorPattern.add(new Edge(colleague, mediator, EdgeType.ASSOCIATION_DIRECTED));
+        mediatorPattern.add(new Edge(concreteColleague1, colleague, EdgeType.INHERITANCE));
+        mediatorPattern.add(new Edge(concreteColleague2, colleague, EdgeType.INHERITANCE));
+        mediatorPattern.add(new Edge(concreteMediator, concreteColleague1, EdgeType.ASSOCIATION_DIRECTED));
+        mediatorPattern.add(new Edge(concreteMediator, concreteColleague2, EdgeType.ASSOCIATION_DIRECTED));
+
+        return mediatorPattern;
     }
 
     /**
@@ -233,10 +338,16 @@ public class TestHelper {
      */
 
     public static DesignPattern createMementoPattern() {
-        final DesignPattern memento = new DesignPattern("Memento");
-        memento.add(createEdge("Memento", "Caretaker", EdgeType.AGGREGATE));
-        memento.add(createEdge("Originator", "Memento", EdgeType.DEPENDENCY));
-        return memento;
+        final DesignPattern mementoPattern = new DesignPattern("Memento");
+
+        final Node memento = createClazz("Memento");
+        final Node caretaker = createClazz("Caretaker");
+        final Node originator = createClazz("Originator");
+
+        mementoPattern.add(new Edge(memento, caretaker, EdgeType.AGGREGATE));
+        mementoPattern.add(new Edge(originator, memento, EdgeType.DEPENDENCY));
+
+        return mementoPattern;
     }
 
     /**
@@ -245,12 +356,19 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing an Observer pattern.
      */
     public static DesignPattern createObserverPattern() {
-        final DesignPattern observer = new DesignPattern("Observer");
-        observer.add(createEdge("ConcreteSubject", "Subject", EdgeType.INHERITANCE));
-        observer.add(createEdge("Subject", "Observer", EdgeType.ASSOCIATION_DIRECTED));
-        observer.add(createEdge("ConcreteObserver", "Observer", EdgeType.INHERITANCE));
-        observer.add(createEdge("ConcreteObserver", "ConcreteSubject", EdgeType.ASSOCIATION_DIRECTED));
-        return observer;
+        final DesignPattern observerPattern = new DesignPattern("Observer");
+
+        final Node subject = createAbstractClazz("Subject");
+        final Node concreteSubject = createClazz("ConcreteSubject");
+        final Node observer = createInterface("Observer");
+        final Node concreteObserver = createClazz("ConcreteObserver");
+
+        observerPattern.add(new Edge(concreteSubject, subject, EdgeType.INHERITANCE));
+        observerPattern.add(new Edge(subject, observer, EdgeType.ASSOCIATION_DIRECTED));
+        observerPattern.add(new Edge(concreteObserver, observer, EdgeType.INHERITANCE));
+        observerPattern.add(new Edge(concreteObserver, concreteSubject, EdgeType.ASSOCIATION_DIRECTED));
+
+        return observerPattern;
     }
 
     /**
@@ -259,12 +377,19 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a Proxy pattern.
      */
     public static DesignPattern createProxyPattern() {
-        final DesignPattern proxy = new DesignPattern("Proxy");
-        proxy.add(createEdge("Client", "Subject", EdgeType.ASSOCIATION_DIRECTED));
-        proxy.add(createEdge("Proxy", "Subject", EdgeType.INHERITANCE));
-        proxy.add(createEdge("RealSubject", "Subject", EdgeType.INHERITANCE));
-        proxy.add(createEdge("Proxy", "RealSubject", EdgeType.ASSOCIATION_DIRECTED));
-        return proxy;
+        final DesignPattern proxyPattern = new DesignPattern("Proxy");
+
+        final Node client = createClazz("Client");
+        final Node subject = createInterface("Subject");
+        final Node realSubject = createClazz("RealSubject");
+        final Node proxy = createClazz("Proxy");
+
+        proxyPattern.add(new Edge(client, subject, EdgeType.ASSOCIATION_DIRECTED));
+        proxyPattern.add(new Edge(proxy, subject, EdgeType.INHERITANCE));
+        proxyPattern.add(new Edge(realSubject, subject, EdgeType.INHERITANCE));
+        proxyPattern.add(new Edge(proxy, realSubject, EdgeType.ASSOCIATION_DIRECTED));
+
+        return proxyPattern;
     }
 
     /**
@@ -273,10 +398,17 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a State/Strategy pattern.
      */
     public static DesignPattern createStateStrategyPattern() {
-        final DesignPattern strategy = new DesignPattern("State - Strategy");
-        strategy.add(createEdge("Strategy", "Context", EdgeType.AGGREGATE));
-        strategy.add(createEdge("ConcreteStrategy", "Strategy", EdgeType.INHERITANCE_MULTI));
-        return strategy;
+        final DesignPattern strategyPattern = new DesignPattern("State - Strategy");
+
+        final Node context = createClazz("Context");
+
+        final Node strategy = createInterface("Strategy");
+        final Node concreteStrategy = createClazz("ConcreteStrategy");
+
+        strategyPattern.add(new Edge(strategy, context, EdgeType.AGGREGATE));
+        strategyPattern.add(new Edge(concreteStrategy, strategy, EdgeType.INHERITANCE_MULTI));
+
+        return strategyPattern;
     }
 
     /**
@@ -286,10 +418,20 @@ public class TestHelper {
      */
     public static DesignPattern createBridgePattern() {
         final DesignPattern bridge = new DesignPattern("Bridge");
-        bridge.add(createEdge("Client", "Abstraction", EdgeType.ASSOCIATION_DIRECTED));
-        bridge.add(createEdge("RefinedAbstraction", "Abstraction", EdgeType.INHERITANCE_MULTI));
-        bridge.add(createEdge("Implementor", "Abstraction", EdgeType.AGGREGATE));
-        bridge.add(createEdge("ConcreteImplementor", "Implementor", EdgeType.INHERITANCE_MULTI));
+
+        final Node client = createClazz("Client");
+
+        final Node abstraction = createAbstractClazz("Abstraction");
+        final Node refinedAbstraction = createClazz("RefinedAbstraction");
+
+        final Node implementor = createInterface("Implementor");
+        final Node concreteImplementor = createClazz("ConcreteImplementor");
+
+        bridge.add(new Edge(client, abstraction, EdgeType.ASSOCIATION_DIRECTED));
+        bridge.add(new Edge(refinedAbstraction, abstraction, EdgeType.INHERITANCE_MULTI));
+        bridge.add(new Edge(implementor, abstraction, EdgeType.AGGREGATE));
+        bridge.add(new Edge(concreteImplementor, implementor, EdgeType.INHERITANCE_MULTI));
+
         return bridge;
     }
 
@@ -299,115 +441,47 @@ public class TestHelper {
      * @return a {@link DesignPattern} representing a protoype pattern.
      */
     public static DesignPattern createPrototypePattern() {
-        final DesignPattern prototype = new DesignPattern("Prototype");
-        prototype.add(createEdge("Client", "Prototype", EdgeType.ASSOCIATION_DIRECTED));
-        prototype.add(createEdge("ConcretePrototype", "Prototype", EdgeType.INHERITANCE_MULTI));
-        return prototype;
+        final DesignPattern prototypePattern = new DesignPattern("Prototype");
+
+        final Node client = createClazz("Client");
+
+        final Node prototype = createInterface("Prototype");
+        final Node concretePrototype = createClazz("ConcretePrototype");
+
+        prototypePattern.add(new Edge(client, prototype, EdgeType.ASSOCIATION_DIRECTED));
+        prototypePattern.add(new Edge(concretePrototype, prototype, EdgeType.INHERITANCE_MULTI));
+
+        return prototypePattern;
     }
 
     /**
-     * Creates a "system under consideration" containing quite a number of patterns that the application should be able
-     * to detect. This system is depicted Figure 4.5 in E.M. van Doorns article on page 29 (4.3 - Experiments).
+     * Creates an {@link Interface} for test purposes.
      *
-     * @return a {@link DesignPattern} representing the design of a "system under consideration".
+     * @param name the name of the {@link Interface}
+     * @return the created {@link Interface}
      */
-    public static SystemUnderConsideration createComplexSystemUnderConsideration() {
-        final SystemUnderConsideration system = new SystemUnderConsideration();
-
-        // Bridge
-        system.add(createEdge("Client", "Ab", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcAb1", "Ab", EdgeType.INHERITANCE));
-        system.add(createEdge("ConcAb2", "Ab", EdgeType.INHERITANCE));
-        system.add(createEdge("ConcAb2", "F_Factory", EdgeType.ASSOCIATION));
-        system.add(createEdge("Impl", "Ab", EdgeType.AGGREGATE));
-        system.add(createEdge("F_Factory", "Impl", EdgeType.INHERITANCE));
-        system.add(createEdge("P_Subject", "Impl", EdgeType.INHERITANCE));
-        system.add(createEdge("ConcImpl3", "Impl", EdgeType.INHERITANCE));
-
-        // Factory Method
-        system.add(createEdge("F_ConcreteFactory", "F_Factory", EdgeType.INHERITANCE));
-        system.add(createEdge("F_ConcreteFactory", "F_Product", EdgeType.ASSOCIATION));
-        system.add(createEdge("F_Product", "F_ProdInterface", EdgeType.INHERITANCE));
-
-        // Proxy
-        system.add(createEdge("P_Proxy", "P_Subject", EdgeType.INHERITANCE));
-        system.add(createEdge("P_RealSubject", "P_Subject", EdgeType.INHERITANCE));
-        system.add(createEdge("P_Proxy", "P_RealSubject", EdgeType.ASSOCIATION));
-
-        // Decorator
-        system.add(createEdge("DecInterface", "ConcImpl3", EdgeType.ASSOCIATION));
-        system.add(createEdge("DecBasis", "DecInterface", EdgeType.INHERITANCE));
-        system.add(createEdge("DecInterface", "DecWrapper", EdgeType.COMPOSITE));
-        system.add(createEdge("DecOption1", "DecWrapper", EdgeType.INHERITANCE));
-        system.add(createEdge("DecOption2", "DecWrapper", EdgeType.INHERITANCE));
-        system.add(createEdge("DecWrapper", "DecInterface", EdgeType.INHERITANCE));
-
-        // Memento
-        system.add(createEdge("Client", "Maintainer", EdgeType.DEPENDENCY));
-        system.add(createEdge("Status", "Maintainer", EdgeType.AGGREGATE));
-
-        // Adapter
-        system.add(createEdge("Client", "T_Interface", EdgeType.ASSOCIATION));
-        system.add(createEdge("Aanpasser", "T_Interface", EdgeType.INHERITANCE));
-        system.add(createEdge("Aanpasser", "NietPassend", EdgeType.ASSOCIATION));
-
-        // Composite
-        system.add(createEdge("Leaflet", "T_Interface", EdgeType.INHERITANCE));
-        system.add(createEdge("Union", "T_Interface", EdgeType.INHERITANCE));
-        system.add(createEdge("T_Interface", "Union", EdgeType.AGGREGATE));
-
-        // Mediator
-        system.add(createEdge("DecInterface", "Med", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcMed", "Med", EdgeType.INHERITANCE));
-        system.add(createEdge("ConcMed", "DecBasis", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcMed", "DecWrapper", EdgeType.ASSOCIATION));
-
-        // Command
-        system.add(createEdge("Maintainer", "Opdracht", EdgeType.INHERITANCE));
-        system.add(createEdge("Client", "Ontvanger", EdgeType.ASSOCIATION));
-        system.add(createEdge("Opdracht", "Aanroeper", EdgeType.AGGREGATE));
-        system.add(createEdge("Maintainer", "Ontvanger", EdgeType.ASSOCIATION));
-
-        // Iterator
-        system.add(createEdge("User", "DecInterface", EdgeType.ASSOCIATION));
-        system.add(createEdge("User", "Med", EdgeType.ASSOCIATION));
-
-        // ChainOfResponsibility
-        system.add(createEdge("Aanroeper", "Behandelaar", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcreteBehandelaar_1", "Behandelaar", EdgeType.INHERITANCE));
-        system.add(createEdge("Behandelaar", "Behandelaar", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcreteBehandelaar_2", "Behandelaar", EdgeType.INHERITANCE));
-
-        // AbstractFactory
-        system.add(createEdge("DecOption1", "AbstrFact", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcrFact1", "AbstrFact", EdgeType.INHERITANCE));
-        system.add(createEdge("ConcrFact2", "AbstrFact", EdgeType.INHERITANCE));
-        system.add(createEdge("DecOption1", "AbstrProA", EdgeType.ASSOCIATION));
-        system.add(createEdge("DecOption1", "AbstrProB", EdgeType.ASSOCIATION));
-        system.add(createEdge("Pro1A", "AbstrProA", EdgeType.INHERITANCE));
-        system.add(createEdge("Pro2A", "AbstrProA", EdgeType.INHERITANCE));
-        system.add(createEdge("Pro1B", "AbstrProB", EdgeType.INHERITANCE));
-        system.add(createEdge("Pro2B", "AbstrProB", EdgeType.INHERITANCE));
-        system.add(createEdge("ConcrFact1", "Pro1A", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcrFact2", "Pro2A", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcrFact1", "Pro1B", EdgeType.ASSOCIATION));
-        system.add(createEdge("ConcrFact2", "Pro2B", EdgeType.ASSOCIATION));
-
-        // Flyweight
-        system.add(createEdge("FW_Cl", "FlywFact", EdgeType.ASSOCIATION));
-        system.add(createEdge("FW_Cl", "ConcFlyw", EdgeType.ASSOCIATION));
-        system.add(createEdge("FW_Cl", "UnshConcFlyw", EdgeType.ASSOCIATION));
-        system.add(createEdge("Flyw", "NietPassend", EdgeType.AGGREGATE));
-        system.add(createEdge("ConcFlyw", "Flyw", EdgeType.INHERITANCE));
-        system.add(createEdge("UnshConcFlyw", "Flyw", EdgeType.INHERITANCE));
-
-        return system;
+    public static Interface createInterface(String name) {
+        return new Interface(name, name, false, false, false);
     }
 
-    public static Edge createEdge(String classname1, String classname2, EdgeType edgeType) {
-        final Clazz cl1 = new Clazz(classname1);
-        final Clazz cl2 = new Clazz(classname2);
-        return new Edge(cl1, cl2, edgeType);
-
+    /**
+     * Creates a non-abstract {@link Clazz} for test purposes.
+     *
+     * @param name the name of the {@link Clazz}
+     * @return the created {@link Clazz}
+     */
+    public static Clazz createAbstractClazz(String name) {
+        return new Clazz(name, name, Visibility.PUBLIC, false, false, true, false);
     }
+
+    /**
+     * Creates an abstract {@link Clazz} for test purposes.
+     *
+     * @param name the name of the {@link Clazz}
+     * @return the created {@link Clazz}
+     */
+    public static Clazz createClazz(String name) {
+        return new Clazz(name, name, Visibility.PUBLIC, false, false, false, false);
+    }
+
 }
