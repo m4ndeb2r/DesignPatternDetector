@@ -1,7 +1,7 @@
 package nl.ou.dpd.data.argoxmi;
 
-import nl.ou.dpd.domain.Edge;
-import nl.ou.dpd.domain.EdgeType;
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.junit.Rule;
@@ -142,8 +142,8 @@ public class ArgoXMIParserTest {
     }
 
     private void assertEdge(Edge edge, String class1, String class2, EdgeType edgeType) {
-        assertThat(edge.getClass1().getName(), is(class1));
-        assertThat(edge.getClass2().getName(), is(class2));
+        assertThat(edge.getNode1().getName(), is(class1));
+        assertThat(edge.getNode2().getName(), is(class2));
         assertThat(edge.getRelationType(), is(edgeType));
         assertThat(edge.isSelfRef(), is(false));
         assertThat(edge.isVirtual(), is(false));

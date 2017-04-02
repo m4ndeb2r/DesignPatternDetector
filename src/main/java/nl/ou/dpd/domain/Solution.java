@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.node.Clazz;
+
 import java.util.Set;
 
 /**
@@ -14,7 +17,7 @@ import java.util.Set;
 public class Solution {
 
     private final String designPatternName;
-    private final MatchedClasses matchedClasses;
+    private final MatchedNodes matchedNodes;
     private final Set<Edge> superfluousEdges;
     private final Set<Edge> missingEdges;
 
@@ -22,31 +25,31 @@ public class Solution {
      * Constructs a {@link Solution} instance for a design pattern.
      *
      * @param designPatternName the name of the design pattern
-     * @param matchedClasses    the matched classes
+     * @param matchedNodes      the matched nodes
      * @param superfluousEdges  the superfluous edges (not stricktly belonging to the desin pattern)
      * @param missingEdges      the missing edges (that should be in the system design, but were not detected
      */
     public Solution(
             String designPatternName,
-            MatchedClasses matchedClasses,
+            MatchedNodes matchedNodes,
             Set<Edge> superfluousEdges,
             Set<Edge> missingEdges) {
         this.designPatternName = designPatternName;
-        this.matchedClasses = matchedClasses;
+        this.matchedNodes = matchedNodes;
         this.superfluousEdges = superfluousEdges;
         this.missingEdges = missingEdges;
     }
 
     /**
-     * Indicates whether the matched classes of this {@link Solution} are equal to the matched classes of another
+     * Indicates whether the matched nodes of this {@link Solution} are equal to the matched nodes of another
      * {@link Solution}.
      *
      * @param other the {@link Solution} to compare to this {@link Solution}.
-     * @return {@code true} if the matched classes of this {@link Solution} are equal to the matched classes of
+     * @return {@code true} if the matched nodes of this {@link Solution} are equal to the matched nodes of
      * {@code other}, or {@code false} otherwise.
      */
     public boolean isEqual(Solution other) {
-        return this.matchedClasses.getBoundSystemClassesSorted().equals(other.matchedClasses.getBoundSystemClassesSorted());
+        return this.matchedNodes.getBoundSystemNodesSorted().equals(other.matchedNodes.getBoundSystemNodesSorted());
     }
 
     /**
@@ -59,12 +62,12 @@ public class Solution {
     }
 
     /**
-     * Getter for the matched classes.
+     * Getter for the matched nodes.
      *
-     * @return the matched classes.
+     * @return the matched nodes.
      */
-    public MatchedClasses getMatchedClasses() {
-        return matchedClasses;
+    public MatchedNodes getMatchedNodes() {
+        return matchedNodes;
     }
 
     /**
@@ -92,6 +95,6 @@ public class Solution {
      * @return {@code true} when the are no matches (no solutions), or {@code false} otherwise.
      */
     public boolean isEmpty() {
-        return this.getMatchedClasses().getBoundSystemClassesSorted().isEmpty();
+        return this.getMatchedNodes().getBoundSystemNodesSorted().isEmpty();
     }
 }

@@ -1,4 +1,4 @@
-package nl.ou.dpd.domain;
+package nl.ou.dpd.domain.edge;
 
 import java.util.ArrayList;
 import java.util.List;

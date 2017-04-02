@@ -1,5 +1,10 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.node.Interface;
+import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +49,7 @@ public class BaBrahemMatcherTest {
         assertThat(solutions.size(), is(3));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -52,9 +57,9 @@ public class BaBrahemMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Adapter"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("B")).getName(), is("Target"));
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("D")).getName(), is("Adapter"));
+        assertThat(mc0.get(TestHelper.createClazz("B")).getName(), is("Target"));
+        assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Client"));
+        assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("Adapter"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -63,12 +68,12 @@ public class BaBrahemMatcherTest {
         assertThat(me0.size(), is(1));
         assertTrue(me0.contains(
                 new Edge(
-                        new Clazz("Adapter"),
-                        new Clazz("Adaptee"),
+                        TestHelper.createClazz("Adapter"),
+                        TestHelper.createClazz("Adaptee"),
                         EdgeType.ASSOCIATION_DIRECTED)));
 
         final Solution s1 = solutions.get(1);
-        final MatchedClasses mc1 = s1.getMatchedClasses();
+        final MatchedNodes mc1 = s1.getMatchedNodes();
         final Set<Edge> se1 = s1.getSuperfluousEdges();
         final Set<Edge> me1 = s1.getMissingEdges();
 
@@ -76,9 +81,9 @@ public class BaBrahemMatcherTest {
         assertThat(s1.getDesignPatternName(), is("Adapter"));
 
         // Check matching classes
-        assertThat(mc1.get(new Clazz("A")).getName(), is("Client"));
-        assertThat(mc1.get(new Clazz("B")).getName(), is("Target"));
-        assertThat(mc1.get(new Clazz("D")).getName(), is("Adapter"));
+        assertThat(mc1.get(TestHelper.createClazz("A")).getName(), is("Client"));
+        assertThat(mc1.get(TestHelper.createClazz("B")).getName(), is("Target"));
+        assertThat(mc1.get(TestHelper.createClazz("D")).getName(), is("Adapter"));
 
         // Check superfluous edges
         assertThat(se1.size(), is(0));
@@ -87,12 +92,12 @@ public class BaBrahemMatcherTest {
         assertThat(me1.size(), is(1));
         assertTrue(me1.contains(
                 new Edge(
-                        new Clazz("Adapter"),
-                        new Clazz("Adaptee"),
+                        TestHelper.createClazz("Adapter"),
+                        TestHelper.createClazz("Adaptee"),
                         EdgeType.ASSOCIATION_DIRECTED)));
 
         final Solution s2 = solutions.get(2);
-        final MatchedClasses mc2 = s2.getMatchedClasses();
+        final MatchedNodes mc2 = s2.getMatchedNodes();
         final Set<Edge> se2 = s2.getSuperfluousEdges();
         final Set<Edge> me2 = s2.getMissingEdges();
 
@@ -100,9 +105,9 @@ public class BaBrahemMatcherTest {
         assertThat(s2.getDesignPatternName(), is("Adapter"));
 
         // Check matching classes
-        assertThat(mc2.get(new Clazz("A")).getName(), is("Client"));
-        assertThat(mc2.get(new Clazz("C")).getName(), is("Target"));
-        assertThat(mc2.get(new Clazz("E")).getName(), is("Adapter"));
+        assertThat(mc2.get(TestHelper.createClazz("A")).getName(), is("Client"));
+        assertThat(mc2.get(TestHelper.createClazz("C")).getName(), is("Target"));
+        assertThat(mc2.get(TestHelper.createClazz("E")).getName(), is("Adapter"));
 
         // Check superfluous edges
         assertThat(se2.size(), is(0));
@@ -111,8 +116,8 @@ public class BaBrahemMatcherTest {
         assertThat(me2.size(), is(1));
         assertTrue(me2.contains(
                 new Edge(
-                        new Clazz("Adapter"),
-                        new Clazz("Adaptee"),
+                        TestHelper.createClazz("Adapter"),
+                        TestHelper.createClazz("Adaptee"),
                         EdgeType.ASSOCIATION_DIRECTED)));
     }
 
@@ -140,7 +145,7 @@ public class BaBrahemMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -148,25 +153,28 @@ public class BaBrahemMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Bridge"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("A")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("B")).getName(), is("Abstraction"));
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Implementor"));
-        assertThat(mc0.get(new Clazz("D")).getName(), is("RefinedAbstraction"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteImplementor"));
+        final Node a = TestHelper.createClazz("A");
+        final Node b = TestHelper.createClazz("B");
+        final Node c = TestHelper.createClazz("C");
+        final Node d = TestHelper.createClazz("D");
+        final Node e = TestHelper.createClazz("E");
+        assertThat(mc0.get(a).getName(), is("Client"));
+        assertThat(mc0.get(b).getName(), is("Abstraction"));
+        assertThat(mc0.get(c).getName(), is("Implementor"));
+        assertThat(mc0.get(d).getName(), is("RefinedAbstraction"));
+        assertThat(mc0.get(e).getName(), is("ConcreteImplementor"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(3));
-        assertTrue(se0.contains(new Edge(new Clazz("D"), new Clazz("E"), EdgeType.DEPENDENCY)));
-        assertTrue(se0.contains(new Edge(new Clazz("C"), new Clazz("B"), EdgeType.ASSOCIATION_DIRECTED)));
-        assertTrue(se0.contains(new Edge(new Clazz("A"), new Clazz("C"), EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(se0.contains(new Edge(d, e, EdgeType.DEPENDENCY)));
+        assertTrue(se0.contains(new Edge(c, b, EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(se0.contains(new Edge(a, c, EdgeType.ASSOCIATION_DIRECTED)));
 
         // Check missing edges
+        final Node implementor = TestHelper.createInterface("Implementor");
+        final Node abstraction = TestHelper.createAbstractClazz("Abstraction");
         assertThat(me0.size(), is(1));
-        assertTrue(me0.contains(
-                new Edge(
-                        new Clazz("Implementor"),
-                        new Clazz("Abstraction"),
-                        EdgeType.AGGREGATE)));
+        assertTrue(me0.contains(new Edge(implementor, abstraction, EdgeType.AGGREGATE)));
     }
 
     /**
@@ -193,7 +201,7 @@ public class BaBrahemMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -201,20 +209,18 @@ public class BaBrahemMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Builder"));
 
         // Check the matching classes
-        assertThat(mc0.get(new Clazz("B")).getName(), is("Builder"));
-        assertThat(mc0.get(new Clazz("D")).getName(), is("ConcreteBuilder"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("Product"));
+        assertThat(mc0.get(TestHelper.createClazz("B")).getName(), is("Builder"));
+        assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("ConcreteBuilder"));
+        assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("Product"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
 
         // Check missing edges
+        final Node builder = TestHelper.createInterface("Builder");
+        final Node director = TestHelper.createClazz("Director");
         assertThat(me0.size(), is(1));
-        assertTrue(me0.contains(
-                new Edge(
-                        new Clazz("Builder"),
-                        new Clazz("Director"),
-                        EdgeType.AGGREGATE)));
+        assertTrue(me0.contains(new Edge(builder, director, EdgeType.AGGREGATE)));
     }
 
     /**
@@ -237,11 +243,13 @@ public class BaBrahemMatcherTest {
         final Solutions matchResult = matcher.match(pattern, system, 1);
         final List<Solution> solutions = matchResult.getSolutions();
 
+        final Node handler = TestHelper.createAbstractClazz("Handler");
+
         // Check number of detected patterns
         assertThat(solutions.size(), is(3));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -249,23 +257,19 @@ public class BaBrahemMatcherTest {
         assertThat(s0.getDesignPatternName(), is("ChainOfResponsibility"));
 
         // Check matches classes
-        assertThat(mc0.get(new Clazz("A")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Handler"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteHandler"));
+        assertThat(mc0.get(TestHelper.createClazz("A")).getName(), is("Client"));
+        assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Handler"));
+        assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("ConcreteHandler"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
 
         // Check missing edges
         assertThat(me0.size(), is(1));
-        assertTrue(me0.contains(
-                new Edge(
-                        new Clazz("Handler"),
-                        new Clazz("Handler"),
-                        EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(me0.contains(new Edge(handler, handler, EdgeType.ASSOCIATION_DIRECTED)));
 
         final Solution s1 = solutions.get(1);
-        final MatchedClasses mc1 = s1.getMatchedClasses();
+        final MatchedNodes mc1 = s1.getMatchedNodes();
         final Set<Edge> se1 = s1.getSuperfluousEdges();
         final Set<Edge> me1 = s1.getMissingEdges();
 
@@ -273,23 +277,19 @@ public class BaBrahemMatcherTest {
         assertThat(s1.getDesignPatternName(), is("ChainOfResponsibility"));
 
         // Check matching classes
-        assertThat(mc1.get(new Clazz("B")).getName(), is("Handler"));
-        assertThat(mc1.get(new Clazz("C")).getName(), is("Client"));
-        assertThat(mc1.get(new Clazz("D")).getName(), is("ConcreteHandler"));
+        assertThat(mc1.get(TestHelper.createClazz("B")).getName(), is("Handler"));
+        assertThat(mc1.get(TestHelper.createClazz("C")).getName(), is("Client"));
+        assertThat(mc1.get(TestHelper.createClazz("D")).getName(), is("ConcreteHandler"));
 
         // Check superfluous edges
         assertThat(se1.size(), is(0));
 
         // Check missing edges
         assertThat(me1.size(), is(1));
-        assertTrue(me1.contains(
-                new Edge(
-                        new Clazz("Handler"),
-                        new Clazz("Handler"),
-                        EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(me1.contains(new Edge(handler, handler, EdgeType.ASSOCIATION_DIRECTED)));
 
         final Solution s2 = solutions.get(2);
-        final MatchedClasses mc2 = s2.getMatchedClasses();
+        final MatchedNodes mc2 = s2.getMatchedNodes();
         final Set<Edge> se2 = s2.getSuperfluousEdges();
         final Set<Edge> me2 = s2.getMissingEdges();
 
@@ -297,20 +297,16 @@ public class BaBrahemMatcherTest {
         assertThat(s2.getDesignPatternName(), is("ChainOfResponsibility"));
 
         // Check matching classes
-        assertThat(mc2.get(new Clazz("A")).getName(), is("Client"));
-        assertThat(mc2.get(new Clazz("B")).getName(), is("Handler"));
-        assertThat(mc2.get(new Clazz("D")).getName(), is("ConcreteHandler"));
+        assertThat(mc2.get(TestHelper.createClazz("A")).getName(), is("Client"));
+        assertThat(mc2.get(TestHelper.createClazz("B")).getName(), is("Handler"));
+        assertThat(mc2.get(TestHelper.createClazz("D")).getName(), is("ConcreteHandler"));
 
         // Check superfluous edges
         assertThat(se2.size(), is(0));
 
         // Check missing edges
         assertThat(me2.size(), is(1));
-        assertTrue(me2.contains(
-                new Edge(
-                        new Clazz("Handler"),
-                        new Clazz("Handler"),
-                        EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(me2.contains(new Edge(handler, handler, EdgeType.ASSOCIATION_DIRECTED)));
 
     }
 
@@ -338,25 +334,25 @@ public class BaBrahemMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
         // Check pattern name
         assertThat(s0.getDesignPatternName(), is("Factory Method"));
 
-        // Check matched classes
-        assertThat(mc0.get(new Clazz("B")).getName(), is("Creator"));
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Product"));
-        assertThat(mc0.get(new Clazz("D")).getName(), is("ConcreteCreator"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteProduct"));
+        // Check matched nodes
+        assertThat(mc0.get(TestHelper.createClazz("B")).getName(), is("Creator"));
+        assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Product"));
+        assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("ConcreteCreator"));
+        assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("ConcreteProduct"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(1));
         assertTrue(se0.contains(
                 new Edge(
-                        new Clazz("C"),
-                        new Clazz("B"),
+                        TestHelper.createClazz("C"),
+                        TestHelper.createClazz("B"),
                         EdgeType.ASSOCIATION_DIRECTED)));
 
         // Check missing edges
@@ -376,25 +372,25 @@ public class BaBrahemMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
         // Check the name
         assertThat(s0.getDesignPatternName(), is("Factory Method"));
 
-        // Ccheck matched classes
-        assertThat(mc0.get(new Clazz("B")).getName(), is("Creator"));
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Product"));
-        assertThat(mc0.get(new Clazz("D")).getName(), is("ConcreteCreator"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteProduct"));
+        // Ccheck matched nodes
+        assertThat(mc0.get(TestHelper.createClazz("B")).getName(), is("Creator"));
+        assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Product"));
+        assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("ConcreteCreator"));
+        assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("ConcreteProduct"));
 
         // Check spuerfluous edges
         assertThat(se0.size(), is(1));
         assertTrue(se0.contains(
                 new Edge(
-                        new Clazz("C"),
-                        new Clazz("B"),
+                        TestHelper.createClazz("C"),
+                        TestHelper.createClazz("B"),
                         EdgeType.ASSOCIATION_DIRECTED)));
 
         // Check missing edges
@@ -414,36 +410,35 @@ public class BaBrahemMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
         // Check the name
         assertThat(s0.getDesignPatternName(), is("Iterator"));
 
-        // Check matched classes
-        assertThat(mc0.get(new Clazz("A")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("B")).getName(), is("Aggregate"));
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Iterator"));
-        assertThat(mc0.get(new Clazz("D")).getName(), is("ConcreteAggregate"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteIterator"));
+        // Check matched nodes
+        final Node a = TestHelper.createClazz("A");
+        final Node b = TestHelper.createClazz("B");
+        final Node c = TestHelper.createClazz("C");
+        final Node d = TestHelper.createClazz("D");
+        final Node e = TestHelper.createClazz("E");
+        assertThat(mc0.get(a).getName(), is("Client"));
+        assertThat(mc0.get(b).getName(), is("Aggregate"));
+        assertThat(mc0.get(c).getName(), is("Iterator"));
+        assertThat(mc0.get(d).getName(), is("ConcreteAggregate"));
+        assertThat(mc0.get(e).getName(), is("ConcreteIterator"));
 
         // Check superfuous edges
         assertThat(se0.size(), is(1));
-        assertTrue(se0.contains(
-                new Edge(
-                        new Clazz("C"),
-                        new Clazz("B"),
-                        EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(se0.contains(new Edge(c, b, EdgeType.ASSOCIATION_DIRECTED)));
 
 
         // Check missing edges
+        final Node concreteIterator = TestHelper.createClazz("ConcreteIterator");
+        final Node concreteAggregate = TestHelper.createClazz("ConcreteAggregate");
         assertThat(me0.size(), is(1));
-        assertTrue(me0.contains(
-                new Edge(
-                        new Clazz("ConcreteIterator"),
-                        new Clazz("ConcreteAggregate"),
-                        EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(me0.contains(new Edge(concreteIterator, concreteAggregate, EdgeType.ASSOCIATION_DIRECTED)));
     }
 
     /**
@@ -466,11 +461,14 @@ public class BaBrahemMatcherTest {
         final Solutions matchResult = matcher.match(pattern, system, 1);
         final List<Solution> solutions = matchResult.getSolutions();
 
+        final Node memento = TestHelper.createClazz("Memento");
+        final Node caretaker = TestHelper.createClazz("Caretaker");
+
         // Check number of times the pattern was detected
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -478,19 +476,15 @@ public class BaBrahemMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Memento"));
 
         // Check the matching classes
-        assertThat(mc0.get(new Clazz("D")).getName(), is("Originator"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("Memento"));
+        assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("Originator"));
+        assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("Memento"));
 
         // Check the superfluous edges
         assertThat(se0.size(), is(0));
 
         // Check the missing edges
         assertThat(me0.size(), is(1));
-        assertTrue(me0.contains(
-                new Edge(
-                        new Clazz("Memento"),
-                        new Clazz("Caretaker"),
-                        EdgeType.AGGREGATE)));
+        assertTrue(me0.contains(new Edge(memento, caretaker, EdgeType.AGGREGATE)));
     }
 
     /**
@@ -513,11 +507,14 @@ public class BaBrahemMatcherTest {
         final Solutions matchResult = matcher.match(pattern, system, 1);
         final List<Solution> solutions = matchResult.getSolutions();
 
+        final Node concreteObserver = TestHelper.createClazz("ConcreteObserver");
+        final Node concreteSubject = TestHelper.createClazz("ConcreteSubject");
+
         // Check number of times the pattern was detected
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -525,26 +522,22 @@ public class BaBrahemMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Observer"));
 
         // Check the matching classes
-        assertThat(mc0.get(new Clazz("B")).getName(), is("Observer"));
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Subject"));
-        assertThat(mc0.get(new Clazz("D")).getName(), is("ConcreteObserver"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteSubject"));
+        assertThat(mc0.get(TestHelper.createClazz("B")).getName(), is("Observer"));
+        assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Subject"));
+        assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("ConcreteObserver"));
+        assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("ConcreteSubject"));
 
         // Check the superfluous edges
         assertThat(se0.size(), is(1));
         assertTrue(se0.contains(
                 new Edge(
-                        new Clazz("D"),
-                        new Clazz("E"),
+                        TestHelper.createClazz("D"),
+                        TestHelper.createClazz("E"),
                         EdgeType.DEPENDENCY)));
 
         // Check the missing edges
         assertThat(me0.size(), is(1));
-        assertTrue(me0.contains(
-                new Edge(
-                        new Clazz("ConcreteObserver"),
-                        new Clazz("ConcreteSubject"),
-                        EdgeType.ASSOCIATION_DIRECTED)));
+        assertTrue(me0.contains(new Edge(concreteObserver, concreteSubject, EdgeType.ASSOCIATION_DIRECTED)));
     }
 
     /**
@@ -567,34 +560,33 @@ public class BaBrahemMatcherTest {
         final Solutions matchResult = matcher.match(pattern, system, 1);
         final List<Solution> solutions = matchResult.getSolutions();
 
+        final Node strategy = TestHelper.createInterface("Strategy");
+        final Node context = TestHelper.createClazz("Context");
+
         // Check the number of times the pattern was detected
         assertThat(solutions.size(), is(2));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
         // Check the name
         assertThat(s0.getDesignPatternName(), is("State - Strategy"));
 
-        // Check the matched classes
-        assertThat(mc0.get(new Clazz("C")).getName(), is("Strategy"));
-        assertThat(mc0.get(new Clazz("E")).getName(), is("ConcreteStrategy"));
+        // Check the matched nodes
+        assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Strategy"));
+        assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("ConcreteStrategy"));
 
         // Check the superfluous edges
         assertThat(se0.size(), is(0));
 
         // Check the missing edges
         assertThat(me0.size(), is(1));
-        assertTrue(me0.contains(
-                new Edge(
-                        new Clazz("Strategy"),
-                        new Clazz("Context"),
-                        EdgeType.AGGREGATE)));
+        assertTrue(me0.contains(new Edge(strategy, context, EdgeType.AGGREGATE)));
 
         final Solution s1 = solutions.get(1);
-        final MatchedClasses mc1 = s1.getMatchedClasses();
+        final MatchedNodes mc1 = s1.getMatchedNodes();
         final Set<Edge> se1 = s1.getSuperfluousEdges();
         final Set<Edge> me1 = s1.getMissingEdges();
 
@@ -602,19 +594,15 @@ public class BaBrahemMatcherTest {
         assertThat(s1.getDesignPatternName(), is("State - Strategy"));
 
         // Check the matching classes
-        assertThat(mc1.get(new Clazz("B")).getName(), is("Strategy"));
-        assertThat(mc1.get(new Clazz("D")).getName(), is("ConcreteStrategy"));
+        assertThat(mc1.get(TestHelper.createClazz("B")).getName(), is("Strategy"));
+        assertThat(mc1.get(TestHelper.createClazz("D")).getName(), is("ConcreteStrategy"));
 
         // Check the superfluous edges
         assertThat(se1.size(), is(0));
 
         // Check the missing edges
         assertThat(me1.size(), is(1));
-        assertTrue(me1.contains(
-                new Edge(
-                        new Clazz("Strategy"),
-                        new Clazz("Context"),
-                        EdgeType.AGGREGATE)));
+        assertTrue(me1.contains(new Edge(strategy, context, EdgeType.AGGREGATE)));
     }
 
     /**
@@ -630,12 +618,12 @@ public class BaBrahemMatcherTest {
 
     private SystemUnderConsideration createBaBrahemSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("D"), new Clazz("E"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("E"), new Clazz("C"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("D"), new Clazz("B"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("C"), new Clazz("B"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("A"), new Clazz("B"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("A"), new Clazz("C"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(TestHelper.createClazz("D"), TestHelper.createClazz("E"), EdgeType.DEPENDENCY));
+        result.add(new Edge(TestHelper.createClazz("E"), TestHelper.createClazz("C"), EdgeType.INHERITANCE));
+        result.add(new Edge(TestHelper.createClazz("D"), TestHelper.createClazz("B"), EdgeType.INHERITANCE));
+        result.add(new Edge(TestHelper.createClazz("C"), TestHelper.createClazz("B"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(TestHelper.createClazz("A"), TestHelper.createClazz("B"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(TestHelper.createClazz("A"), TestHelper.createClazz("C"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 
