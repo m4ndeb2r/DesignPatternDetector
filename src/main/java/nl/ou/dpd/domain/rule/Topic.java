@@ -6,6 +6,7 @@ package nl.ou.dpd.domain.rule;
  * if two nodes have equal visibility.
  *
  * @author Martin de Boer
+ * @author Peter Vansweevelt
  */
 public enum Topic {
     TYPE,

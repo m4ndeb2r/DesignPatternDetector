@@ -35,7 +35,7 @@ public class EdgeRule implements Rule<Edge> {
      * Applies the rule on a given {@ink Edge}.
      *
      * @param the class under consideration
-     * @return <code>True</code> if the node meets the conditions set in the {@link EdgeRule}. <code> False</code> otherwise.
+     * @return {@code true} if the node meets the conditions set in the {@link EdgeRule}, or {@code false} otherwise.
      */
     public boolean process(Edge systemEdge) {
         if (ruleEdge.getName() != null && !ruleEdge.getName().equalsIgnoreCase(systemEdge.getName())) {
@@ -47,17 +47,14 @@ public class EdgeRule implements Rule<Edge> {
         if (target == Target.OBJECT) {
             return processObjectTarget(systemEdge);
         }
-
-        // TODO: throw exception? This is an unexpected situation.
-        return false;
+        throw new RuleException("Unexpected target: " + this.target + ".");
     }
 
     private boolean processRelationTarget(Edge systemEdge) {
         if (topic == Topic.TYPE) {
             return systemEdge.getRelationType() == ruleEdge.getRelationType();
         }
-        // TODO: throw exception? This is an unexpected situation.
-        return false;
+        throw new RuleException("Unexpected topic while processing RELATION target: " + this.topic + ".");
     }
 
     private boolean processObjectTarget(Edge systemEdge) {
@@ -68,8 +65,7 @@ public class EdgeRule implements Rule<Edge> {
             final boolean endOkay = ruleEnd != null && ruleEnd.equals(systemEdge.getCardinalityEnd());
             return frontOkay && endOkay;
         }
-        // TODO: throw exception? This is an unexpected situation.
-        return false;
+        throw new RuleException("Unexpected topic while processing OBJECT target: " + this.topic + ".");
     }
 
 }

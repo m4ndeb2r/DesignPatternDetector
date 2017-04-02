@@ -4,10 +4,9 @@ import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
-import nl.ou.dpd.domain.node.Interface;
-import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.node.Visibility;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -18,6 +17,26 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  */
 public class EdgeRuleTest {
+
+    /**
+     * Exception rule.
+     */
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    /**
+     * Test if the {@link EdgeRule} throws an exception when an unexpected {@link Target} is provided.
+     */
+    @Test
+    public void testEdgeRuleWithUnknownTarget() {
+        final Edge ruleEdge = new Edge(new Clazz("node1"), new Clazz("node2"), EdgeType.ASSOCIATION);
+        final Edge systemEdge = new Edge(new Clazz("node1"), new Clazz("node2"), EdgeType.ASSOCIATION);
+        final EdgeRule failingTargetRule = new EdgeRule(ruleEdge, Topic.TYPE, Target.ATTRIBUTE, null);
+
+        thrown.expect(RuleException.class);
+        thrown.expectMessage("Unexpected target: ATTRIBUTE");
+        failingTargetRule.process(systemEdge);
+    }
 
     /**
      * Test the {@link EdgeRule} class for type checking.
@@ -31,6 +50,11 @@ public class EdgeRuleTest {
         final EdgeRule edgeRule = new EdgeRule(ruleEdge, Topic.TYPE, Target.RELATION, null);
         assertTrue(edgeRule.process(systemEdge));
         assertFalse(edgeRule.process(systemEdge2));
+
+        final EdgeRule failingTopicRule = new EdgeRule(ruleEdge, Topic.CARDINALITY, Target.RELATION, null);
+        thrown.expect(RuleException.class);
+        thrown.expectMessage("Unexpected topic while processing RELATION target: CARDINALITY");
+        failingTopicRule.process(systemEdge);
     }
 
     /**
@@ -57,6 +81,11 @@ public class EdgeRuleTest {
         systemEdge2.removeCardinalityFront();
         systemEdge2.removeCardinalityEnd();
         assertFalse(edgeRule.process(systemEdge2));
+
+        final EdgeRule failingTopicRule = new EdgeRule(ruleEdge, Topic.VISIBILITY, Target.OBJECT, null);
+        thrown.expect(RuleException.class);
+        thrown.expectMessage("Unexpected topic while processing OBJECT target: VISIBILITY");
+        failingTopicRule.process(systemEdge);
     }
 
 }

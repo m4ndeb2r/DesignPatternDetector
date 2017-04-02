@@ -54,8 +54,7 @@ public class NodeRule implements Rule<Node> {
         if (target == Target.ATTRIBUTE) {
             return processAttributeTarget(systemNode);
         }
-        // TODO: throw exception? This is an unexpected situation.
-        return false;
+        throw new RuleException("Unexpected target: " + this.target + ".");
     }
 
     private boolean processObjectTarget(Node systemNode) {
@@ -79,8 +78,7 @@ public class NodeRule implements Rule<Node> {
                 // If ruleNode.isActive is not set, return true; otherwise check for equality
                 return (ruleNode.isActive() == null || systemNode.isActive() == ruleNode.isActive());
             default:
-                // TODO: throw exception? This is an unexpected situation.
-                return false;
+                throw new RuleException("Unexpected topic while processing OBJECT target: " + this.topic + ".");
         }
     }
 
