@@ -25,7 +25,7 @@ public class Solution {
      * Constructs a {@link Solution} instance for a design pattern.
      *
      * @param designPatternName the name of the design pattern
-     * @param matchedNodes    the matched classes
+     * @param matchedNodes      the matched nodes
      * @param superfluousEdges  the superfluous edges (not stricktly belonging to the desin pattern)
      * @param missingEdges      the missing edges (that should be in the system design, but were not detected
      */
@@ -41,11 +41,11 @@ public class Solution {
     }
 
     /**
-     * Indicates whether the matched classes of this {@link Solution} are equal to the matched classes of another
+     * Indicates whether the matched nodes of this {@link Solution} are equal to the matched nodes of another
      * {@link Solution}.
      *
      * @param other the {@link Solution} to compare to this {@link Solution}.
-     * @return {@code true} if the matched classes of this {@link Solution} are equal to the matched classes of
+     * @return {@code true} if the matched nodes of this {@link Solution} are equal to the matched nodes of
      * {@code other}, or {@code false} otherwise.
      */
     public boolean isEqual(Solution other) {
@@ -62,9 +62,9 @@ public class Solution {
     }
 
     /**
-     * Getter for the matched classes.
+     * Getter for the matched nodes.
      *
-     * @return the matched classes.
+     * @return the matched nodes.
      */
     public MatchedNodes getMatchedNodes() {
         return matchedNodes;

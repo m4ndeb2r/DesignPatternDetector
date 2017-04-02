@@ -341,7 +341,7 @@ public class BaBrahemMatcherTest {
         // Check pattern name
         assertThat(s0.getDesignPatternName(), is("Factory Method"));
 
-        // Check matched classes
+        // Check matched nodes
         assertThat(mc0.get(TestHelper.createClazz("B")).getName(), is("Creator"));
         assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Product"));
         assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("ConcreteCreator"));
@@ -379,7 +379,7 @@ public class BaBrahemMatcherTest {
         // Check the name
         assertThat(s0.getDesignPatternName(), is("Factory Method"));
 
-        // Ccheck matched classes
+        // Ccheck matched nodes
         assertThat(mc0.get(TestHelper.createClazz("B")).getName(), is("Creator"));
         assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Product"));
         assertThat(mc0.get(TestHelper.createClazz("D")).getName(), is("ConcreteCreator"));
@@ -417,7 +417,7 @@ public class BaBrahemMatcherTest {
         // Check the name
         assertThat(s0.getDesignPatternName(), is("Iterator"));
 
-        // Check matched classes
+        // Check matched nodes
         final Node a = TestHelper.createClazz("A");
         final Node b = TestHelper.createClazz("B");
         final Node c = TestHelper.createClazz("C");
@@ -574,7 +574,7 @@ public class BaBrahemMatcherTest {
         // Check the name
         assertThat(s0.getDesignPatternName(), is("State - Strategy"));
 
-        // Check the matched classes
+        // Check the matched nodes
         assertThat(mc0.get(TestHelper.createClazz("C")).getName(), is("Strategy"));
         assertThat(mc0.get(TestHelper.createClazz("E")).getName(), is("ConcreteStrategy"));
 
