@@ -30,6 +30,14 @@ public class EdgeRule implements Rule<Edge> {
         this.target = target;
         this.operator = operator;
     }
+    
+    /**
+     * Get the ruleEdge of this {@link Rule}. 
+     * @return the ruleEdge
+     */
+    public Edge getRuleEdge() {
+    	return ruleEdge;
+    }
 
     /**
      * Applies the rule on a given {@ink Edge}.
@@ -38,9 +46,6 @@ public class EdgeRule implements Rule<Edge> {
      * @return {@code true} if the node meets the conditions set in the {@link EdgeRule}, or {@code false} otherwise.
      */
     public boolean process(Edge systemEdge) {
-        if (ruleEdge.getName() != null && !ruleEdge.getName().equalsIgnoreCase(systemEdge.getName())) {
-            return false;
-        }
         if (target == Target.RELATION) {
             return processRelationTarget(systemEdge);
         }
