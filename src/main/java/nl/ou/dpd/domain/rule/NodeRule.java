@@ -49,7 +49,12 @@ public class NodeRule implements Rule<Node> {
             return false;
         }
         if (target == Target.OBJECT) {
-            return processObjectTarget(systemNode);
+        	if (operator == Operator.EXISTS) {
+                return processObjectTargetExists(systemNode);        		
+        	}
+        	if (operator == Operator.EQUALS) {
+                return processObjectTargetEquals(systemNode);        		
+        	}
         }
         if (target == Target.ATTRIBUTE) {
             return processAttributeTarget(systemNode);
@@ -57,7 +62,10 @@ public class NodeRule implements Rule<Node> {
         throw new RuleException("Unexpected target: " + this.target + ".");
     }
 
-    private boolean processObjectTarget(Node systemNode) {
+    private boolean processObjectTargetEquals(Node systemNode) {
+    	if (!processObjectTargetExists(systemNode)) {
+            throw new RuleException("Unexpected error. The topic " + this.topic + " is not set.");
+    	}    	
         switch (topic) {
             case TYPE:
                 // If ruleNode.type is not set, return true, otherwise check for equal types
@@ -67,21 +75,45 @@ public class NodeRule implements Rule<Node> {
                 return ruleNode.getVisibility() == null || systemNode.getVisibility() == ruleNode.getVisibility();
             case MODIFIER_ROOT:
                 // If ruleNode.isRoot is not set, return true; otherwise check for equality
-                return (ruleNode.isRoot() == null || systemNode.isRoot() == ruleNode.isRoot());
+                return ruleNode.isRoot() == null || systemNode.isRoot() == ruleNode.isRoot();
             case MODIFIER_LEAF:
                 // If ruleNode.isLeaf is not set, return true; otherwise check for equality
-                return (ruleNode.isLeaf() == null || systemNode.isLeaf() == ruleNode.isLeaf());
+                return ruleNode.isLeaf() == null || systemNode.isLeaf() == ruleNode.isLeaf();
             case MODIFIER_ABSTRACT:
                 // If ruleNode.isAbstract is not set, return true; otherwise check for equality
-                return (ruleNode.isAbstract() == null || systemNode.isAbstract() == ruleNode.isAbstract());
+                return ruleNode.isAbstract() == null || systemNode.isAbstract() == ruleNode.isAbstract();
             case MODIFIER_ACTIVE:
                 // If ruleNode.isActive is not set, return true; otherwise check for equality
-                return (ruleNode.isActive() == null || systemNode.isActive() == ruleNode.isActive());
+                return ruleNode.isActive() == null || systemNode.isActive() == ruleNode.isActive();
             default:
                 throw new RuleException("Unexpected topic while processing OBJECT target: " + this.topic + ".");
         }
     }
 
+    private boolean processObjectTargetExists(Node systemNode) {
+        switch (topic) {
+            case TYPE:
+                // If systemNode.type is not set, return false
+                return systemNode.getType() != null;
+            case VISIBILITY:
+                // If systemNode.visibility is not set, return false
+                return systemNode.getVisibility() != null;
+            case MODIFIER_ROOT:
+                // If systemNode.isRoot is not set, return false
+                return systemNode.isRoot() != null;
+            case MODIFIER_LEAF:
+                // If systemNode.isLeaf is not set, return false
+                return systemNode.isLeaf() != null;
+            case MODIFIER_ABSTRACT:
+                // If systemNode.isAbstract is not set, return false
+                return systemNode.isAbstract() != null;
+            case MODIFIER_ACTIVE:
+                // If systemNode.isActive is not set, return false
+                return systemNode.isActive() != null;
+            default:
+                throw new RuleException("Unexpected topic while processing OBJECT target: " + this.topic + ".");
+        }
+    }
     private boolean processAttributeTarget(Node systemNode) {
         // TODO: throw exception? This is an unexpected situation (unimplemented).
         return false;

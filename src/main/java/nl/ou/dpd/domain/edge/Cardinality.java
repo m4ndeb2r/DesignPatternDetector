@@ -15,11 +15,11 @@ public class Cardinality {
      */
     public static final int INFINITY = -1;
 
-    private int lower, upper;
+    private final int lower, upper;
 
     /**
      * Constructor setting the lower and upper bound of the cardinality. Values are not checked on errors.
-     * Infinity can be entered as -1 or {@link Cardinality#INFINITY}.
+     * Infinity can be entered as -1 or {@link Cardinality#INFINITY}. Lower and upper bound can be equal e.g when the cardinality is 1.
      *
      * @param lower the lower bound of the cardinality. Must be 0 or greater.
      * @param upper the upper bound of he cardinality. Must be -1 (infinity) or greater.

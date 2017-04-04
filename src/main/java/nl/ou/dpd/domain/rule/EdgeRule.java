@@ -44,9 +44,6 @@ public class EdgeRule implements Rule<Edge> {
         if (target == Target.RELATION) {
             return processRelationTarget(systemEdge);
         }
-        if (target == Target.OBJECT) {
-            return processObjectTarget(systemEdge);
-        }
         throw new RuleException("Unexpected target: " + this.target + ".");
     }
 
@@ -54,18 +51,31 @@ public class EdgeRule implements Rule<Edge> {
         if (topic == Topic.TYPE) {
             return systemEdge.getRelationType() == ruleEdge.getRelationType();
         }
+        if (topic == Topic.CARDINALITY) {
+        	if (operator == Operator.EXISTS) {
+        		return processCardinalityTopicExists(systemEdge);
+        	}       	
+        	if (operator == Operator.EQUALS) {
+        		return processCardinalityTopicEquals(systemEdge);
+        	}
+        }
         throw new RuleException("Unexpected topic while processing RELATION target: " + this.topic + ".");
     }
 
-    private boolean processObjectTarget(Edge systemEdge) {
-        if (topic == Topic.CARDINALITY) {
-            final Cardinality ruleFront = ruleEdge.getCardinalityFront();
-            final Cardinality ruleEnd = ruleEdge.getCardinalityEnd();
-            final boolean frontOkay = ruleFront != null && ruleFront.equals(systemEdge.getCardinalityFront());
-            final boolean endOkay = ruleEnd != null && ruleEnd.equals(systemEdge.getCardinalityEnd());
-            return frontOkay && endOkay;
-        }
-        throw new RuleException("Unexpected topic while processing OBJECT target: " + this.topic + ".");
+    private boolean processCardinalityTopicExists(Edge systemEdge) {
+        final boolean frontOkay = systemEdge.getCardinalityFront() != null;
+        final boolean endOkay = systemEdge.getCardinalityEnd() != null;
+        return frontOkay && endOkay;
     }
 
+    private boolean processCardinalityTopicEquals(Edge systemEdge) {
+    	if (!processCardinalityTopicExists(systemEdge)) {
+            throw new RuleException("Either one or both cardinalities are not set.");
+    	}
+        final Cardinality ruleFront = ruleEdge.getCardinalityFront();
+        final Cardinality ruleEnd = ruleEdge.getCardinalityEnd();
+        final boolean frontOkay = ruleFront.equals(systemEdge.getCardinalityFront());
+        final boolean endOkay = ruleEnd.equals(systemEdge.getCardinalityEnd());
+        return frontOkay && endOkay;
+    }
 }

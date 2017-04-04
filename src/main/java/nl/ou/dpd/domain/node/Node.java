@@ -35,7 +35,7 @@ public abstract class Node implements Comparable<Node> {
     private Boolean isActive;
 
     /**
-     * Constructor with protected access because it is only accessable from within subclasses.
+     * Constructor with protected access because it is only accessible from within subclasses.
      *
      * @param id         a unique id of this {@link Node}
      * @param name       the name of this {@link Node}
