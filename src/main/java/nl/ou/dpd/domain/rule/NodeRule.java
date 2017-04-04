@@ -29,6 +29,14 @@ public class NodeRule implements Rule<Node> {
         this.target = target;
         this.operator = operator;
     }
+    
+    /**
+     * Get the ruleNode of this {@link Rule}. 
+     * @return the ruleNode
+     */
+    public Node getRuleNode() {
+    	return ruleNode;
+    }
 
     /**
      * Applies the rule on a given {@ink Node}.
@@ -44,10 +52,6 @@ public class NodeRule implements Rule<Node> {
      * otherwise.
      */
     public boolean process(Node systemNode) {
-        // We always inspect a node of a given class-type. TODO: should we indeed? Why?
-        if (!systemNode.getName().equalsIgnoreCase(ruleNode.getName())) {
-            return false;
-        }
         if (target == Target.OBJECT) {
         	if (operator == Operator.EXISTS) {
                 return processObjectTargetExists(systemNode);        		
