@@ -14,7 +14,7 @@ public abstract class Edges {
     private List<Edge> edges;
 
     /**
-     * Constructor that has protected access because it is only accessable from subclasses.
+     * Constructor that has protected access because it is only accessible from subclasses.
      */
     protected Edges() {
         this.edges = new ArrayList();
