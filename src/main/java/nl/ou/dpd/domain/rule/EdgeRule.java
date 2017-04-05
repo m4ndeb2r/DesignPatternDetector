@@ -15,6 +15,7 @@ public class EdgeRule implements Rule<Edge> {
     private final Topic topic;
     private final Target target;
     private final Operator operator;
+    private final boolean not;
 
     /**
      * Creates a rule with the {@link Edge} edge that implements the features needed to apply to this rule.
@@ -29,9 +30,26 @@ public class EdgeRule implements Rule<Edge> {
         this.topic = topic;
         this.target = target;
         this.operator = operator;
+        this.not = false;
     }
     
     /**
+     * Creates a rule with the {@link Edge} edge that implements the features needed to apply to this rule.
+     *
+     * @param edge     the {@link Edge} containing the rule's features
+     * @param topic    holds the feature to be evaluated (type, visibility, ...)
+     * @param target   the target of the evaluation (object, relation, ...)
+     * @param operator the evaluation operator (equals, exists, ...)
+     * @param not      if the operator must be used negative (not equals,..)
+     */
+    public EdgeRule(Edge edge, Topic topic, Target target, Operator operator, boolean not) {
+        this.ruleEdge = edge;
+        this.topic = topic;
+        this.target = target;
+        this.operator = operator;
+        this.not = not;
+    }
+   /**
      * Get the ruleEdge of this {@link Rule}. 
      * @return the ruleEdge
      */
@@ -47,7 +65,11 @@ public class EdgeRule implements Rule<Edge> {
      */
     public boolean process(Edge systemEdge) {
         if (target == Target.RELATION) {
-            return processRelationTarget(systemEdge);
+        	if (not) {
+        		return !processRelationTarget(systemEdge);
+        	} else {
+        		return processRelationTarget(systemEdge);
+        	}
         }
         throw new RuleException("Unexpected target: " + this.target + ".");
     }

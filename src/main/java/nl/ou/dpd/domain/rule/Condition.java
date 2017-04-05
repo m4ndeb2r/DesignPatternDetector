@@ -27,7 +27,8 @@ public class Condition {
 	private List<Condition> andConditions;
 	private List<Condition> orConditions;
 	private Purview purview;
-	private Boolean handled;
+	private Boolean value;
+	private boolean handled;
 	
 	/**
 	 * Constructor of the {@link Condition} class.
@@ -41,7 +42,8 @@ public class Condition {
 		andConditions = new ArrayList<Condition>();
 		orConditions = new ArrayList<Condition>();
 		purview = null;
-		handled = null;
+		value = null;
+		handled = false;
 	}
 	
 	/**
@@ -185,8 +187,25 @@ public class Condition {
 	}
 	
 	/**
+	 * Set value attribute.
+	 * Visibility private: the value can only be set by processing the condition.
+	 * @param value
+	 */
+	private void setValue(Boolean value) {
+		this.value = value;
+	}
+	
+	/**
+	 * Get value attribute.
+	 * @return <code>Null</code> if the condition has not been handled yet. The boolean value of the condition otherwise.
+	 */
+	public Boolean getValue() {		
+		return value;
+	}
+	
+	/**
 	 * Set handled attribute.
-	 * Visibility private: the handler is set by processing the condition.
+	 * Visibility private: the attribuet handled can only be set by processing the condition.
 	 * @param handled
 	 */
 	private void setHandled(boolean handled) {
@@ -195,34 +214,44 @@ public class Condition {
 	
 	/**
 	 * Get handled attribute.
-	 * @return <code>Null</code> if the condition has not been handled yet. The boolean value of the condition otherwise.
+	 * @return <code>False</code> if the condition has not been handled yet. <code>True</code> otherwise.
 	 */
-	public boolean getHandled() {
+	public boolean getHandled() {		
 		return handled;
 	}
+	
+	/**
+	 * Reset the handled attribute to false. 
+	 */
+	public void clearHandled() {
+		setValue(null);
+		setHandled(false);
+	}
+	
 	/**
 	 * Process the {@link Condition}.
 	 * @param edge an edgeof the system under consideration.
-	 * @return <code>True</code> if all the rules and the and-conditions have been met or if the purview is set to IGNORE. <code>False</code> otherwise. 
+	 * @return <code>True</code> if all the rules have been met or if the purview is set to IGNORE. <code>False</code> otherwise. 
 	 */
-	public boolean process(Edge edge) {
-
-		if (handled != null) {
-			return handled;
-		}
+	public Boolean process(Edge edge) {
+		//if condition has been handled, do not process
+		if (handled == true) {
+			return value;
+		}		
 		switch (purview) {
 		case IGNORE: {
-			setHandled(true);
-			return handled;
+			setHandled(false);
+			return value;
 		}
 		case FEEDBACK_ONLY: {
-			processRules(edge);
+			setValue(processRules(edge));
 			setHandled(true);
-			return handled;
+			return value;
 		}
         default:		
-			setHandled(processRules(edge));
-			return handled;
+			setValue(processRules(edge));
+			setHandled(true);
+			return value;
 		}
 	}
 
@@ -230,33 +259,93 @@ public class Condition {
 	 * Processes the rules of this condition.
 	 * Inspects whether the rule applies to an Edge or a Node, and selects the appropriate Rule.
 	 * Inspects whether the rule has to be applied to this Edge or Node by comparing their names. 
-	 * @return
+	 * @return the value of the handled attribute; <br>
+	 * <ul><li><code>True</code> if all the rules return true.</li>
+	 * <li><code>False</code> if at least one of the rules returns false.</li>
+	 * <li><code>Null</code> if the condition has not been processed.</li></ul>
 	 */
 	private Boolean processRules(Edge edge) {
 		for (Rule r : rules) {
+			Boolean ruleHandled = null;
 			//check classes
 			if (r.getClass().getName().contains("EdgeRule")) {
-				EdgeRule edgeRule = (EdgeRule) r;
-				//Only process if the rule applies to this edge 
-				if (edgeRule.getRuleEdge().getName() != null && edgeRule.getRuleEdge().getName().equalsIgnoreCase(edge.getName())) {
-					return r.process(edge);			
-				}
-			}
-			if (r.getClass().getName().contains("NodeRule")) {
-				NodeRule nodeRule = (NodeRule) r;
-				//Only process if the rule applies to one of the nodes of the edge.
+				ruleHandled = processEdgeRule((EdgeRule) r, edge);
+			} else if (r.getClass().getName().contains("NodeRule")) {
 				Node node1 = edge.getNode1();
-				Node node2 = edge.getNode2();					
-				if (nodeRule.getRuleNode().getName() != null && nodeRule.getRuleNode().getName().equalsIgnoreCase(node1.getName())) {
-					return r.process(node1);			
+				ruleHandled = processNodeRule((NodeRule) r, node1);
+				//handle node 2 only if node 1 didn't return a result.
+				if (ruleHandled == null) {
+					Node node2 = edge.getNode2();					
+					ruleHandled = processNodeRule((NodeRule) r, node2);
 				}
-				if (nodeRule.getRuleNode().getName() != null && nodeRule.getRuleNode().getName().equalsIgnoreCase(node2.getName())) {
-					return r.process(node2);							
-				}
+			} else {
+				String message = "The Class " + r.getClass() + " has no implementation in any Rule.";
+				throw new RuleException("Unexpected exception. " + message);
 			}
-			String message = "The Class " + r.getClass() + " has no implementation in any Rule.";
-			throw new RuleException("Unexpected exception. " + message);
-		} 
-		return handled;
-	}	
+			
+			//rule could not be applied
+			if (ruleHandled == null) {
+				return null;
+			}
+			//all rules must be met			
+			if (ruleHandled == false) {
+				return false;
+			}
+			//rule has been met: process next rule
+		}
+		return true;
+	}
+	
+	/**
+	 * Processes an edgerule.
+	 * @param r the rule
+	 * @param edge the edge to be processed
+	 */
+	private Boolean processEdgeRule(EdgeRule r, Edge edge) {
+		//Only process if the rule applies to this edge
+		boolean checkNames = nameExists(r.getRuleEdge().getName()) && compareNames(r.getRuleEdge().getName(),edge.getName());
+		if (checkNames) {
+			return r.process(edge);			
+		} else {
+		// if names does not correspond: do nothing
+			return null;
+		}		
+	}
+
+	/**
+	 * Processes a noderule.
+	 * @param r the rule
+	 * @param node the node to be processed
+	 */
+	private Boolean processNodeRule(NodeRule r, Node node) {
+		//Only process if the rule applies to this edge
+		boolean checkNames = nameExists(r.getRuleNode().getName()) && compareNames(r.getRuleNode().getName(),node.getName());
+		if (checkNames) {
+			return r.process(node);			
+		} else {
+		// if names does not correspond: do nothing
+			return null;
+		}		
+	}
+	
+	/**
+	 * Compare the name of the edges/nodes
+	 * @param name1 name of the first edge/node
+	 * @param name1 name of the second edge/node
+	 * @return <code>True</code> if the name correspond (ignoring Case) <code>False</code> otherwise.
+	 */
+	private boolean compareNames(String name1, String name2) {
+		return name1.equalsIgnoreCase(name2);
+	}
+	
+	/**
+	 * Check if he name exists
+	 * @param name the name to examine
+	 * @return <code>True</code> if the name exists. <code>False</code> otherwise.
+	 */
+	private boolean nameExists(String name) {
+		return name != null && !name.equals("");
+		
+	}
+
 }

@@ -14,6 +14,7 @@ public class NodeRule implements Rule<Node> {
     private final Operator operator;
     private final Target target;
     private final Topic topic;
+    private final boolean not;
 
     /**
      * Creates a rule with the {@link Node} node that implements the features needed to apply to this rule.
@@ -28,6 +29,23 @@ public class NodeRule implements Rule<Node> {
         this.topic = topic;
         this.target = target;
         this.operator = operator;
+        this.not = false;
+    }
+    
+    /**
+     * Creates a rule with the {@link Node} node that implements the features needed to apply to this rule.
+     *
+     * @param node     the {@link Node} containing the rule's features
+     * @param topic    holds the feature to be evaluated (type, visibility, ...)
+     * @param target   the target of the evaluation (object, attributes, ...)
+     * @param operator the evaluation operator (equals, exists, ...)
+     */
+    public NodeRule(Node node, Topic topic, Target target, Operator operator, boolean not) {
+        this.ruleNode = node;
+        this.topic = topic;
+        this.target = target;
+        this.operator = operator;
+        this.not = not;
     }
     
     /**
@@ -54,14 +72,35 @@ public class NodeRule implements Rule<Node> {
     public boolean process(Node systemNode) {
         if (target == Target.OBJECT) {
         	if (operator == Operator.EXISTS) {
-                return processObjectTargetExists(systemNode);        		
+        		if (not) {
+        			return !processObjectTargetExists(systemNode);
+        		} else {
+        			return processObjectTargetExists(systemNode);
+        		}
         	}
         	if (operator == Operator.EQUALS) {
-                return processObjectTargetEquals(systemNode);        		
+        		if (not) {
+            		if (not) {
+            			return !processObjectTargetEquals(systemNode);
+            		} else {
+            			return processObjectTargetEquals(systemNode);
+            		}
+        			
+        		} else {                    
+            		if (not) {
+            			return !processObjectTargetEquals(systemNode);
+            		} else {
+            			return processObjectTargetEquals(systemNode);
+            		}
+        		}
         	}
         }
         if (target == Target.ATTRIBUTE) {
-            return processAttributeTarget(systemNode);
+    		if (not) {
+    			return !processAttributeTarget(systemNode);
+    		} else {
+    			return processAttributeTarget(systemNode);
+    		}
         }
         throw new RuleException("Unexpected target: " + this.target + ".");
     }

@@ -34,13 +34,15 @@ public class NodeRuleTest {
     /**
      * Test the {@link NodeRule} class for node name checking.
      */
-    @Test
+    
+    //this checking has been moved to the condition class
+/*    @Test
     public void testNodeForName() {
         final NodeRule nodeRule = new NodeRule(new Interface("id1", "Interface"), Topic.TYPE, Target.OBJECT, Operator.EQUALS);
         assertTrue(nodeRule.process(new Interface("id2", "Interface")));
         assertFalse(nodeRule.process(new Interface("id3", "OtherInterface")));
     }
-
+*/
     /**
      * Test if the {@link NodeRule} throws an exception when an unexpected {@link Target} is provided.
      */
@@ -152,7 +154,14 @@ public class NodeRuleTest {
         assertTrue(typeSetRule.process(new Clazz("id4", "ClassName", Visibility.PROTECTED, null, false, false, true, false)));
         assertTrue(typeSetRule.process(new Clazz("id5", "ClassName", null, null, false, false, true, false)));
         assertTrue(typeNotSetRule.process(new Interface("id6", "ClassName")));
-
+        
+        final NodeRule notTypeNotSetRule = new NodeRule(everythingSetNode, Topic.TYPE, Target.OBJECT, Operator.EXISTS, true);
+        assertFalse(notTypeNotSetRule.process(new Clazz("id2", "ClassName", Visibility.PUBLIC, null, false, false, true, false)));
+        assertFalse(notTypeNotSetRule.process(new Clazz("id3", "ClassName", null, null, false, false, true, false)));
+        assertFalse(notTypeNotSetRule.process(new Clazz("id4", "ClassName", Visibility.PROTECTED, null, false, false, true, false)));
+        assertFalse(notTypeNotSetRule.process(new Clazz("id5", "ClassName", null, null, false, false, true, false)));
+        assertFalse(notTypeNotSetRule.process(new Interface("id6", "ClassName")));
+                
         //visibility
         final NodeRule visibilityNotSetRule = new NodeRule(nothingSetNode, Topic.VISIBILITY, Target.OBJECT, Operator.EXISTS);
         final NodeRule visibilitySetRule = new NodeRule(everythingSetNode, Topic.VISIBILITY, Target.OBJECT, Operator.EXISTS);
