@@ -20,30 +20,30 @@ import java.util.Objects;
 public class Edge {
 
     private String name;
-    private Node node1, node2;
+    private Node leftNode, rightNode;
     private EdgeType relationType;
     private boolean selfRef, locked, virtual;
-    private Cardinality cardinalityFront; //cardinality on node1
-    private Cardinality cardinalityEnd; //cardinality on node2
+    private Cardinality cardinalityLeft; //cardinality on leftNode
+    private Cardinality cardinalityRight; //cardinality on rightNode
 
     /**
      * Constructs an instance of a {@link Edge} with the specified class names and edge type. The classes
      * represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type represents
      * the relation type between the classes.
      *
-     * @param node1 the "left" class or interface in the relation
-     * @param node2 the "right" class or interface in the relation
-     * @param type  the type of relation
+     * @param leftNode  the "left" class or interface in the relation
+     * @param rightNode the "right" class or interface in the relation
+     * @param type      the type of relation
      */
-    public Edge(Node node1, Node node2, EdgeType type) {
-        this.node1 = node1;
-        this.node2 = node2;
+    public Edge(Node leftNode, Node rightNode, EdgeType type) {
+        this.leftNode = leftNode;
+        this.rightNode = rightNode;
         this.relationType = type;
-        this.selfRef = node1.equals(node2);
+        this.selfRef = leftNode.equals(rightNode);
         this.locked = false;
         this.virtual = false;
-        this.cardinalityFront = null;
-        this.cardinalityEnd = null;
+        this.cardinalityLeft = null;
+        this.cardinalityRight = null;
     }
 
 
@@ -52,13 +52,13 @@ public class Edge {
      * nodes represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type
      * represents the relation type between the nodes.
      *
-     * @param node1 the "left" class or interface in the relation
-     * @param node2 the "right" class or interface in the relation
-     * @param type  the type of relation
-     * @param name  the name of the edge. Recommended as being unique (in a pattern).
+     * @param leftNode  the "left" class or interface in the relation
+     * @param rightNode the "right" class or interface in the relation
+     * @param type      the type of relation
+     * @param name      the name of the edge. Recommended as being unique (in a pattern).
      */
-    public Edge(Node node1, Node node2, EdgeType type, String name) {
-        this(node1, node2, type);
+    public Edge(Node leftNode, Node rightNode, EdgeType type, String name) {
+        this(leftNode, rightNode, type);
         this.name = name;
     }
 
@@ -68,9 +68,9 @@ public class Edge {
      * @param edge an {@link Edge} to construct a duplicate of.
      */
     public Edge(Edge edge) {
-        this(edge.node1, edge.node2, edge.relationType, edge.name);
-        this.cardinalityFront = edge.cardinalityFront;
-        this.cardinalityEnd = edge.cardinalityEnd;
+        this(edge.leftNode, edge.rightNode, edge.relationType, edge.name);
+        this.cardinalityLeft = edge.cardinalityLeft;
+        this.cardinalityRight = edge.cardinalityRight;
         this.locked = edge.locked;
         this.virtual = edge.virtual;
     }
@@ -81,20 +81,11 @@ public class Edge {
     public void makeVirtual() {
         Node tmp;
 
-        tmp = node1;
-        node1 = node2;
-        node2 = tmp;
+        tmp = leftNode;
+        leftNode = rightNode;
+        rightNode = tmp;
 
         virtual = true;
-    }
-
-    /**
-     * Set the name of this edge.
-     *
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -104,6 +95,15 @@ public class Edge {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Set the name of this edge.
+     *
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -149,8 +149,8 @@ public class Edge {
      *
      * @return the first {@link Node}.
      */
-    public Node getNode1() {
-        return node1;
+    public Node getLeftNode() {
+        return leftNode;
     }
 
     /**
@@ -158,8 +158,8 @@ public class Edge {
      *
      * @return the second {@link Node}.
      */
-    public Node getNode2() {
-        return node2;
+    public Node getRightNode() {
+        return rightNode;
     }
 
     /**
@@ -182,55 +182,55 @@ public class Edge {
     }
 
     /**
-     * Set the cardinality of {@link #node1}.
+     * Set the cardinality of {@link #leftNode}.
      *
      * @param lower the lower cardinality value
      * @param upper the upper cardinality value
      */
     public void setCardinalityFront(int lower, int upper) {
-        this.cardinalityFront = new Cardinality(lower, upper);
+        this.cardinalityLeft = new Cardinality(lower, upper);
     }
 
     /**
-     * Set the cardinality of {@link #node2}.
+     * Set the cardinality of {@link #rightNode}.
      *
      * @param lower the lower cardinality value
      * @param upper the upper cardinality value
      */
     public void setCardinalityEnd(int lower, int upper) {
-        this.cardinalityEnd = new Cardinality(lower, upper);
+        this.cardinalityRight = new Cardinality(lower, upper);
     }
 
     /**
-     * Get the cardinality of classinterface1.
+     * Get the cardinality of the left node.
      *
      * @return the cardinality
      */
-    public Cardinality getCardinalityFront() {
-        return cardinalityFront;
+    public Cardinality getCardinalityLeft() {
+        return cardinalityLeft;
     }
 
     /**
-     * Get the cardinality of classinterface1.
+     * Get the cardinality of the right node.
      *
      * @return the cardinality
      */
-    public Cardinality getCardinalityEnd() {
-        return cardinalityEnd;
+    public Cardinality getCardinalityRight() {
+        return cardinalityRight;
     }
 
     /**
-     * Remove the cardinality of {@link #node1}.
+     * Remove the cardinality of {@link #leftNode}.
      */
     public void removeCardinalityFront() {
-        cardinalityFront = null;
+        cardinalityLeft = null;
     }
 
     /**
-     * Remove the cardinality of {@link #node2}.
+     * Remove the cardinality of {@link #rightNode}.
      */
     public void removeCardinalityEnd() {
-        cardinalityEnd = null;
+        cardinalityRight = null;
     }
 
 
@@ -250,11 +250,11 @@ public class Edge {
         return selfRef == edge.selfRef &&
                 virtual == edge.virtual &&
                 Objects.equals(name, edge.name) &&
-                Objects.equals(node1, edge.node1) &&
-                Objects.equals(node2, edge.node2) &&
+                Objects.equals(leftNode, edge.leftNode) &&
+                Objects.equals(rightNode, edge.rightNode) &&
                 relationType == edge.relationType &&
-                Objects.equals(cardinalityFront, edge.cardinalityFront) &&
-                Objects.equals(cardinalityEnd, edge.cardinalityEnd);
+                Objects.equals(cardinalityLeft, edge.cardinalityLeft) &&
+                Objects.equals(cardinalityRight, edge.cardinalityRight);
     }
 
     /**
@@ -264,7 +264,7 @@ public class Edge {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, node1, node2, relationType, selfRef, virtual, cardinalityFront, cardinalityEnd);
+        return Objects.hash(name, leftNode, rightNode, relationType, selfRef, virtual, cardinalityLeft, cardinalityRight);
     }
 
 }

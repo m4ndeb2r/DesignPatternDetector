@@ -1,7 +1,5 @@
 package nl.ou.dpd.domain.node;
 
-import org.w3c.dom.Attr;
-
 import java.util.List;
 
 /**

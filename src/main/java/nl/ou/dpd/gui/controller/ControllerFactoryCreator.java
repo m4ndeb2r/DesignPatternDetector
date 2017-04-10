@@ -29,7 +29,8 @@ public final class ControllerFactoryCreator {
     private static Map<Model, Map<String, Controller>> controllers = new HashMap<>();
 
     // Utility class. No public default constructor.
-    private ControllerFactoryCreator() {}
+    private ControllerFactoryCreator() {
+    }
 
     /**
      * Creates a controller factory that can construct {@link Controller}s. If any {@link Controller} has been

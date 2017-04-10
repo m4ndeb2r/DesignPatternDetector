@@ -86,13 +86,13 @@ public class MatchedNodesTest {
     public void testCanMatchUnboundPatternEdges() {
         when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
-        when(systemEdge.getNode1()).thenReturn(Node.EMPTY_NODE);
-        when(systemEdge.getNode2()).thenReturn(Node.EMPTY_NODE);
+        when(systemEdge.getLeftNode()).thenReturn(Node.EMPTY_NODE);
+        when(systemEdge.getRightNode()).thenReturn(Node.EMPTY_NODE);
 
         when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
-        when(patternEdge.getNode1()).thenReturn(patternNode1);
-        when(patternEdge.getNode2()).thenReturn(patternNode2);
+        when(patternEdge.getLeftNode()).thenReturn(patternNode1);
+        when(patternEdge.getRightNode()).thenReturn(patternNode2);
 
         matchedNodes.prepareMatch(systemEdge);
         assertTrue(matchedNodes.canMatch(systemEdge, patternEdge));
@@ -107,13 +107,13 @@ public class MatchedNodesTest {
     public void testCanNotMatchBoundPatternEdges() {
         when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
-        when(systemEdge.getNode1()).thenReturn(Node.EMPTY_NODE);
-        when(systemEdge.getNode2()).thenReturn(Node.EMPTY_NODE);
+        when(systemEdge.getLeftNode()).thenReturn(Node.EMPTY_NODE);
+        when(systemEdge.getRightNode()).thenReturn(Node.EMPTY_NODE);
 
         when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
-        when(patternEdge.getNode1()).thenReturn(patternNode1);
-        when(patternEdge.getNode2()).thenReturn(patternNode2);
+        when(patternEdge.getLeftNode()).thenReturn(patternNode1);
+        when(patternEdge.getRightNode()).thenReturn(patternNode2);
 
         matchedNodes.prepareMatch(systemEdge);
 
@@ -134,13 +134,13 @@ public class MatchedNodesTest {
     public void testCanMatchBoundPatternEdges() {
         when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
-        when(systemEdge.getNode1()).thenReturn(systemNode1);
-        when(systemEdge.getNode2()).thenReturn(systemNode2);
+        when(systemEdge.getLeftNode()).thenReturn(systemNode1);
+        when(systemEdge.getRightNode()).thenReturn(systemNode2);
 
         when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
-        when(patternEdge.getNode1()).thenReturn(patternNode1);
-        when(patternEdge.getNode2()).thenReturn(patternNode2);
+        when(patternEdge.getLeftNode()).thenReturn(patternNode1);
+        when(patternEdge.getRightNode()).thenReturn(patternNode2);
 
         matchedNodes.prepareMatch(systemEdge);
 
@@ -159,13 +159,13 @@ public class MatchedNodesTest {
     public void testCanMatchOnTheLeft() {
         when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
-        when(systemEdge.getNode1()).thenReturn(systemNode1);
-        when(systemEdge.getNode2()).thenReturn(systemNode2);
+        when(systemEdge.getLeftNode()).thenReturn(systemNode1);
+        when(systemEdge.getRightNode()).thenReturn(systemNode2);
 
         when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
-        when(patternEdge.getNode1()).thenReturn(patternNode1);
-        when(patternEdge.getNode2()).thenReturn(patternNode2);
+        when(patternEdge.getLeftNode()).thenReturn(patternNode1);
+        when(patternEdge.getRightNode()).thenReturn(patternNode2);
 
         matchedNodes.prepareMatch(systemEdge);
 
@@ -189,13 +189,13 @@ public class MatchedNodesTest {
     public void testCanMatchOnTheRight() {
         when(systemEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE);
         when(systemEdge.isSelfRef()).thenReturn(false);
-        when(systemEdge.getNode1()).thenReturn(systemNode1);
-        when(systemEdge.getNode2()).thenReturn(systemNode2);
+        when(systemEdge.getLeftNode()).thenReturn(systemNode1);
+        when(systemEdge.getRightNode()).thenReturn(systemNode2);
 
         when(patternEdge.getRelationType()).thenReturn(EdgeType.INHERITANCE_MULTI);
         when(patternEdge.isSelfRef()).thenReturn(false);
-        when(patternEdge.getNode1()).thenReturn(patternNode1);
-        when(patternEdge.getNode2()).thenReturn(patternNode2);
+        when(patternEdge.getLeftNode()).thenReturn(patternNode1);
+        when(patternEdge.getRightNode()).thenReturn(patternNode2);
 
         matchedNodes.prepareMatch(systemEdge);
 

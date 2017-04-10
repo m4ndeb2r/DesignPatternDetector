@@ -30,29 +30,29 @@ public class DesignPatternTest {
         dp.add(new Edge(new Clazz("A"), new Clazz("C"), EdgeType.AGGREGATE));
         dp.add(new Edge(new Clazz("B"), new Clazz("E"), EdgeType.AGGREGATE));
 
-        assertThat(dp.getEdges().get(0).getNode1().getName(), is("A"));
-        assertThat(dp.getEdges().get(0).getNode2().getName(), is("B"));
-        assertThat(dp.getEdges().get(1).getNode1().getName(), is("C"));
-        assertThat(dp.getEdges().get(1).getNode2().getName(), is("D"));
-        assertThat(dp.getEdges().get(2).getNode1().getName(), is("E"));
-        assertThat(dp.getEdges().get(2).getNode2().getName(), is("F"));
-        assertThat(dp.getEdges().get(3).getNode1().getName(), is("A"));
-        assertThat(dp.getEdges().get(3).getNode2().getName(), is("C"));
-        assertThat(dp.getEdges().get(4).getNode1().getName(), is("B"));
-        assertThat(dp.getEdges().get(4).getNode2().getName(), is("E"));
+        assertThat(dp.getEdges().get(0).getLeftNode().getName(), is("A"));
+        assertThat(dp.getEdges().get(0).getRightNode().getName(), is("B"));
+        assertThat(dp.getEdges().get(1).getLeftNode().getName(), is("C"));
+        assertThat(dp.getEdges().get(1).getRightNode().getName(), is("D"));
+        assertThat(dp.getEdges().get(2).getLeftNode().getName(), is("E"));
+        assertThat(dp.getEdges().get(2).getRightNode().getName(), is("F"));
+        assertThat(dp.getEdges().get(3).getLeftNode().getName(), is("A"));
+        assertThat(dp.getEdges().get(3).getRightNode().getName(), is("C"));
+        assertThat(dp.getEdges().get(4).getLeftNode().getName(), is("B"));
+        assertThat(dp.getEdges().get(4).getRightNode().getName(), is("E"));
 
         dp.order();
 
-        assertThat(dp.getEdges().get(0).getNode1().getName(), is("A"));
-        assertThat(dp.getEdges().get(0).getNode2().getName(), is("B"));
-        assertThat(dp.getEdges().get(1).getNode1().getName(), is("A"));
-        assertThat(dp.getEdges().get(1).getNode2().getName(), is("C"));
-        assertThat(dp.getEdges().get(2).getNode1().getName(), is("C"));
-        assertThat(dp.getEdges().get(2).getNode2().getName(), is("D"));
-        assertThat(dp.getEdges().get(3).getNode1().getName(), is("B"));
-        assertThat(dp.getEdges().get(3).getNode2().getName(), is("E"));
-        assertThat(dp.getEdges().get(4).getNode1().getName(), is("E"));
-        assertThat(dp.getEdges().get(4).getNode2().getName(), is("F"));
+        assertThat(dp.getEdges().get(0).getLeftNode().getName(), is("A"));
+        assertThat(dp.getEdges().get(0).getRightNode().getName(), is("B"));
+        assertThat(dp.getEdges().get(1).getLeftNode().getName(), is("A"));
+        assertThat(dp.getEdges().get(1).getRightNode().getName(), is("C"));
+        assertThat(dp.getEdges().get(2).getLeftNode().getName(), is("C"));
+        assertThat(dp.getEdges().get(2).getRightNode().getName(), is("D"));
+        assertThat(dp.getEdges().get(3).getLeftNode().getName(), is("B"));
+        assertThat(dp.getEdges().get(3).getRightNode().getName(), is("E"));
+        assertThat(dp.getEdges().get(4).getLeftNode().getName(), is("E"));
+        assertThat(dp.getEdges().get(4).getRightNode().getName(), is("F"));
     }
 
     /**
@@ -68,24 +68,24 @@ public class DesignPatternTest {
         pattern.add(new Edge(new Clazz("A"), new Clazz("B"), EdgeType.ASSOCIATION));
 
         assertThat(pattern.getEdges().size(), is(2));
-        assertThat(pattern.getEdges().get(0).getNode1().getName(), is("A"));
-        assertThat(pattern.getEdges().get(0).getNode2().getName(), is("B"));
+        assertThat(pattern.getEdges().get(0).getLeftNode().getName(), is("A"));
+        assertThat(pattern.getEdges().get(0).getRightNode().getName(), is("B"));
         assertFalse(pattern.getEdges().get(0).isVirtual());
-        assertThat(pattern.getEdges().get(1).getNode1().getName(), is("B"));
-        assertThat(pattern.getEdges().get(1).getNode2().getName(), is("A"));
+        assertThat(pattern.getEdges().get(1).getLeftNode().getName(), is("B"));
+        assertThat(pattern.getEdges().get(1).getRightNode().getName(), is("A"));
         assertTrue(pattern.getEdges().get(1).isVirtual());
 
         pattern.add(new Edge(new Clazz("C"), new Clazz("D"), EdgeType.INHERITANCE));
 
         assertThat(pattern.getEdges().size(), is(3));
-        assertThat(pattern.getEdges().get(0).getNode1().getName(), is("A"));
-        assertThat(pattern.getEdges().get(0).getNode2().getName(), is("B"));
+        assertThat(pattern.getEdges().get(0).getLeftNode().getName(), is("A"));
+        assertThat(pattern.getEdges().get(0).getRightNode().getName(), is("B"));
         assertFalse(pattern.getEdges().get(0).isVirtual());
-        assertThat(pattern.getEdges().get(1).getNode1().getName(), is("B"));
-        assertThat(pattern.getEdges().get(1).getNode2().getName(), is("A"));
+        assertThat(pattern.getEdges().get(1).getLeftNode().getName(), is("B"));
+        assertThat(pattern.getEdges().get(1).getRightNode().getName(), is("A"));
         assertTrue(pattern.getEdges().get(1).isVirtual());
-        assertThat(pattern.getEdges().get(2).getNode1().getName(), is("C"));
-        assertThat(pattern.getEdges().get(2).getNode2().getName(), is("D"));
+        assertThat(pattern.getEdges().get(2).getLeftNode().getName(), is("C"));
+        assertThat(pattern.getEdges().get(2).getRightNode().getName(), is("D"));
         assertFalse(pattern.getEdges().get(2).isVirtual());
     }
 }

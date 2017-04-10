@@ -36,12 +36,11 @@ public class Model extends Observable {
     private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
     private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
     private static final String _DPD__PROJ_MRU = "";
-
+    private final Matcher matcher;
+    private final RetentionFileChooser fileChooser;
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
     private Project openProject = null;
-    private final Matcher matcher;
-    private final RetentionFileChooser fileChooser;
 
     /**
      * Constructor expecting a {@link Scene} as input parameter.

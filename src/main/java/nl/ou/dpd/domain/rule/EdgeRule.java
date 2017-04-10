@@ -19,10 +19,10 @@ public class EdgeRule extends Rule<Edge> {
     /**
      * Creates a rule with the {@link Edge} mould that implements the features needed to apply to this rule.
      *
-     * @param mould     the {@link Edge} containing the rule's features
-     * @param topic     holds the feature to be evaluated (type, visibility, ...)
-     * @param scope     the scope of the evaluation (object, relation, ...)
-     * @param operator  the evaluation operator (equals, exists, ...)
+     * @param mould    the {@link Edge} containing the rule's features
+     * @param topic    holds the feature to be evaluated (type, visibility, ...)
+     * @param scope    the scope of the evaluation (object, relation, ...)
+     * @param operator the evaluation operator (equals, exists, ...)
      */
     public EdgeRule(Edge mould, Topic topic, Scope scope, Operator operator) {
         super(mould, topic, scope, operator);
@@ -79,20 +79,20 @@ public class EdgeRule extends Rule<Edge> {
     }
 
     private boolean processCardinalityExists(Edge systemEdge) {
-        final boolean frontOkay = systemEdge.getCardinalityFront() != null;
-        final boolean endOkay = systemEdge.getCardinalityEnd() != null;
-        return frontOkay && endOkay;
+        final boolean leftOkay = systemEdge.getCardinalityLeft() != null;
+        final boolean rightOkay = systemEdge.getCardinalityRight() != null;
+        return leftOkay && rightOkay;
     }
 
     private boolean processCardinalityEquals(Edge systemEdge) {
         if (!processCardinalityExists(systemEdge)) {
             error("Either one or both cardinalities are not set.");
         }
-        final Cardinality ruleFront = getMould().getCardinalityFront();
-        final Cardinality ruleEnd = getMould().getCardinalityEnd();
-        final boolean frontOkay = ruleFront.equals(systemEdge.getCardinalityFront());
-        final boolean endOkay = ruleEnd.equals(systemEdge.getCardinalityEnd());
-        return frontOkay && endOkay;
+        final Cardinality ruleLeft = getMould().getCardinalityLeft();
+        final Cardinality ruleRight = getMould().getCardinalityRight();
+        final boolean leftOkay = ruleLeft.equals(systemEdge.getCardinalityLeft());
+        final boolean rightOkay = ruleRight.equals(systemEdge.getCardinalityRight());
+        return leftOkay && rightOkay;
     }
 
     private boolean error(String message) {

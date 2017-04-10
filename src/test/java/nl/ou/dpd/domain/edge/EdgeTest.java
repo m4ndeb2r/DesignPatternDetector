@@ -25,20 +25,20 @@ public class EdgeTest {
         Edge edge2 = new Edge(edge);
 
         assertThat(edge.getName(), is("edge"));
-        assertNull(edge.getCardinalityFront());
-        assertNull(edge.getCardinalityEnd());
-        assertThat(edge.getNode1().getName(), is("class1"));
-        assertThat(edge.getNode2().getName(), is("class2"));
+        assertNull(edge.getCardinalityLeft());
+        assertNull(edge.getCardinalityRight());
+        assertThat(edge.getLeftNode().getName(), is("class1"));
+        assertThat(edge.getRightNode().getName(), is("class2"));
         assertThat(edge.getRelationType(), is(EdgeType.DEPENDENCY));
         assertFalse(edge.isLocked());
         assertFalse(edge.isSelfRef());
         assertFalse(edge.isVirtual());
 
         assertThat(edge2.getName(), is("edge"));
-        assertNull(edge2.getCardinalityFront());
-        assertNull(edge2.getCardinalityEnd());
-        assertThat(edge2.getNode1().getName(), is("class1"));
-        assertThat(edge2.getNode2().getName(), is("class2"));
+        assertNull(edge2.getCardinalityLeft());
+        assertNull(edge2.getCardinalityRight());
+        assertThat(edge2.getLeftNode().getName(), is("class1"));
+        assertThat(edge2.getRightNode().getName(), is("class2"));
         assertThat(edge2.getRelationType(), is(EdgeType.DEPENDENCY));
         assertFalse(edge2.isLocked());
         assertFalse(edge2.isSelfRef());
@@ -51,15 +51,15 @@ public class EdgeTest {
     @Test
     public void testMakeVirtual() {
         Edge edge = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name1");
-        assertThat(edge.getNode1().getName(), is("A"));
-        assertThat(edge.getNode2().getName(), is("B"));
+        assertThat(edge.getLeftNode().getName(), is("A"));
+        assertThat(edge.getRightNode().getName(), is("B"));
         assertFalse(edge.isVirtual());
 
         edge.makeVirtual();
 
         // Check that nodes a reversed and the isVirtual property is set to true
-        assertThat(edge.getNode1().getName(), is("B"));
-        assertThat(edge.getNode2().getName(), is("A"));
+        assertThat(edge.getLeftNode().getName(), is("B"));
+        assertThat(edge.getRightNode().getName(), is("A"));
         assertTrue(edge.isVirtual());
     }
 
@@ -107,17 +107,17 @@ public class EdgeTest {
         Edge edge7 = new Edge(edge5);
         assertTrue(edge7.equals(edge5));
         edge7.setCardinalityEnd(0, Cardinality.INFINITY);
-        assertThat(edge7.getCardinalityEnd().getLower(), is(0));
-        assertThat(edge7.getCardinalityEnd().getUpper(), is(Cardinality.INFINITY));
-        assertNull(edge5.getCardinalityEnd());
+        assertThat(edge7.getCardinalityRight().getLower(), is(0));
+        assertThat(edge7.getCardinalityRight().getUpper(), is(Cardinality.INFINITY));
+        assertNull(edge5.getCardinalityRight());
         assertFalse(edge7.equals(edge5));
 
         edge5.setCardinalityEnd(0, Cardinality.INFINITY);
         assertTrue(edge7.equals(edge5));
         edge7.setCardinalityFront(1, 1);
-        assertThat(edge7.getCardinalityFront().getLower(), is(1));
-        assertThat(edge7.getCardinalityFront().getUpper(), is(1));
-        assertNull(edge5.getCardinalityFront());
+        assertThat(edge7.getCardinalityLeft().getLower(), is(1));
+        assertThat(edge7.getCardinalityLeft().getUpper(), is(1));
+        assertNull(edge5.getCardinalityLeft());
         assertFalse(edge7.equals(edge5));
 
         // Check that two edges with different names are not equal
