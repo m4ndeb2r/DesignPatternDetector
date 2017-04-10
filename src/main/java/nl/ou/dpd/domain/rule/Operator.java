@@ -8,5 +8,7 @@ package nl.ou.dpd.domain.rule;
  */
 public enum Operator {
     EQUALS,
-    EXISTS
+    NOT_EQUALS,
+    EXISTS,
+    NOT_EXISTS
 }

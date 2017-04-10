@@ -134,7 +134,7 @@ public class ProjectViewController extends Controller implements Observer {
     }
 
     /**
-     * Let the model select a desing pattern template file from disk, and store it in the currently open
+     * Let the model select a design pattern template file from disk, and store it in the currently open
      * {@link Project}. The {@link Model} will notify its {@link Observer}s (among which this
      * {@link ProjectViewController}).
      *

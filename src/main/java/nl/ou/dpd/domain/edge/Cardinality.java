@@ -7,6 +7,7 @@ import java.util.Objects;
  * represented by -1 ({@link #INFINITY}).
  *
  * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
 public class Cardinality {
 
@@ -19,12 +20,16 @@ public class Cardinality {
 
     /**
      * Constructor setting the lower and upper bound of the cardinality. Values are not checked on errors.
-     * Infinity can be entered as -1 or {@link Cardinality#INFINITY}. Lower and upper bound can be equal e.g when the cardinality is 1.
+     * Infinity can be entered as -1 or {@link Cardinality#INFINITY}. Lower and upper bound can be equal e.g when the
+     * cardinality is 1.
      *
      * @param lower the lower bound of the cardinality. Must be 0 or greater.
      * @param upper the upper bound of he cardinality. Must be -1 (infinity) or greater.
      */
     public Cardinality(int lower, int upper) {
+        if (upper < lower && upper != INFINITY) {
+            throw new IllegalArgumentException("Upperbound value must be >= lowerbound value.");
+        }
         this.lower = lower;
         this.upper = upper;
     }

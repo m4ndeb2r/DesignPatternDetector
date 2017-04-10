@@ -26,7 +26,9 @@ public class Clazz extends Node {
     }
 
     /**
-     * Constructs a {@link Clazz} instance with the specified {@code name} and similar {@code id}.
+     * Constructs a {@link Clazz} instance with the specified {@code name} and similar {@code id}. Use this constructor
+     * for design pattern {@link Clazz}es only! In case of {@link Clazz}es in a system under consideration all
+     * properties should be known, so then, the constructor with all properties as arguments should be used.
      *
      * @param id   a unique id for this {@link Clazz}
      * @param name the classname of this {@link Clazz}

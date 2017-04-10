@@ -2,107 +2,102 @@ package nl.ou.dpd.domain.rule;
 
 import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * A {@link EdgeRule} represents a part of a condition.
+ * An {@link EdgeRule} is a {@link Rule} that applies to {@link Edge}s specificly. It contains two internal
+ * {@link NodeRule}s
  *
  * @author Peter Vansweevelt
  * @author Martin de Boer
  */
-public class EdgeRule implements Rule<Edge> {
+public class EdgeRule extends Rule<Edge> {
 
-    private final Edge ruleEdge;
-    private final Topic topic;
-    private final Target target;
-    private final Operator operator;
-    private final boolean not;
+    private static final Logger LOGGER = LogManager.getLogger(EdgeRule.class);
 
     /**
-     * Creates a rule with the {@link Edge} edge that implements the features needed to apply to this rule.
+     * Creates a rule with the {@link Edge} mould that implements the features needed to apply to this rule.
      *
-     * @param edge     the {@link Edge} containing the rule's features
-     * @param topic    holds the feature to be evaluated (type, visibility, ...)
-     * @param target   the target of the evaluation (object, relation, ...)
-     * @param operator the evaluation operator (equals, exists, ...)
+     * @param mould     the {@link Edge} containing the rule's features
+     * @param topic     holds the feature to be evaluated (type, visibility, ...)
+     * @param scope     the scope of the evaluation (object, relation, ...)
+     * @param operator  the evaluation operator (equals, exists, ...)
      */
-    public EdgeRule(Edge edge, Topic topic, Target target, Operator operator) {
-        this.ruleEdge = edge;
-        this.topic = topic;
-        this.target = target;
-        this.operator = operator;
-        this.not = false;
-    }
-    
-    /**
-     * Creates a rule with the {@link Edge} edge that implements the features needed to apply to this rule.
-     *
-     * @param edge     the {@link Edge} containing the rule's features
-     * @param topic    holds the feature to be evaluated (type, visibility, ...)
-     * @param target   the target of the evaluation (object, relation, ...)
-     * @param operator the evaluation operator (equals, exists, ...)
-     * @param not      if the operator must be used negative (not equals,..)
-     */
-    public EdgeRule(Edge edge, Topic topic, Target target, Operator operator, boolean not) {
-        this.ruleEdge = edge;
-        this.topic = topic;
-        this.target = target;
-        this.operator = operator;
-        this.not = not;
-    }
-   /**
-     * Get the ruleEdge of this {@link Rule}. 
-     * @return the ruleEdge
-     */
-    public Edge getRuleEdge() {
-    	return ruleEdge;
+    public EdgeRule(Edge mould, Topic topic, Scope scope, Operator operator) {
+        super(mould, topic, scope, operator);
     }
 
     /**
-     * Applies the rule on a given {@ink Edge}.
+     * Applies this {@link EdgeRule} on a given {@ink Edge}.
      *
-     * @param the class under consideration
-     * @return {@code true} if the node meets the conditions set in the {@link EdgeRule}, or {@code false} otherwise.
+     * @param systemEdge the edge that has to be evaluated
+     * @return {@code true} if {@code systemEdge} meets the conditions set in the {@link EdgeRule}, or {@code false}
+     * otherwise.
      */
     public boolean process(Edge systemEdge) {
-        if (target == Target.RELATION) {
-        	if (not) {
-        		return !processRelationTarget(systemEdge);
-        	} else {
-        		return processRelationTarget(systemEdge);
-        	}
+        if (getScope() == Scope.RELATION) {
+            return processRelation(systemEdge);
         }
-        throw new RuleException("Unexpected target: " + this.target + ".");
+        return error("Unexpected scope: " + getScope() + ".");
     }
 
-    private boolean processRelationTarget(Edge systemEdge) {
-        if (topic == Topic.TYPE) {
-            return systemEdge.getRelationType() == ruleEdge.getRelationType();
+    private boolean processRelation(Edge systemEdge) {
+        switch (getTopic()) {
+            case TYPE:
+                return processRelationType(systemEdge);
+            case CARDINALITY:
+                return processRelationCardinality(systemEdge);
+            default:
+                return error("Unexpected topic while processing RELATION: " + getTopic() + ".");
         }
-        if (topic == Topic.CARDINALITY) {
-        	if (operator == Operator.EXISTS) {
-        		return processCardinalityTopicExists(systemEdge);
-        	}       	
-        	if (operator == Operator.EQUALS) {
-        		return processCardinalityTopicEquals(systemEdge);
-        	}
-        }
-        throw new RuleException("Unexpected topic while processing RELATION target: " + this.topic + ".");
     }
 
-    private boolean processCardinalityTopicExists(Edge systemEdge) {
+    private boolean processRelationCardinality(Edge systemEdge) {
+        switch (getOperator()) {
+            case EXISTS:
+                return processCardinalityExists(systemEdge);
+            case NOT_EXISTS:
+                return !processCardinalityExists(systemEdge);
+            case EQUALS:
+                return processCardinalityEquals(systemEdge);
+            case NOT_EQUALS:
+                return !processCardinalityEquals(systemEdge);
+            default:
+                return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+        }
+    }
+
+    private boolean processRelationType(Edge systemEdge) {
+        switch (getOperator()) {
+            case EQUALS:
+                return systemEdge.getRelationType() == getMould().getRelationType();
+            default:
+                return error("Unexpected operator while processing TYPE: " + getOperator() + ".");
+
+        }
+    }
+
+    private boolean processCardinalityExists(Edge systemEdge) {
         final boolean frontOkay = systemEdge.getCardinalityFront() != null;
         final boolean endOkay = systemEdge.getCardinalityEnd() != null;
         return frontOkay && endOkay;
     }
 
-    private boolean processCardinalityTopicEquals(Edge systemEdge) {
-    	if (!processCardinalityTopicExists(systemEdge)) {
-            throw new RuleException("Either one or both cardinalities are not set.");
-    	}
-        final Cardinality ruleFront = ruleEdge.getCardinalityFront();
-        final Cardinality ruleEnd = ruleEdge.getCardinalityEnd();
+    private boolean processCardinalityEquals(Edge systemEdge) {
+        if (!processCardinalityExists(systemEdge)) {
+            error("Either one or both cardinalities are not set.");
+        }
+        final Cardinality ruleFront = getMould().getCardinalityFront();
+        final Cardinality ruleEnd = getMould().getCardinalityEnd();
         final boolean frontOkay = ruleFront.equals(systemEdge.getCardinalityFront());
         final boolean endOkay = ruleEnd.equals(systemEdge.getCardinalityEnd());
         return frontOkay && endOkay;
     }
+
+    private boolean error(String message) {
+        LOGGER.error(message);
+        throw new RuleException(message);
+    }
+
 }
