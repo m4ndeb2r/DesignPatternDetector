@@ -3,9 +3,7 @@ package nl.ou.dpd.domain.rule;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.node.Node;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -72,8 +70,8 @@ public class ConditionWithMultipleRulesTest {
 
         // Set expectations
         when(edgeRule.process(systemEdge)).thenReturn(true);
-        when(systemEdge.getNode1()).thenReturn(systemLeftNode);
-        when(systemEdge.getNode2()).thenReturn(systemRightNode);
+        when(systemEdge.getLeftNode()).thenReturn(systemLeftNode);
+        when(systemEdge.getRightNode()).thenReturn(systemRightNode);
         when(edgeRule.process(systemEdge)).thenReturn(true);
         when(firstLeftNodeRule.process(systemLeftNode)).thenReturn(true);
         when(secondLeftNodeRule.process(systemLeftNode)).thenReturn(true);
@@ -108,8 +106,8 @@ public class ConditionWithMultipleRulesTest {
 
         // Set expectations
         when(edgeRule.process(systemEdge)).thenReturn(true);
-        when(systemEdge.getNode1()).thenReturn(systemLeftNode);
-        when(systemEdge.getNode2()).thenReturn(systemRightNode);
+        when(systemEdge.getLeftNode()).thenReturn(systemLeftNode);
+        when(systemEdge.getRightNode()).thenReturn(systemRightNode);
         when(edgeRule.process(systemEdge)).thenReturn(true);
         when(firstLeftNodeRule.process(systemLeftNode)).thenReturn(true);
         when(secondLeftNodeRule.process(systemLeftNode)).thenReturn(true);
@@ -144,8 +142,8 @@ public class ConditionWithMultipleRulesTest {
 
         // Set expectations
         when(edgeRule.process(systemEdge)).thenReturn(true);
-        when(systemEdge.getNode1()).thenReturn(systemLeftNode);
-        when(systemEdge.getNode2()).thenReturn(systemRightNode);
+        when(systemEdge.getLeftNode()).thenReturn(systemLeftNode);
+        when(systemEdge.getRightNode()).thenReturn(systemRightNode);
         when(edgeRule.process(systemEdge)).thenReturn(true);
         when(firstLeftNodeRule.process(systemLeftNode)).thenReturn(false);
 

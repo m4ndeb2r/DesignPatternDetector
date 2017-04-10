@@ -141,9 +141,9 @@ public class ArgoXMIParserTest {
         assertEdge(edges.get(3), "Strat", "Cont", EdgeType.AGGREGATE);
     }
 
-    private void assertEdge(Edge edge, String class1, String class2, EdgeType edgeType) {
-        assertThat(edge.getNode1().getName(), is(class1));
-        assertThat(edge.getNode2().getName(), is(class2));
+    private void assertEdge(Edge edge, String leftNodeName, String rightNodeName, EdgeType edgeType) {
+        assertThat(edge.getLeftNode().getName(), is(leftNodeName));
+        assertThat(edge.getRightNode().getName(), is(rightNodeName));
         assertThat(edge.getRelationType(), is(edgeType));
         assertThat(edge.isSelfRef(), is(false));
         assertThat(edge.isVirtual(), is(false));

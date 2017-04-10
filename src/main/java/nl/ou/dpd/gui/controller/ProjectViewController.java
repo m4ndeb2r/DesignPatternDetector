@@ -15,9 +15,9 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.MatchedNodes;
 import nl.ou.dpd.domain.Solution;
+import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 import org.apache.logging.log4j.LogManager;
@@ -281,9 +281,9 @@ public class ProjectViewController extends Controller implements Observer {
             }
             for (Edge edge : superfluousEdges) {
                 int col = 0;
-                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getNode1().getName()), col++, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getLeftNode().getName()), col++, row);
                 feedbackSuperfluousEdgesGridPane.add(new Text("-->"), col++, row);
-                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getNode2().getName()), col, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getRightNode().getName()), col, row);
                 row++;
             }
 
@@ -297,9 +297,9 @@ public class ProjectViewController extends Controller implements Observer {
             }
             for (Edge edge : missingEdges) {
                 int col = 0;
-                feedbackMissingEdgesGridPane.add(new Text(edge.getNode1().getName()), col++, row);
+                feedbackMissingEdgesGridPane.add(new Text(edge.getLeftNode().getName()), col++, row);
                 feedbackMissingEdgesGridPane.add(new Text("-->"), col++, row);
-                feedbackMissingEdgesGridPane.add(new Text(edge.getNode2().getName()), col, row);
+                feedbackMissingEdgesGridPane.add(new Text(edge.getRightNode().getName()), col, row);
                 row++;
             }
         }

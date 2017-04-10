@@ -11,7 +11,7 @@ import java.io.File;
  * A wrapper for a {@link FileChooser}. This wrapper memorizes the most recent directory that was accessed, and opens
  * it by default.
  *
- * @author  Martin de Boer
+ * @author Martin de Boer
  */
 public class RetentionFileChooser {
 

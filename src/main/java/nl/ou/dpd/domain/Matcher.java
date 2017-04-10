@@ -114,7 +114,7 @@ public final class Matcher {
                     for (int k = j + 1; k < system.getEdges().size(); k++) {
                         final Edge skEdge = system.getEdges().get(k);
                         if (!skEdge.isLocked()
-                                && skEdge.getNode2().equals(systemEdge.getNode2())
+                                && skEdge.getRightNode().equals(systemEdge.getRightNode())
                                 && matchedNodes.canMatch(skEdge, patternEdge)) {
                             copyMatchedNodes.makeMatch(skEdge, patternEdge);
                             missingEdges.remove(patternEdge);
@@ -170,8 +170,8 @@ public final class Matcher {
     /**
      * Create a {@link Solution} instance containing (feedback) information about a detected design pattern.
      *
-     * @param pattern        the detected design pattern
-     * @param system         the system under consideration that was analysed
+     * @param pattern      the detected design pattern
+     * @param system       the system under consideration that was analysed
      * @param matchedNodes matched classes
      * @return feedback information about the detected design pattern
      */
@@ -191,8 +191,8 @@ public final class Matcher {
         // Superfluous classes
         final Set<Edge> superfluousEdges = new HashSet<>();
         for (Edge systemEdge : system.getEdges()) {
-            if (matchedNodes.isSystemNodeBound(systemEdge.getNode1())
-                    && matchedNodes.isSystemNodeBound(systemEdge.getNode2())
+            if (matchedNodes.isSystemNodeBound(systemEdge.getLeftNode())
+                    && matchedNodes.isSystemNodeBound(systemEdge.getRightNode())
                     && !systemEdge.isLocked()) {
                 superfluousEdges.add(systemEdge);
             }

@@ -2,7 +2,6 @@ package nl.ou.dpd.domain;
 
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.node.Node;
 
 import java.util.HashMap;
@@ -126,27 +125,27 @@ public final class MatchedNodes {
     }
 
     private boolean hasBothNodesMatched(final Edge systemEdge, final Edge patternEdge) {
-        return this.isMatched(systemEdge.getNode1(), patternEdge.getNode1())
-                && this.isMatched(systemEdge.getNode2(), patternEdge.getNode2());
+        return this.isMatched(systemEdge.getLeftNode(), patternEdge.getLeftNode())
+                && this.isMatched(systemEdge.getRightNode(), patternEdge.getRightNode());
     }
 
     private boolean hasRightNodeBound(final Edge systemEdge, final Edge patternEdge) {
-        return this.isUnbound(systemEdge.getNode1())
-                && !this.designPatternClassIsBound(patternEdge.getNode1())
-                && this.isMatched(systemEdge.getNode2(), patternEdge.getNode2());
+        return this.isUnbound(systemEdge.getLeftNode())
+                && !this.designPatternClassIsBound(patternEdge.getLeftNode())
+                && this.isMatched(systemEdge.getRightNode(), patternEdge.getRightNode());
     }
 
     private boolean hasLeftNodeBound(final Edge systemEdge, final Edge patternEdge) {
-        return this.isMatched(systemEdge.getNode1(), patternEdge.getNode1())
-                && this.isUnbound(systemEdge.getNode2())
-                && !this.designPatternClassIsBound(patternEdge.getNode2());
+        return this.isMatched(systemEdge.getLeftNode(), patternEdge.getLeftNode())
+                && this.isUnbound(systemEdge.getRightNode())
+                && !this.designPatternClassIsBound(patternEdge.getRightNode());
     }
 
     private boolean hasAllNodesUnbound(final Edge systemEdge, final Edge patternEdge) {
-        return this.isUnbound(systemEdge.getNode1())
-                && this.isUnbound(systemEdge.getNode2())
-                && !this.designPatternClassIsBound(patternEdge.getNode1())
-                && !this.designPatternClassIsBound(patternEdge.getNode2());
+        return this.isUnbound(systemEdge.getLeftNode())
+                && this.isUnbound(systemEdge.getRightNode())
+                && !this.designPatternClassIsBound(patternEdge.getLeftNode())
+                && !this.designPatternClassIsBound(patternEdge.getRightNode());
     }
 
     private boolean areEdgeTypesCompatible(final Edge sysEdge, final Edge dpEdge) {
@@ -168,8 +167,8 @@ public final class MatchedNodes {
      * @param patternEdge the edge from the design pattern to match.
      */
     void makeMatch(final Edge systemEdge, final Edge patternEdge) {
-        add(systemEdge.getNode1(), patternEdge.getNode1());
-        add(systemEdge.getNode2(), patternEdge.getNode2());
+        add(systemEdge.getLeftNode(), patternEdge.getLeftNode());
+        add(systemEdge.getRightNode(), patternEdge.getRightNode());
         systemEdge.lock();
         patternEdge.lock();
     }
@@ -180,8 +179,8 @@ public final class MatchedNodes {
      * @param systemEdge the edge to prepare space for.
      */
     void prepareMatch(final Edge systemEdge) {
-        add(systemEdge.getNode1());
-        add(systemEdge.getNode2());
+        add(systemEdge.getLeftNode());
+        add(systemEdge.getRightNode());
     }
 
     /**

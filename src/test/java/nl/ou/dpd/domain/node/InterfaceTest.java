@@ -122,26 +122,26 @@ public class InterfaceTest {
      */
     @Test
     public void testConstructorsAndGetters() {
-        Interface c1 = new Interface("A");
-        assertThat(c1.getName(), is("A"));
-        assertThat(c1.getId(), is("A"));
-        assertThat(c1.getAttributes().size(), is(0));
-        assertThat(c1.getType(), is(NodeType.INTERFACE));
-        assertThat(c1.getVisibility(), is(Visibility.PUBLIC));
-        assertNull(c1.isRoot());
-        assertNull(c1.isLeaf());
-        assertTrue(c1.isAbstract());
-        assertNull(c1.isActive());
+        Interface i1 = new Interface("A");
+        assertThat(i1.getName(), is("A"));
+        assertThat(i1.getId(), is("A"));
+        assertThat(i1.getAttributes().size(), is(0));
+        assertThat(i1.getType(), is(NodeType.INTERFACE));
+        assertThat(i1.getVisibility(), is(Visibility.PUBLIC));
+        assertNull(i1.isRoot());
+        assertNull(i1.isLeaf());
+        assertTrue(i1.isAbstract());
+        assertNull(i1.isActive());
 
-        Interface c2 = new Interface("id", "name", true, false, true);
-        assertThat(c2.getId(), is("id"));
-        assertThat(c2.getName(), is("name"));
-        assertThat(c2.getAttributes().size(), is(0));
-        assertThat(c2.getType(), is(NodeType.INTERFACE));
-        assertThat(c2.getVisibility(), is(Visibility.PUBLIC));
-        assertTrue(c2.isRoot());
-        assertFalse(c2.isLeaf());
-        assertTrue(c2.isAbstract());
-        assertTrue(c2.isActive());
+        Interface i2 = new Interface("id", "name", true, false, true);
+        assertThat(i2.getId(), is("id"));
+        assertThat(i2.getName(), is("name"));
+        assertThat(i2.getAttributes().size(), is(0));
+        assertThat(i2.getType(), is(NodeType.INTERFACE));
+        assertThat(i2.getVisibility(), is(Visibility.PUBLIC));
+        assertTrue(i2.isRoot());
+        assertFalse(i2.isLeaf());
+        assertTrue(i2.isAbstract());
+        assertTrue(i2.isActive());
     }
 }

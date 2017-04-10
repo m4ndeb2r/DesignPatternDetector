@@ -1,7 +1,6 @@
 package nl.ou.dpd.domain.rule;
 
 import nl.ou.dpd.domain.edge.Edge;
-import nl.ou.dpd.domain.node.Node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,15 +78,6 @@ public class Condition {
         return description;
     }
 
-    /**
-     * Set the purview.
-     *
-     * @param purview the new {@link Purview} for this {@link Condition}.
-     */
-    public void setPurview(Purview purview) {
-        this.purview = purview;
-    }
-
     public List<EdgeRule> getEdgeRules() {
         return edgeRules;
     }
@@ -121,9 +111,18 @@ public class Condition {
         return purview;
     }
 
+    /**
+     * Set the purview.
+     *
+     * @param purview the new {@link Purview} for this {@link Condition}.
+     */
+    public void setPurview(Purview purview) {
+        this.purview = purview;
+    }
 
     /**
      * Indicates whether this {@link Condition} is processed, and was processed successfully.
+     *
      * @return {@code true} if the process method was executed and returned {@code true}.
      */
     public boolean isProcessedSuccessfully() {
@@ -132,6 +131,7 @@ public class Condition {
 
     /**
      * Indicates whether this {@link Condition} is processed, and was processed unsuccessfully.
+     *
      * @return {@code true} if the process method was executed, but returned {@code false}.
      */
     public boolean isProcessedUnsuccessfully() {
@@ -195,13 +195,13 @@ public class Condition {
             }
         }
         for (Rule rule : this.leftNodeRules) {
-            result = result && rule.process(edge.getNode1());
+            result = result && rule.process(edge.getLeftNode());
             if (result == false) {
                 return false;
             }
         }
         for (Rule rule : this.rightNodeRules) {
-            result = result && rule.process(edge.getNode2());
+            result = result && rule.process(edge.getRightNode());
             if (result == false) {
                 return false;
             }

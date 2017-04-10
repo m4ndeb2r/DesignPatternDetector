@@ -1,10 +1,10 @@
 package nl.ou.dpd.data.argoxmi;
 
 import nl.ou.dpd.data.parser.Parser;
-import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -96,9 +96,9 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
             if (dependencies != null) {
                 for (String dep : dependencies) {
                     final String name = classElements.get(key).getName();
-                    final Clazz class1 = new Clazz(name);
-                    final Clazz class2 = new Clazz(dep);
-                    system.add(new Edge(class1, class2, EdgeType.DEPENDENCY));
+                    final Clazz leftClass = new Clazz(name);
+                    final Clazz rightClass = new Clazz(dep);
+                    system.add(new Edge(leftClass, rightClass, EdgeType.DEPENDENCY));
                 }
             }
         }
@@ -111,11 +111,11 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
      */
     private void addInheritanceElements(SystemUnderConsideration system) {
         for (String key : inheritanceElements.keySet()) {
-            final String name1 = ArgoXMIParser.classElements.get(key).getName();
-            final String name2 = ArgoXMIParser.classElements.get(inheritanceElements.get(key)).getName();
-            final Clazz class1 = new Clazz(name1);
-            final Clazz class2 = new Clazz(name2);
-            system.add(new Edge(class1, class2, EdgeType.INHERITANCE));
+            final String nameLeftClass = ArgoXMIParser.classElements.get(key).getName();
+            final String nameRightClass = ArgoXMIParser.classElements.get(inheritanceElements.get(key)).getName();
+            final Clazz leftClass = new Clazz(nameLeftClass);
+            final Clazz rightClass = new Clazz(nameRightClass);
+            system.add(new Edge(leftClass, rightClass, EdgeType.INHERITANCE));
         }
     }
 
@@ -126,11 +126,11 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
      */
     private void addAbstractElements(SystemUnderConsideration system) {
         for (AbstractionElement elem : abstractElements) {
-            final String name1 = ArgoXMIParser.classElements.get(elem.getImplementer()).getName();
-            final String name2 = ArgoXMIParser.classElements.get(elem.getSuper()).getName();
-            final Clazz class1 = new Clazz(name1);
-            final Clazz class2 = new Clazz(name2);
-            system.add(new Edge(class1, class2, EdgeType.INHERITANCE));
+            final String nameLeftClass = ArgoXMIParser.classElements.get(elem.getImplementer()).getName();
+            final String nameRightClass = ArgoXMIParser.classElements.get(elem.getSuper()).getName();
+            final Clazz leftClass = new Clazz(nameLeftClass);
+            final Clazz rightClass = new Clazz(nameRightClass);
+            system.add(new Edge(leftClass, rightClass, EdgeType.INHERITANCE));
         }
     }
 

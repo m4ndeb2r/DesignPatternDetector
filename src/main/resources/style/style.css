@@ -2,9 +2,10 @@
  * General settings
  */
 #header {
-    -fx-text-fill : rgb(0,0,0);
+    -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 18px;
 }
+
 .app-title {
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
@@ -36,31 +37,36 @@
     -fx-text-fill: rgb(51, 151, 187);
     -fx-font-size: 22px;
 }
+
 .feedback-subtitle {
     -fx-padding: 20px 0 5px 0;
     -fx-font-weight: 600;
     -fx-font-family: fantasy;
     -fx-font-style: normal;
-    -fx-text-fill : rgb(0,0,0);
+    -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 18px;
 }
+
 .feedback-subsubtitle {
     -fx-padding: 2px 0 2px 0;
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill : rgb(0,0,0);
+    -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 16px;
 }
+
 .feedback-gridpane {
     -fx-padding: 5px 10px 5px 15px;
     -fx-hgap: 5px;
     -fx-vgap: 3px;
 }
+
 #feedbackSplitPane {
     -fx-orientation: horizontal;
     -fx-min-height: 20px;
 }
+
 #feedbackTreeView {
     -fx-fit-to-height: true;
     -fx-fit-to-width: true;
@@ -72,6 +78,7 @@
     -fx-min-width: 220px;
     -fx-min-height: 20px;
 }
+
 #feedbackScrollPane {
     -fx-orientation: vertical;
     -fx-fit-to-height: true;
@@ -82,15 +89,19 @@
     -fx-fill-width: true;
     -fx-min-height: 20px;
 }
+
 #feedbackScrollPane VBox {
     -fx-padding: 10px;
 }
+
 .error {
     -fx-text-fill: crimson;
 }
+
 .warning {
     -fx-text-fill: darkorange;
 }
+
 .okay {
     -fx-text-fill: darkgreen;
 }
