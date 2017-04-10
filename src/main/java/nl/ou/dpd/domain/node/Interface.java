@@ -33,8 +33,10 @@ public class Interface extends Node {
     }
 
     /**
-     * Constructs a {@link Clazz} instance with the specified {@code name} and {@code id}.
-     * NodeType is NodeTYpe.<i>INTERFACE</i>. Visibility as always public. Boolean <code>isAbstract</code> is always true.
+     * Constructs a {@link Interface} instance with the specified {@code name}, {@code id}, {@code isRoot},
+     * {@code isLeaf} and {@code isActive}. The {@link NodeType} of this {@link Interface} is always
+     * {@link NodeType#INTERFACE}, its visibility is always {@link Visibility#PUBLIC}, and it is always abstract
+     * ({@code isAbstract} is {@code} true.
      *
      * @param id       a unique id of this {@link Interface}
      * @param name     the name of this {@link Interface}

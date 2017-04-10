@@ -1,59 +1,31 @@
 package nl.ou.dpd.domain.rule;
 
 import nl.ou.dpd.domain.node.Node;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * A {@link NodeRule} represents a part of a condition.
+ * A {@link NodeRule} is a {@link Rule} that applies to {@link Node}s specificly.
  *
  * @author Peter Vansweevelt
  * @author Martin de Boer
+ * @see EdgeRule
+ * @see Rule
  */
-public class NodeRule implements Rule<Node> {
+public class NodeRule extends Rule<Node> {
 
-    private final Node ruleNode;
-    private final Operator operator;
-    private final Target target;
-    private final Topic topic;
-    private final boolean not;
+    private static final Logger LOGGER = LogManager.getLogger(Rule.class);
 
     /**
-     * Creates a rule with the {@link Node} node that implements the features needed to apply to this rule.
+     * Creates a rule with the {@link Node} mould that implements the features needed to apply to this rule.
      *
-     * @param node     the {@link Node} containing the rule's features
+     * @param mould    the {@link Node} containing the rule's features
      * @param topic    holds the feature to be evaluated (type, visibility, ...)
-     * @param target   the target of the evaluation (object, attributes, ...)
+     * @param scope    the scope of the evaluation (object, attributes, ...)
      * @param operator the evaluation operator (equals, exists, ...)
      */
-    public NodeRule(Node node, Topic topic, Target target, Operator operator) {
-        this.ruleNode = node;
-        this.topic = topic;
-        this.target = target;
-        this.operator = operator;
-        this.not = false;
-    }
-    
-    /**
-     * Creates a rule with the {@link Node} node that implements the features needed to apply to this rule.
-     *
-     * @param node     the {@link Node} containing the rule's features
-     * @param topic    holds the feature to be evaluated (type, visibility, ...)
-     * @param target   the target of the evaluation (object, attributes, ...)
-     * @param operator the evaluation operator (equals, exists, ...)
-     */
-    public NodeRule(Node node, Topic topic, Target target, Operator operator, boolean not) {
-        this.ruleNode = node;
-        this.topic = topic;
-        this.target = target;
-        this.operator = operator;
-        this.not = not;
-    }
-    
-    /**
-     * Get the ruleNode of this {@link Rule}. 
-     * @return the ruleNode
-     */
-    public Node getRuleNode() {
-    	return ruleNode;
+    public NodeRule(Node mould, Topic topic, Scope scope, Operator operator) {
+        super(mould, topic, scope, operator);
     }
 
     /**
@@ -70,96 +42,98 @@ public class NodeRule implements Rule<Node> {
      * otherwise.
      */
     public boolean process(Node systemNode) {
-        if (target == Target.OBJECT) {
-        	if (operator == Operator.EXISTS) {
-        		if (not) {
-        			return !processObjectTargetExists(systemNode);
-        		} else {
-        			return processObjectTargetExists(systemNode);
-        		}
-        	}
-        	if (operator == Operator.EQUALS) {
-        		if (not) {
-            		if (not) {
-            			return !processObjectTargetEquals(systemNode);
-            		} else {
-            			return processObjectTargetEquals(systemNode);
-            		}
-        			
-        		} else {                    
-            		if (not) {
-            			return !processObjectTargetEquals(systemNode);
-            		} else {
-            			return processObjectTargetEquals(systemNode);
-            		}
-        		}
-        	}
-        }
-        if (target == Target.ATTRIBUTE) {
-    		if (not) {
-    			return !processAttributeTarget(systemNode);
-    		} else {
-    			return processAttributeTarget(systemNode);
-    		}
-        }
-        throw new RuleException("Unexpected target: " + this.target + ".");
-    }
-
-    private boolean processObjectTargetEquals(Node systemNode) {
-    	if (!processObjectTargetExists(systemNode)) {
-            throw new RuleException("Unexpected error. The topic " + this.topic + " is not set.");
-    	}    	
-        switch (topic) {
-            case TYPE:
-                // If ruleNode.type is not set, return true, otherwise check for equal types
-                return ruleNode.getType() == null || systemNode.getType() == ruleNode.getType();
-            case VISIBILITY:
-                // If ruleNode.visibility is not set, return true; otherwise check for equality
-                return ruleNode.getVisibility() == null || systemNode.getVisibility() == ruleNode.getVisibility();
-            case MODIFIER_ROOT:
-                // If ruleNode.isRoot is not set, return true; otherwise check for equality
-                return ruleNode.isRoot() == null || systemNode.isRoot() == ruleNode.isRoot();
-            case MODIFIER_LEAF:
-                // If ruleNode.isLeaf is not set, return true; otherwise check for equality
-                return ruleNode.isLeaf() == null || systemNode.isLeaf() == ruleNode.isLeaf();
-            case MODIFIER_ABSTRACT:
-                // If ruleNode.isAbstract is not set, return true; otherwise check for equality
-                return ruleNode.isAbstract() == null || systemNode.isAbstract() == ruleNode.isAbstract();
-            case MODIFIER_ACTIVE:
-                // If ruleNode.isActive is not set, return true; otherwise check for equality
-                return ruleNode.isActive() == null || systemNode.isActive() == ruleNode.isActive();
+        switch (getScope()) {
+            case OBJECT:
+                return processObject(systemNode);
+            case ATTRIBUTE:
+                return processAttributeScope(systemNode);
             default:
-                throw new RuleException("Unexpected topic while processing OBJECT target: " + this.topic + ".");
+                return error("Unexpected scope: " + getScope() + ".");
         }
     }
 
-    private boolean processObjectTargetExists(Node systemNode) {
-        switch (topic) {
+    private boolean processObject(Node systemNode) {
+        switch (getOperator()) {
+            case EXISTS:
+                // TODO: This case seems futile, because it always returns true
+                return processObjectTopicExists(systemNode);
+            case NOT_EXISTS:
+                // TODO: This case seems futile, because it always returns false
+                return !processObjectTopicExists(systemNode);
+            case EQUALS:
+                return processObjectTopicEquals(systemNode);
+            case NOT_EQUALS:
+                return !processObjectTopicEquals(systemNode);
+            default:
+                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+        }
+    }
+
+    private boolean processObjectTopicEquals(Node systemNode) {
+        switch (getTopic()) {
             case TYPE:
-                // If systemNode.type is not set, return false
+                if (getMould().getType() == null) {
+                    return error("Cannot perform rule on topic TYPE. Unable to detect what to check for.");
+                }
+                return systemNode.getType() == getMould().getType();
+            case VISIBILITY:
+                if (getMould().getVisibility() == null) {
+                    return error("Cannot perform rule on topic VISIBILITY. Unable to detect what to check for.");
+                }
+                return systemNode.getVisibility() == getMould().getVisibility();
+            case MODIFIER_ROOT:
+                if (getMould().isRoot() == null) {
+                    return error("Cannot perform rule on topic MODIFIER_ROOT. Unable to detect what to check for.");
+                }
+                return systemNode.isRoot() == getMould().isRoot();
+            case MODIFIER_LEAF:
+                if (getMould().isLeaf() == null) {
+                    return error("Cannot perform rule on topic MODIFIER_LEAF. Unable to detect what to check for.");
+                }
+                return systemNode.isLeaf() == getMould().isLeaf();
+            case MODIFIER_ABSTRACT:
+                if (getMould().isAbstract() == null) {
+                    return error("Cannot perform rule on topic MODIFIER_ABSTRACT. Unable to detect what to check for.");
+                }
+                return systemNode.isAbstract() == getMould().isAbstract();
+            case MODIFIER_ACTIVE:
+                if (getMould().isActive() == null) {
+                    return error("Cannot perform rule on topic MODIFIER_ACTIVE. Unable to detect what to check for.");
+                }
+                return systemNode.isActive() == getMould().isActive();
+            default:
+                return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
+        }
+    }
+
+    // TODO: This method seems futile: system nodes always have a type, visibility, and a value for all modifiers
+    // TODO: instead of false, we should perhaps throw a RuleException when a topic does not exist?
+    private boolean processObjectTopicExists(Node systemNode) {
+        switch (getTopic()) {
+            case TYPE:
                 return systemNode.getType() != null;
             case VISIBILITY:
-                // If systemNode.visibility is not set, return false
                 return systemNode.getVisibility() != null;
             case MODIFIER_ROOT:
-                // If systemNode.isRoot is not set, return false
                 return systemNode.isRoot() != null;
             case MODIFIER_LEAF:
-                // If systemNode.isLeaf is not set, return false
                 return systemNode.isLeaf() != null;
             case MODIFIER_ABSTRACT:
-                // If systemNode.isAbstract is not set, return false
                 return systemNode.isAbstract() != null;
             case MODIFIER_ACTIVE:
-                // If systemNode.isActive is not set, return false
                 return systemNode.isActive() != null;
             default:
-                throw new RuleException("Unexpected topic while processing OBJECT target: " + this.topic + ".");
+                return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
         }
     }
-    private boolean processAttributeTarget(Node systemNode) {
-        // TODO: throw exception? This is an unexpected situation (unimplemented).
-        return false;
+
+    private boolean processAttributeScope(Node systemNode) {
+        return error("Attribute Scope rule checking is not implemented yet.");
+    }
+
+    private boolean error(String message) {
+        LOGGER.error(message);
+        throw new RuleException(message);
     }
 
 }

@@ -1,12 +1,12 @@
 package nl.ou.dpd.domain.rule;
 
 /**
- * Represents a target. TODO explain this more extensively.
+ * Represents a scope in the context of a {@link Rule}.
  *
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
-public enum Target {
+public enum Scope {
     RELATION,
     OBJECT,
     ATTRIBUTE

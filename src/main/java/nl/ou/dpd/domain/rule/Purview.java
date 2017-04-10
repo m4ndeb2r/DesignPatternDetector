@@ -1,14 +1,12 @@
-/**
- * 
- */
 package nl.ou.dpd.domain.rule;
 
 /**
- * @author Peter Vansweevelt
+ * A {@link Purview} indicates to what extend a {@link Condition} is relevant for the analysis.
  *
+ * @author Peter Vansweevelt
  */
 public enum Purview {
-	OBLIGATED,
-	FEEDBACK_ONLY,
-	IGNORE
+    MANDATORY,
+    FEEDBACK_ONLY,
+    IGNORE
 }
