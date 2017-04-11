@@ -106,15 +106,15 @@ public class EdgeTest {
         // Check that edges with different cardinalities are not equal
         Edge edge7 = new Edge(edge5);
         assertTrue(edge7.equals(edge5));
-        edge7.setCardinalityEnd(0, Cardinality.INFINITY);
+        edge7.setCardinalityRight(0, Cardinality.INFINITY);
         assertThat(edge7.getCardinalityRight().getLower(), is(0));
         assertThat(edge7.getCardinalityRight().getUpper(), is(Cardinality.INFINITY));
         assertNull(edge5.getCardinalityRight());
         assertFalse(edge7.equals(edge5));
 
-        edge5.setCardinalityEnd(0, Cardinality.INFINITY);
+        edge5.setCardinalityRight(0, Cardinality.INFINITY);
         assertTrue(edge7.equals(edge5));
-        edge7.setCardinalityFront(1, 1);
+        edge7.setCardinalityLeft(1, 1);
         assertThat(edge7.getCardinalityLeft().getLower(), is(1));
         assertThat(edge7.getCardinalityLeft().getUpper(), is(1));
         assertNull(edge5.getCardinalityLeft());

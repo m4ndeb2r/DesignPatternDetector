@@ -187,7 +187,7 @@ public class Edge {
      * @param lower the lower cardinality value
      * @param upper the upper cardinality value
      */
-    public void setCardinalityFront(int lower, int upper) {
+    public void setCardinalityLeft(int lower, int upper) {
         this.cardinalityLeft = new Cardinality(lower, upper);
     }
 
@@ -197,7 +197,7 @@ public class Edge {
      * @param lower the lower cardinality value
      * @param upper the upper cardinality value
      */
-    public void setCardinalityEnd(int lower, int upper) {
+    public void setCardinalityRight(int lower, int upper) {
         this.cardinalityRight = new Cardinality(lower, upper);
     }
 
@@ -222,14 +222,14 @@ public class Edge {
     /**
      * Remove the cardinality of {@link #leftNode}.
      */
-    public void removeCardinalityFront() {
+    public void removeCardinalityLeft() {
         cardinalityLeft = null;
     }
 
     /**
      * Remove the cardinality of {@link #rightNode}.
      */
-    public void removeCardinalityEnd() {
+    public void removeCardinalityRight() {
         cardinalityRight = null;
     }
 
