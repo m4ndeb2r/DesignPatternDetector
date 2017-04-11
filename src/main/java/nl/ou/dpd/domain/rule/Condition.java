@@ -1,6 +1,8 @@
 package nl.ou.dpd.domain.rule;
 
 import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.node.Node;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +35,8 @@ public class Condition {
     private List<EdgeRule> edgeRules;
     private List<NodeRule> leftNodeRules;
     private List<NodeRule> rightNodeRules;
+    /*NEW 11 april 2017*/
+    private List<NodeRule> nodeRules;
 
     private Purview purview;
 
@@ -52,6 +56,8 @@ public class Condition {
         edgeRules = new ArrayList<>();
         leftNodeRules = new ArrayList<>();
         rightNodeRules = new ArrayList<>();
+        /*NEW 11 april 2017*/
+        nodeRules = new ArrayList<>();
 
         // Default value: ignore
         purview = Purview.IGNORE;
@@ -102,6 +108,16 @@ public class Condition {
         this.rightNodeRules = rightNodeRules;
     }
 
+    /*NEW 11 april 2017*/
+    public List<NodeRule> getNodeRules() {
+        return nodeRules;
+    }
+    /*NEW 11 april 2017*/
+    public void setNodeRules(List<NodeRule> nodeRules) {
+        this.nodeRules = nodeRules;
+    }
+
+    
     /**
      * Get the purview.
      *
@@ -180,7 +196,34 @@ public class Condition {
         }
     }
 
+    /*NEW 11 april 2017*/
     /**
+     * Process the {@link Condition}. A {@link Condition} is only processed once. To force reprocessing of a
+     * {@link Condition}, please call {@link Condition#clearProcessed()} beforehand.
+     *
+     * @param the systemEdge to be processed
+     * @param patternEdge the mould holding the desired values of this edge
+     * @return {@code true} if all the {@link Rule}s have been met, or {@code null} if the {@link Purview} is set to
+     * {@link Purview#IGNORE}, or {@code false} in all other cases.
+     */
+    public boolean process(Edge systemEdge, Edge patternEdge) {
+        if (processed == true) {
+            return processResult;
+        }
+        switch (purview) {
+            case IGNORE:
+                this.processed = false;
+                return true;
+            case FEEDBACK_ONLY:
+            case MANDATORY:
+                this.processResult = processRules(systemEdge, patternEdge);
+                this.processed = true;
+                return this.processResult;
+            default:
+                return error("Unexpected purview: " + purview + ".");
+        }
+    }
+/**
      * Processes the all rules of this {@link Condition}, the edge rules as well as the node rules for either node.
      *
      * @return the accumulated result of processed {@link Rule}s: {@code true} if all the rules succeed, or
@@ -188,23 +231,61 @@ public class Condition {
      */
     private boolean processRules(Edge edge) {
         boolean result = true;
-        for (Rule rule : this.edgeRules) {
+        for (Rule<Edge> rule : this.edgeRules) {
             result = result && rule.process(edge);
             if (result == false) {
                 return false;
             }
         }
-        for (Rule rule : this.leftNodeRules) {
+        for (Rule<Node> rule : this.leftNodeRules) {
             result = result && rule.process(edge.getLeftNode());
             if (result == false) {
                 return false;
             }
         }
-        for (Rule rule : this.rightNodeRules) {
+        for (Rule<Node> rule : this.rightNodeRules) {
             result = result && rule.process(edge.getRightNode());
             if (result == false) {
                 return false;
             }
+        }
+        return result;
+    }
+
+    /*NEW 11 april 2017*/
+    /**
+     * Processes the all rules of this {@link Condition}, the edge rules as well as the node rules for either node.
+     *
+     * @return the accumulated result of processed {@link Rule}s: {@code true} if all the rules succeed, or
+     * {@code false} otherwise.
+     */
+    private boolean processRules(Edge systemEdge, Edge patternEdge) {
+        boolean result = true;
+        for (Rule<Edge> rule : this.edgeRules) {
+        	if (rule.getMould() == patternEdge) {
+	            result = result && rule.process(systemEdge);
+	            if (result == false) {
+	                return false;
+	            }
+        	}
+        }
+    
+        for (Rule<Node> rule : this.nodeRules) {
+        	if (rule.getMould() == patternEdge.getLeftNode()) {
+	            result = result && rule.process(systemEdge.getLeftNode());
+	            if (result == false) {
+	                return false;
+	            }
+        	}
+        }
+        
+        for (Rule<Node> rule : this.nodeRules) {
+        	if (rule.getMould() == patternEdge.getRightNode()) {
+	            result = result && rule.process(systemEdge.getRightNode());
+	            if (result == false) {
+	                return false;
+	            }
+        	}
         }
         return result;
     }

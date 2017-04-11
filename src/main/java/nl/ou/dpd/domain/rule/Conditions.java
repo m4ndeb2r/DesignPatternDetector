@@ -18,7 +18,7 @@ public class Conditions {
      * Constructor of the class {@link Conditions}.
      */
     public Conditions() {
-        this.conditions = new ArrayList();
+        this.conditions = new ArrayList<Condition>();
     }
 
     /**
@@ -45,6 +45,35 @@ public class Conditions {
         for (Condition c : conditions) {
             c.clearProcessed();
             c.process(edge);
+        }
+        for (Condition c : conditions) {
+            if (c.getPurview() == Purview.MANDATORY && !c.isProcessed()) {
+                return null;
+            }
+            if (c.getPurview() == Purview.MANDATORY && c.isProcessedUnsuccessfully()) {
+                return false;
+            }
+        }
+        return true;
+    }
+ 
+    /*NEW 11 april 2017*/
+    /**
+     * Processes all the conditions for a specified {@link Edge} and its {@link Node}s, and returns the accumulative result:
+     * <ul>
+     * <li>{@code null} if at least one mandatory condition has not been processed.</li>
+     * <li>{@code false} if the combination of mandatory conditions have not been met</li>
+     * <li>{@code true} if the combination of mandatory conditions have been met</li>
+     * </ul>
+     *
+     * @param systemEdge the systemEdge to be processed
+     * @param patternEdge the mould holding the desired values of this edge
+     * @return the accumulative result value of the processed attribute;
+     */
+    public Boolean processConditions(Edge systemEdge, Edge patternEdge) {
+        for (Condition c : conditions) {
+            c.clearProcessed();
+            c.process(systemEdge, patternEdge);
         }
         for (Condition c : conditions) {
             if (c.getPurview() == Purview.MANDATORY && !c.isProcessed()) {
