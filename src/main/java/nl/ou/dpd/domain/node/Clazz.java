@@ -10,6 +10,9 @@ import java.util.List;
  * @author Martin de Boer
  */
 public class Clazz extends Node {
+	
+	/**NEW 12/04/17**/
+	private String classtype; 
 
     /**
      * Constructs a {@link Clazz} instance with the specified {@code name} and similar {@code id}.
@@ -54,6 +57,40 @@ public class Clazz extends Node {
     public Clazz(String id, String name, Visibility visibility, List<Attribute> attributes, Boolean isRoot,
                  Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
         super(id, name, NodeType.CLASS, visibility, attributes, isRoot, isLeaf, isAbstract, isActive);
+    }
+    
+	/**NEW 12/04/17**/
+    /**
+     * Constructs a {@link Clazz} instance with the specified parameters.
+     *
+     * @param id         a unique id for this {@link Clazz}
+     * @param name       the name of this {@link Clazz}
+     * @param classtype	 the virtual type of this class, given by name
+     * @param visibility the {@link Visibility} of this {@link Clazz}
+     * @param attributes the attributes of this {@link Clazz}
+     * @param isRoot     {@code true} is this {@link Clazz} is a root node, {@code false} if not, or {@code null} if
+     *                   undefined
+     * @param isLeaf     {@code true} is this {@link Clazz} is a leaf node, {@code false} if not, or {@code null} if
+     *                   undefined
+     * @param isAbstract {@code true} is this {@link Clazz} is abstract, {@code false} if not, or {@code null} if
+     *                   undefined
+     * @param isActive   {@code true} is this {@link Clazz} is active, {@code false} if not, or {@code null} if
+     *                   undefined
+     */
+    public Clazz(String id, String name, String classtype, Visibility visibility, List<Attribute> attributes, Boolean isRoot,
+                 Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
+        super(id, name, NodeType.CLASS, visibility, attributes, isRoot, isLeaf, isAbstract, isActive);
+        this.classtype = classtype;
+    }
+    
+	/**NEW 12/04/17**/
+    public void setClasstype(String classtype) {
+    	this.classtype = classtype;
+    }
+    
+	/**NEW 12/04/17**/
+    public String getClasstype() {
+    	return classtype;
     }
 
 }

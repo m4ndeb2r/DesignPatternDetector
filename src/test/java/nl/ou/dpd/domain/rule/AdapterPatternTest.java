@@ -8,10 +8,21 @@ import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.Visibility;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests the {@link Conditions} class. In this test class we define a set of {@link Condition}s with {@link EdgeRule}s and/or two
@@ -37,7 +48,7 @@ public class AdapterPatternTest {
 
 	private Node client, target, adapter, adaptee;
 	private Edge clientTarget, adapterTarget, adapterAdaptee;
-	private Conditions conditions;
+//	private Conditions conditions;
 	private Edge editorShape;
 	private Edge textshapeTextview;
 	private Edge textshapeShape;
@@ -45,6 +56,14 @@ public class AdapterPatternTest {
 	private Node shape;
 	private Node textShape;
 	private Node textView;
+	
+	 /**
+     * Exception rule.
+     */
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    @Mock
+    private Conditions conditions;
 	
     /**
      * Initializes pattern edges.
@@ -57,6 +76,14 @@ public class AdapterPatternTest {
     	target = new Clazz("target", "Target", Visibility.PUBLIC, null, null, null, true, null); //an abstract class
     	adapter = new Clazz("adapter", "Adapter", Visibility.PUBLIC, null, null, null, null, null);
     	adaptee = new Clazz("adaptee", "Adaptee", Visibility.PUBLIC, null, null, null, null, null);
+    	
+    	// Create attributes
+    	Attribute adapteeAttr = new Attribute("adaptee", new Clazz("attr2", "adaptee", "Adaptee", Visibility.PRIVATE, null, null, null, null, null));
+    	Attribute adapterAttr = new Attribute("adapter", new Clazz("attr1", "adapter", "Adapter", null, null, null, null, null, null));
+    	
+    	// set attributes in classes
+    	client.getAttributes().add(adapterAttr);
+    	adapter.getAttributes().add(adapteeAttr);
     	
     	// Create edges
         clientTarget = new Edge(client, target, EdgeType.ASSOCIATION_DIRECTED, "Client-Target");
@@ -91,6 +118,8 @@ public class AdapterPatternTest {
     	cond7.getNodeRules().add(new NodeRule(adaptee, Topic.TYPE, Scope.OBJECT, Operator.EQUALS));
     	Condition cond8 = new Condition("8", "The Client is a class.");
     	cond8.getNodeRules().add(new NodeRule(client, Topic.TYPE, Scope.OBJECT, Operator.EQUALS));
+    	Condition con9 = new Condition("9", "The Client has an Adapter attribute.");
+    	con9.getNodeRules().add(new NodeRule(client, Topic.TYPE, Scope.ATTRIBUTE, Operator.EXISTS));
     	
     	conditions = new Conditions();
     	conditions.getConditions().add(cond1);
@@ -121,6 +150,14 @@ public class AdapterPatternTest {
     	textShape = new Clazz("textShape", "TextShape", Visibility.PUBLIC, null, null, null, null, null);
     	//Adaptee
     	textView = new Clazz("textView", "TextView", Visibility.PUBLIC, null, null, null, null, null);
+
+    	// Create attributes
+    	Attribute textShapeAttr = new Attribute("textView", new Clazz("attrid1", "textView", "TextView", Visibility.PRIVATE, null, null, null, null, null));
+    	Attribute drawingEditorAttr = new Attribute("Shape", new Clazz("attrid2", "Shape", "Shape", null, null, null, null, null, null));
+  
+    	// set attributes in classes
+    	textShape.getAttributes().add(textShapeAttr);
+    	drawingEditor.getAttributes().add(drawingEditorAttr);   	
     	
     	// Create systemedges
     	//clientTaget
@@ -144,7 +181,25 @@ public class AdapterPatternTest {
     	assertTrue(conditions.processConditions(editorShape, clientTarget));
     	assertTrue(conditions.processConditions(textshapeTextview, adapterAdaptee));
     	assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
-    }
+    	
+    	//wrong combinations of systemedges and patternedges
+    	//don't evaluate cardinalities
+    	conditions.getConditions().get(4).setPurview(Purview.IGNORE);
+    	//wrong association but all conditions of adapter-adaptee are met (cond2,cond6, cond7)
+    	assertTrue(conditions.processConditions(editorShape, adapterAdaptee));
+    	assertFalse(conditions.processConditions(editorShape, adapterTarget));
+    	assertFalse(conditions.processConditions(textshapeTextview, adapterTarget));
+    	assertFalse(conditions.processConditions(textshapeTextview, clientTarget));
+    	assertFalse(conditions.processConditions(textshapeShape, clientTarget));
+    	assertFalse(conditions.processConditions(textshapeShape, adapterAdaptee));
+    	
+    	//wrong combination cardinality condition on adapter-adaptee- relation, not set in systemedge
+    	//evaluate cardinalities
+    	conditions.getConditions().get(4).setPurview(Purview.MANDATORY);
+    	thrown.expect(RuleException.class);
+        thrown.expectMessage("Either one or both cardinalities are not set.");
+        conditions.processConditions(editorShape, adapterAdaptee);
+   }
     
     /**
      * Tests a system where a relationship is wrong.
@@ -219,4 +274,89 @@ public class AdapterPatternTest {
     	assertFalse(conditions.processConditions(textshapeShape, adapterTarget)); 
 
     }
+    
+    /**
+     * Test a system with mapped system and patternedges
+     * Map<Node, Node> = map<systemedge, patternedge>
+     */
+    @Test
+    public void testMatchedNodesOK() {
+    	Map<Node, Node> matchedNodes = new HashMap<>();
+    	matchedNodes.put(drawingEditor, client);
+    	matchedNodes.put(shape, target);
+    	matchedNodes.put(textShape, adapter);
+    	matchedNodes.put(textView, adaptee);
+ 
+    	assertTrue(conditions.processConditions(matchedNodes));    	
+
+    	//only node conditions are evaluated
+    	for (Condition c : conditions.getConditions()) {
+    		assertTrue(c.isProcessed());
+    	}
+     	
+    }
+    
+    /**
+     * Test a system building mapped system and patternedges
+     * Map<Node, Node> = map<systemedge, patternedge>
+     */
+    @Test
+    public void testMatchedNodesBuildingOK() {
+    	
+    	Map<Node, Node> matchedNodes = new HashMap<>();
+       	if (conditions.processConditions(editorShape, clientTarget)) {
+    		matchedNodes.put(editorShape.getLeftNode(), clientTarget.getLeftNode());
+    		matchedNodes.put(editorShape.getRightNode(), clientTarget.getRightNode());
+    	}
+    	if (conditions.processConditions(textshapeTextview, adapterAdaptee)) {
+    		matchedNodes.put(textshapeTextview.getLeftNode(), adapterAdaptee.getLeftNode());
+    		matchedNodes.put(textshapeTextview.getRightNode(), adapterAdaptee.getRightNode());
+    	}
+    	if (conditions.processConditions(textshapeShape, adapterTarget)) {
+    		matchedNodes.put(textshapeShape.getLeftNode(), adapterTarget.getLeftNode());
+    		matchedNodes.put(textshapeShape.getRightNode(), adapterTarget.getRightNode());
+    	}
+
+    	boolean structureOK = conditions.processConditions(editorShape, clientTarget) && conditions.processConditions(textshapeTextview, adapterAdaptee) && conditions.processConditions(textshapeShape, adapterTarget);
+    	assertTrue(conditions.processConditions(matchedNodes) && structureOK);
+
+
+    }
+    
+    /**
+     * Test a system building mapped system and patternedges with a wrong relationship.
+     * Map<Node, Node> = map<systemedge, patternedge>
+     */
+    @Test
+    public void testMatchedNodesBuildingWrongRelationship() {
+    	
+    	Map<Node, Node> matchedNodes = new HashMap<>();
+    	//clientTarget has a wrong relationship
+        editorShape = new Edge(drawingEditor, shape, EdgeType.DEPENDENCY, "editor-shape");
+    	
+    	if (conditions.processConditions(editorShape, clientTarget)) {
+    		matchedNodes.put(editorShape.getLeftNode(), clientTarget.getLeftNode());
+    		matchedNodes.put(editorShape.getRightNode(), clientTarget.getRightNode());
+    	}
+    	if (conditions.processConditions(textshapeTextview, adapterAdaptee)) {
+    		matchedNodes.put(textshapeTextview.getLeftNode(), adapterAdaptee.getLeftNode());
+    		matchedNodes.put(textshapeTextview.getRightNode(), adapterAdaptee.getRightNode());
+    	}
+    	if (conditions.processConditions(textshapeShape, adapterTarget)) {
+    		matchedNodes.put(textshapeShape.getLeftNode(), adapterTarget.getLeftNode());
+    		matchedNodes.put(textshapeShape.getRightNode(), adapterTarget.getRightNode());
+    	}
+    	
+    	//nodes of a wrong edge are not mentioned in the map, thus not processed with the matchedNodes.
+    	//assert all conditions are evaluated
+    	for (Condition c : conditions.getConditions()) {
+    		assertTrue(c.isProcessed());
+    	}
+    	
+    	assertTrue(conditions.processConditions(matchedNodes)); 
+    	
+    	//with an extra evaluation of the different edges, structure is not complete.
+       	boolean structureOK = conditions.processConditions(editorShape, clientTarget) && conditions.processConditions(textshapeTextview, adapterAdaptee) && conditions.processConditions(textshapeShape, adapterTarget);
+    	assertFalse(conditions.processConditions(matchedNodes) && structureOK);    	
+     }
 }

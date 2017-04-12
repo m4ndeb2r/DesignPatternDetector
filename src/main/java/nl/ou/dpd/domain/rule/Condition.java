@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A Design Pattern template (defined in a templates xml-file) is defined by way of a number of conditions. This class
@@ -223,7 +225,36 @@ public class Condition {
                 return error("Unexpected purview: " + purview + ".");
         }
     }
-/**
+    
+    /*NEW 12 april 2017*/
+    /**
+     * Process the {@link Condition}. A {@link Condition} is only processed once. To force reprocessing of a
+     * {@link Condition}, please call {@link Condition#clearProcessed()} beforehand.
+     *
+     * @param the systemEdge to be processed
+     * @param patternEdge the mould holding the desired values of this edge
+     * @return {@code true} if all the {@link Rule}s have been met, or {@code null} if the {@link Purview} is set to
+     * {@link Purview#IGNORE}, or {@code false} in all other cases.
+     */
+    public boolean process(Map<Node, Node> matchedNodes) {
+        if (processed == true) {
+            return processResult;
+        }
+        switch (purview) {
+            case IGNORE:
+                this.processed = false;
+                return true;
+            case FEEDBACK_ONLY:
+            case MANDATORY:
+                this.processResult = processRules(matchedNodes);
+                this.processed = true;
+                return this.processResult;
+            default:
+                return error("Unexpected purview: " + purview + ".");
+        }
+    }
+    
+    /**
      * Processes the all rules of this {@link Condition}, the edge rules as well as the node rules for either node.
      *
      * @return the accumulated result of processed {@link Rule}s: {@code true} if all the rules succeed, or
@@ -288,6 +319,43 @@ public class Condition {
         	}
         }
         return result;
+    }
+    
+    /*NEW 12 april 2017*/
+    /**
+     * Processes all the noderules of this {@link Condition}, which have a matched node in the matchedNodes-map.
+     * If the node on which the rule applies does not exist or the rule is an edgerule, return is {@code true}.
+     * 
+     * @param a map with system edges as keys and matched pattern edges as values
+     * @return the accumulated result of processed node{@link Rule}s: {@code true} if all the rules succeed, or the node does not exist in the map.
+     * {@code false} otherwise.
+     */
+    private boolean processRules(Map<Node, Node> matchedNodes) {
+        boolean result = true;
+        for (Rule<Node> rule : this.nodeRules) {
+        	if (matchedNodes.containsValue(rule.getMould())) {
+	            result = result && rule.process(getMapKey(matchedNodes, rule.getMould()));
+	            if (result == false) {
+	                return false;
+	            }
+        	}
+      }
+        return result;
+    }
+    
+	/**
+	 * Returns the key of the value in the given map.
+	 * @param map
+	 * @param value
+	 * @return
+	 */
+     private Node getMapKey(Map<Node, Node> map, Node value) {
+    	for (Entry<Node, Node> e : map.entrySet()) {
+    		if (e.getValue() == value) {
+    			return e.getKey();
+    		}
+    	}
+    	return null;
     }
 
     private boolean error(String message) {
