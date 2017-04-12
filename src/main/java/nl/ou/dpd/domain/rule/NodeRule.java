@@ -128,10 +128,41 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processAttributeScope(Node systemNode) {
-        return error("Attribute Scope rule checking is not implemented yet.");
+    	switch (getOperator()) {
+		    case EXISTS:
+		        // TODO: This case seems futile, because it always returns true
+		        return processAttributeTopicExists(systemNode);
+		    case NOT_EXISTS:
+		        // TODO: This case seems futile, because it always returns false
+		        return !processAttributeTopicExists(systemNode);
+		    case EQUALS:
+		        return processAttributeTopicEquals(systemNode);
+		    case NOT_EQUALS:
+		        return !processAttributeTopicEquals(systemNode);
+		    default:
+		    	return error("Unexpected operator while processing ATTRIBUTE: " + getOperator() + ".");
+    	}
     }
 
-    private boolean error(String message) {
+    /**
+	 * @param systemNode
+	 * @return
+	 */
+	private boolean processAttributeTopicEquals(Node systemNode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * @param systemNode
+	 * @return
+	 */
+	private boolean processAttributeTopicExists(Node systemNode) {
+		
+		return false;
+	}
+
+	private boolean error(String message) {
         LOGGER.error(message);
         throw new RuleException(message);
     }
