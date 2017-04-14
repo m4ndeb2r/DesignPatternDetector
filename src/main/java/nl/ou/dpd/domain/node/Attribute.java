@@ -8,7 +8,7 @@ package nl.ou.dpd.domain.node;
 public class Attribute {
 
     private final String name;
-    private final Node type;
+    private final Node classtype;
 
     /**
      * Creates an attribute with the given name and {@link Node} type.
@@ -16,9 +16,9 @@ public class Attribute {
      * @param name the name of the attribute
      * @param type the type of the attribute
      */
-    public Attribute(String name, Node type) {
+    public Attribute(String name, Node classtype) {
         this.name = name;
-        this.type = type;
+        this.classtype = classtype;
     }
 
     /**
@@ -35,8 +35,8 @@ public class Attribute {
      *
      * @return the type of the attribute as {@link Node}
      */
-    public Node getType() {
-        return type;
+    public Node getClasstype() {
+        return classtype;
     }
 
 }
