@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,7 +186,7 @@ public class ProjectViewController extends Controller implements Observer {
         int patternCount = 0;
         for (String patternName : result.keySet()) {
             final List<Solution> solutions = result.get(patternName);
-            final TreeItem<String> patternRoot = new TreeItem<>(patternName + " (" + solutions.size() + ")");
+            final TreeItem<String> patternRoot = new TreeItem<>(makePatternRootName(patternName, solutions));
             treeRoot.getChildren().add(patternRoot);
 
             int i = 0;
@@ -206,8 +207,28 @@ public class ProjectViewController extends Controller implements Observer {
 
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
 
+        // Sort by patterns by name
+        treeRoot.getChildren().sort(Comparator.comparing(t->t.getValue()));
+
         // Enable clear button
         clearButton.setDisable(false);
+    }
+
+    /**
+     * Generates the name of a pattern root string, based on the {@code patternName} and the size of the
+     * {@link solutions}. If there is only one solution, the {@code patternName} is returned; if there are several
+     * solutions, the {@code patternName} is suffixed with the number of solutions between parenthesis.
+     *
+     * @param patternName the pattern name
+     * @param solutions   the solutions found for a pattern
+     * @return the name of the pattern followed by the number of solutions between parenthesis, or just the name of the
+     * pattern (when there is just 1 solution).
+     */
+    private String makePatternRootName(String patternName, List<Solution> solutions) {
+        if (solutions.size() > 1) {
+            return patternName + " (" + solutions.size() + ")";
+        }
+        return patternName;
     }
 
     /**

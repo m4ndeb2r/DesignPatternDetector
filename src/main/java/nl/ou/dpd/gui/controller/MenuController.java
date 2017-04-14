@@ -324,25 +324,41 @@ public class MenuController extends Controller implements Observer {
                 }
                 final String menuText = projectFile.getName();
                 final MenuItem menuItem = new MenuItem(menuText);
-                menuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        try {
-                            getModel().openProject(projectFile);
-                        } catch (FileNotFoundException ex) {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setTitle("Error");
-                            alert.setHeaderText("Project file not found");
-                            alert.setContentText(ex.getMessage());
-                            alert.showAndWait();
-                        }
-                    }
-                });
+                menuItem.setOnAction(createOpenRecentProjectFileEventHandler(projectFile));
                 recentProjectsMenu.getItems().add(menuItem);
             }
         }
 
         this.recentProjectsMenu.setDisable(this.recentProjectsMenu.getItems().size() == 0);
+    }
+
+    /**
+     * Creates a handler for the open-recent-project-file event. Recent project files can only be opened whe no project
+     * is currently open, unless it can be closed without data loss, or the user confirms it is okay to close the
+     * currently open project file and discard any changes made to it.
+     *
+     * @param projectFile the project file to open
+     * @return the created {@link EventHandler}
+     */
+    private EventHandler<ActionEvent> createOpenRecentProjectFileEventHandler(File projectFile) {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    if (!getModel().hasOpenProject()
+                            || getModel().canCloseProjectWithoutDataLoss()
+                            || canCloseWithoutSaving()) {
+                        getModel().openProject(projectFile);
+                    }
+                } catch (FileNotFoundException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Project file not found");
+                    alert.setContentText(ex.getMessage());
+                    alert.showAndWait();
+                }
+            }
+        };
     }
 }
 
