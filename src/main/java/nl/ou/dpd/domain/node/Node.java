@@ -131,7 +131,7 @@ public abstract class Node implements Comparable<Node> {
      */
     public List<Attribute> getAttributesByType(Node attributeType) {
         return attributes.stream()
-                .filter(attribute -> attribute.getClasstype().equals(attributeType))
+                .filter(attribute -> attribute.getType().equals(attributeType))
                 .collect(Collectors.toList());
     }
 
