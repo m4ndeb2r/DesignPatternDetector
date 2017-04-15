@@ -104,7 +104,7 @@ public class MenuController extends Controller implements Observer {
             try {
                 getModel().openProject();
             } catch (FileNotFoundException fnfe) {
-                final Alert alert = new Alert(Alert.AlertType.ERROR);
+                final Alert alert = new CustomAlert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("The file could not be saved");
                 alert.setContentText(fnfe.getMessage());
@@ -128,7 +128,7 @@ public class MenuController extends Controller implements Observer {
 
     private boolean canCloseWithoutSaving() {
         // Ask user: okay to close project and lose any changes?
-        final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        final Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Note: unsaved changes");
         alert.setHeaderText("The current project will be discarded");
         alert.setContentText("Are you sure you want to close the current project and lose unsaved changes?");
@@ -187,11 +187,11 @@ public class MenuController extends Controller implements Observer {
     private void showSaveFileAlert(boolean success, String detailMsg) {
         Alert alert = null;
         if (success) {
-            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert = new CustomAlert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText("File successfully saved");
         } else {
-            alert = new Alert(Alert.AlertType.ERROR);
+            alert = new CustomAlert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("The file could not be saved");
             if (detailMsg != null) {
@@ -244,7 +244,7 @@ public class MenuController extends Controller implements Observer {
     }
 
     private void showNotImplementedAlert(String function) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new CustomAlert(Alert.AlertType.WARNING);
         alert.setTitle("Warning");
         alert.setHeaderText("Not implemented yet: " + function);
         alert.setContentText("This function will be implemented in a future version of the application. Our apologies for the inconvenience.");
@@ -282,7 +282,7 @@ public class MenuController extends Controller implements Observer {
 
     private boolean okayToExit() {
         // Ask user: okay to close project and lose any changes?
-        final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        final Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit application");
         alert.setHeaderText("The application will stop");
         alert.setContentText("Are you sure you want exit the application?");
@@ -351,7 +351,7 @@ public class MenuController extends Controller implements Observer {
                         getModel().openProject(projectFile);
                     }
                 } catch (FileNotFoundException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    Alert alert = new CustomAlert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText("Project file not found");
                     alert.setContentText(ex.getMessage());

@@ -168,7 +168,7 @@ public class ProjectViewController extends Controller implements Observer {
             LOGGER.error("Error during analysis: ", e);
 
             // Show error to the user.
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new CustomAlert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Could not analyse input data");
             alert.setContentText(e.getMessage());
