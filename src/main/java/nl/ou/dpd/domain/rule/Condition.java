@@ -1,6 +1,7 @@
 package nl.ou.dpd.domain.rule;
 
 import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
 
 import org.apache.logging.log4j.LogManager;
@@ -37,8 +38,8 @@ public class Condition {
     private List<EdgeRule> edgeRules;
     private List<NodeRule> leftNodeRules;
     private List<NodeRule> rightNodeRules;
-    /*NEW 11 april 2017*/
     private List<NodeRule> nodeRules;
+    private List<AttributeRule> attributeRules;
 
     private Purview purview;
 
@@ -58,8 +59,8 @@ public class Condition {
         edgeRules = new ArrayList<>();
         leftNodeRules = new ArrayList<>();
         rightNodeRules = new ArrayList<>();
-        /*NEW 11 april 2017*/
         nodeRules = new ArrayList<>();
+        attributeRules = new ArrayList<>();
 
         // Default value: ignore
         purview = Purview.IGNORE;
@@ -110,15 +111,21 @@ public class Condition {
         this.rightNodeRules = rightNodeRules;
     }
 
-    /*NEW 11 april 2017*/
     public List<NodeRule> getNodeRules() {
         return nodeRules;
     }
-    /*NEW 11 april 2017*/
+
     public void setNodeRules(List<NodeRule> nodeRules) {
         this.nodeRules = nodeRules;
     }
 
+    public List<AttributeRule> getAttributeRules() {
+        return attributeRules;
+    }
+
+    public void setAtributeRules(List<AttributeRule> attributeRules) {
+        this.attributeRules = attributeRules;
+    }
     
     /**
      * Get the purview.
@@ -179,8 +186,7 @@ public class Condition {
      * @param edge an edge of the system under consideration.
      * @return {@code true} if all the {@link Rule}s have been met, or {@code null} if the {@link Purview} is set to
      * {@link Purview#IGNORE}, or {@code false} in all other cases.
-     */
-    public boolean process(Edge edge) {
+     */    public boolean process(Edge edge) {
         if (processed == true) {
             return processResult;
         }
@@ -198,7 +204,7 @@ public class Condition {
         }
     }
 
-    /*NEW 11 april 2017*/
+
     /**
      * Process the {@link Condition}. A {@link Condition} is only processed once. To force reprocessing of a
      * {@link Condition}, please call {@link Condition#clearProcessed()} beforehand.
@@ -283,15 +289,17 @@ public class Condition {
         return result;
     }
 
-    /*NEW 11 april 2017*/
+
     /**
-     * Processes the all rules of this {@link Condition}, the edge rules as well as the node rules for either node.
+     * Processes all the rules of this {@link Condition} for either edge, adhering nodes and their attributes.
      *
      * @return the accumulated result of processed {@link Rule}s: {@code true} if all the rules succeed, or
      * {@code false} otherwise.
      */
     private boolean processRules(Edge systemEdge, Edge patternEdge) {
         boolean result = true;
+        
+        //evaluate all edge rules matching the given edge
         for (Rule<Edge> rule : this.edgeRules) {
         	if (rule.getMould() == patternEdge) {
 	            result = result && rule.process(systemEdge);
@@ -300,7 +308,8 @@ public class Condition {
 	            }
         	}
         }
-    
+
+        //evaluate all node rules matching the given left node
         for (Rule<Node> rule : this.nodeRules) {
         	if (rule.getMould() == patternEdge.getLeftNode()) {
 	            result = result && rule.process(systemEdge.getLeftNode());
@@ -309,7 +318,8 @@ public class Condition {
 	            }
         	}
         }
-        
+
+        //evaluate all node rules matching the given right node
         for (Rule<Node> rule : this.nodeRules) {
         	if (rule.getMould() == patternEdge.getRightNode()) {
 	            result = result && rule.process(systemEdge.getRightNode());
@@ -318,9 +328,43 @@ public class Condition {
 	            }
         	}
         }
-        return result;
+
+        //evaluate all attribute rules matching the left node attributes with the type of the right node
+        //(other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
+        for (Rule<Attribute> rule : this.attributeRules) {
+        	boolean partialResult = false;
+        	boolean ruleProcessed = false;
+        	for (Attribute systemAttribute : findAttributesOfRightNodeType(systemEdge)) {
+        		if (rule.getMould().getType().getName() == patternEdge.getRightNode().getName()) {
+		            partialResult = partialResult || rule.process(systemAttribute);
+		            ruleProcessed = true;
+        		}
+        	}
+        	partialResult = partialResult || !ruleProcessed;
+            result = result && partialResult;
+            if (result == false) {
+                return false;
+            }
+        }
+     return result;
     }
     
+	/** Find all attributes in the left node which has the type of the right node.
+	 * (other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
+	 * @param systemEdge
+	 * @return
+	 */
+	private List<Attribute> findAttributesOfRightNodeType(Edge systemEdge) {
+		List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
+		List<Attribute> foundAttributes = new ArrayList<Attribute>();
+		for(Attribute attribute : systemAttributes) {
+			if (attribute.getType().getName().equals(systemEdge.getRightNode().getName())) {
+				foundAttributes.add(attribute);
+			}
+		}
+		return foundAttributes;
+	}
+     
     /*NEW 12 april 2017*/
     /**
      * Processes all the noderules of this {@link Condition}, which have a matched node in the matchedNodes-map.
@@ -332,6 +376,7 @@ public class Condition {
      */
     private boolean processRules(Map<Node, Node> matchedNodes) {
         boolean result = true;
+        
         for (Rule<Node> rule : this.nodeRules) {
         	if (matchedNodes.containsValue(rule.getMould())) {
 	            result = result && rule.process(getMapKey(matchedNodes, rule.getMould()));
@@ -339,7 +384,7 @@ public class Condition {
 	                return false;
 	            }
         	}
-      }
+        }
         return result;
     }
     

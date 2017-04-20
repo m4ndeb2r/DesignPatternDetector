@@ -59,7 +59,7 @@ public class Conditions {
         return true;
     }
  
-    /*NEW 11 april 2017*/
+
     /**
      * Processes all the conditions for a specified {@link Edge} and its {@link Node}s, and returns the accumulative result:
      * <ul>

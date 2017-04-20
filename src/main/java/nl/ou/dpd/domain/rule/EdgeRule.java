@@ -2,6 +2,10 @@ package nl.ou.dpd.domain.rule;
 
 import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.node.Attribute;
+
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,19 +40,27 @@ public class EdgeRule extends Rule<Edge> {
      * otherwise.
      */
     public boolean process(Edge systemEdge) {
-        if (getScope() == Scope.RELATION) {
-            return processRelation(systemEdge);
-        }
-        return error("Unexpected scope: " + getScope() + ".");
+    	switch (getScope()) {
+    		case RELATION:
+    			return processRelation(systemEdge);
+    		case ATTRIBUTE:
+    			return processAttribute(systemEdge);
+    		default:
+    			return error("Unexpected scope: " + getScope() + ".");
+    	}
     }
 
-    private boolean processRelation(Edge systemEdge) {
+	private boolean processRelation(Edge systemEdge) {
         switch (getTopic()) {
             case TYPE:
                 return processRelationType(systemEdge);
             case CARDINALITY:
                 return processRelationCardinality(systemEdge);
-            default:
+            case CARDINALITY_LEFT:
+                return processRelationCardinalityLeft(systemEdge);
+            case CARDINALITY_RIGHT:
+                return processRelationCardinalityRight(systemEdge);
+           default:
                 return error("Unexpected topic while processing RELATION: " + getTopic() + ".");
         }
     }
@@ -68,6 +80,35 @@ public class EdgeRule extends Rule<Edge> {
         }
     }
 
+    private boolean processRelationCardinalityLeft(Edge systemEdge) {
+        switch (getOperator()) {
+            case EXISTS:
+                return processCardinalityLeftExists(systemEdge);
+            case NOT_EXISTS:
+                return !processCardinalityLeftExists(systemEdge);
+            case EQUALS:
+                return processCardinalityLeftEquals(systemEdge);
+            case NOT_EQUALS:
+                return !processCardinalityLeftEquals(systemEdge);
+            default:
+                return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+        }
+    } 
+    
+    private boolean processRelationCardinalityRight(Edge systemEdge) {
+        switch (getOperator()) {
+        case EXISTS:
+            return processCardinalityRightExists(systemEdge);
+        case NOT_EXISTS:
+            return !processCardinalityRightExists(systemEdge);
+        case EQUALS:
+            return processCardinalityRightEquals(systemEdge);
+        case NOT_EQUALS:
+            return !processCardinalityRightEquals(systemEdge);
+        default:
+            return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+    }
+}
     private boolean processRelationType(Edge systemEdge) {
         switch (getOperator()) {
             case EQUALS:
@@ -84,6 +125,31 @@ public class EdgeRule extends Rule<Edge> {
         return leftOkay && rightOkay;
     }
 
+    private boolean processCardinalityLeftExists(Edge systemEdge) {
+        return systemEdge.getCardinalityLeft() != null;
+    }
+    
+    private boolean processCardinalityRightExists(Edge systemEdge) {
+        return systemEdge.getCardinalityRight() != null;
+    }
+   private boolean processCardinalityLeftEquals(Edge systemEdge) {
+        if (!processCardinalityLeftExists(systemEdge)) {
+            error("Left cardinality is not set.");
+        }
+        final Cardinality ruleLeft = getMould().getCardinalityLeft();
+        final boolean leftOkay = ruleLeft.equals(systemEdge.getCardinalityLeft());
+        return leftOkay;
+    }
+
+    private boolean processCardinalityRightEquals(Edge systemEdge) {
+        if (!processCardinalityRightExists(systemEdge)) {
+            error("Right cardinality is not set.");
+        }
+        final Cardinality ruleRight = getMould().getCardinalityRight();
+        final boolean rightOkay = ruleRight.equals(systemEdge.getCardinalityRight());
+        return rightOkay;
+    }    
+    
     private boolean processCardinalityEquals(Edge systemEdge) {
         if (!processCardinalityExists(systemEdge)) {
             error("Either one or both cardinalities are not set.");
@@ -94,10 +160,41 @@ public class EdgeRule extends Rule<Edge> {
         final boolean rightOkay = ruleRight.equals(systemEdge.getCardinalityRight());
         return leftOkay && rightOkay;
     }
-
     private boolean error(String message) {
         LOGGER.error(message);
         throw new RuleException(message);
     }
+    
+	private boolean processAttribute(Edge systemEdge) {
+        switch (getTopic()) {
+	        case TYPE:
+	            return processAttributeType(systemEdge);
+	        default:
+	            return error("Unexpected topic while processing ATTRIBUTE: " + getTopic() + ".");
+        }
+	}
 
+	private boolean processAttributeType(Edge systemEdge) {
+        switch (getOperator()) {
+        case EXISTS:
+            return processAttributeTypeExists(systemEdge);
+        default:
+            return error("Unexpected operator while processing ATTRIBUTE.TYPE: " + getOperator() + ".");
+        }
+	}
+
+	/** Find an attribute in the left node which has the type of the right node.
+	 * Which means: an attribute of that type exists.
+	 * @param systemEdge
+	 * @return
+	 */
+	private boolean processAttributeTypeExists(Edge systemEdge) {
+		List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
+		for(Attribute attribute : systemAttributes) {
+			if (attribute.getType().getName().equals(systemEdge.getRightNode().getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -19,6 +19,7 @@ import java.util.Objects;
 
 public class Edge {
 
+	private String id;
     private String name;
     private Node leftNode, rightNode;
     private EdgeType relationType;
@@ -52,16 +53,32 @@ public class Edge {
      * nodes represent the vertices in a graph (when the design pattern is viewed as a graph), and the edge type
      * represents the relation type between the nodes.
      *
+     * @param name      the name of the edge. Recommended as being unique (in a pattern).
      * @param leftNode  the "left" class or interface in the relation
      * @param rightNode the "right" class or interface in the relation
-     * @param type      the type of relation
-     * @param name      the name of the edge. Recommended as being unique (in a pattern).
      */
     public Edge(Node leftNode, Node rightNode, EdgeType type, String name) {
         this(leftNode, rightNode, type);
         this.name = name;
     }
 
+    /**18/04/17*/
+    /**
+     * Constructs an instance of a {@link Edge} with the specified nodes and a name of the edge. The
+     * nodes represent the vertices in a graph (when the design pattern is viewed as a graph).
+     *
+     * @param leftNode  the "left" class or interface in the relation
+     * @param rightNode the "right" class or interface in the relation
+     * @param type      the type of relation
+     * @param name      the name of the edge. Recommended as being unique (in a pattern).
+     */
+    public Edge(String id, String name, Node leftNode, Node rightNode) {
+    	this.id = id;
+        this.name = name;
+        this.leftNode = leftNode;
+        this.rightNode = rightNode;
+    }
+    
     /**
      * This constructor returns a duplicate of the specified {@link Edge}.
      *
@@ -73,6 +90,21 @@ public class Edge {
         this.cardinalityRight = edge.cardinalityRight;
         this.locked = edge.locked;
         this.virtual = edge.virtual;
+    }
+
+    /**18/04/17*/
+    /**
+     * This constructor returns a duplicate of the specified {@link Edge}.
+     *
+     * @param edge an {@link Edge} to construct a duplicate of.
+     */
+    public Edge duplicate() {
+    	Edge newEdge = new Edge(this.getId(), this.getName(),this.getLeftNode(), this.getRightNode());
+        newEdge.cardinalityLeft = this.cardinalityLeft;
+        newEdge.cardinalityRight = this.cardinalityRight;
+        newEdge.locked = this.locked;
+        newEdge.virtual = this.virtual;
+        return newEdge;
     }
 
     /**
@@ -89,7 +121,7 @@ public class Edge {
     }
 
     /**
-     * Set the name of this edge.
+     * Get the name of this edge.
      *
      * @return name
      */
@@ -106,6 +138,26 @@ public class Edge {
         this.name = name;
     }
 
+    /**18/04/17*/
+    /**
+     * Get the id of this edge.
+     *
+     * @return id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**18/04/17*/
+    /**
+     * Set the id of this edge.
+     *
+     * @param id
+     */
+    public void setId(String id) {
+        this.id = id;
+    }   
+    
     /**
      * Indicates whether or not this {@link Edge} is virtual (non-visible).
      *
@@ -169,6 +221,15 @@ public class Edge {
      */
     public EdgeType getRelationType() {
         return relationType;
+    }
+
+    /**
+     * Sets the type of relation between the first and the second {@link Node}.
+     *
+     * @return the edge type.
+     */
+    public void setRelationType(EdgeType relationType) {
+        this.relationType = relationType;
     }
 
     /**

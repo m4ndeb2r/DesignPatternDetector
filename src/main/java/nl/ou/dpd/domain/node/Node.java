@@ -105,6 +105,16 @@ public abstract class Node implements Comparable<Node> {
     }
 
     /**
+     * Sets the {@link Visibility} of this {@link Node}. The visibility depends on the access modifier of a class or
+     * interface. For example, an interface or a public class allways returns: {@link Visibility#PUBLIC}.
+     *
+     * @param the {@link Visibility} of this {@link Node}.
+     */
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
+    }
+
+    /**
      * Returns all the attributes of this {@link Node}.
      *
      * @return a list of {@link Attribute}s
@@ -131,18 +141,29 @@ public abstract class Node implements Comparable<Node> {
      */
     public List<Attribute> getAttributesByType(Node attributeType) {
         return attributes.stream()
-                .filter(attribute -> attribute.getClasstype().equals(attributeType))
+                .filter(attribute -> attribute.getType().equals(attributeType))
                 .collect(Collectors.toList());
     }
 
     /**
-     * Indicates whether or not this {@link Node} is a root node, is not a root node, or whether is is undefined.
+     * Indicates whether or not this {@link Node} is a root node, is not a root node, or whether it is undefined.
      *
-     * @return {@code true} is this node is a root node, {@code false} if it is not a root node, or {@code null} if
+     * @return {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
      * undefined
      */
     public Boolean isRoot() {
         return isRoot;
+    }
+
+
+    /**
+     * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
+     *
+     * @param {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
+     * undefined
+     */
+    public void setRoot(Boolean value) {
+        isRoot = value;
     }
 
     /**
@@ -156,6 +177,15 @@ public abstract class Node implements Comparable<Node> {
     }
 
     /**
+     * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
+     *
+     * @param {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
+     * undefined
+     */
+    public void setLeaf(Boolean value) {
+        isLeaf = value;
+    }
+    /**
      * Indicates whether or not this {@link Node} is abstract, not abstract, or whether that is undefined.
      *
      * @return {@code true} is this node is abstract, {@code false} if it is not a root node, or {@code null} if
@@ -163,6 +193,16 @@ public abstract class Node implements Comparable<Node> {
      */
     public Boolean isAbstract() {
         return isAbstract;
+    }
+    
+    /**
+     * Sets this {@link Node} as a abstract node, not a abstract node, or whether ii is undefined.
+     *
+     * @param {@code true} if this node is a abstract node, {@code false} if it is not a abstract node, or {@code null} if
+     * undefined
+     */
+    public void setAbstract(Boolean value) {
+        isAbstract = value;
     }
 
     /**
@@ -173,6 +213,16 @@ public abstract class Node implements Comparable<Node> {
      */
     public Boolean isActive() {
         return isActive;
+    }
+
+    /**
+     * Sets this {@link Node} as a active node, not a active node, or whether ii is undefined.
+     *
+     * @param {@code true} if this node is a active node, {@code false} if it is not a active node, or {@code null} if
+     * undefined
+     */
+    public void setActive(Boolean value) {
+        isActive = value;
     }
 
     /**

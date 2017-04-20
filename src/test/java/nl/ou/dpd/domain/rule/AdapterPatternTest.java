@@ -48,6 +48,7 @@ public class AdapterPatternTest {
 
 	private Node client, target, adapter, adaptee;
 	private Edge clientTarget, adapterTarget, adapterAdaptee;
+	private Attribute adapteeAttr, adapterAttr;
 //	private Conditions conditions;
 	private Edge editorShape;
 	private Edge textshapeTextview;
@@ -78,8 +79,9 @@ public class AdapterPatternTest {
     	adaptee = new Clazz("adaptee", "Adaptee", Visibility.PUBLIC, null, null, null, null, null);
     	
     	// Create attributes
-    	Attribute adapteeAttr = new Attribute("adaptee", new Clazz("attr2", "adaptee", "Adaptee", Visibility.PRIVATE, null, null, null, null, null));
-    	Attribute adapterAttr = new Attribute("adapter", new Clazz("attr1", "adapter", "Adapter", null, null, null, null, null, null));
+    	adapteeAttr = new Attribute("adaptee", adaptee);
+    	adapteeAttr.setVisibility(Visibility.PRIVATE);
+    	adapterAttr = new Attribute("adapter", adapter);
     	
     	// set attributes in classes
     	client.getAttributes().add(adapterAttr);
@@ -118,8 +120,22 @@ public class AdapterPatternTest {
     	cond7.getNodeRules().add(new NodeRule(adaptee, Topic.TYPE, Scope.OBJECT, Operator.EQUALS));
     	Condition cond8 = new Condition("8", "The Client is a class.");
     	cond8.getNodeRules().add(new NodeRule(client, Topic.TYPE, Scope.OBJECT, Operator.EQUALS));
-    	Condition con9 = new Condition("9", "The Client has an Adapter attribute.");
-    	con9.getNodeRules().add(new NodeRule(client, Topic.TYPE, Scope.ATTRIBUTE, Operator.EXISTS));
+    	
+    	//condition created by parsing the structure component of the template.xml
+    	Condition cond9 = new Condition("9", "The Client has a Target attribute.");
+    	cond9.getEdgeRules().add(new EdgeRule(clientTarget, Topic.TYPE, Scope.ATTRIBUTE, Operator.EXISTS));
+    	//condition created by parsing the structure component of the template.xml
+    	Condition cond10 = new Condition("10", "The Adapter has an Adaptee attribute.");
+    	cond10.getEdgeRules().add(new EdgeRule(adapterAdaptee, Topic.TYPE, Scope.ATTRIBUTE, Operator.EXISTS));
+    	
+    	//This is a genuine attribute-rule
+    	Condition cond11 = new Condition("12", "The Adaptee attribute in the Adapter has a private visibility.");
+    	cond11.getAttributeRules().add(new AttributeRule(adapteeAttr, Topic.VISIBILITY, Scope.OBJECT, Operator.EQUALS));
+    	//this condition needs an 'overview' of all pattern- and systemedges 
+    	Condition cond12 = new Condition("12", "The Client does not have an Adaptee attribute.");
+    	cond11.getNodeRules().add(new NodeRule(client, Topic.TYPE, Scope.ATTRIBUTE, Operator.NOT_EXISTS));
+
+    	
     	
     	conditions = new Conditions();
     	conditions.getConditions().add(cond1);
@@ -130,8 +146,11 @@ public class AdapterPatternTest {
     	conditions.getConditions().add(cond6);
     	conditions.getConditions().add(cond7);
     	conditions.getConditions().add(cond8);
-    	   	
-
+    	conditions.getConditions().add(cond9);
+    	conditions.getConditions().add(cond10);
+       	conditions.getConditions().add(cond11);    	   	
+//    	conditions.getConditions().add(cond12);
+ 
     	//change default purview IGNORED to MANDATORY
     	for (Condition c : conditions.getConditions()) {
     		c.setPurview(Purview.MANDATORY);
@@ -152,8 +171,9 @@ public class AdapterPatternTest {
     	textView = new Clazz("textView", "TextView", Visibility.PUBLIC, null, null, null, null, null);
 
     	// Create attributes
-    	Attribute textShapeAttr = new Attribute("textView", new Clazz("attrid1", "textView", "TextView", Visibility.PRIVATE, null, null, null, null, null));
-    	Attribute drawingEditorAttr = new Attribute("Shape", new Clazz("attrid2", "Shape", "Shape", null, null, null, null, null, null));
+    	Attribute textShapeAttr = new Attribute("textView", textView);
+    	textShapeAttr.setVisibility(Visibility.PRIVATE);
+    	Attribute drawingEditorAttr = new Attribute("Shape", shape);
   
     	// set attributes in classes
     	textShape.getAttributes().add(textShapeAttr);
@@ -183,8 +203,9 @@ public class AdapterPatternTest {
     	assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
     	
     	//wrong combinations of systemedges and patternedges
-    	//don't evaluate cardinalities
+    	//don't evaluate cardinalities and attributes
     	conditions.getConditions().get(4).setPurview(Purview.IGNORE);
+    	conditions.getConditions().get(10).setPurview(Purview.IGNORE);
     	//wrong association but all conditions of adapter-adaptee are met (cond2,cond6, cond7)
     	assertTrue(conditions.processConditions(editorShape, adapterAdaptee));
     	assertFalse(conditions.processConditions(editorShape, adapterTarget));
@@ -194,6 +215,7 @@ public class AdapterPatternTest {
     	assertFalse(conditions.processConditions(textshapeShape, adapterAdaptee));
     	
     	//wrong combination cardinality condition on adapter-adaptee- relation, not set in systemedge
+    	//same problem with exception for null-settings of attributes 
     	//evaluate cardinalities
     	conditions.getConditions().get(4).setPurview(Purview.MANDATORY);
     	thrown.expect(RuleException.class);

@@ -63,7 +63,7 @@ public abstract class Rule<SUBJECT_TYPE> {
      *
      * @return the {@link Topic} of this {@link Rule}
      */
-    protected Topic getTopic() {
+    public Topic getTopic() {
         return topic;
     }
 
@@ -72,7 +72,7 @@ public abstract class Rule<SUBJECT_TYPE> {
      *
      * @return the {@link Scope} of this {@link Rule}
      */
-    protected Scope getScope() {
+    public Scope getScope() {
         return scope;
     }
 
@@ -81,7 +81,7 @@ public abstract class Rule<SUBJECT_TYPE> {
      *
      * @return the {@link Operator} this {@link Rule} is using when processing the evaluation.
      */
-    protected Operator getOperator() {
+    public Operator getOperator() {
         return operator;
     }
 }

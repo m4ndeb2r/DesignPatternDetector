@@ -1,5 +1,6 @@
 package nl.ou.dpd.domain.rule;
 
+import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,10 +34,6 @@ public class NodeRule extends Rule<Node> {
      * <p>
      * TODO: Consider returning feedback instead of a boolean
      * <p>
-     * TODO: The system class must be bound with a dp-class as it does in MatchedNodes. Now the classtype is still
-     * compared by using the name. Maybe a decoratorpattern on the system class can be used to dynamically add the
-     * associated dp class to it?
-     *
      * @param systemNode the node under consideration
      * @return {@code true} if the {@link Node} meets the conditions set in this {@link NodeRule}, or {@code false}
      * otherwise.
@@ -154,10 +151,14 @@ public class NodeRule extends Rule<Node> {
 	}
 
 	/**
+	 * Returns if an attribute with the given type exists
 	 * @param systemNode
 	 * @return
 	 */
 	private boolean processAttributeTopicExists(Node systemNode) {
+		for (Attribute attr : this.getMould().getAttributes()) {
+			
+		}
 		
 		return false;
 	}

@@ -37,6 +37,24 @@ public abstract class Edges {
         }
     }
 
+    /**18/04/17*/
+    /**
+     * Adds a new {@link Edge} to this {@link Edges}. Whenever the {@link EdgeType} of the new {@link Edge}
+     * equals {@link EdgeType#ASSOCIATION}, an extra, virtual (non-visible) is also added.
+     *
+     * @param edge the {@link Edge} to add.
+     */
+    public void addRealEdge(Edge edge) {
+        edges.add(edge);
+
+        if (edge.getRelationType() == EdgeType.ASSOCIATION) {
+            // For edge (A, B, ....) a second but virtual edge (B, A, ...) will be added.
+            final Edge duplicate = edge.duplicate();
+            duplicate.makeVirtual();
+            edges.add(duplicate);
+        }
+    } 
+    
     /**
      * Getter method for the list of {@link Edge}s.
      *
