@@ -6,13 +6,13 @@
      * text; selected items in menus, lists, trees, and tables; progress bars;
      * default buttons.
      */
-    -fx-accent: dodgerblue;
+    -fx-accent: #2a71e9;
 
     /* A bright blue for the focus indicator of objects. Typically used as the
      * first color in -fx-background-color for the "focused" pseudo-class. Also
      * typically used with insets of -1.4 to provide a glowing effect.
      */
-    -fx-focus-color: dodgerblue;
+    -fx-focus-color: #2a71e9;
 
     /* This is the color of the default button. It's similar to -fx-focus-color but more subtle
      *
