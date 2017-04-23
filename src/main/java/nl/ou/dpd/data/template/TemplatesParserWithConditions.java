@@ -52,9 +52,7 @@ public class TemplatesParserWithConditions {
     private DesignPattern designPattern;
     private List<Condition> conditions;
     private List<Node> nodes;
-/*    private List<Map<String, String>> attributeParameters;
-    private List<List<Map<String, String>>> attributeParametersPerNode;
-*/
+
     private Map<XMLEvent, Node> attributeEventsPerNode;
     /**
      * Parses a template file with the specified {@code filename}.
@@ -69,9 +67,7 @@ public class TemplatesParserWithConditions {
 		nodes = new ArrayList<Node>();
 		conditions = new ArrayList<Condition>();
 		attributeEventsPerNode = new HashMap<XMLEvent, Node>();
-/*		attributeParameters  = new ArrayList<Map<String, String>>();
-		attributeParametersPerNode = new ArrayList<List<Map<String, String>>>();
-*/		
+	
     	XMLInputFactory factory = XMLInputFactory.newInstance();
     	
     	try {
@@ -86,8 +82,7 @@ public class TemplatesParserWithConditions {
             final String msg = "The pattern template file " + filename + " could not be found.";
             LOGGER.error(msg, e);
             throw new DesignPatternDetectorException(msg, e);
-        }
-    	
+        }    	
     	return designPatterns;
     }
 
@@ -104,7 +99,9 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * General method to handle events
+	 * General method to handle events.
+	 * All possible startelements are listed. If an element is read which is not listed, an error is thrown.
+	 * Endelements are only listed if there is an action bound to the endevent. 
 	 * @param event
 	 */
 	private void handleEvent(XMLEvent event) {
@@ -116,7 +113,7 @@ public class TemplatesParserWithConditions {
 					//create a new template and add it to the templates list 
 					designPattern = createTemplate(readAttributes(event));
 					designPatterns.add(designPattern);
-					//empty lists for the new template
+					//clear lists for the new template
 					nodes.clear();
 					conditions.clear();
 					attributeEventsPerNode.clear();
@@ -129,10 +126,7 @@ public class TemplatesParserWithConditions {
 					//add a new node to the nodes list
 					Node node = createNode(readAttributes(event));
 					if (!nodeIdIsUnique(node)) {
-						final String msg = "The node id " + node.getId() + " is not unique in this pattern.";
-			            final Exception e = new XMLStreamException();
-			            LOGGER.error(msg, e);
-			 		    throw new DesignPatternDetectorException(msg, e);
+						error("The node id " + node.getId() + " is not unique in this pattern.");
 					}
 					nodes.add(node);
 					//make a condition concerning the node type and add it to the conditions list
@@ -140,7 +134,7 @@ public class TemplatesParserWithConditions {
 					conditions.add(condition);
 					break;
 				case TemplateTag.ATTRIBUTE:
-					//Keep the attribute event with its corresponding node
+					//Save the attribute event with its corresponding node
 					attributeEventsPerNode.put(event, nodes.get(nodes.size() - 1));
 					break;
 				case TemplateTag.METHOD:
@@ -150,12 +144,6 @@ public class TemplatesParserWithConditions {
 				case TemplateTag.EDGE:
 					//add a new edge to the designPattern
 					Edge edge = createEdge(readAttributes(event));
-					if (!edgeIdIsUnique(edge)) {
-						final String msg = "The edge id " + edge.getId() + " is not unique in this pattern.";
-			            final Exception e = new XMLStreamException();
-			            LOGGER.error(msg, e);
-			 		    throw new DesignPatternDetectorException(msg, e);
-					}
 					designPattern.addRealEdge(edge);
 					break;
 				case TemplateTag.CONDITIONS:
@@ -169,14 +157,11 @@ public class TemplatesParserWithConditions {
 					//make a rule and add it to the condition
 					Rule rule = makeRule(readAttributes(event));
 					addRuleToCondition(rule, conditions.get(conditions.size() - 1));
-					//TODO apply rule on designpattern node or edge
+					//apply rule on designpattern node, edge or attribute
 					applyRule(rule, readAttributes(event).get(TemplateAttribute.VALUE));
 					break;
 				default:
-		            final String msg = "The pattern template tag " + event.asStartElement().getName().getLocalPart() + " could not be handled.";
-		            final Exception e = new XMLStreamException();
-		            LOGGER.error(msg, e);
-		 		    throw new DesignPatternDetectorException(msg, e);					
+		            error("The pattern template tag " + event.asStartElement().getName().getLocalPart() + " could not be handled.");
 			}
 		}
 		
@@ -195,23 +180,24 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * General method to read attributes
-	 * @param event
-	 * @return a Map<String, String> holding the attributes with the attributename as key and the attributevalue as value
+	 * General method to read {@link Attribute}s of an xml-startevent.
+	 * @param {@link XMLEvent}
+	 * @return a Map<String, String> holding the attributes with the attribute name as key and the attribute value as value
 	 */
 	private Map<String, String> readAttributes(XMLEvent event) {
-		//holds the attributes with the attributename as key and the attributevalue as value
+		//holds the attributes with the attribute name as key and the attribute value as value
 		Map<String, String> attributes = new HashMap<String, String>();
 		Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
 		while (attrIterator.hasNext()) {
-			Attribute attr = (Attribute) attrIterator.next();
+			Attribute attr = attrIterator.next();
 			attributes.put(attr.getName().getLocalPart(), attr.getValue());			
 		}
 		return attributes;		
 	}
 	
 	/**
-	 * @param attributes
+	 * Create a new {@link DesignPattern) with given name
+	 * @param attributes a map of attributes holding the name
 	 * @return a new DesignPattern with the specified name.
 	 */
 	private DesignPattern createTemplate(Map<String, String> attributes) {
@@ -220,7 +206,8 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * @param attributes
+	 * Create a new {@link Node) with given id and type.
+	 * @param attributes a map of attributes holding the id and type
 	 * @return a new Node with the specified name and type.
 	 */
 	private Node createNode(Map<String, String> attributes) {
@@ -236,22 +223,23 @@ public class TemplatesParserWithConditions {
 	}
 	
 	/**
+	 * Make a {@link Condition) stating that a {@ Node} must have a particular type as given in the {@code structure} of the template.
 	 * @param node
-	 * @return a new DesignPattern with the specified name.
+	 * @return a new Condition with an auto-generated id and description.
 	 */
 	private Condition makeNodeTypeCondition(Node node) {
-		String id = "SystemCondition " + conditions.size() + 1;
+		String id = "SystemCondition " + (conditions.size() + 1);
 		String description = "The node " + node.getName() + " must be of type "  + node.getType().toString(); 
-		Condition c = new Condition(id, description);
-		NodeRule rule = new NodeRule(node, Topic.TYPE, Scope.OBJECT, Operator.EQUALS);
-		c.getNodeRules().add(rule);
-		return c;		
+		Condition condition = new Condition(id, description);
+		NodeRule rule = new NodeRule(node, Scope.OBJECT, Topic.TYPE, Operator.EQUALS);
+		condition.getNodeRules().add(rule);
+		return condition;		
 	}
 
 	/**
-	 * Checks if the id of the new node is unique in this pattern.
+	 * Checks if the id of the new {@link Node) is unique in this pattern.
 	 * @param node
-	 * @return true if the node is unique in this pattern. False otherwise.
+	 * @return true if the node is unique in this pattern, false otherwise.
 	 */
 	private boolean nodeIdIsUnique(Node node) {
 		for (Node n : nodes) {
@@ -263,9 +251,9 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * Checks if the id of the new edge is unique in this pattern.
+	 * Checks if the id of the new {@link Edge) is unique in this pattern.
 	 * @param edge
-	 * @return true if the edge is unique in this pattern. False otherwise.
+	 * @return true if the edge is unique in this pattern, false otherwise.
 	 */
 	private boolean edgeIdIsUnique(Edge edge) {
 		for (Edge e : designPattern.getEdges()) {
@@ -277,12 +265,12 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * Create all the attributes and add them to the corresponding nodes.
+	 * Create all the attributes and add them to the corresponding {@link Node)s, using the Set of {@link XMLEvent)s assembled during the streamed reading.
 	 */
 	private void createAttributes() {
-		Iterator attrIterator = attributeEventsPerNode.keySet().iterator();
-		while (attrIterator.hasNext()) {
-			XMLEvent event = (XMLEvent) attrIterator.next();
+		Iterator<XMLEvent> attributeIterator = attributeEventsPerNode.keySet().iterator();
+		while (attributeIterator.hasNext()) {
+			XMLEvent event = attributeIterator.next();
 			Map <String, String> parameters = readAttributes(event);
 			nl.ou.dpd.domain.node.Attribute attribute = createAttribute(parameters);
 			
@@ -292,8 +280,9 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * @param attributes
-	 * @return a new Attribute with the specified name and type (found in the list of Nodes).
+	 * Create a new node-attribute with the name and type specified in the Map.
+	 * @param attributes a Map of attributes of the Attribute XML StartEvent.
+	 * @return a new node-attribute with the specified name and type (found in the list of Nodes).
 	 */
 	private nl.ou.dpd.domain.node.Attribute createAttribute(Map<String, String> attributes) {
 		String id = attributes.get(TemplateAttribute.ID);
@@ -304,8 +293,9 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * @param type the type as a String
-	 * @return the node object with the name of 'type'
+	 * Find a Node by id.
+	 * @param id the id as a String
+	 * @return the node object with the name of 'id'
 	 */
 	private Node findNodeById(String id) {
 		for (Node n : nodes) {
@@ -317,8 +307,9 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * @param type the type as a String
-	 * @return the node object with the name of 'type'
+	 * Find an Attribute by id.
+	 * @param id the id as a String
+	 * @return the node object with the name of 'id'
 	 */
 	private nl.ou.dpd.domain.node.Attribute findAttributeById(String id) {
 		for (Node n : nodes) {
@@ -332,8 +323,9 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * @param type the type as a String
-	 * @return the node object with the name of 'type'
+	 * Find an Edge by id.
+	 * @param id the id as a String
+	 * @return the node object with the name of 'id'
 	 */
 	private Edge findEdgeById(String id) {
 		for (Edge e : designPattern.getEdges()) {
@@ -345,20 +337,25 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
+	 * Create an {@link Edge} with the specified attributes: id, node1 and node2.
 	 * @param attributes
-	 * @return a new Node with the specified name and type.
+	 * @return a new Edge with the specified name and type.
 	 */
 	private Edge createEdge(Map<String, String> attributes) {
 		String id = attributes.get(TemplateAttribute.ID);
 		String node1Name = attributes.get(TemplateAttribute.NODE1);
 		String node2Name = attributes.get(TemplateAttribute.NODE2);
 		Node node1 = findNodeById(node1Name);
-		Node node2 = findNodeById(node2Name);		
-		return new Edge(id, id, node1, node2);
+		Node node2 = findNodeById(node2Name);
+		Edge edge = new Edge(id, id, node1, node2);
+		if (!edgeIdIsUnique(edge)) {
+			error("The edge id " + edge.getId() + " is not unique in this pattern.");
+		}
+		return edge;
 	}
+	
 	/**
-	 * @param node
-	 * @return condition
+	 * Make {@link Condition)s stating that a node must have the attributes as given in the {@code structure} of the {@link Node}.
 	 */
 	private Condition makeAttributeExistsConditions() {
 		for(Node node : nodes) {
@@ -370,8 +367,9 @@ public class TemplatesParserWithConditions {
 	}
 	
 	/**
+	 * Make a {@link Condition) stating that a node must have an attribute as given in the {@code structure} of the {@link Node}.
 	 * @param node
-	 * @return condition
+	 * @return condition a new Condition with an auto-generated id and description.
 	 */
 	private Condition makeAttributeExistsCondition(Node node, nl.ou.dpd.domain.node.Attribute attr) {
 		
@@ -380,19 +378,16 @@ public class TemplatesParserWithConditions {
 		String description = "The node " + node.getName() + " must have an attribute of type "  + attributeType.getId();
 		Condition condition = new Condition(id, description);
 
-		Edge edge = findEdgeWithTwoNodes(node, attributeType);
+		Edge edge = findEdgeByTwoNodes(node, attributeType);
 		if (edge == null) {
-			final String msg = "An edge between " + node.getId() + " and " + attributeType.getId() + " could not be found.";
-            final Exception e = new XMLStreamException();
-            LOGGER.error(msg, e);
- 		    throw new DesignPatternDetectorException(msg, e);			
+			error("An edge between " + node.getId() + " and " + attributeType.getId() + " could not be found.");			
 		}
-		EdgeRule rule = new EdgeRule(edge, Topic.TYPE, Scope.ATTRIBUTE, Operator.EXISTS);
+		EdgeRule rule = new EdgeRule(edge, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS);
 		condition.getEdgeRules().add(rule);		
 		return condition;		
 	}
 
-	private Edge findEdgeWithTwoNodes(Node leftNode, Node rightNode) {
+	private Edge findEdgeByTwoNodes(Node leftNode, Node rightNode) {
 		for (Edge e : designPattern.getEdges()) {
 			if (e.getLeftNode() == leftNode && e.getRightNode() == rightNode) {
 				return e;
@@ -402,8 +397,9 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
-	 * @param readAttributes
-	 * @return
+	 * Makes a {@link Condition} with the id and description as given in the Map.
+	 * @param attributes a Map of attributenames and -values
+	 * @return a new Condition with the specified id and description
 	 */
 	private Condition makeCondition(Map<String, String> attributes) {
 		String id = attributes.get(TemplateAttribute.ID);
@@ -412,8 +408,9 @@ public class TemplatesParserWithConditions {
 	}
 	
 	/**
-	 * @param readAttributes
-	 * @return
+	 * Makes a {@link Rule} with the elements (applies,scope, topic, operator and not) as given in the Map.
+	 * @param attributes a Map of attributenames and -values
+	 * @return a new Rule with the specified elements
 	 */
 	private Rule makeRule(Map<String, String> attributes) {
 		String applies = attributes.get(TemplateAttribute.APPLIES);
@@ -424,20 +421,25 @@ public class TemplatesParserWithConditions {
 		
 		if (findNodeById(applies) != null) {
 			//a nodeRule
-			return new NodeRule(findNodeById(applies), findTopic(topic) , findScope(scope), findOperator(operator, not));						
+			return new NodeRule(findNodeById(applies), findScope(scope), findTopic(topic), findOperator(operator, not));						
 		}
 		if (findEdgeById(applies) != null) {
 			//an edgeRule
-			return new EdgeRule(findEdgeById(applies), findTopic(topic) , findScope(scope), findOperator(operator, not));						
+			return new EdgeRule(findEdgeById(applies), findScope(scope), findTopic(topic), findOperator(operator, not));						
 		}
 		if (findAttributeById(applies) != null) {
 			//an attributeRule
-			return new AttributeRule(findAttributeById(applies), findTopic(topic) , findScope(scope), findOperator(operator, not));						
+			return new AttributeRule(findAttributeById(applies), findScope(scope), findTopic(topic), findOperator(operator, not));						
 		}
 
 		return null;
 	}
 
+	/**
+	 * Find an Enum element of type {@link Scope} by a given String.
+	 * @param scope given as a String
+	 * @return the {@link Scope} element if found, {@code null} otherwise.
+	 */
 	public Scope findScope(String scope) {
 		if (scope.equalsIgnoreCase("RELATION")) {
 				return Scope.RELATION;
@@ -450,7 +452,11 @@ public class TemplatesParserWithConditions {
 		}
 		return null;		
 	}
-	
+	/**
+	 * Find an Enum element of type {@link Topic} by a given String.
+	 * @param scope given as a String
+	 * @return the {@link Topic} element if found, {@code null} otherwise.
+	 */
 	public Topic findTopic(String topic) {
 		if (topic.equalsIgnoreCase("TYPE")) {
 			return Topic.TYPE;
@@ -479,6 +485,11 @@ public class TemplatesParserWithConditions {
 		return null;
 	}
 	
+	/**
+	 * Find an Enum element of type {@link Operator} by a given String.
+	 * @param scope given as a String
+	 * @return the {@link Operator} element if found, {@code null} otherwise.
+	 */
 	public Operator findOperator(String operator, String not) {
 		if (not == null || not == "") not = "false";
 		
@@ -498,6 +509,7 @@ public class TemplatesParserWithConditions {
 	}
 	
 	/**
+	 * Adds a {@link Rule} to a {@link Condition}.
 	 * @param rule
 	 * @param condition
 	 */
@@ -514,6 +526,8 @@ public class TemplatesParserWithConditions {
 	}
 
 	/**
+	 * Applies a {@link Rule} using the specified value.
+	 * Results in the node of the Rule implementing the Rule in the Node itself.
 	 * @param rule
 	 * @param value
 	 */
@@ -531,4 +545,10 @@ public class TemplatesParserWithConditions {
 			applyRule.apply();
 		}
 	}
+	
+    private void error(String message) {
+        final Exception e = new XMLStreamException();
+        LOGGER.error(message);
+        throw new DesignPatternDetectorException(message, e);
+    }
 }

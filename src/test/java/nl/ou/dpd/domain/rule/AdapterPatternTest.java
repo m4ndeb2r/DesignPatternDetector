@@ -105,36 +105,36 @@ public class AdapterPatternTest {
     	
         // Create Conditions
     	Condition cond1 = new Condition("1", "The Client has a directed association with the Target.");
-    	cond1.getEdgeRules().add(new EdgeRule(clientTarget, Topic.TYPE, Scope.RELATION, Operator.EQUALS));
+    	cond1.getEdgeRules().add(new EdgeRule(clientTarget, Scope.RELATION, Topic.TYPE, Operator.EQUALS));
     	Condition cond2 = new Condition("2", "The Adapter has a directed association with the Adaptee.");
-    	cond2.getEdgeRules().add(new EdgeRule(adapterAdaptee, Topic.TYPE, Scope.RELATION, Operator.EQUALS));
+    	cond2.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.RELATION, Topic.TYPE, Operator.EQUALS));
     	Condition cond3 = new Condition("3", "The Adapter has a inheritance relation with the Target (abstract class).");
-    	cond3.getEdgeRules().add(new EdgeRule(adapterTarget, Topic.TYPE, Scope.RELATION, Operator.EQUALS));
+    	cond3.getEdgeRules().add(new EdgeRule(adapterTarget, Scope.RELATION, Topic.TYPE, Operator.EQUALS));
     	Condition cond4 = new Condition("4", "The Target is an abstract class.");
-    	cond4.getNodeRules().add(new NodeRule(target, Topic.MODIFIER_ABSTRACT, Scope.OBJECT, Operator.EQUALS));
+    	cond4.getNodeRules().add(new NodeRule(target, Scope.OBJECT, Topic.MODIFIER_ABSTRACT, Operator.EQUALS));
     	Condition cond5 = new Condition("5", "The Adapter uses exactly one Adaptee. An Adaptee can be used by none or more Adapters.");
-    	cond5.getEdgeRules().add(new EdgeRule(adapterAdaptee, Topic.CARDINALITY, Scope.RELATION, Operator.EQUALS));
+    	cond5.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.RELATION, Topic.CARDINALITY, Operator.EQUALS));
     	Condition cond6 = new Condition("6", "The Adapter is a class.");
-    	cond6.getNodeRules().add(new NodeRule(adapter, Topic.TYPE, Scope.OBJECT, Operator.EQUALS));    	
+    	cond6.getNodeRules().add(new NodeRule(adapter, Scope.OBJECT, Topic.TYPE, Operator.EQUALS));    	
     	Condition cond7 = new Condition("7", "The Adaptee is a class.");
-    	cond7.getNodeRules().add(new NodeRule(adaptee, Topic.TYPE, Scope.OBJECT, Operator.EQUALS));
+    	cond7.getNodeRules().add(new NodeRule(adaptee, Scope.OBJECT, Topic.TYPE, Operator.EQUALS));
     	Condition cond8 = new Condition("8", "The Client is a class.");
-    	cond8.getNodeRules().add(new NodeRule(client, Topic.TYPE, Scope.OBJECT, Operator.EQUALS));
+    	cond8.getNodeRules().add(new NodeRule(client, Scope.OBJECT, Topic.TYPE, Operator.EQUALS));
     	
     	//condition created by parsing the structure component of the template.xml
     	Condition cond9 = new Condition("9", "The Client has a Target attribute.");
-    	cond9.getEdgeRules().add(new EdgeRule(clientTarget, Topic.TYPE, Scope.ATTRIBUTE, Operator.EXISTS));
+    	cond9.getEdgeRules().add(new EdgeRule(clientTarget, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS));
     	//condition created by parsing the structure component of the template.xml
     	Condition cond10 = new Condition("10", "The Adapter has an Adaptee attribute.");
-    	cond10.getEdgeRules().add(new EdgeRule(adapterAdaptee, Topic.TYPE, Scope.ATTRIBUTE, Operator.EXISTS));
+    	cond10.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS));
     	
     	//This is a genuine attribute-rule
     	Condition cond11 = new Condition("12", "The Adaptee attribute in the Adapter has a private visibility.");
-    	cond11.getAttributeRules().add(new AttributeRule(adapteeAttr, Topic.VISIBILITY, Scope.OBJECT, Operator.EQUALS));
+    	cond11.getAttributeRules().add(new AttributeRule(adapteeAttr, Scope.OBJECT, Topic.VISIBILITY, Operator.EQUALS));
     	//this condition needs an 'overview' of all pattern- and systemedges 
-    	Condition cond12 = new Condition("12", "The Client does not have an Adaptee attribute.");
-    	cond11.getNodeRules().add(new NodeRule(client, Topic.TYPE, Scope.ATTRIBUTE, Operator.NOT_EXISTS));
-
+/*    	Condition cond12 = new Condition("12", "The Client does not have an Adaptee attribute.");
+    	cond11.getNodeRules().add(new NodeRule(client, Scope.ATTRIBUTE, Topic.TYPE, Operator.NOT_EXISTS));
+*/
     	
     	
     	conditions = new Conditions();

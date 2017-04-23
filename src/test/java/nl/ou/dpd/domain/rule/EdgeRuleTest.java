@@ -31,10 +31,10 @@ public class EdgeRuleTest {
     public void testEdgeRuleWithUnknownScope() {
         final Edge mould = new Edge(new Clazz("node1"), new Clazz("node2"), EdgeType.ASSOCIATION);
         final Edge systemEdge = new Edge(new Clazz("myClass1"), new Clazz("myClass2"), EdgeType.ASSOCIATION);
-        final EdgeRule failingTargetRule = new EdgeRule(mould, Topic.TYPE, Scope.ATTRIBUTE, Operator.EQUALS);
+        final EdgeRule failingTargetRule = new EdgeRule(mould, Scope.ATTRIBUTE, Topic.TYPE, Operator.EQUALS);
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected scope: ATTRIBUTE");
+        thrown.expectMessage("Unexpected operator while processing ATTRIBUTE.TYPE: EQUALS");
         failingTargetRule.process(systemEdge);
     }
 
@@ -47,11 +47,11 @@ public class EdgeRuleTest {
         final Edge systemEdge = new Edge(new Clazz("myClass1a"), new Clazz("myClass2a"), EdgeType.ASSOCIATION);
         final Edge systemEdge2 = new Edge(new Clazz("myClass1b"), new Clazz("myClass2b"), EdgeType.DEPENDENCY);
 
-        final EdgeRule edgeRule = new EdgeRule(mould, Topic.TYPE, Scope.RELATION, Operator.EQUALS);
+        final EdgeRule edgeRule = new EdgeRule(mould, Scope.RELATION, Topic.TYPE, Operator.EQUALS);
         assertTrue(edgeRule.process(systemEdge));
         assertFalse(edgeRule.process(systemEdge2));
 
-        final EdgeRule failingTopicRule = new EdgeRule(mould, Topic.CARDINALITY, Scope.RELATION, Operator.EQUALS);
+        final EdgeRule failingTopicRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expectMessage("Either one or both cardinalities are not set.");
         failingTopicRule.process(systemEdge);
@@ -70,7 +70,7 @@ public class EdgeRuleTest {
         systemEdge.setCardinalityLeft(1, 1);
         systemEdge.setCardinalityRight(0, Cardinality.INFINITY);
      	
-        final EdgeRule failingTopicRule = new EdgeRule(mould, Topic.VISIBILITY, Scope.RELATION, Operator.EQUALS);
+        final EdgeRule failingTopicRule = new EdgeRule(mould, Scope.RELATION, Topic.VISIBILITY, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expectMessage("Unexpected topic while processing RELATION: VISIBILITY");
         failingTopicRule.process(systemEdge);
@@ -95,12 +95,12 @@ public class EdgeRuleTest {
         systemEdge2.setCardinalityRight(1, Cardinality.INFINITY);
 
         // Cardinalities exist
-        final EdgeRule edgeRuleExists = new EdgeRule(mould, Topic.CARDINALITY, Scope.RELATION, Operator.EXISTS);
+        final EdgeRule edgeRuleExists = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY, Operator.EXISTS);
         assertTrue(edgeRuleExists.process(systemEdge));
         assertTrue(edgeRuleExists.process(systemEdge2));
 
         // Cardinality equals, or not
-        final EdgeRule edgeRuleEquals = new EdgeRule(mould, Topic.CARDINALITY, Scope.RELATION, Operator.EQUALS);
+        final EdgeRule edgeRuleEquals = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY, Operator.EQUALS);
         assertTrue(edgeRuleEquals.process(systemEdge));
         assertFalse(edgeRuleEquals.process(systemEdge2));
 
@@ -109,7 +109,7 @@ public class EdgeRuleTest {
         assertFalse(edgeRuleExists.process(systemEdge2));
 
         // Cardinality cannot equal when one or both are not set.
-        final EdgeRule failingCardinalityRule = new EdgeRule(mould, Topic.CARDINALITY, Scope.RELATION, Operator.EQUALS);
+        final EdgeRule failingCardinalityRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expectMessage("Either one or both cardinalities are not set.");
         failingCardinalityRule.process(systemEdge2);

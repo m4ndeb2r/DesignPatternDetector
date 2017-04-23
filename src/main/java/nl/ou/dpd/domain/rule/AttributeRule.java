@@ -24,8 +24,8 @@ public class AttributeRule extends Rule<Attribute> {
      * @param scope    the scope of the evaluation (object, attributes, ...)
      * @param operator the evaluation operator (equals, exists, ...)
      */
-    public AttributeRule(Attribute mould, Topic topic, Scope scope, Operator operator) {
-        super(mould, topic, scope, operator);
+    public AttributeRule(Attribute mould, Scope scope, Topic topic, Operator operator) {
+        super(mould, scope, topic, operator);
     }
 
     /**
@@ -47,26 +47,27 @@ public class AttributeRule extends Rule<Attribute> {
     }
 
     private boolean processObject(Attribute systemAttribute) {
+        switch (getTopic()) {
+        case VISIBILITY:
+        	return processObjectVisibility(systemAttribute);
+        default:
+            return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
+        }
+    }
+
+    private boolean processObjectVisibility(Attribute systemAttribute) {
         switch (getOperator()) {
             case EQUALS:
-                return processObjectTopicEquals(systemAttribute);
+                return processObjectVisibilityEquals(systemAttribute);
             case NOT_EQUALS:
-                return !processObjectTopicEquals(systemAttribute);
+                return !processObjectVisibilityEquals(systemAttribute);
             default:
                 return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
         }
     }
 
-    private boolean processObjectTopicEquals(Attribute systemAttribute) {
-        switch (getTopic()) {
-            case VISIBILITY:
-                if (getMould().getVisibility() == null) {
-                    return error("Cannot perform rule on topic VISIBILITY. Unable to detect what to check for.");
-                }
-                return systemAttribute.getVisibility() == getMould().getVisibility();
-            default:
-                return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
-        }
+    private boolean processObjectVisibilityEquals(Attribute systemAttribute) {
+        return systemAttribute.getVisibility() == getMould().getVisibility();
     }
 
 	private boolean error(String message) {

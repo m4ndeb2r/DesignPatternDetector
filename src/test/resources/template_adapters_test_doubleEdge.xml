@@ -144,7 +144,7 @@ Possible values of type are:
 				<edges>
 					<edge id="ClientTarget" node1="Client"	node2="Target"/>
 					<edge id="AdapterAdaptee" node1="Adapter" node2="Adaptee"/>
-					<edge id="AdapterTarget" node1="Adapter" node2="Target"/>
+					<edge id="ClientTarget" node1="Adapter" node2="Target"/>
 				</edges>
 			</structure>
 			<conditions>

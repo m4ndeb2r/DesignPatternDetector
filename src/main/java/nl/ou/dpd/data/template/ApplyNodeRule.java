@@ -3,7 +3,9 @@
  */
 package nl.ou.dpd.data.template;
 
-import nl.ou.dpd.domain.edge.EdgeType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.domain.rule.NodeRule;
@@ -11,11 +13,16 @@ import nl.ou.dpd.domain.rule.Rule;
 import nl.ou.dpd.domain.rule.RuleException;
 
 /**
+ * Class that applies a NodeRule using a specified value.
+ * Results in the Node, given in the Rule, implementing the Rule in the Node itself.
+ * 
  * @author Peter Vansweevelt
  *
  */
 public class ApplyNodeRule extends ApplyRule<Node> {
 	
+    private static final Logger LOGGER = LogManager.getLogger(TemplatesParserWithConditions.class);
+
 	private Node node;
 
 	/**
@@ -27,143 +34,130 @@ public class ApplyNodeRule extends ApplyRule<Node> {
 		node = rule.getMould();
 	}
 	
-	   /**
-     * Applies the rule on a given {@ink Node}.
-     * <p>
-     * TODO: Consider returning feedback instead of a void
-     * <p>
-     * @param node the node under consideration
-     * @{@code true} if the {@link Node} meets the conditions set in this {@link NodeRule}, or {@code false}
-     * otherwise.
-     */
+	 /**
+	  * Applies this {@link NodeRule} on a given {@ink Node}.
+	  * Results in the Node, given in the Rule, implementing the Rule in the Node itself.
+	  */
     public void apply() {
         switch (rule.getScope()) {
             case OBJECT:
-                applyObject(node);
-                break;
-           case ATTRIBUTE:
-                applyAttributeScope(node);
+                applyObject();
                 break;
             default:
                 error("Unexpected scope: " + rule.getScope() + ".");
         }
     }
 
-    private void applyObject(Node node) {
-        switch (rule.getOperator()) {
-            case EXISTS:
-                // TODO: This case seems futile, because it always returns true
-                applyObjectTopicExists(node);
-                break;
-            case NOT_EXISTS:
-                // TODO: This case seems futile, because it always returns false
-//                !applyObjectTopicExists(node);
-                break;
-            case EQUALS:
-                applyObjectTopicEquals(node);
-                break;
-            case NOT_EQUALS:
-//                !applyObjectTopicEquals(node);
-                break;
-            default:
-                error("Unexpected operator while applying OBJECT: " + rule.getOperator() + ".");
-        }
-    }
-
-    private void applyObjectTopicEquals(Node node) {
+    private void applyObject() {
         switch (rule.getTopic()) {
-            case TYPE:
-//                node.setType()
-                break;
-            case VISIBILITY:
-                node.setVisibility(findVisibilityByName(value)); 
-                break;
-            case MODIFIER_ROOT:
-                node.setRoot(Boolean.valueOf(value));
-                break;
-            case MODIFIER_LEAF:
-            	node.setLeaf(Boolean.valueOf(value));
-                break;
-            case MODIFIER_ABSTRACT:
-            	node.setAbstract(Boolean.valueOf(value));
-                break;
-            case MODIFIER_ACTIVE:
-            	node.setActive(Boolean.valueOf(value));
-                break;
-            default:
-                error("Unexpected topic while applying OBJECT: " + rule.getTopic() + ".");
+        case VISIBILITY:
+        	applyObjectVisibility();
+            break;
+        case MODIFIER_ROOT:
+        	applyObjectModifierRoot();
+            break;
+        case MODIFIER_LEAF:
+        	applyObjectModifierLeaf();
+        	node.setLeaf(Boolean.valueOf(value));
+            break;
+        case MODIFIER_ABSTRACT:
+        	applyObjectModifierAbstract();
+        	node.setAbstract(Boolean.valueOf(value));
+            break;
+        case MODIFIER_ACTIVE:
+        	applyObjectModifierActive();
+        	node.setActive(Boolean.valueOf(value));
+            break;
+        default:
+            error("Unexpected topic while applying OBJECT: " + rule.getTopic() + ".");
         }
     }
 
-    // TODO: This method seems futile: system nodes always have a type, visibility, and a value for all modifiers
-    // TODO: instead of false, we should perhaps throw a RuleException when a topic does not exist?
-    private void applyObjectTopicExists(Node node) {
-/*        switch (getTopic()) {
-            case TYPE:
-                node.getType() != null;
-            case VISIBILITY:
-                node.getVisibility() != null;
-            case MODIFIER_ROOT:
-                node.isRoot() != null;
-            case MODIFIER_LEAF:
-                node.isLeaf() != null;
-            case MODIFIER_ABSTRACT:
-                node.isAbstract() != null;
-            case MODIFIER_ACTIVE:
-                node.isActive() != null;
-            default:
-                error("Unexpected topic while applying OBJECT: " + getTopic() + ".");
-        }
-*/    }
+	private void applyObjectVisibility() {
+       switch (rule.getOperator()) {
+       case EQUALS:
+	 	  applyObjectVisibilityEquals();
+	 	  break;
+       default:
+           error("Unexpected operator while applying CARDINALITY: " + rule.getOperator() + ".");
 
-    private void applyAttributeScope(Node node) {
- /*   	switch (getOperator()) {
-		    case EXISTS:
-		        // TODO: This case seems futile, because it always returns true
-		        applyAttributeTopicExists(node);
-		    case NOT_EXISTS:
-		        // TODO: This case seems futile, because it always returns false
-		        !applyAttributeTopicExists(node);
-		    case EQUALS:
-		        applyAttributeTopicEquals(node);
-		    case NOT_EQUALS:
-		        !applyAttributeTopicEquals(node);
-		    default:
-		    	error("Unexpected operator while applying ATTRIBUTE: " + getOperator() + ".");
-    	}
-*/    }
+       }
+ 	}
 
-    /**
-	 * @param node
-	 * @return
-	 */
-	private void applyAttributeTopicEquals(Node node) {
-		// TODO Auto-generated method stub
-		
+	private void applyObjectModifierRoot() {
+       switch (rule.getOperator()) {
+		   case EQUALS:
+		 	  applyObjectModifierRootEquals();
+		 	  break;
+		   default:
+		      error("Unexpected operator while applying MODIFIER_ROOT: " + rule.getOperator() + ".");	
+       }
 	}
 
-	/**
-	 * Returns if an attribute with the given type exists
-	 * @param node
-	 * @return
-	 */
-	private void applyAttributeTopicExists(Node node) {
-		// TODO Auto-generated method stub
-
+	private void applyObjectModifierActive() {
+       switch (rule.getOperator()) {
+       case EQUALS:
+    	   applyObjectModifierActiveEquals();
+    	   break;
+       default:
+           error("Unexpected operator while applying MODIFIER_ACTIVE: " + rule.getOperator() + ".");
+       }
 	}
+
+	private void applyObjectModifierLeaf() {
+       switch (rule.getOperator()) {
+		   case EQUALS:
+		 	  applyObjectModifierLeafEquals();
+		 	  break;
+		   default:
+		      error("Unexpected operator while applying MODIFIER_LEAF: " + rule.getOperator() + ".");	
+       }
+	}
+
+	private void applyObjectModifierAbstract() {
+       switch (rule.getOperator()) {
+       case EQUALS:
+    	   applyObjectModifierAbstractEquals();
+    	   break;
+       default:
+           error("Unexpected operator while applying MODIFIER_ABSTRACT: " + rule.getOperator() + ".");
+       }
+	}
+
+	private void applyObjectModifierActiveEquals() {
+		 node.setActive(Boolean.valueOf(value));
+	}
+
+
+	private void applyObjectModifierAbstractEquals() {
+    	node.setAbstract(Boolean.valueOf(value));
+    }
+
+	private void applyObjectModifierLeafEquals() {
+    	node.setLeaf(Boolean.valueOf(value));
+    }
+
+
+	private void applyObjectModifierRootEquals() {
+    	node.setRoot(Boolean.valueOf(value));
+    }
+
+
+
+	private void applyObjectVisibilityEquals() {
+        node.setVisibility(findVisibilityByName(value));
+    }
 
 	private Visibility findVisibilityByName(String visibilityName) {
 		for (Visibility visibility : Visibility.values()) {
-		  if (visibility.toString().contains(visibilityName)) {
+		  if (visibility.toString().contains(visibilityName.toUpperCase())) {
 			  return visibility;
 		  }
 		}
 		return null;
 	}
 	private void error(String message) {
- //       LOGGER.error(message);
+        LOGGER.error(message);
         throw new RuleException(message);
     }
-
-
 }

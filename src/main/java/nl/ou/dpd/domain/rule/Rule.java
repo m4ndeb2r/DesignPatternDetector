@@ -5,8 +5,8 @@ package nl.ou.dpd.domain.rule;
  * using a number of attributes. These attributes are the following:
  * <ul>
  * <li>a {@code mould} - a blueprint/template containing the properties an ideal subject should have</li>
- * <li>a {@code topic} - the {@link Topic} to be evaluated by this {@link Rule}, i.e. type, visibility, ...</li>
  * <li>a {@code scope} - the {@link Scope} of the evaluation, i.e. object, relation, ...</li>
+ * <li>a {@code topic} - the {@link Topic} to be evaluated by this {@link Rule}, i.e. type, visibility, ...</li>
  * <li>a {@code operator} - the evaluation {@link Operator}, i.e. equals, not_equals, exists, not_exists, ...</li>
  * </ul>
  *
@@ -18,8 +18,8 @@ package nl.ou.dpd.domain.rule;
 public abstract class Rule<SUBJECT_TYPE> {
 
     private final SUBJECT_TYPE mould;
-    private final Topic topic;
     private final Scope scope;
+    private final Topic topic;
     private final Operator operator;
 
     /**
@@ -27,17 +27,17 @@ public abstract class Rule<SUBJECT_TYPE> {
      *
      * @param mould    an object of type {@link SUBJECT_TYPE}, containing all the features this {@link Rule} may use to
      *                 evaluate a subject will be applied to
-     * @param topic    holds the feature to be evaluated (type, visibility, ...)
      * @param scope    the scope of the evaluation (object, relation, ...)
+     * @param topic    holds the feature to be evaluated (type, visibility, ...)
      * @param operator the evaluation operator (equals, exists, ...)
      */
-    public Rule(SUBJECT_TYPE mould, Topic topic, Scope scope, Operator operator) {
-        if (mould == null || topic == null || scope == null || operator == null) {
+    public Rule(SUBJECT_TYPE mould, Scope scope, Topic topic, Operator operator) {
+        if (mould == null || scope == null || topic == null || operator == null) {
             throw new IllegalArgumentException("All arguments are mandatory.");
         }
         this.mould = mould;
-        this.topic = topic;
         this.scope = scope;
+        this.topic = topic;
         this.operator = operator;
     }
 
@@ -59,21 +59,21 @@ public abstract class Rule<SUBJECT_TYPE> {
     }
 
     /**
-     * Returns the topic that is evaluated by this {@link Rule}.
-     *
-     * @return the {@link Topic} of this {@link Rule}
-     */
-    public Topic getTopic() {
-        return topic;
-    }
-
-    /**
      * Returns the scope of the evaluation by this {@link Rule}.
      *
      * @return the {@link Scope} of this {@link Rule}
      */
     public Scope getScope() {
         return scope;
+    }
+
+    /**
+     * Returns the topic that is evaluated by this {@link Rule}.
+     *
+     * @return the {@link Topic} of this {@link Rule}
+     */
+    public Topic getTopic() {
+        return topic;
     }
 
     /**

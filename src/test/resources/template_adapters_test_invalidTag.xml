@@ -147,6 +147,7 @@ Possible values of type are:
 					<edge id="AdapterTarget" node1="Adapter" node2="Target"/>
 				</edges>
 			</structure>
+			<invalidtag>dummie</invalidtag>
 			<conditions>
 			  <condition id="1" description="The Client has a directed association with the Target.">
 					<rule applies="ClientTarget" scope="relation" topic="type" operator="equals" value="ASSOCIATION_DIRECTED"/> 

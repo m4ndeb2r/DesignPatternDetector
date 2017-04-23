@@ -28,8 +28,8 @@ public class EdgeRule extends Rule<Edge> {
      * @param scope    the scope of the evaluation (object, relation, ...)
      * @param operator the evaluation operator (equals, exists, ...)
      */
-    public EdgeRule(Edge mould, Topic topic, Scope scope, Operator operator) {
-        super(mould, topic, scope, operator);
+    public EdgeRule(Edge mould, Scope scope, Topic topic, Operator operator) {
+        super(mould, scope, topic, operator);
     }
 
     /**

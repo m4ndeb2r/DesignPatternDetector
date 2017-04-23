@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -25,19 +27,20 @@ import static org.hamcrest.core.Is.is;
  */
 public class TemplatesParserWithConditionsTest {
 
-/*
+    // A test file containing valid XML.
+    private static final String ADAPTERTEMPLATES_XML = "/template_adapters.xml";
     // A test file containing invalid XML.
     private static final String INVALID_XML = "/invalid.xml";
+    // A test file containing two nodes with the same name.
+    private static final String DOUBLE_NODE_XML = "/template_adapters_test_doubleNode.xml";
+    // A test file containing two nodes with the same name.
+    private static final String DOUBLE_EDGE_XML = "/template_adapters_test_doubleEdge.xml";
     // A test file containing an invalid edge tag.
-    private static final String INVALID_EDGE_TAG_XML = "/invalid-edge-tag.xml";
+    private static final String MISSING_EDGE_XML = "/template_adapters_test_missingEdge.xml";
     // A test file containing an invalid edge tag.
-    private static final String INVALID_TEMPLATE_TAG_XML = "/invalid-template-tag.xml";
-    // A test file containing the Ba Brahem templates example.
-    private static final String BA_BRAHEM_TEST_XML = "/Ba_Brahem.xml";
-*/
+    private static final String INVALID_TAG_XML = "/template_adapters_test_invalidTag.xml";
 	
     // A test file containing invalid XML.
-    private static final String ADAPTERTEMPLATES_XML = "/template_adapters.xml";
 
     /**
      * Exception rule.
@@ -46,68 +49,99 @@ public class TemplatesParserWithConditionsTest {
     public ExpectedException thrown = ExpectedException.none();
 
     /**
-     * Tests the exception handling in case of incorrect XML resulting in a {@link SAXParseException} during parsing
-     * a template file by a {@link TemplatesParser}.
+     * Tests the exception handling in case of document which could not be parsed, resulting in a {@link XMLStreamException} during
+     * parsing a template file by a {@link TemplatesParserWithConditions}.
      */
-/*    @Test
-    public void testSAXParseException() {
+    @Test
+    public void testXMLStreamException() {
         final String path = getPath(INVALID_XML);
-        final TemplatesParser templatesParser = new TemplatesParser();
+        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
 
         thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(SAXParseException.class));
+        thrown.expectCause(is(XMLStreamException.class));
         thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
 
         templatesParser.parse(path);
     }
-*/
+
     /**
-     * Tests the exception handling in case of an unexpected edge tag, resulting in a {@link SAXException} during
-     * parsing a template file by a {@link TemplatesParser}.
+     * Tests the exception handling a case of a node id which is not unique, resulting in a {@link XMLStreamException} during
+     * parsing a template file by a {@link TemplatesParserWithConditions}.
      */
-/*    @Test
-    public void testSAXException1() {
-        final String path = getPath(INVALID_EDGE_TAG_XML);
-        final TemplatesParser templatesParser = new TemplatesParser();
+    @Test
+    public void testDoubleNodeException() {
+        final String path = getPath(DOUBLE_NODE_XML);
+        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
 
         thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(SAXException.class));
-        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+        thrown.expectCause(is(XMLStreamException.class));
+        thrown.expectMessage("The node id Adaptee is not unique in this pattern.");
 
         templatesParser.parse(path);
     }
-*/
+
     /**
-     * Tests the exception handling in case of an unexpected template tag, resulting in a {@link SAXException} during
-     * parsing a template file by a {@link TemplatesParser}.
+     * Tests the exception handling  a case of an edge id which is not unique, resulting in a {@link XMLStreamException} during
+     * parsing a template file by a {@link TemplatesParserWithConditions}.
      */
-/*    @Test
-    public void testSAXException2() {
-        final String path = getPath(INVALID_TEMPLATE_TAG_XML);
-        final TemplatesParser templatesParser = new TemplatesParser();
+    @Test
+    public void testDoubleEdgeException() {
+        final String path = getPath(DOUBLE_EDGE_XML);
+        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
 
         thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(SAXException.class));
-        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+        thrown.expectCause(is(XMLStreamException.class));
+        thrown.expectMessage("The edge id ClientTarget is not unique in this pattern.");
 
         templatesParser.parse(path);
     }
-*/
+
     /**
+     * Tests the exception handling  a case of a missing edge, resulting in a {@link XMLStreamException} during
+     * parsing a template file by a {@link TemplatesParserWithConditions}.
+     */
+    @Test
+    public void testEdgeNotFoundException() {
+        final String path = getPath(MISSING_EDGE_XML);
+        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(XMLStreamException.class));
+        thrown.expectMessage("An edge between Adapter and Adaptee could not be found.");
+
+        templatesParser.parse(path);
+    }
+
+    /**
+     * Tests the exception handling  a case of a missing edge, resulting in a {@link XMLStreamException} during
+     * parsing a template file by a {@link TemplatesParserWithConditions}.
+     */
+    @Test
+    public void testTagNotFoundException() {
+        final String path = getPath(INVALID_TAG_XML);
+        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
+
+        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expectCause(is(XMLStreamException.class));
+        thrown.expectMessage("The pattern template tag invalidtag could not be handled.");
+
+        templatesParser.parse(path);
+    }
+     /**
      * Tests the exception handling in case of a {@link IOException} during parsing a template file by a
-     * {@link TemplatesParser}.
+     * {@link TemplatesParserWithConditions}.
      */
-/*    @Test
+    @Test
     public void testFileNotFoundException() {
-        final TemplatesParser templatesParser = new TemplatesParser();
+        final TemplatesParserWithConditions parser = new TemplatesParserWithConditions();
 
         thrown.expect(DesignPatternDetectorException.class);
         thrown.expectCause(is(FileNotFoundException.class));
         thrown.expectMessage("The pattern template file missing.xml could not be found.");
 
-        templatesParser.parse("missing.xml");
+        parser.parse("missing.xml");
     }
-*/
+
     /**
      * Test the happy flow of parsing an XMI input file by the {@link TemplatesParser}.
      */
@@ -123,22 +157,8 @@ public class TemplatesParserWithConditionsTest {
         DesignPattern dp3 = parseResult.get(2);
         
         assertThat(parseResult.size(), is(3));
-/*        assertThat(parseResult.get(0).getEdges().size(), is(2));
-        assertEdge(parseResult.get(0).getEdges().get(0), "P", "Q", EdgeType.ASSOCIATION_DIRECTED);
-        assertEdge(parseResult.get(0).getEdges().get(1), "R", "Q", EdgeType.INHERITANCE);
+        assertThat(parseResult.get(0).getEdges().size(), is(3));
     }
-*/
-
-
-/*        
-    private void assertEdge(Edge edge, String leftNodeName, String rightNodeName, EdgeType edgeType) {
-        assertThat(edge.getLeftNode().getName(), is(leftNodeName));
-        assertThat(edge.getRightNode().getName(), is(rightNodeName));
-        assertThat(edge.getRelationType(), is(edgeType));
-        assertThat(edge.isSelfRef(), is(false));
-        assertThat(edge.isVirtual(), is(false));
-        assertThat(edge.isLocked(), is(false));
-*/    }
 
 	/**
 	 * @param adaptertemplatesXml

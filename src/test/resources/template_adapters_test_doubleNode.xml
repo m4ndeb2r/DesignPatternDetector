@@ -133,7 +133,7 @@ Possible values of type are:
 						<method id="adapter.request" />
 					</node>
 					<node id="Target" type="class"/>
-					<node id="Adapter" type="class">
+					<node id="Adaptee" type="class">
 						<attribute id="adaptee" type="Adaptee"/>
 						<method id="request"/>
 					</node>

@@ -21,12 +21,12 @@ public class NodeRule extends Rule<Node> {
      * Creates a rule with the {@link Node} mould that implements the features needed to apply to this rule.
      *
      * @param mould    the {@link Node} containing the rule's features
-     * @param topic    holds the feature to be evaluated (type, visibility, ...)
      * @param scope    the scope of the evaluation (object, attributes, ...)
+     * @param topic    holds the feature to be evaluated (type, visibility, ...)
      * @param operator the evaluation operator (equals, exists, ...)
      */
-    public NodeRule(Node mould, Topic topic, Scope scope, Operator operator) {
-        super(mould, topic, scope, operator);
+    public NodeRule(Node mould, Scope scope, Topic topic, Operator operator) {
+        super(mould, scope, topic, operator);
     }
 
     /**
@@ -42,83 +42,208 @@ public class NodeRule extends Rule<Node> {
         switch (getScope()) {
             case OBJECT:
                 return processObject(systemNode);
-            case ATTRIBUTE:
-                return processAttributeScope(systemNode);
             default:
                 return error("Unexpected scope: " + getScope() + ".");
         }
     }
 
     private boolean processObject(Node systemNode) {
-        switch (getOperator()) {
-            case EXISTS:
-                // TODO: This case seems futile, because it always returns true
-                return processObjectTopicExists(systemNode);
-            case NOT_EXISTS:
-                // TODO: This case seems futile, because it always returns false
-                return !processObjectTopicExists(systemNode);
-            case EQUALS:
-                return processObjectTopicEquals(systemNode);
-            case NOT_EQUALS:
-                return !processObjectTopicEquals(systemNode);
-            default:
-                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
-        }
-    }
-
-    private boolean processObjectTopicEquals(Node systemNode) {
         switch (getTopic()) {
             case TYPE:
-                if (getMould().getType() == null) {
-                    return error("Cannot perform rule on topic TYPE. Unable to detect what to check for.");
-                }
-                return systemNode.getType() == getMould().getType();
+            	return processObjectType(systemNode);
             case VISIBILITY:
-                if (getMould().getVisibility() == null) {
-                    return error("Cannot perform rule on topic VISIBILITY. Unable to detect what to check for.");
-                }
-                return systemNode.getVisibility() == getMould().getVisibility();
+            	return processObjectVisibility(systemNode);
             case MODIFIER_ROOT:
-                if (getMould().isRoot() == null) {
-                    return error("Cannot perform rule on topic MODIFIER_ROOT. Unable to detect what to check for.");
-                }
-                return systemNode.isRoot() == getMould().isRoot();
+            	return processObjectModifierRoot(systemNode);
             case MODIFIER_LEAF:
-                if (getMould().isLeaf() == null) {
-                    return error("Cannot perform rule on topic MODIFIER_LEAF. Unable to detect what to check for.");
-                }
-                return systemNode.isLeaf() == getMould().isLeaf();
+            	return processObjectModifierLeaf(systemNode);
             case MODIFIER_ABSTRACT:
-                if (getMould().isAbstract() == null) {
-                    return error("Cannot perform rule on topic MODIFIER_ABSTRACT. Unable to detect what to check for.");
-                }
-                return systemNode.isAbstract() == getMould().isAbstract();
+            	return processObjectModifierAbstract(systemNode);
             case MODIFIER_ACTIVE:
-                if (getMould().isActive() == null) {
-                    return error("Cannot perform rule on topic MODIFIER_ACTIVE. Unable to detect what to check for.");
-                }
-                return systemNode.isActive() == getMould().isActive();
+            	return processObjectModifierActive(systemNode);
             default:
                 return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
         }
     }
 
-    // TODO: This method seems futile: system nodes always have a type, visibility, and a value for all modifiers
+    private boolean processObjectType(Node systemNode) {
+        switch (getOperator()) {
+            case EXISTS:
+                // TODO: This case seems futile, because it always returns true
+                return processObjectTypeExists(systemNode);
+            case NOT_EXISTS:
+                // TODO: This case seems futile, because it always returns false
+                return !processObjectTypeExists(systemNode);
+            case EQUALS:
+                return processObjectTypeEquals(systemNode);
+            case NOT_EQUALS:
+                return !processObjectTypeEquals(systemNode);
+            default:
+                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+        }
+    }
+
+    private boolean processObjectVisibility(Node systemNode) {
+        switch (getOperator()) {
+            case EXISTS:
+                // TODO: This case seems futile, because it always returns true
+                return processObjectVisibilityExists(systemNode);
+            case NOT_EXISTS:
+                // TODO: This case seems futile, because it always returns false
+                return !processObjectVisibilityExists(systemNode);
+            case EQUALS:
+                return processObjectVisibilityEquals(systemNode);
+            case NOT_EQUALS:
+                return !processObjectVisibilityEquals(systemNode);
+            default:
+                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+        }
+    }
+
+    private boolean processObjectModifierRoot(Node systemNode) {
+        switch (getOperator()) {
+            case EXISTS:
+                // TODO: This case seems futile, because it always returns true
+                return processObjectModifierRootExists(systemNode);
+            case NOT_EXISTS:
+                // TODO: This case seems futile, because it always returns false
+                return !processObjectModifierRootExists(systemNode);
+            case EQUALS:
+                return processObjectModifierRootEquals(systemNode);
+            case NOT_EQUALS:
+                return !processObjectModifierRootEquals(systemNode);
+            default:
+                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+        }
+    }
+
+    private boolean processObjectModifierLeaf(Node systemNode) {
+        switch (getOperator()) {
+            case EXISTS:
+                // TODO: This case seems futile, because it always returns true
+                return processObjectModifierLeafExists(systemNode);
+            case NOT_EXISTS:
+                // TODO: This case seems futile, because it always returns false
+                return !processObjectModifierLeafExists(systemNode);
+            case EQUALS:
+                return processObjectModifierLeafEquals(systemNode);
+            case NOT_EQUALS:
+                return !processObjectModifierLeafEquals(systemNode);
+            default:
+                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+        }
+    }
+
+    private boolean processObjectModifierAbstract(Node systemNode) {
+        switch (getOperator()) {
+            case EXISTS:
+                // TODO: This case seems futile, because it always returns true
+                return processObjectModifierAbstractExists(systemNode);
+            case NOT_EXISTS:
+                // TODO: This case seems futile, because it always returns false
+                return !processObjectModifierAbstractExists(systemNode);
+            case EQUALS:
+                return processObjectModifierAbstractEquals(systemNode);
+            case NOT_EQUALS:
+                return !processObjectModifierAbstractEquals(systemNode);
+            default:
+                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+        }
+    }
+
+    private boolean processObjectModifierActive(Node systemNode) {
+        switch (getOperator()) {
+            case EXISTS:
+                // TODO: This case seems futile, because it always returns true
+                return processObjectModifierActiveExists(systemNode);
+            case NOT_EXISTS:
+                // TODO: This case seems futile, because it always returns false
+                return !processObjectModifierActiveExists(systemNode);
+            case EQUALS:
+                return processObjectModifierActiveEquals(systemNode);
+            case NOT_EQUALS:
+                return !processObjectModifierActiveEquals(systemNode);
+            default:
+                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+        }
+    }
+    
+    private boolean processObjectTypeExists(Node systemNode) {
+        return systemNode.getType() != null;
+    }
+    
+    private boolean processObjectTypeEquals(Node systemNode) {
+        if (getMould().getType() == null) {
+            return error("Cannot perform rule on topic TYPE. Unable to detect what to check for.");
+        }
+        return systemNode.getType() == getMould().getType();    	   	
+    }
+        
+    private boolean processObjectVisibilityExists(Node systemNode) {
+        return systemNode.getVisibility() != null;
+    }
+
+    private boolean processObjectVisibilityEquals(Node systemNode) {
+        if (getMould().getVisibility() == null) {
+            return error("Cannot perform rule on topic VISIBILITY. Unable to detect what to check for.");
+        }
+        return systemNode.getVisibility() == getMould().getVisibility();    	
+    }
+
+    private boolean processObjectModifierRootExists(Node systemNode) {
+        return systemNode.isRoot() != null;   	
+    }
+    
+    private boolean processObjectModifierRootEquals(Node systemNode) {
+        if (getMould().isRoot() == null) {
+            return error("Cannot perform rule on topic MODIFIER_ROOT. Unable to detect what to check for.");
+        }
+        return systemNode.isRoot() == getMould().isRoot();    	
+    }
+
+    private boolean processObjectModifierLeafExists(Node systemNode) { 
+        return systemNode.isLeaf() != null;    	
+    }
+    
+    private boolean processObjectModifierLeafEquals(Node systemNode) {
+        if (getMould().isLeaf() == null) {
+            return error("Cannot perform rule on topic MODIFIER_LEAF. Unable to detect what to check for.");
+        }
+        return systemNode.isLeaf() == getMould().isLeaf();    	
+    }
+  
+    private boolean processObjectModifierAbstractExists(Node systemNode) {
+        return systemNode.isAbstract() != null;
+    }
+    
+    private boolean processObjectModifierAbstractEquals(Node systemNode) {
+        if (getMould().isAbstract() == null) {
+            return error("Cannot perform rule on topic MODIFIER_ABSTRACT. Unable to detect what to check for.");
+        }
+        return systemNode.isAbstract() == getMould().isAbstract();    	
+    }
+    private boolean processObjectModifierActiveExists(Node systemNode) {
+        return systemNode.isActive() != null;    	
+    }
+    
+    private boolean processObjectModifierActiveEquals(Node systemNode) {
+        if (getMould().isActive() == null) {
+            return error("Cannot perform rule on topic MODIFIER_ACTIVE. Unable to detect what to check for.");
+        }
+        return systemNode.isActive() == getMould().isActive();    	
+    }
+      // TODO: This method seems futile: system nodes always have a type, visibility, and a value for all modifiers
     // TODO: instead of false, we should perhaps throw a RuleException when a topic does not exist?
-    private boolean processObjectTopicExists(Node systemNode) {
+/*    private boolean processObjectTopicExists(Node systemNode) {
         switch (getTopic()) {
             case TYPE:
-                return systemNode.getType() != null;
+
             case VISIBILITY:
-                return systemNode.getVisibility() != null;
+
             case MODIFIER_ROOT:
-                return systemNode.isRoot() != null;
             case MODIFIER_LEAF:
-                return systemNode.isLeaf() != null;
             case MODIFIER_ABSTRACT:
-                return systemNode.isAbstract() != null;
             case MODIFIER_ACTIVE:
-                return systemNode.isActive() != null;
             default:
                 return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
         }
@@ -145,24 +270,24 @@ public class NodeRule extends Rule<Node> {
 	 * @param systemNode
 	 * @return
 	 */
-	private boolean processAttributeTopicEquals(Node systemNode) {
+/*	private boolean processAttributeTopicEquals(Node systemNode) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+*/
 	/**
 	 * Returns if an attribute with the given type exists
 	 * @param systemNode
 	 * @return
 	 */
-	private boolean processAttributeTopicExists(Node systemNode) {
+/*	private boolean processAttributeTopicExists(Node systemNode) {
 		for (Attribute attr : this.getMould().getAttributes()) {
 			
 		}
 		
 		return false;
 	}
-
+*/
 	private boolean error(String message) {
         LOGGER.error(message);
         throw new RuleException(message);
