@@ -190,15 +190,15 @@ public class ProjectViewController extends Controller implements Observer {
             treeRoot.getChildren().add(patternRoot);
 
             int i = 0;
-            boolean postFix = solutions.size() > 1;
+            boolean multipleSolutions = solutions.size() > 1;
             for (Solution solution : solutions) {
                 String dpn = solution.getDesignPatternName();
                 ++i;
-                if (postFix) {
+                if (multipleSolutions) {
                     dpn += (i);
+                    final TreeItem<String> patternItem = new TreeItem<>(dpn);
+                    patternRoot.getChildren().add(patternItem);
                 }
-                final TreeItem<String> patternItem = new TreeItem<>(dpn);
-                patternRoot.getChildren().add(patternItem);
                 feedbackMap.put(dpn, solution);
             }
 
