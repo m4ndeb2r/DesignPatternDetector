@@ -156,7 +156,29 @@ public class Edge {
      */
     public void setId(String id) {
         this.id = id;
-    }   
+    } 
+    
+    /*27/04/17*/
+    /**
+     * Set the left node of this edge.
+     *
+     * @param Node
+     */
+    public void setLeftNode(Node node) {
+        this.leftNode = node;
+    } 
+    
+   
+    /*27/04/17*/
+    /**
+     * Set the right node of this edge.
+     *
+     * @param Node
+     */
+    public void setRightNode(Node node) {
+        this.rightNode = node;
+    } 
+
     
     /**
      * Indicates whether or not this {@link Edge} is virtual (non-visible).
@@ -230,6 +252,7 @@ public class Edge {
      */
     public void setRelationType(EdgeType relationType) {
         this.relationType = relationType;
+        //TODO make a virtual edge when relation type is ASSOCIATION
     }
 
     /**

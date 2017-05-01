@@ -9,5 +9,25 @@ import nl.ou.dpd.domain.edge.Edges;
  * @author Martin de Boer
  */
 public class SystemUnderConsideration extends Edges {
+	
+	private String id;
+	private String name;
+
+	public SystemUnderConsideration() {
+	}
+
+	
+	public SystemUnderConsideration(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public String getName() {
+		return name;
+	}
 
 }

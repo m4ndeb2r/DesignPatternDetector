@@ -24,7 +24,7 @@ public abstract class Node implements Comparable<Node> {
     public static final Node EMPTY_NODE = new EmptyNode();
 
     private final String id;
-    private final String name;
+    private String name;
     private NodeType type;
     private Visibility visibility;
 
@@ -84,6 +84,17 @@ public abstract class Node implements Comparable<Node> {
     public String getName() {
         return name;
     }
+    
+    /**
+     * Sets the name of this {@link Node}.
+     *
+     * @param a {@link String} representing this {@link Node}s name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 
     /**
      * Returns the {@link NodeType} of this {@link Node}: {@link NodeType#CLASS} or {@link NodeType#INTERFACE}.
@@ -96,7 +107,7 @@ public abstract class Node implements Comparable<Node> {
 
     /**
      * Return the {@link Visibility} of this {@link Node}. The visibility depends on the access modifier of a class or
-     * interface. For example, an interface or a public class allways returns: {@link Visibility#PUBLIC}.
+     * interface. For example, an interface or a public class always returns: {@link Visibility#PUBLIC}.
      *
      * @return the {@link Visibility} of this {@link Node}.
      */
@@ -104,9 +115,10 @@ public abstract class Node implements Comparable<Node> {
         return visibility;
     }
 
+    /*27/04/17*/
     /**
      * Sets the {@link Visibility} of this {@link Node}. The visibility depends on the access modifier of a class or
-     * interface. For example, an interface or a public class allways returns: {@link Visibility#PUBLIC}.
+     * interface. For example, an interface or a public class always returns: {@link Visibility#PUBLIC}.
      *
      * @param the {@link Visibility} of this {@link Node}.
      */
@@ -155,7 +167,7 @@ public abstract class Node implements Comparable<Node> {
         return isRoot;
     }
 
-
+    /*27/04/17*/
     /**
      * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
      *
@@ -175,7 +187,8 @@ public abstract class Node implements Comparable<Node> {
     public Boolean isLeaf() {
         return isLeaf;
     }
-
+    
+    /*27/04/17*/
     /**
      * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
      *
@@ -195,7 +208,8 @@ public abstract class Node implements Comparable<Node> {
         return isAbstract;
     }
     
-    /**
+
+    /*27/04/17*//**
      * Sets this {@link Node} as a abstract node, not a abstract node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a abstract node, {@code false} if it is not a abstract node, or {@code null} if
@@ -215,7 +229,8 @@ public abstract class Node implements Comparable<Node> {
         return isActive;
     }
 
-    /**
+
+    /*27/04/17*//**
      * Sets this {@link Node} as a active node, not a active node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a active node, {@code false} if it is not a active node, or {@code null} if

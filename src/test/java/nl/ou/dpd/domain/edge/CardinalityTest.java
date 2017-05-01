@@ -27,7 +27,7 @@ public class CardinalityTest {
     public void testContrstructorOK() {
         assertThat(new Cardinality(0, 1).getLower(), is(0));
         assertThat(new Cardinality(1, 1).getLower(), is(1));
-        assertThat(new Cardinality(1, Cardinality.INFINITY).getUpper(), is(Cardinality.INFINITY));
+        assertThat(new Cardinality(1, Cardinality.UNLIMITED).getUpper(), is(Cardinality.UNLIMITED));
     }
 
     /**

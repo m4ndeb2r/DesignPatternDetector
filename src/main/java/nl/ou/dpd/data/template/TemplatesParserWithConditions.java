@@ -39,7 +39,10 @@ import nl.ou.dpd.exception.DesignPatternDetectorException;
 
 /**
  * This class implements a parser for a template.xml with a structure- and conditions part, including parsing nodes, edges, attributes and conditions.
- * TODO: implement parsing of methods.   
+ * If successfully, the parsing results in a list of templates containing the edges with corresponding nodes with their attributes and all properties defining the pattern.
+ * Also, conditions with rules are made, ready to evaluate the pattern.
+ * 
+ * TODO: implement parsing of methods.  
  * 
  * @author Peter Vansweevelt
  *
@@ -309,7 +312,7 @@ public class TemplatesParserWithConditions {
 	/**
 	 * Find an Attribute by id.
 	 * @param id the id as a String
-	 * @return the node object with the name of 'id'
+	 * @return the attribute object with the id of 'id'
 	 */
 	private nl.ou.dpd.domain.node.Attribute findAttributeById(String id) {
 		for (Node n : nodes) {
@@ -325,7 +328,7 @@ public class TemplatesParserWithConditions {
 	/**
 	 * Find an Edge by id.
 	 * @param id the id as a String
-	 * @return the node object with the name of 'id'
+	 * @return the edge object with the id of 'id'
 	 */
 	private Edge findEdgeById(String id) {
 		for (Edge e : designPattern.getEdges()) {

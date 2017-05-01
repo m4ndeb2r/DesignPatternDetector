@@ -64,11 +64,11 @@ public class EdgeRuleTest {
     public void testEdgeRuleWithUnknownTopic() {
         final Edge mould = new Edge(new Clazz("node1"), new Clazz("node2"), EdgeType.ASSOCIATION);
         mould.setCardinalityLeft(1, 1);
-        mould.setCardinalityRight(0, Cardinality.INFINITY);
+        mould.setCardinalityRight(0, Cardinality.UNLIMITED);
 
         final Edge systemEdge = new Edge(new Clazz("myClass1"), new Clazz("myClass2"), EdgeType.ASSOCIATION);
         systemEdge.setCardinalityLeft(1, 1);
-        systemEdge.setCardinalityRight(0, Cardinality.INFINITY);
+        systemEdge.setCardinalityRight(0, Cardinality.UNLIMITED);
      	
         final EdgeRule failingTopicRule = new EdgeRule(mould, Scope.RELATION, Topic.VISIBILITY, Operator.EQUALS);
         thrown.expect(RuleException.class);
@@ -84,15 +84,15 @@ public class EdgeRuleTest {
     public void testEdgeForCardinality() {
         final Edge mould = new Edge(new Clazz("node1"), new Clazz("node2"), EdgeType.ASSOCIATION);
         mould.setCardinalityLeft(1, 1);
-        mould.setCardinalityRight(0, Cardinality.INFINITY);
+        mould.setCardinalityRight(0, Cardinality.UNLIMITED);
 
         final Edge systemEdge = new Edge(new Clazz("myClass1a"), new Clazz("myClass2a"), EdgeType.ASSOCIATION);
         systemEdge.setCardinalityLeft(1, 1);
-        systemEdge.setCardinalityRight(0, Cardinality.INFINITY);
+        systemEdge.setCardinalityRight(0, Cardinality.UNLIMITED);
 
         final Edge systemEdge2 = new Edge(new Clazz("myClass1b"), new Clazz("myClass2b"), EdgeType.ASSOCIATION);
         systemEdge2.setCardinalityLeft(1, 1);
-        systemEdge2.setCardinalityRight(1, Cardinality.INFINITY);
+        systemEdge2.setCardinalityRight(1, Cardinality.UNLIMITED);
 
         // Cardinalities exist
         final EdgeRule edgeRuleExists = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY, Operator.EXISTS);

@@ -9,7 +9,7 @@ public class Attribute {
 
     private final String id;
 	private final String name;
-    private final Node type;
+    private Node type;
     private Visibility visibility;
 
     /**
@@ -63,6 +63,16 @@ public class Attribute {
     public Node getType() {
         return type;
     }
+    
+    /**
+     * Set the type of the attribute.
+     *
+     * @param the type of the attribute as {@link Node}
+     */
+    public void setType(Node type) {
+        this.type = type;
+    }
+  
     /**
      * Get the name of the attribute.
      *
