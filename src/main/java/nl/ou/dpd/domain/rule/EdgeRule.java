@@ -191,7 +191,7 @@ public class EdgeRule extends Rule<Edge> {
 	private boolean processAttributeTypeExists(Edge systemEdge) {
 		List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
 		for(Attribute attribute : systemAttributes) {
-			if (attribute.getType().getName().equals(systemEdge.getRightNode().getName())) {
+			if (attribute.getType().equals(systemEdge.getRightNode())) {
 				return true;
 			}
 		}

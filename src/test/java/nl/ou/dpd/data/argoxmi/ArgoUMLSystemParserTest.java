@@ -21,7 +21,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
- * Tests the {@link TemplatesParser} class.
+ * Tests the {@link ArgoUMLSystemParser} class.
  *
  * @author Martin de Boer
  * @author Peter Vansweevelt
@@ -50,24 +50,10 @@ public class ArgoUMLSystemParserTest {
     private static final String OBSERVER = "/Observer.xmi";
     private static final String PROXY = "/Proxy.xmi";
     private static final String STRATEGY = "/Strategy.xmi";
-
-    
-    
-    
     // A test file containing invalid XML.
     private static final String INVALID_XML = "/invalid.xml";
-    // A test file containing two nodes with the same name.
-    private static final String DOUBLE_NODE_XML = "/template_adapters_test_doubleNode.xml";
-    // A test file containing two nodes with the same name.
-    private static final String DOUBLE_EDGE_XML = "/template_adapters_test_doubleEdge.xml";
-    // A test file containing an invalid edge tag.
-    private static final String MISSING_EDGE_XML = "/template_adapters_test_missingEdge.xml";
-    // A test file containing an invalid edge tag.
-    private static final String INVALID_TAG_XML = "/template_adapters_test_invalidTag.xml";
-    
-    private int numberOfNodes; //used to print the number of (different) nodes
-	
-    // A test file containing invalid XML.
+   //used to print the number of (different) nodes
+    private int numberOfNodes; 
 
     /**
      * Exception rule.
@@ -167,15 +153,12 @@ public class ArgoUMLSystemParserTest {
         
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        assertEquals("Adapters", parseResult.getName());
 
-        numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-        
+        assertEquals("Adapters", parseResult.getName());
         assertEquals(40, parser.getNumberOfNodes());
         assertEquals(28, parseResult.getEdges().size());
         
-        //Examine edges in order af appearing in the .xmi
+        //Examine edges in order of appearing in the .xmi
         edge = parseResult.getEdges().get(0);
         assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
         assertEquals("SquarePegAdapter", edge.getLeftNode().getName());
@@ -503,7 +486,7 @@ public class ArgoUMLSystemParserTest {
         assertEquals(13, parser.getNumberOfNodes());
         assertEquals(18, parseResult.getEdges().size());
         
-        //Examine edges in order af appearing in the .xmi
+        //Examine edges in order of appearing in the .xmi
         edge = parseResult.getEdges().get(0);
         assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
         assertEquals("ConcFact1", edge.getLeftNode().getName());
@@ -646,7 +629,7 @@ public class ArgoUMLSystemParserTest {
         assertEquals(5, parser.getNumberOfNodes());
         assertEquals(6, parseResult.getEdges().size());
         
-        //Examine edges in order af appearing in the .xmi
+        //Examine edges in order of appearing in the .xmi
         edge = parseResult.getEdges().get(0);
         assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
         assertEquals("D", edge.getLeftNode().getName());
@@ -705,7 +688,7 @@ public class ArgoUMLSystemParserTest {
         assertEquals(8, parser.getNumberOfNodes());
         assertEquals(8, parseResult.getEdges().size());
         
-        //Examine edges in order af appearing in the .xmi
+        //Examine edges in order of appearing in the .xmi
         edge = parseResult.getEdges().get(0);
         assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
         assertEquals("ConcAbstr2", edge.getLeftNode().getName());
@@ -779,7 +762,7 @@ public class ArgoUMLSystemParserTest {
         assertEquals(4, parser.getNumberOfNodes());
         assertEquals(3, parseResult.getEdges().size());
         
-        //Examine edges in order af appearing in the .xmi
+        //Examine edges in order of appearing in the .xmi
         edge = parseResult.getEdges().get(0);
         assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
         assertEquals("ConcrMaker", edge.getLeftNode().getName());
@@ -817,7 +800,7 @@ public class ArgoUMLSystemParserTest {
         assertEquals(4, parser.getNumberOfNodes());
         assertEquals(4, parseResult.getEdges().size());
         
-        //Examine edges in order af appearing in the .xmi
+        //Examine edges in order of appearing in the .xmi
         edge = parseResult.getEdges().get(0);
         assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
         assertEquals("User", edge.getLeftNode().getName());
@@ -862,7 +845,7 @@ public class ArgoUMLSystemParserTest {
         assertEquals(5, parser.getNumberOfNodes());
         assertEquals(5, parseResult.getEdges().size());
         
-        //Examine edges in order af appearing in the .xmi
+        //Examine edges in order of appearing in the .xmi
         edge = parseResult.getEdges().get(0);
         assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
         assertEquals("User", edge.getLeftNode().getName());
@@ -906,10 +889,42 @@ public class ArgoUMLSystemParserTest {
     public void testParseComposite() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(COMPOSITE);
-
+        Edge edge;
+        
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
+
+        assertEquals(4, parser.getNumberOfNodes());
+        assertEquals(4, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Part", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("End", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Part", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Union", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Part", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Union", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Part", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());	
     }
     
     /**
@@ -919,10 +934,49 @@ public class ArgoUMLSystemParserTest {
     public void testParseDecorator() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(DECORATOR);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
+
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(5, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcretePart", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Part", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Dec", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Part", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("ConcDecA", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Dec", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("ConcDecB", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Dec", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());	
+ 
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Dec", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Part", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());	
     }
     
     /**
@@ -932,11 +986,36 @@ public class ArgoUMLSystemParserTest {
     public void testParseFactoryMethod() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(FACTORY_METHOD);
-
+        Edge edge;
+        
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+ 
+        assertEquals(4, parser.getNumberOfNodes());
+        assertEquals(3, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcreteCreator", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcreteProduct", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("ConcreteProduct", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Product", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("ConcreteCreator", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Creator", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+   }
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -945,11 +1024,57 @@ public class ArgoUMLSystemParserTest {
     public void testParseFlyweight() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(FLYWEIGHT);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+ 
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(6, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Client", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("FlyWFac", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Client", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcrFlyW", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Client", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("UnshConcrFlyw", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("ConcrFlyW", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("FlyW", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("UnshConcrFlyw", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("FlyW", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(5);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("FlyWFac", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("FlyW", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -958,11 +1083,50 @@ public class ArgoUMLSystemParserTest {
     public void testParseInterpreter() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(INTERPRETER);
-
+        Edge edge;
+        
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+ 
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(5, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("NonTermExpres", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrExpres", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("TermExpres", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrExpres", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Cont", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrExpres", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("TermExpres", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrExpres", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -971,11 +1135,57 @@ public class ArgoUMLSystemParserTest {
     public void testParseIterator() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(ITERATOR);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+ 
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(6, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcAgg", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcIter", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Iter", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Agg", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcAgg", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Agg", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcIter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Iter", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(5);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("ConcIter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcAgg", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -984,10 +1194,56 @@ public class ArgoUMLSystemParserTest {
     public void testParseMediator() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(MEDIATOR);
-
+        Edge edge;
+        
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
+ 
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(6, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcMed", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Med", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Coll", edge.getLeftNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getLeftNode().getType());
+        assertEquals("Med", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcColl_1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Coll", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcColl_2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Coll", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("ConcMed", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcColl_1", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(5);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("ConcMed", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcColl_2", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
     }
     
     /**
@@ -997,11 +1253,29 @@ public class ArgoUMLSystemParserTest {
     public void testParseMemento() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(MEMENTO);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+
+        assertEquals(3, parser.getNumberOfNodes());
+        assertEquals(2, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("Source", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Package", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Keeper", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Package", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -1010,11 +1284,43 @@ public class ArgoUMLSystemParserTest {
     public void testParseObserver() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(OBSERVER);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+
+        assertEquals(4, parser.getNumberOfNodes());
+        assertEquals(4, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Subj", edge.getLeftNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getLeftNode().getType());
+        assertEquals("Observ", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("ConcrObs", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Observ", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("ConcrObs", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcrSubj", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcrSubj", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Subj", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+   }
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -1023,11 +1329,43 @@ public class ArgoUMLSystemParserTest {
     public void testParseProxy() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(PROXY);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+ 
+        assertEquals(4, parser.getNumberOfNodes());
+        assertEquals(4, parseResult.getEdges().size());
+        
+        //Examine edges in order of appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Subj", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("RealSubj", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Subj", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Proxy", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Subj", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Proxy", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("RealSubj", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -1083,8 +1421,8 @@ public class ArgoUMLSystemParserTest {
         return this.getClass().getResource(resourceName).getPath();
 	}
 	
-	/**Print the edges and nodes of the SystemUnderConsideration
-	 *  
+	/**
+	 *  Print the edges and nodes of the SystemUnderConsideration
 	 */
 	
 	private String printSystemStructure(SystemUnderConsideration system) {
