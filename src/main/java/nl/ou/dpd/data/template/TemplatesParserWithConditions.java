@@ -51,6 +51,36 @@ public class TemplatesParserWithConditions {
 	
     private static final Logger LOGGER = LogManager.getLogger(TemplatesParserWithConditions.class);
     
+    //template attributes
+	final String NAME = "name";
+	final String SUPERPATTERN = "superpattern";
+	final String ID = "id";
+	final String TYPE= "type";
+	final String NODE1 = "node1";
+	final String NODE2 = "node2";
+	final String DESCRIPTION = "description";
+	final String APPLIES = "applies";
+	final String SCOPE = "scope";
+	final String TOPIC = "topic";
+	final String OPERATOR = "operator";
+	final String VALUE = "value";
+	final String NOT = "not";
+	//template tags
+	final String TEMPLATES = "templates";
+	final String TEMPLATE = "template";
+	final String STRUCTURE = "structure";
+	final String NODES = "nodes";
+	final String NODE = "node";
+	final String ATTRIBUTE = "attribute";
+	final String METHOD = "method";
+	final String EDGES ="edges";
+	final String EDGE = "edge";
+	final String CONDITIONS = "conditions";
+	final String CONDITION = "condition";
+	final String RULE = "rule";
+
+
+    
     private List<DesignPattern> designPatterns;
     private DesignPattern designPattern;
     private List<Condition> conditions;
@@ -110,9 +140,9 @@ public class TemplatesParserWithConditions {
 	private void handleEvent(XMLEvent event) {
 		if (event.isStartElement()) {
 			switch (event.asStartElement().getName().getLocalPart()) {
-				case TemplateTag.TEMPLATES:
+				case TEMPLATES:
 					break;
-				case TemplateTag.TEMPLATE:
+				case TEMPLATE:
 					//create a new template and add it to the templates list 
 					designPattern = createTemplate(readAttributes(event));
 					designPatterns.add(designPattern);
@@ -121,11 +151,11 @@ public class TemplatesParserWithConditions {
 					conditions.clear();
 					attributeEventsPerNode.clear();
 					break;
-				case TemplateTag.STRUCTURE:
+				case STRUCTURE:
 					break;
-				case TemplateTag.NODES:
+				case NODES:
  					break;
-				case TemplateTag.NODE:
+				case NODE:
 					//add a new node to the nodes list
 					Node node = createNode(readAttributes(event));
 					if (!nodeIdIsUnique(node)) {
@@ -136,32 +166,32 @@ public class TemplatesParserWithConditions {
 					Condition condition = makeNodeTypeCondition(node);
 					conditions.add(condition);
 					break;
-				case TemplateTag.ATTRIBUTE:
+				case ATTRIBUTE:
 					//Save the attribute event with its corresponding node
 					attributeEventsPerNode.put(event, nodes.get(nodes.size() - 1));
 					break;
-				case TemplateTag.METHOD:
+				case METHOD:
 					break;
-				case TemplateTag.EDGES:
+				case EDGES:
 					break;
-				case TemplateTag.EDGE:
+				case EDGE:
 					//add a new edge to the designPattern
 					Edge edge = createEdge(readAttributes(event));
 					designPattern.addRealEdge(edge);
 					break;
-				case TemplateTag.CONDITIONS:
+				case CONDITIONS:
 					break;
-				case TemplateTag.CONDITION:
+				case CONDITION:
 					//make a condition and add it to the conditions list
 					condition = makeCondition(readAttributes(event));
 					conditions.add(condition);
 					break;
-				case TemplateTag.RULE:
+				case RULE:
 					//make a rule and add it to the condition
 					Rule rule = makeRule(readAttributes(event));
 					addRuleToCondition(rule, conditions.get(conditions.size() - 1));
 					//apply rule on designpattern node, edge or attribute
-					applyRule(rule, readAttributes(event).get(TemplateAttribute.VALUE));
+					applyRule(rule, readAttributes(event).get(VALUE));
 					break;
 				default:
 		            error("The pattern template tag " + event.asStartElement().getName().getLocalPart() + " could not be handled.");
@@ -170,11 +200,11 @@ public class TemplatesParserWithConditions {
 		
 		if (event.isEndElement()) {
 			switch (event.asEndElement().getName().getLocalPart()) {
-				case TemplateTag.NODES:
+				case NODES:
 					//make attributes and add them to the corresponding nodes using the attributeEventsPerNode Map
 					createAttributes();
 					break;
-				case TemplateTag.EDGES:
+				case EDGES:
 					//make attribute exist conditions
 					makeAttributeExistsConditions();
 					break;
@@ -204,7 +234,7 @@ public class TemplatesParserWithConditions {
 	 * @return a new DesignPattern with the specified name.
 	 */
 	private DesignPattern createTemplate(Map<String, String> attributes) {
-		String name = attributes.get(TemplateAttribute.NAME);
+		String name = attributes.get(NAME);
 		return new DesignPattern(name);		
 	}
 
@@ -214,8 +244,8 @@ public class TemplatesParserWithConditions {
 	 * @return a new Node with the specified name and type.
 	 */
 	private Node createNode(Map<String, String> attributes) {
-		String id = attributes.get(TemplateAttribute.ID);
-		String type = attributes.get(TemplateAttribute.TYPE);
+		String id = attributes.get(ID);
+		String type = attributes.get(TYPE);
 		if (type.equalsIgnoreCase("class")) {
 			return new Clazz(id, id);
 		}
@@ -288,8 +318,8 @@ public class TemplatesParserWithConditions {
 	 * @return a new node-attribute with the specified name and type (found in the list of Nodes).
 	 */
 	private nl.ou.dpd.domain.node.Attribute createAttribute(Map<String, String> attributes) {
-		String id = attributes.get(TemplateAttribute.ID);
-		String type = attributes.get(TemplateAttribute.TYPE);
+		String id = attributes.get(ID);
+		String type = attributes.get(TYPE);
 		Node node = findNodeById(type);
 		nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, node);
 		return attr;
@@ -345,9 +375,9 @@ public class TemplatesParserWithConditions {
 	 * @return a new Edge with the specified name and type.
 	 */
 	private Edge createEdge(Map<String, String> attributes) {
-		String id = attributes.get(TemplateAttribute.ID);
-		String node1Name = attributes.get(TemplateAttribute.NODE1);
-		String node2Name = attributes.get(TemplateAttribute.NODE2);
+		String id = attributes.get(ID);
+		String node1Name = attributes.get(NODE1);
+		String node2Name = attributes.get(NODE2);
 		Node node1 = findNodeById(node1Name);
 		Node node2 = findNodeById(node2Name);
 		Edge edge = new Edge(id, id, node1, node2);
@@ -405,8 +435,8 @@ public class TemplatesParserWithConditions {
 	 * @return a new Condition with the specified id and description
 	 */
 	private Condition makeCondition(Map<String, String> attributes) {
-		String id = attributes.get(TemplateAttribute.ID);
-		String description = attributes.get(TemplateAttribute.DESCRIPTION);
+		String id = attributes.get(ID);
+		String description = attributes.get(DESCRIPTION);
 		return new Condition(id, description);
 	}
 	
@@ -416,11 +446,11 @@ public class TemplatesParserWithConditions {
 	 * @return a new Rule with the specified elements
 	 */
 	private Rule makeRule(Map<String, String> attributes) {
-		String applies = attributes.get(TemplateAttribute.APPLIES);
-		String scope = attributes.get(TemplateAttribute.SCOPE);
-		String topic = attributes.get(TemplateAttribute.TOPIC);
-		String operator = attributes.get(TemplateAttribute.OPERATOR);
-		String not = attributes.get(TemplateAttribute.NOT);
+		String applies = attributes.get(APPLIES);
+		String scope = attributes.get(SCOPE);
+		String topic = attributes.get(TOPIC);
+		String operator = attributes.get(OPERATOR);
+		String not = attributes.get(NOT);
 		
 		if (findNodeById(applies) != null) {
 			//a nodeRule

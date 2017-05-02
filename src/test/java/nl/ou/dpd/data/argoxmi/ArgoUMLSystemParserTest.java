@@ -1,25 +1,22 @@
 package nl.ou.dpd.data.argoxmi;
 
-import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.node.NodeType;
+import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -82,97 +79,33 @@ public class ArgoUMLSystemParserTest {
      * Tests the exception handling in case of document which could not be parsed, resulting in a {@link XMLStreamException} during
      * parsing a template file by a {@link TemplatesParserWithConditions}.
      */
-/*    @Test
+    @Test
     public void testXMLStreamException() {
         final String path = getPath(INVALID_XML);
-        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
+        final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
 
         thrown.expect(DesignPatternDetectorException.class);
         thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+        thrown.expectMessage("The XMI file " + path + " could not be parsed.");
 
-        templatesParser.parse(path);
+        parser.parse(path);
     }
-*/
-    /**
-     * Tests the exception handling a case of a node id which is not unique, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
-     */
-/*    @Test
-    public void testDoubleNodeException() {
-        final String path = getPath(DOUBLE_NODE_XML);
-        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
 
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The node id Adaptee is not unique in this pattern.");
-
-        templatesParser.parse(path);
-    }
-*/
-    /**
-     * Tests the exception handling  a case of an edge id which is not unique, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
-     */
-/*    @Test
-    public void testDoubleEdgeException() {
-        final String path = getPath(DOUBLE_EDGE_XML);
-        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
-
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The edge id ClientTarget is not unique in this pattern.");
-
-        templatesParser.parse(path);
-    }
-*/
-    /**
-     * Tests the exception handling  a case of a missing edge, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
-     */
-/*    @Test
-    public void testEdgeNotFoundException() {
-        final String path = getPath(MISSING_EDGE_XML);
-        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
-
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("An edge between Adapter and Adaptee could not be found.");
-
-        templatesParser.parse(path);
-    }
-*/
-    /**
-     * Tests the exception handling  a case of a missing edge, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
-     */
-/*    @Test
-    public void testTagNotFoundException() {
-        final String path = getPath(INVALID_TAG_XML);
-        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
-
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The pattern template tag invalidtag could not be handled.");
-
-        templatesParser.parse(path);
-    }
-*/
     /**
      * Tests the exception handling in case of a {@link IOException} during parsing a template file by a
      * {@link TemplatesParserWithConditions}.
      */
-/*    @Test
+    @Test
     public void testFileNotFoundException() {
-        final TemplatesParserWithConditions parser = new TemplatesParserWithConditions();
+        final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
 
         thrown.expect(DesignPatternDetectorException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The pattern template file missing.xml could not be found.");
+        thrown.expectMessage("The XMI file missing.xml could not be found.");
 
         parser.parse("missing.xml");
     }
-*/
+
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
      */
@@ -180,11 +113,47 @@ public class ArgoUMLSystemParserTest {
     public void testParse1() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(VALID_ADAPTER);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
         assertEquals("Adapters", parseResult.getName());
+        
+        assertEquals(4, parser.getNumberOfNodes());
+        assertEquals(3, parseResult.getEdges().size());
+ 
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Adapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Adaptee", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        assertEquals(0, edge.getCardinalityLeft().getLower());
+        assertEquals(-1, edge.getCardinalityLeft().getUpper());
+        assertEquals(1, edge.getCardinalityRight().getLower());
+        assertEquals(1, edge.getCardinalityRight().getUpper());
+
+        assertEquals("adaptee", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("Adaptee", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Adapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Target", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.ASSOCIATION, edge.getRelationType());
+        assertEquals("Client", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Target", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("adapter", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("Target", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
     }
 
     /**
@@ -194,12 +163,329 @@ public class ArgoUMLSystemParserTest {
     public void testParse2() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(VALID_ADAPTERS);
-
+        Edge edge;
+        
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
         assertEquals("Adapters", parseResult.getName());
-    }
+
+        numberOfNodes = parser.getNumberOfNodes();
+        System.out.print(printSystemStructure(parseResult));
+        
+        assertEquals(40, parser.getNumberOfNodes());
+        assertEquals(28, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("SquarePegAdapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("SquarePeg", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("sp", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("SquarePeg", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        assertEquals("width", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("Double", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getRightNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("AdapterDemoSquarePeg", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("SquarePegAdapter", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("rh", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("RoundHole", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        assertEquals("sp", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("SquarePeg", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getRightNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("AdapterDemoSquarePeg", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("RoundHole", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("rh", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("RoundHole", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        assertEquals("radius", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("Integer", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getRightNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("SquarePegAdapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("RoundHole", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("sp", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("SquarePeg", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        assertEquals("radius", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("Integer", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getRightNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Client", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Target", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(5);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("Adapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Target", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("newAttr", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("Integer", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(6);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Adapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Adaptee", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        assertEquals("newAttr", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("Integer", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(7);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Mp4Player", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AdvancedMediaPlayer", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(8);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("VlcPlayer", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AdvancedMediaPlayer", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(9);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("MediaAdapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("MediaPlayer", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("advancedMusicPlayer", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("AdvancedMediaPlayer", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(10);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("MediaAdapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AdvancedMediaPlayer", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("advancedMusicPlayer", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("AdvancedMediaPlayer", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(11);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("AudioPlayer", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("MediaPlayer", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("mediaAdapter", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("MediaAdapter", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(12);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("AudioPlayer", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("MediaAdapter", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("mediaAdapter", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("MediaAdapter", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        assertEquals("advancedMusicPlayer", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("AdvancedMediaPlayer", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getRightNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(13);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("MediaPlayerAdapterDemo", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AudioPlayer", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("audioPlayer", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("AudioPlayer", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        assertEquals("mediaAdapter", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("MediaAdapter", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getRightNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(14);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("AudioPlayer_rev", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("MediaPlayer_rev", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(15);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("MediaAdapter_rev", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("MediaPlayer_rev", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("ap", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("AudioPlayer_rev", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        edge = parseResult.getEdges().get(16);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("MediaPlayerDemo_rev", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("MediaAdapter_rev", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("ap", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("AudioPlayer_rev", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getRightNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(17);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("MediaAdapter_rev", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AdvancedMediaplayer_rev", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("ap", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("AudioPlayer_rev", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(18);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("Line", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Shape", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(19);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("TextShape", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Shape", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("textview", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("TextView", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(20);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("TextShape", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("TextView", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("textview", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("TextView", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(21);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("DrawingEditor", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Shape", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+  
+        edge = parseResult.getEdges().get(22);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("Line", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Shape", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(23);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("TextShape", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Shape", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("textview", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("TextView", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getLeftNode().getAttributes().get(0).getVisibility());
+
+        edge = parseResult.getEdges().get(24);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("textShapeDemo", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("TextShape", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("textShape", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("TextShape", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        assertEquals("textview", edge.getRightNode().getAttributes().get(0).getName());
+        assertEquals("TextView", edge.getRightNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PRIVATE, edge.getRightNode().getAttributes().get(0).getVisibility());
+        
+        edge = parseResult.getEdges().get(25);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Adapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Adaptee", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        assertEquals("adaptee", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("Adaptee", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        edge = parseResult.getEdges().get(26);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Adapter", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Target", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("adaptee", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("Adaptee", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+        edge = parseResult.getEdges().get(27);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Client", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Target", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        assertEquals("adapter", edge.getLeftNode().getAttributes().get(0).getName());
+        assertEquals("Adapter", edge.getLeftNode().getAttributes().get(0).getType().getName());
+        assertEquals(Visibility.PUBLIC, edge.getLeftNode().getAttributes().get(0).getVisibility());
+        
+       
+   }
 
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -208,11 +494,142 @@ public class ArgoUMLSystemParserTest {
     public void testAbstractFactory() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(ABSTRACT_FACTORY);
-
+        Edge edge;
+        
         final SystemUnderConsideration parseResult = parser.parse(path);
+        
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+        
+        assertEquals(13, parser.getNumberOfNodes());
+        assertEquals(18, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcFact1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Prod1A", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcFact1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Prod1B", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcFact1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Prod1C", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcFact2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Prod2A", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcFact2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Prod2B", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(5);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcFact2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Prod2C", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(6);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrFact", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(7);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdA", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(8);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdB", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(9);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Prod1A", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdA", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(10);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Prod2A", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdA", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+ 
+        edge = parseResult.getEdges().get(11);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Prod1B", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdB", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(12);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Prod2B", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdB", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(13);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcFact1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrFact", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(14);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcFact2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrFact", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(15);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Prod1C", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdC", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(16);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("Prod2C", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdC", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(17);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("AbstrProdC", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -221,11 +638,57 @@ public class ArgoUMLSystemParserTest {
     public void testParseBaBrahem() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(BA_BRAHEM);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+        
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(6, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("D", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("E", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("D", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("B", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("E", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("C", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+ 
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("C", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("B", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("A", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("B", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(5);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("A", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("C", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -234,11 +697,72 @@ public class ArgoUMLSystemParserTest {
     public void testParseBridge() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(BRIDGE);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+
+        assertEquals(8, parser.getNumberOfNodes());
+        assertEquals(8, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("ConcAbstr2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcImpl1", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcAbstr2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Ab", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcAbstr1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Ab", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+ 
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcImpl1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Impl", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(4);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcImpl2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Impl", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(5);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcImpl3", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Impl", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(6);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Ab", edge.getLeftNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getLeftNode().getType());
+        assertEquals("Impl", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(7);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Client", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Ab", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+   }
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -247,10 +771,35 @@ public class ArgoUMLSystemParserTest {
     public void testParseBuilder() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(BUILDER);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
+        
+        assertEquals(4, parser.getNumberOfNodes());
+        assertEquals(3, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("ConcrMaker", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Prod", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Direc", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Maker", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.INHERITANCE, edge.getRelationType());
+        assertEquals("ConcrMaker", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Maker", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
     }
     
     /**
@@ -260,11 +809,43 @@ public class ArgoUMLSystemParserTest {
     public void testParseChainOfResponsibility() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(CHAIN_OF_RESPONSIBILITY);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
-        numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+        numberOfNodes = parser.getNumberOfNodes();;
+        
+        assertEquals(4, parser.getNumberOfNodes());
+        assertEquals(4, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Processor", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcProcess1", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Processor", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcProcess2", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Processor", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+         edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Processor", edge.getLeftNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getLeftNode().getType());
+        assertEquals("Processor", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+}
     
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
@@ -273,13 +854,52 @@ public class ArgoUMLSystemParserTest {
     public void testParseCommand() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(COMMAND);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
-    
-    /**
+
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(5, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.DEPENDENCY, edge.getRelationType());
+        assertEquals("User", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("ConcTask", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Caller", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Task", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcTask", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Task", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("ConcTask", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Rec", edge.getRightNode().getName());
+        assertEquals(NodeType.CLASS, edge.getRightNode().getType());
+	
+		edge = parseResult.getEdges().get(4);
+		assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+		assertEquals("User", edge.getLeftNode().getName());
+		assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+		assertEquals("Rec", edge.getRightNode().getName());
+		assertEquals(NodeType.CLASS, edge.getRightNode().getType());	
+	}   
+
+	/**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
      */
     @Test
@@ -416,11 +1036,44 @@ public class ArgoUMLSystemParserTest {
     public void testParseStrategy() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
         final String path = getPath(STRATEGY);
+        Edge edge;
 
         final SystemUnderConsideration parseResult = parser.parse(path);
         numberOfNodes = parser.getNumberOfNodes();
-        System.out.print(printSystemStructure(parseResult));
-    }
+        
+        assertEquals(5, parser.getNumberOfNodes());
+        assertEquals(4, parseResult.getEdges().size());
+        
+        //Examine edges in order af appearing in the .xmi
+        edge = parseResult.getEdges().get(0);
+        assertEquals(EdgeType.ASSOCIATION_DIRECTED, edge.getRelationType());
+        assertEquals("Cont", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Strat", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(1);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcrStratB", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Strat", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+        
+        edge = parseResult.getEdges().get(2);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcrStratC", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Strat", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+        edge = parseResult.getEdges().get(3);
+        assertEquals(EdgeType.REALIZATION, edge.getRelationType());
+        assertEquals("ConcrStratA", edge.getLeftNode().getName());
+        assertEquals(NodeType.CLASS, edge.getLeftNode().getType());
+        assertEquals("Strat", edge.getRightNode().getName());
+        assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
+
+ }
     
     /**
 	 * @param adaptertemplatesXml

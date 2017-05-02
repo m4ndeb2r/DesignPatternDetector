@@ -21,7 +21,7 @@ import nl.ou.dpd.domain.rule.RuleException;
  */
 public class ApplyEdgeRule extends ApplyRule<Edge> {
 
-    private static final Logger LOGGER = LogManager.getLogger(TemplatesParserWithConditions.class);
+    private static final Logger LOGGER = LogManager.getLogger(ApplyEdgeRule.class);
     
 	private Edge edge;
 

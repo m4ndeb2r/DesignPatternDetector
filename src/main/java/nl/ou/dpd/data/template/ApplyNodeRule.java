@@ -21,7 +21,7 @@ import nl.ou.dpd.domain.rule.RuleException;
  */
 public class ApplyNodeRule extends ApplyRule<Node> {
 	
-    private static final Logger LOGGER = LogManager.getLogger(TemplatesParserWithConditions.class);
+    private static final Logger LOGGER = LogManager.getLogger(ApplyNodeRule.class);
 
 	private Node node;
 

@@ -21,7 +21,7 @@ import nl.ou.dpd.domain.rule.RuleException;
  */
 public class ApplyAttributeRule extends ApplyRule<Attribute> {
 
-    private static final Logger LOGGER = LogManager.getLogger(TemplatesParserWithConditions.class);
+    private static final Logger LOGGER = LogManager.getLogger(ApplyAttributeRule.class);
 
 	private Attribute attribute;
 

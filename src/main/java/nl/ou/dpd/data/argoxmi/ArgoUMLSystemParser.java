@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.ou.dpd.data.argoxmi;
 
 import java.io.File;
@@ -24,7 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
@@ -43,13 +39,45 @@ import nl.ou.dpd.exception.DesignPatternDetectorException;
  *
  */
 public class ArgoUMLSystemParser {
+	//attributes of the XMI
+	final String NAME = "name";
+	final String ID = "xmi.id";
+	final String VISIBILITY = "visibility";
+	final String IS_ROOT = "isRoot";
+	final String IS_LEAF = "isLeaf";
+	final String IS_ABSTRACT = "isAbstract";
+	final String IS_ACTIVE = "isActive";
+	final String IDREF = "xmi.idref";
+	final String LOWER = "lower";
+	final String UPPER = "upper";
+	final String IS_NAVIGABLE = "isNavigable";
+	final String HREF= "href";
+	//tags of the XMI
+	final String MODEL = "Model";
+	final String CLASS = "Class";
+	final String INTERFACE = "Interface";
+	final String ATTRIBUTE = "Attribute";
+	final String OPERATION = "Operation";
+	final String ASSOCIATION ="Association";
+	final String ASSOCIATION_END = "AssociationEnd";
+	final String MULTIPLICITY_RANGE = "MultiplicityRange";
+	final String MULTIPLICITY_DOT_RANGE = "Multiplicity.range";
+	final String ASSOCIATION_END_DOT_PARTICIPANT = "AssociationEnd.participant";
+	final String ABSTRACTION = "Abstraction";
+	final String DEPENDENCY = "Dependency";
+	final String DEPENDENCY_DOT_CLIENT = "Dependency.client";
+	final String DEPENDENCY_DOT_SUPPLIER = "Dependency.supplier";
+	final String GENERALIZATION = "Generalization";
+	final String GENERALIZATION_DOT_CHILD = "Generalization.child";
+	final String GENERALIZATION_DOT_PARENT = "Generalization.parent";
+	final String NAMESPACE_DOT_OWNED_ELEMENT = "Namespace.ownedElement";
+	final String DATATYPE = "DataType";
 	
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLSystemParser.class);
     
     private SystemUnderConsideration system;
     private List<Node> nodes;
     private Stack<XMLEvent> events = new Stack<XMLEvent>();
-    private nl.ou.dpd.domain.node.Attribute lastAttribute;
 
     public int getNumberOfNodes() {
     	return nodes.size();
@@ -97,211 +125,201 @@ public class ArgoUMLSystemParser {
 
 	/**
 	 * General method to handle events.
-	 * Start- and endelements are only listed if there is an action bound to the event. 
+	 * Start- and end elements are only listed if there is an action bound to the event. 
 	 * @param event
 	 */
 	private void handleEvent(XMLEvent event) {
 
 		if (event.isStartElement()) {
 			switch (event.asStartElement().getName().getLocalPart()) {
-				case XMITag.MODEL:
+				case MODEL:
 					//Create the SystemUnderConsideration
-					system = createSystem(readAttributes(event));
+					system = createSystem(event);
 					events.push(event);
 					break;
-				case XMITag.CLASS:
-				case XMITag.INTERFACE:
+				case CLASS:
+				case INTERFACE:
 					handleNodeEvent(event);
 					events.push(event);
 					break;
-				case XMITag.ATTRIBUTE:
-					//create an attribute WITHOUT type (null) and add it to the attributes of Node
-					Node lastNode = nodes.get(nodes.size() - 1);
-					nl.ou.dpd.domain.node.Attribute attr = createUncompleteAttribute(readAttributes(event));
-					lastNode.getAttributes().add(attr);
+				case ATTRIBUTE:
+					handleAttributeEvent(event);
 					events.push(event);
 					break;
-				case XMITag.ASSOCIATION:
-					//create an uncomplete edge
-					String associationId = readAttributes(event).get(XMIAttribute.ID);
-					String associationName = readAttributes(event).get(XMIAttribute.NAME);
-					system.addRealEdge(new Edge(associationId, associationName, null, null));
-					//remember this event
+				case ASSOCIATION:
+					handleAssociationEvent(event);
 					events.push(event);
 					break;
-				case XMITag.ABSTRACTION:
+				case ABSTRACTION:
 					handleAbstraction(event);
-					//remember this event
 					events.push(event);
 					break;
-				case XMITag.GENERALIZATION:
+				case GENERALIZATION:
 					handleGeneralization(event);
-					//remember this event
 					events.push(event);
 					break;
-				case XMITag.ASSOCIATION_END:
+				case ASSOCIATION_END:
 					//navigability
-					if (system.getEdges().get(system.getEdges().size() - 1).getRelationType() == null) {
-						String temp = readAttributes(event).get(XMIAttribute.IS_NAVIGABLE);
-						if (!temp.equals("true")) {
-							system.getEdges().get(system.getEdges().size() - 1).setRelationType(EdgeType.ASSOCIATION_DIRECTED);
-						} else {
-							system.getEdges().get(system.getEdges().size() - 1).setRelationType(EdgeType.ASSOCIATION);
-						}
-					} else {
-						String temp = readAttributes(event).get(XMIAttribute.IS_NAVIGABLE);
-//						Boolean b = Boolean.getBoolean(temp);
-//						boolean bb = temp.equals("true");
- 						if (system.getEdges().get(system.getEdges().size() - 1).getRelationType() == EdgeType.ASSOCIATION && temp.equals("true")) {
-							system.getEdges().get(system.getEdges().size() - 1).setRelationType(EdgeType.ASSOCIATION);
-						}
-					}
+					handleAssociationEndEvent(event);
 					events.push(event);
 					break;
-				case XMITag.MULTIPLICITY_RANGE:
-					//multiplicity of an associationEnd 
-					if (!events.empty() && events.peek().asStartElement().getName().getLocalPart().equals(XMITag.ASSOCIATION_END)){
-						int lower = Integer.parseInt(readAttributes(event).get(XMIAttribute.LOWER));
-						int upper = Integer.parseInt(readAttributes(event).get(XMIAttribute.UPPER));
-						if (system.getEdges().get(system.getEdges().size() - 1).getCardinalityLeft() == null) {
-							system.getEdges().get(system.getEdges().size() - 1).setCardinalityLeft(lower, upper);
-						} else {
-							system.getEdges().get(system.getEdges().size() - 1).setCardinalityRight(lower, upper);						
-						}
-					}
+				case MULTIPLICITY_RANGE:
+					handleMultiplicityRangeEvent(event);
 					events.push(event);
 					break;
-				case XMITag.DATATYPE:
+				case DATATYPE:
 					//internal ArgoUML datatype of an attribute
 					handleDatatypeEvent(event);
 					events.push(event);
 					break;
-				case XMITag.DEPENDENCY:
+				case DEPENDENCY:
 					handleDependencyEvent(event);
 					events.push(event);
 					break;
+				default:
 			}
 		}
 		
 		if (event.isEndElement()) {
 			switch (event.asEndElement().getName().getLocalPart()) {
-				case XMITag.MODEL:
-				case XMITag.CLASS:
-				case XMITag.INTERFACE:
-				case XMITag.ATTRIBUTE:
-				case XMITag.ASSOCIATION:
-				case XMITag.ABSTRACTION:
-				case XMITag.GENERALIZATION:
-				case XMITag.ASSOCIATION_END:
-				case XMITag.MULTIPLICITY_RANGE:
-				case XMITag.DATATYPE:
-				case XMITag.DEPENDENCY:
+				case MODEL:
+				case CLASS:
+				case INTERFACE:
+				case ATTRIBUTE:
+				case ASSOCIATION:
+				case ABSTRACTION:
+				case GENERALIZATION:
+				case ASSOCIATION_END:
+				case MULTIPLICITY_RANGE:
+				case DATATYPE:
+				case DEPENDENCY:
 					events.pop();
+				default:
 			}
 		}	
 	}
 
-	/**
-	 * General method to read {@link Attribute}s of an xml-startevent.
-	 * @param {@link XMLEvent}
-	 * @return a Map<String, String> holding the attributes with the attribute name as key and the attribute value as value
-	 */
-	private Map<String, String> readAttributes(XMLEvent event) {
-		//holds the attributes with the attribute name as key and the attribute value as value
-		Map<String, String> attributes = new HashMap<String, String>();
-		Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
-		while (attrIterator.hasNext()) {
-			Attribute attr = attrIterator.next();
-			attributes.put(attr.getName().getLocalPart(), attr.getValue());			
-		}
-		return attributes;		
-	}
-	
 	private void handleNodeEvent(XMLEvent event) {
-		Node node;
-		String idref;
 		//look for the event one level higher
 		switch(events.peek().asStartElement().getName().getLocalPart()) {
-			case XMITag.MODEL:
+			case MODEL:
 				//this is genuine node event
-				if (readAttributes(event).get(XMIAttribute.ID) != null) {
-					node = findNodeById(readAttributes(event).get(XMIAttribute.ID));
-					if ( node == null) {
-						//node does not exist
-						node = createUncompleteNode(event);
-						nodes.add(node);
-					}
-					if (node.getName() == null) {
-						//properties are not set yet
-						setNodeProperties(event);
-					}
-				}
-				break;				
-			case XMITag.ASSOCIATION_END:
+				createAndAddNode(event);
+			break;				
+			case ASSOCIATION_END:
 				//if last remembered event is associationEnd.participant, this is the type of an association end
-				if (system.getEdges().get(system.getEdges().size() - 1).getLeftNode() == null) {
-					system.getEdges().get(system.getEdges().size() - 1).setLeftNode(findNodeById(readAttributes(event).get(XMIAttribute.IDREF)));
-				} else {
-					system.getEdges().get(system.getEdges().size() - 1).setRightNode(findNodeById(readAttributes(event).get(XMIAttribute.IDREF)));						
-				}
+				setLeftOrRightNode(event);
 				break;
-			case XMITag.ABSTRACTION:
+			case ABSTRACTION:
 				//if last remembered event is abstraction, this is the type of an abstraction node
-				if (system.getEdges().get(system.getEdges().size() - 1).getLeftNode() == null) {
-					system.getEdges().get(system.getEdges().size() - 1).setLeftNode(findNodeById(readAttributes(event).get(XMIAttribute.IDREF)));
-				} else {
-					system.getEdges().get(system.getEdges().size() - 1).setRightNode(findNodeById(readAttributes(event).get(XMIAttribute.IDREF)));						
-				}
+				setLeftOrRightNode(event);
 				break;
-			case XMITag.GENERALIZATION:
+			case GENERALIZATION:
 				//if last remembered event is generalization, this is the type of an abstraction node
-				if (system.getEdges().get(system.getEdges().size() - 1).getLeftNode() == null) {
-					system.getEdges().get(system.getEdges().size() - 1).setLeftNode(findNodeById(readAttributes(event).get(XMIAttribute.IDREF)));
-				} else {
-					system.getEdges().get(system.getEdges().size() - 1).setRightNode(findNodeById(readAttributes(event).get(XMIAttribute.IDREF)));						
-				}
+				setLeftOrRightNode(event);
 				break;
-			case XMITag.ATTRIBUTE:
+			case ATTRIBUTE:
 				//if last remembered event is attribute, set the type of the attribute
-				Node lastNode = nodes.get(nodes.size() - 1);
-				nl.ou.dpd.domain.node.Attribute attr = lastNode.getAttributes().get(lastNode.getAttributes().size() - 1);
-				idref = readAttributes(event).get(XMIAttribute.IDREF);
-				node = findNodeById(idref);
-				if (node == null) {
-					node = createUncompleteNode(event);
-					nodes.add(node);
-				} 
-				attr.setType(node);
+				setAttributeType(event);
 				break;
-			case XMITag.DEPENDENCY:
+			case DEPENDENCY:
 				//if last remembered event is dependency, this is the type of an abstraction node
-				String dependencyId = readAttributes(events.peek()).get(XMIAttribute.ID);
-				String idrefNode = readAttributes(event).get(XMIAttribute.IDREF);
-				node = findNodeById(idrefNode);
-				Edge edge = findEdgeById(dependencyId);
-				if (node == null) {
-					node = createUncompleteNode(event);
-					nodes.add(node);
-				} 
-				if (edge.getLeftNode() == null) {
-					edge.setLeftNode(findNodeById(idrefNode));
-				} else {
-					edge.setRightNode(findNodeById(idrefNode));						
-				}
-				break;	
+				setDependencyNode(event);
+				break;
+			default:
 			}
 	}
 
+	/**
+	 * Create a new {@link SystemUnderConsideration) with given id and name
+	 * @param attributes a map of attributes holding the name
+	 * @return a new SystemUnderConsideration with the specified id and name.
+	 */
+	private SystemUnderConsideration createSystem(XMLEvent event) {
+		String id = readAttributes(event).get(ID);
+		String name = readAttributes(event).get(NAME);
+		return new SystemUnderConsideration(id, name);		
+	}
+	
+	//add an attribute
+	private void handleAttributeEvent(XMLEvent event) {
+		//create an attribute WITHOUT type (null) and add it to the attributes of Node.
+		//A type will be added as a special handling of the Class/Interface event
+		Node node = findNodeById(readAttributes(events.peek()).get(ID));		
+		nl.ou.dpd.domain.node.Attribute attr = createUncompleteAttribute(event);
+		node.getAttributes().add(attr);
+	}
+	
+	//add an association
+	private void handleAssociationEvent(XMLEvent event) {
+		system.addRealEdge(createUncompleteEdge(event));
+	}
+	
+	//add an abstraction
+	private void handleAbstraction(XMLEvent event) {
+		if (events.peek().asStartElement().getName().getLocalPart() == MODEL) {
+			//create an uncomplete edge
+			Edge edge = createUncompleteEdge(event);
+			edge.setRelationType(EdgeType.REALIZATION);
+			system.addRealEdge(edge);			
+		}
+	}
+	
+	//add a generalization
+	private void handleGeneralization(XMLEvent event) {
+		if (events.peek().asStartElement().getName().getLocalPart() == MODEL) {
+			//create an uncomplete edge
+			Edge edge = createUncompleteEdge(event);
+			edge.setRelationType(EdgeType.INHERITANCE);
+			system.addRealEdge(edge);			
+		}
+	}
+
+	//set the kind of asociation
+	private void handleAssociationEndEvent(XMLEvent event) {
+		//association directed if first node isNavigable == false and second node isNavigable == true
+		Edge edge = getLastEdge();
+		if (edge != null && edge.getRelationType() == null) {
+			String temp = readAttributes(event).get(IS_NAVIGABLE);
+			if (!temp.equals("true")) {
+				edge.setRelationType(EdgeType.ASSOCIATION_DIRECTED);
+			} else {
+				edge.setRelationType(EdgeType.ASSOCIATION);
+			}
+		} else {
+			String temp = readAttributes(event).get(IS_NAVIGABLE);
+			if (edge.getRelationType() == EdgeType.ASSOCIATION && temp.equals("true")) {
+				edge.setRelationType(EdgeType.ASSOCIATION);
+			}
+		}
+	}
+
+	//set the multipicity of an association end
+	private void handleMultiplicityRangeEvent(XMLEvent event) {
+		//multiplicity of an associationEnd
+		Edge edge = getLastEdge();
+		if (!events.empty() && events.peek().asStartElement().getName().getLocalPart().equals(ASSOCIATION_END)){
+			int lower = Integer.parseInt(readAttributes(event).get(LOWER));
+			int upper = Integer.parseInt(readAttributes(event).get(UPPER));
+			if (edge.getCardinalityLeft() == null) {
+				edge.setCardinalityLeft(lower, upper);
+			} else {
+				edge.setCardinalityRight(lower, upper);						
+			}
+		}
+	}
+
+	//set the type of an attribute
 	private void handleDatatypeEvent(XMLEvent event) {
 		Node node;
 		//look for the event one level higher
 		switch(events.peek().asStartElement().getName().getLocalPart()) {
-			case XMITag.ATTRIBUTE:
+			case ATTRIBUTE:
 				//if last remembered event is attribute, set the type of the attribute
 				//see http://argouml.tigris.org//profiles/uml14/default-uml14.xmi
 				Node lastNode = nodes.get(nodes.size() - 1);
 				nl.ou.dpd.domain.node.Attribute attr = lastNode.getAttributes().get(lastNode.getAttributes().size() - 1);
-				String href = readAttributes(event).get(XMIAttribute.HREF);
+				String href = readAttributes(event).get(HREF);
 				if (href.substring(href.length() - 56).equals("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087C")) {
 					node = new Clazz("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087C", "Integer");
 					nodes.add(node);
@@ -326,34 +344,12 @@ public class ArgoUMLSystemParser {
 			}
 	}
 	
-	private void handleAbstraction(XMLEvent event) {
-		if (events.peek().asStartElement().getName().getLocalPart() == XMITag.MODEL) {
-			//create an uncomplete edge
-			String abstractionId = readAttributes(event).get(XMIAttribute.ID);
-			Edge edge = new Edge(abstractionId, null, null, null);
-			edge.setRelationType(EdgeType.REALIZATION);
-			system.addRealEdge(edge);			
-		}
-	}
-	
-	private void handleGeneralization(XMLEvent event) {
-		if (events.peek().asStartElement().getName().getLocalPart() == XMITag.MODEL) {
-			//create an uncomplete edge
-			String abstractionId = readAttributes(event).get(XMIAttribute.ID);
-			Edge edge = new Edge(abstractionId, null, null, null);
-			edge.setRelationType(EdgeType.INHERITANCE);
-			system.addRealEdge(edge);			
-		}
-	}
-
+	//add a dependency edge 
 	private void handleDependencyEvent(XMLEvent event) {
-		if (events.peek().asStartElement().getName().getLocalPart() == XMITag.CLASS) {
+		if (events.peek().asStartElement().getName().getLocalPart() == CLASS) {
 			//create an uncomplete edge
 			Map<String, String> attributes = readAttributes(event);
-			String dependencyId = attributes.get(XMIAttribute.ID);
-			if (dependencyId == null) {
-				dependencyId = attributes.get(XMIAttribute.IDREF);
-			}
+			String dependencyId = getIdOrIdref(attributes);
 			if (dependencyId != null && findEdgeById(dependencyId) == null) {//create an uncomplete edge if the edge does not exist yet
 				Edge edge = new Edge(dependencyId, null, null, null);
 				edge.setRelationType(EdgeType.DEPENDENCY);
@@ -361,17 +357,69 @@ public class ArgoUMLSystemParser {
 			}
 		}		
 	}
-	/**
-	 * Create a new {@link DesignPattern) with given name
-	 * @param attributes a map of attributes holding the name
-	 * @return a new DesignPattern with the specified name.
-	 */
-	private SystemUnderConsideration createSystem(Map<String, String> attributes) {
-		String id = attributes.get(XMIAttribute.ID);
-		String name = attributes.get(XMIAttribute.NAME);
-		return new SystemUnderConsideration(id, name);		
+
+	//Create a node with the specified id if it does not exist and add it to the nodes -list.
+	//Set the properties of the (new or existing) node.
+	private void createAndAddNode(XMLEvent event) {
+		Node node = null;
+		if (readAttributes(event).get(ID) != null) {
+			node = findNodeById(readAttributes(event).get(ID));
+			if (node == null) {
+				//node does not exist
+				node = createUncompleteNode(event);
+				nodes.add(node);
+			}
+			if (node.getName() == null) {
+				//properties are not set yet
+				setNodeProperties(event);
+			}
+		}
 	}
 
+	private void setLeftOrRightNode(XMLEvent event) {
+		Edge edge = getLastEdge();
+		if (edge.getLeftNode() == null) {
+			edge.setLeftNode(findNodeById(readAttributes(event).get(IDREF)));
+		} else {
+			edge.setRightNode(findNodeById(readAttributes(event).get(IDREF)));						
+		}
+	}
+	
+	private void setAttributeType (XMLEvent event) {
+		nl.ou.dpd.domain.node.Attribute attr = getLastNode().getAttributes().get(getLastNode().getAttributes().size() - 1);
+		String idref = readAttributes(event).get(IDREF);
+		Node node = findNodeById(idref);
+		if (node == null) {
+			node = createUncompleteNode(event);
+			nodes.add(node);
+		} 
+		attr.setType(node);
+
+	}
+	
+	private void setDependencyNode(XMLEvent event) {
+		String dependencyId = readAttributes(events.peek()).get(ID);
+		String idrefNode = readAttributes(event).get(IDREF);
+		Node node = findNodeById(idrefNode);
+		Edge edge = findEdgeById(dependencyId);
+		if (node == null) {
+			node = createUncompleteNode(event);
+			nodes.add(node);
+		} 
+		if (edge.getLeftNode() == null) {
+			edge.setLeftNode(findNodeById(idrefNode));
+		} else {
+			edge.setRightNode(findNodeById(idrefNode));						
+		}
+	}
+	
+	private Edge createUncompleteEdge(XMLEvent event) {
+		String id = readAttributes(event).get(ID);
+		String name = readAttributes(event).get(NAME);
+		Edge edge = new Edge(id, name, null, null);
+		return edge;
+	}
+		
 	/**
 	 * Create a new {@link Node) with given id and type.
 	 * @param an {@link XMLEvent}
@@ -379,12 +427,9 @@ public class ArgoUMLSystemParser {
 	 */
 	private Node createUncompleteNode(XMLEvent event) {
 		Map<String, String> attributes = readAttributes(event);
-		String id = attributes.get(XMIAttribute.ID);
-		if (id == null) {
-			id = attributes.get(XMIAttribute.IDREF);
-		}
+		String id = getIdOrIdref(attributes);
 		Node node;
-		if (event.asStartElement().getName().getLocalPart() == XMITag.CLASS) {
+		if (event.asStartElement().getName().getLocalPart() == CLASS) {
 			node = new Clazz(id, null);
 		} else {
 			//interface
@@ -394,22 +439,36 @@ public class ArgoUMLSystemParser {
 	}
 	
 	/**
+	 * Create a new node-attribute with the name and type specified in the Map.
+	 * @param attributes a Map of attributes of the Attribute XML StartEvent.
+	 * @return a new node-attribute with the specified name and type (found in the list of Nodes).
+	 */
+	private nl.ou.dpd.domain.node.Attribute createUncompleteAttribute(XMLEvent event) {
+		Map<String, String> attributes = readAttributes(event);
+		String id = attributes.get(ID);
+		String name = attributes.get(NAME);
+		Visibility visibility = findVisibilityByName(attributes.get(VISIBILITY));
+		nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, name, null);
+		attr.setVisibility(visibility);;
+		return attr;
+	}
+
+	/**
 	 * Create a new {@link Interface) with given id and type.
 	 * @param attributes a map of attributes holding the id and type
 	 * @return a new Node with the specified name and type.
 	 */
 	private void setNodeProperties(XMLEvent event) {
 		Map<String, String> attributes = readAttributes(event);
-		String id = attributes.get(XMIAttribute.ID);
-		String name = attributes.get(XMIAttribute.NAME);
-		Boolean isRoot = Boolean.valueOf(attributes.get(XMIAttribute.IS_ROOT));
-		Boolean isLeaf = Boolean.valueOf(attributes.get(XMIAttribute.IS_LEAF));
-		Boolean isActive = Boolean.valueOf(attributes.get(XMIAttribute.IS_ACTIVE));
-		Visibility visibility = findVisibilityByName(attributes.get(XMIAttribute.VISIBILITY));
-		Boolean isAbstract = Boolean.valueOf(attributes.get(XMIAttribute.IS_ABSTRACT));
+		String name = attributes.get(NAME);
+		Boolean isRoot = Boolean.valueOf(attributes.get(IS_ROOT));
+		Boolean isLeaf = Boolean.valueOf(attributes.get(IS_LEAF));
+		Boolean isActive = Boolean.valueOf(attributes.get(IS_ACTIVE));
+		Visibility visibility = findVisibilityByName(attributes.get(VISIBILITY));
+		Boolean isAbstract = Boolean.valueOf(attributes.get(IS_ABSTRACT));
 
-		if (event.asStartElement().getName().getLocalPart() == XMITag.CLASS) {
-			Clazz clazz = (Clazz) findNodeById(attributes.get(XMIAttribute.ID));
+		if (event.asStartElement().getName().getLocalPart() == CLASS) {
+			Clazz clazz = (Clazz) findNodeById(attributes.get(ID));
 			clazz.setName(name);
 			clazz.setVisibility(visibility);
 			clazz.setRoot(isRoot);
@@ -418,40 +477,12 @@ public class ArgoUMLSystemParser {
 			clazz.setActive(isActive);
 		} else {
 			//interface
-			Interface iface = (Interface) findNodeById(attributes.get(XMIAttribute.ID));
+			Interface iface = (Interface) findNodeById(attributes.get(ID));
 			iface.setName(name);
 			iface.setRoot(isRoot);
 			iface.setLeaf(isLeaf);
 			iface.setActive(isActive);
 		}
-	}
-
-/**
-	 * Checks if the id of the new {@link Node) is unique in this pattern.
-	 * @param node
-	 * @return true if the node is unique in this pattern, false otherwise.
-	 */
-	private boolean nodeIdIsUnique(Node node) {
-		for (Node n : nodes) {
-			if (n.getId().equals(node.getId())) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Create a new node-attribute with the name and type specified in the Map.
-	 * @param attributes a Map of attributes of the Attribute XML StartEvent.
-	 * @return a new node-attribute with the specified name and type (found in the list of Nodes).
-	 */
-	private nl.ou.dpd.domain.node.Attribute createUncompleteAttribute(Map<String, String> attributes) {
-		String id = attributes.get(XMIAttribute.ID);
-		String name = attributes.get(XMIAttribute.NAME);
-		Visibility visibility = findVisibilityByName(attributes.get(XMIAttribute.VISIBILITY));
-		nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, name, null);
-		attr.setVisibility(visibility);;
-		return attr;
 	}
 
 	/**
@@ -491,9 +522,40 @@ public class ArgoUMLSystemParser {
 		return null;
 	}
 	
-    private void error(String message) {
-        final Exception e = new XMLStreamException();
-        LOGGER.error(message);
-        throw new DesignPatternDetectorException(message, e);
-    }
+	
+	private String getIdOrIdref(Map<String, String> attributes) {
+		String id = attributes.get(ID);
+		if (id == null) {
+			id = attributes.get(IDREF);
+		}
+		return id;
+
+	}
+
+	private Edge getLastEdge() {
+		if (system.getEdges().isEmpty()) {
+			return null;
+		}
+		return system.getEdges().get(system.getEdges().size() - 1);
+	}
+
+	private Node getLastNode() {
+		return nodes.get(nodes.size() - 1);
+	}
+
+	/**
+	 * General method to read {@link Attribute}s of an xml-startevent.
+	 * @param {@link XMLEvent}
+	 * @return a Map<String, String> holding the attributes with the attribute name as key and the attribute value as value
+	 */
+	private Map<String, String> readAttributes(XMLEvent event) {
+		//holds the attributes with the attribute name as key and the attribute value as value
+		Map<String, String> attributes = new HashMap<String, String>();
+		Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
+		while (attrIterator.hasNext()) {
+			Attribute attr = attrIterator.next();
+			attributes.put(attr.getName().getLocalPart(), attr.getValue());			
+		}
+		return attributes;		
+	}
 }
