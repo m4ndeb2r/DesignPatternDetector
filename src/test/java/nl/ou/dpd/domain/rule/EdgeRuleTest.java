@@ -129,14 +129,14 @@ public class EdgeRuleTest {
         assertTrue(edgeRuleExists.process(systemEdgeWrongCardinalityLeft));
         assertTrue(edgeRuleExists.process(systemEdgeWrongCardinalityRight));
 
-        // CardinalitieLeft exist
+        // CardinalityLeft exist
         final EdgeRule cardLeftExists = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_LEFT, Operator.EXISTS);
         final EdgeRule cardLeftNotExists = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_LEFT, Operator.NOT_EXISTS);
         assertTrue(cardLeftExists.process(systemEdge));
         assertTrue(cardLeftExists.process(systemEdgeWrongCardinalityLeft));
         assertFalse(cardLeftNotExists.process(systemEdgeWrongCardinalityRight));
         
-        // CardinalitieRight exist
+        // CardinalityRight exist
         final EdgeRule cardRightExists = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_RIGHT, Operator.EXISTS);
         final EdgeRule cardRightNotExists = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_RIGHT, Operator.NOT_EXISTS);
         assertTrue(cardRightExists.process(systemEdge));
@@ -144,14 +144,13 @@ public class EdgeRuleTest {
         assertFalse(cardRightNotExists.process(systemEdgeWrongCardinalityLeft));
 
         // Cardinality equals, or not
-        
         final EdgeRule edgeRuleEquals = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY, Operator.EQUALS);
         assertTrue(edgeRuleEquals.process(systemEdge));
         assertFalse(edgeRuleEquals.process(systemEdgeWrongCardinalityRight));
         assertFalse(edgeRuleEquals.process(systemEdgeWrongCardinalityLeft));
         assertFalse(edgeRuleEquals.process(systemEdgeWrongCardinalities));
         
-        // CardinalitieLeft equals
+        // CardinalityLeft equals
         final EdgeRule cardLeftEquals = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_LEFT, Operator.EQUALS);
         final EdgeRule cardLeftNotEquals = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_LEFT, Operator.NOT_EQUALS);
         assertTrue(cardLeftEquals.process(systemEdge));
@@ -162,7 +161,7 @@ public class EdgeRuleTest {
         assertTrue(cardLeftNotEquals.process(systemEdgeWrongCardinalityLeft));
         assertTrue(cardLeftEquals.process(systemEdgeWrongCardinalityRight));
         
-        // CardinalitieRight equals
+        // CardinalityRight equals
         final EdgeRule cardRightEquals = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_RIGHT, Operator.EQUALS);
         final EdgeRule cardRightNotEquals = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_RIGHT, Operator.NOT_EQUALS);
         assertTrue(cardRightEquals.process(systemEdge));
