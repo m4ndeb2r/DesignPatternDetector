@@ -62,7 +62,7 @@ public class Edge {
         this.name = name;
     }
 
-    /**18/04/17*/
+    /*18/04/17*/
     /**
      * Constructs an instance of a {@link Edge} with the specified nodes and a name of the edge. The
      * nodes represent the vertices in a graph (when the design pattern is viewed as a graph).
@@ -92,7 +92,7 @@ public class Edge {
         this.virtual = edge.virtual;
     }
 
-    /**18/04/17*/
+    /*18/04/17*/
     /**
      * This constructor returns a duplicate of the specified {@link Edge}.
      *
@@ -138,7 +138,7 @@ public class Edge {
         this.name = name;
     }
 
-    /**18/04/17*/
+    /*18/04/17*/
     /**
      * Get the id of this edge.
      *
@@ -148,7 +148,7 @@ public class Edge {
         return id;
     }
 
-    /**18/04/17*/
+    /*18/04/17*/
     /**
      * Set the id of this edge.
      *

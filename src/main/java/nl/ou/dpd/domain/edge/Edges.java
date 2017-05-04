@@ -37,7 +37,7 @@ public abstract class Edges {
         }
     }
 
-    /**18/04/17*/
+    /*18/04/17*/
     /**
      * Adds a new {@link Edge} to this {@link Edges}. Whenever the {@link EdgeType} of the new {@link Edge}
      * equals {@link EdgeType#ASSOCIATION}, an extra, virtual (non-visible) is also added.
