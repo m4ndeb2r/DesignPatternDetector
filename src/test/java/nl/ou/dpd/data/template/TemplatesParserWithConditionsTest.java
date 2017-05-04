@@ -20,7 +20,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Tests the {@link TemplatesParser} class.
+ * Tests the {@link TemplatesParserWithConditions} class.
+ *
+ * TODO: This is a copy of the TemplatesParserTest. Eventually there must be just one of both.
+ * TODO: The TemplatesParserWithConditions will eventually also replace the TemplatesParser.
  *
  * @author Martin de Boer
  * @author Peter Vansweevelt
