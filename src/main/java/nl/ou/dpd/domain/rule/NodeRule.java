@@ -232,62 +232,7 @@ public class NodeRule extends Rule<Node> {
         }
         return systemNode.isActive() == getMould().isActive();    	
     }
-      // TODO: This method seems futile: system nodes always have a type, visibility, and a value for all modifiers
-    // TODO: instead of false, we should perhaps throw a RuleException when a topic does not exist?
-/*    private boolean processObjectTopicExists(Node systemNode) {
-        switch (getTopic()) {
-            case TYPE:
 
-            case VISIBILITY:
-
-            case MODIFIER_ROOT:
-            case MODIFIER_LEAF:
-            case MODIFIER_ABSTRACT:
-            case MODIFIER_ACTIVE:
-            default:
-                return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
-        }
-    }
-
-    private boolean processAttributeScope(Node systemNode) {
-    	switch (getOperator()) {
-		    case EXISTS:
-		        // TODO: This case seems futile, because it always returns true
-		        return processAttributeTopicExists(systemNode);
-		    case NOT_EXISTS:
-		        // TODO: This case seems futile, because it always returns false
-		        return !processAttributeTopicExists(systemNode);
-		    case EQUALS:
-		        return processAttributeTopicEquals(systemNode);
-		    case NOT_EQUALS:
-		        return !processAttributeTopicEquals(systemNode);
-		    default:
-		    	return error("Unexpected operator while processing ATTRIBUTE: " + getOperator() + ".");
-    	}
-    }
-
-    /**
-	 * @param systemNode
-	 * @return
-	 */
-/*	private boolean processAttributeTopicEquals(Node systemNode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-*/
-	/**
-	 * Returns if an attribute with the given type exists
-	 * @param systemNode
-	 * @return
-	 */
-/*	private boolean processAttributeTopicExists(Node systemNode) {
-		for (Attribute attr : this.getMould().getAttributes()) {
-			
-		}
-		
-		return false;
-	}
-*/
 	private boolean error(String message) {
         LOGGER.error(message);
         throw new RuleException(message);

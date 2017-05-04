@@ -3,11 +3,11 @@ package nl.ou.dpd.domain.rule;
 import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.node.Attribute;
-
-import java.util.List;
-
+import nl.ou.dpd.domain.node.Node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 /**
  * An {@link EdgeRule} is a {@link Rule} that applies to {@link Edge}s specificly. It contains two internal
@@ -40,17 +40,17 @@ public class EdgeRule extends Rule<Edge> {
      * otherwise.
      */
     public boolean process(Edge systemEdge) {
-    	switch (getScope()) {
-    		case RELATION:
-    			return processRelation(systemEdge);
-    		case ATTRIBUTE:
-    			return processAttribute(systemEdge);
-    		default:
-    			return error("Unexpected scope: " + getScope() + ".");
-    	}
+        switch (getScope()) {
+            case RELATION:
+                return processRelation(systemEdge);
+            case ATTRIBUTE:
+                return processAttribute(systemEdge);
+            default:
+                return error("Unexpected scope: " + getScope() + ".");
+        }
     }
 
-	private boolean processRelation(Edge systemEdge) {
+    private boolean processRelation(Edge systemEdge) {
         switch (getTopic()) {
             case TYPE:
                 return processRelationType(systemEdge);
@@ -60,7 +60,7 @@ public class EdgeRule extends Rule<Edge> {
                 return processRelationCardinalityLeft(systemEdge);
             case CARDINALITY_RIGHT:
                 return processRelationCardinalityRight(systemEdge);
-           default:
+            default:
                 return error("Unexpected topic while processing RELATION: " + getTopic() + ".");
         }
     }
@@ -93,22 +93,23 @@ public class EdgeRule extends Rule<Edge> {
             default:
                 return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
         }
-    } 
-    
+    }
+
     private boolean processRelationCardinalityRight(Edge systemEdge) {
         switch (getOperator()) {
-        case EXISTS:
-            return processCardinalityRightExists(systemEdge);
-        case NOT_EXISTS:
-            return !processCardinalityRightExists(systemEdge);
-        case EQUALS:
-            return processCardinalityRightEquals(systemEdge);
-        case NOT_EQUALS:
-            return !processCardinalityRightEquals(systemEdge);
-        default:
-            return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+            case EXISTS:
+                return processCardinalityRightExists(systemEdge);
+            case NOT_EXISTS:
+                return !processCardinalityRightExists(systemEdge);
+            case EQUALS:
+                return processCardinalityRightEquals(systemEdge);
+            case NOT_EQUALS:
+                return !processCardinalityRightEquals(systemEdge);
+            default:
+                return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+        }
     }
-}
+
     private boolean processRelationType(Edge systemEdge) {
         switch (getOperator()) {
             case EQUALS:
@@ -128,11 +129,12 @@ public class EdgeRule extends Rule<Edge> {
     private boolean processCardinalityLeftExists(Edge systemEdge) {
         return systemEdge.getCardinalityLeft() != null;
     }
-    
+
     private boolean processCardinalityRightExists(Edge systemEdge) {
         return systemEdge.getCardinalityRight() != null;
     }
-   private boolean processCardinalityLeftEquals(Edge systemEdge) {
+
+    private boolean processCardinalityLeftEquals(Edge systemEdge) {
         if (!processCardinalityLeftExists(systemEdge)) {
             error("Left cardinality is not set.");
         }
@@ -148,8 +150,8 @@ public class EdgeRule extends Rule<Edge> {
         final Cardinality ruleRight = getMould().getCardinalityRight();
         final boolean rightOkay = ruleRight.equals(systemEdge.getCardinalityRight());
         return rightOkay;
-    }    
-    
+    }
+
     private boolean processCardinalityEquals(Edge systemEdge) {
         if (!processCardinalityExists(systemEdge)) {
             error("Either one or both cardinalities are not set.");
@@ -160,41 +162,45 @@ public class EdgeRule extends Rule<Edge> {
         final boolean rightOkay = ruleRight.equals(systemEdge.getCardinalityRight());
         return leftOkay && rightOkay;
     }
+
     private boolean error(String message) {
         LOGGER.error(message);
         throw new RuleException(message);
     }
-    
-	private boolean processAttribute(Edge systemEdge) {
+
+    private boolean processAttribute(Edge systemEdge) {
         switch (getTopic()) {
-	        case TYPE:
-	            return processAttributeType(systemEdge);
-	        default:
-	            return error("Unexpected topic while processing ATTRIBUTE: " + getTopic() + ".");
+            case TYPE:
+                return processAttributeType(systemEdge);
+            default:
+                return error("Unexpected topic while processing ATTRIBUTE: " + getTopic() + ".");
         }
-	}
+    }
 
-	private boolean processAttributeType(Edge systemEdge) {
+    private boolean processAttributeType(Edge systemEdge) {
         switch (getOperator()) {
-        case EXISTS:
-            return processAttributeTypeExists(systemEdge);
-        default:
-            return error("Unexpected operator while processing ATTRIBUTE.TYPE: " + getOperator() + ".");
+            case EXISTS:
+                return processAttributeTypeExists(systemEdge);
+            default:
+                return error("Unexpected operator while processing ATTRIBUTE.TYPE: " + getOperator() + ".");
         }
-	}
+    }
 
-	/** Find an attribute in the left node which has the type of the right node.
-	 * Which means: an attribute of that type exists.
-	 * @param systemEdge
-	 * @return
-	 */
-	private boolean processAttributeTypeExists(Edge systemEdge) {
-		List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
-		for(Attribute attribute : systemAttributes) {
-			if (attribute.getType().equals(systemEdge.getRightNode())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Determine whether an attribute exists in the left node of an edge, that is of the type of the right node.
+     *
+     * @param systemEdge the edge to examine
+     * @return {@code true} if the left node of {@code systemEdge} contains an attribute of the type of the right node
+     * of {@code systemEdge}, ofr {@code false} otherwise.
+     */
+    private boolean processAttributeTypeExists(Edge systemEdge) {
+        final Node rightNode = systemEdge.getRightNode();
+        final List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
+        for (Attribute attribute : systemAttributes) {
+            if (attribute.getType().equals(rightNode)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
