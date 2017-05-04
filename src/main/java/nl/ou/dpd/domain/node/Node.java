@@ -94,8 +94,6 @@ public abstract class Node implements Comparable<Node> {
         this.name = name;
     }
 
-
-
     /**
      * Returns the {@link NodeType} of this {@link Node}: {@link NodeType#CLASS} or {@link NodeType#INTERFACE}.
      *
