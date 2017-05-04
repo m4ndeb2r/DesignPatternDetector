@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class DesignPatternTest {
 
     /**
-     * Tests the {@link DesignPattern#order()} method.
+     * Tests the {@link DesignPattern#order()} method when the order of the edges needs to be changed.
      */
     @Test
     public void testOrder() {
@@ -46,7 +46,7 @@ public class DesignPatternTest {
     }
 
     /**
-     * Tests the {@link DesignPattern#order()} method.
+     * Tests the {@link DesignPattern#order()} method when the order of the edges is already okay.
      */
     @Test
     public void testOrderNoChanges() {
