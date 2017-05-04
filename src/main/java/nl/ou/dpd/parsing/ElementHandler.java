@@ -1,4 +1,4 @@
-package nl.ou.dpd.data.parser;
+package nl.ou.dpd.parsing;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

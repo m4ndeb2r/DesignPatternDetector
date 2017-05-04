@@ -1,4 +1,4 @@
-package nl.ou.dpd.data.argoxmi;
+package nl.ou.dpd.parsing.argoxmi;
 
 import java.io.File;
 import java.io.FileInputStream;

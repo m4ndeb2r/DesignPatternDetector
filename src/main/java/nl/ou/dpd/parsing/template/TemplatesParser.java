@@ -1,7 +1,7 @@
-package nl.ou.dpd.data.template;
+package nl.ou.dpd.parsing.template;
 
 
-import nl.ou.dpd.data.parser.Parser;
+import nl.ou.dpd.parsing.Parser;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.apache.logging.log4j.LogManager;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.ou.dpd.data.template;
+package nl.ou.dpd.parsing.template;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

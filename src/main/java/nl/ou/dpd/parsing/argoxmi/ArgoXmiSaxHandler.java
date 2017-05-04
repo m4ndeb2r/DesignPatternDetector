@@ -1,6 +1,6 @@
-package nl.ou.dpd.data.argoxmi;
+package nl.ou.dpd.parsing.argoxmi;
 
-import nl.ou.dpd.data.parser.ElementHandler;
+import nl.ou.dpd.parsing.ElementHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

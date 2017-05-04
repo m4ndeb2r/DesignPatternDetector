@@ -1,4 +1,4 @@
-package nl.ou.dpd.data.parser;
+package nl.ou.dpd.parsing;
 
 /**
  * A {@link Parser} provides functionality for parsing any input file(s).

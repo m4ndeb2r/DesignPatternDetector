@@ -1,4 +1,4 @@
-package nl.ou.dpd.data.template;
+package nl.ou.dpd.parsing.template;
 
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.edge.Edge;

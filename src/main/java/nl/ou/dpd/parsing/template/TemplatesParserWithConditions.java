@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.ou.dpd.data.template;
+package nl.ou.dpd.parsing.template;
 
 import java.io.File;
 import java.io.FileInputStream;

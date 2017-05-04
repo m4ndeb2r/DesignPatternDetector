@@ -1,14 +1,10 @@
-package nl.ou.dpd.data.template;
+package nl.ou.dpd.parsing.template;
 
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.domain.edge.Edge;
-import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

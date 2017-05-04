@@ -1,6 +1,6 @@
-package nl.ou.dpd.data.argoxmi;
+package nl.ou.dpd.parsing.argoxmi;
 
-import nl.ou.dpd.data.parser.ElementHandler;
+import nl.ou.dpd.parsing.ElementHandler;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;

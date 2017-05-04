@@ -1,4 +1,4 @@
-package nl.ou.dpd.data.argoxmi;
+package nl.ou.dpd.parsing.argoxmi;
 
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;

@@ -1,6 +1,6 @@
-package nl.ou.dpd.data.template;
+package nl.ou.dpd.parsing.template;
 
-import nl.ou.dpd.data.parser.ElementHandler;
+import nl.ou.dpd.parsing.ElementHandler;
 import nl.ou.dpd.domain.DesignPattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

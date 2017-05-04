@@ -1,6 +1,5 @@
-package nl.ou.dpd.data.template;
+package nl.ou.dpd.parsing.template;
 
-import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Attribute;
@@ -15,18 +14,9 @@ import nl.ou.dpd.domain.rule.Operator;
 import nl.ou.dpd.domain.rule.RuleException;
 import nl.ou.dpd.domain.rule.Scope;
 import nl.ou.dpd.domain.rule.Topic;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-
-import javax.xml.stream.XMLStreamException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
