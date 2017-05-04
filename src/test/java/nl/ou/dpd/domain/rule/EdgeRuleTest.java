@@ -83,11 +83,11 @@ public class EdgeRuleTest {
      */
     @Test
     public void testEdgeRuleWithUnknownTopic() {
-        final Edge mould = new Edge(new Clazz("node1"), new Clazz("node2"), EdgeType.ASSOCIATION);
+        final Edge mould = new Edge(new Clazz("node1", "node1"), new Clazz("node2", "node2"), EdgeType.ASSOCIATION);
         mould.setCardinalityLeft(1, 1);
         mould.setCardinalityRight(0, Cardinality.UNLIMITED);
 
-        final Edge systemEdge = new Edge(new Clazz("myClass1"), new Clazz("myClass2"), EdgeType.ASSOCIATION);
+        final Edge systemEdge = new Edge(new Clazz("myClass1", "myClass1"), new Clazz("myClass2", "myClass2"), EdgeType.ASSOCIATION);
         systemEdge.setCardinalityLeft(1, 1);
         systemEdge.setCardinalityRight(0, Cardinality.UNLIMITED);
      	

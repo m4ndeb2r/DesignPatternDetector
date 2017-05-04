@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.ou.dpd.parsing.template;
 
 import org.apache.logging.log4j.LogManager;

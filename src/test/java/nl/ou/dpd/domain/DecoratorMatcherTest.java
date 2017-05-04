@@ -53,11 +53,11 @@ public class DecoratorMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Decorator"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("TextView")).getName(), is("ConcreteComponent"));
-        assertThat(mc0.get(new Clazz("Decorator")).getName(), is("Decorator"));
-        assertThat(mc0.get(new Clazz("VisualComponent")).getName(), is("Component"));
-        assertThat(mc0.get(new Clazz("ScrollDecorator")).getName(), is("ConcreteDecorator"));
-        assertThat(mc0.get(new Clazz("BorderDecorator")).getName(), is("ConcreteDecorator"));
+        assertThat(mc0.get(new Clazz("TextView", "TextView")).getName(), is("ConcreteComponent"));
+        assertThat(mc0.get(new Clazz("Decorator", "Decorator")).getName(), is("Decorator"));
+        assertThat(mc0.get(new Clazz("VisualComponent", "VisualComponent")).getName(), is("Component"));
+        assertThat(mc0.get(new Clazz("ScrollDecorator", "ScrollDecorator")).getName(), is("ConcreteDecorator"));
+        assertThat(mc0.get(new Clazz("BorderDecorator", "BorderDecorator")).getName(), is("ConcreteDecorator"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -68,11 +68,11 @@ public class DecoratorMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("TextView"), new Clazz("VisualComponent"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("Decorator"), new Clazz("VisualComponent"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("VisualComponent"), new Clazz("Decorator"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("ScrollDecorator"), new Clazz("Decorator"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("BorderDecorator"), new Clazz("Decorator"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("TextView", "TextView"), new Clazz("VisualComponent", "VisualComponent"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("Decorator", "Decorator"), new Clazz("VisualComponent", "VisualComponent"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("VisualComponent", "VisualComponent"), new Clazz("Decorator", "Decorator"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("ScrollDecorator", "ScrollDecorator"), new Clazz("Decorator", "Decorator"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("BorderDecorator", "BorderDecorator"), new Clazz("Decorator", "Decorator"), EdgeType.INHERITANCE));
         return result;
     }
 

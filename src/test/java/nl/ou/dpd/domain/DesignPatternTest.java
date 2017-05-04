@@ -24,11 +24,11 @@ public class DesignPatternTest {
     @Test
     public void testOrder() {
         DesignPattern dp = new DesignPattern("test");
-        dp.add(new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE));
-        dp.add(new Edge(new Clazz("C"), new Clazz("D"), EdgeType.AGGREGATE));
-        dp.add(new Edge(new Clazz("E"), new Clazz("F"), EdgeType.AGGREGATE));
-        dp.add(new Edge(new Clazz("A"), new Clazz("C"), EdgeType.AGGREGATE));
-        dp.add(new Edge(new Clazz("B"), new Clazz("E"), EdgeType.AGGREGATE));
+        dp.add(new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE));
+        dp.add(new Edge(new Clazz("C", "C"), new Clazz("D", "D"), EdgeType.AGGREGATE));
+        dp.add(new Edge(new Clazz("E", "E"), new Clazz("F", "F"), EdgeType.AGGREGATE));
+        dp.add(new Edge(new Clazz("A", "A"), new Clazz("C", "C"), EdgeType.AGGREGATE));
+        dp.add(new Edge(new Clazz("B", "B"), new Clazz("E", "E"), EdgeType.AGGREGATE));
 
         assertThat(dp.getEdges().get(0).getLeftNode().getName(), is("A"));
         assertThat(dp.getEdges().get(0).getRightNode().getName(), is("B"));
@@ -65,7 +65,7 @@ public class DesignPatternTest {
 
         assertThat(pattern.getEdges().size(), is(0));
 
-        pattern.add(new Edge(new Clazz("A"), new Clazz("B"), EdgeType.ASSOCIATION));
+        pattern.add(new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.ASSOCIATION));
 
         assertThat(pattern.getEdges().size(), is(2));
         assertThat(pattern.getEdges().get(0).getLeftNode().getName(), is("A"));
@@ -75,7 +75,7 @@ public class DesignPatternTest {
         assertThat(pattern.getEdges().get(1).getRightNode().getName(), is("A"));
         assertTrue(pattern.getEdges().get(1).isVirtual());
 
-        pattern.add(new Edge(new Clazz("C"), new Clazz("D"), EdgeType.INHERITANCE));
+        pattern.add(new Edge(new Clazz("C", "C"), new Clazz("D", "D"), EdgeType.INHERITANCE));
 
         assertThat(pattern.getEdges().size(), is(3));
         assertThat(pattern.getEdges().get(0).getLeftNode().getName(), is("A"));

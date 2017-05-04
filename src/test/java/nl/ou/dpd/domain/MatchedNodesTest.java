@@ -173,8 +173,8 @@ public class MatchedNodesTest {
         // both the systemEdge and the patternEdge have their right classes bound to each other, but both their "left"
         // classes are unbound.
         matchedNodes.makeMatch(
-                new Edge(new Clazz("Y"), systemNode2, EdgeType.INHERITANCE),
-                new Edge(new Clazz("X"), patternNode2, EdgeType.INHERITANCE)
+                new Edge(new Clazz("Y", "Y"), systemNode2, EdgeType.INHERITANCE),
+                new Edge(new Clazz("X", "X"), patternNode2, EdgeType.INHERITANCE)
         );
 
         // Match is possible
@@ -203,8 +203,8 @@ public class MatchedNodesTest {
         // both the systemEdge and the patternEdge have their left classes bound to each other, but both their "right"
         // classes are unbound.
         matchedNodes.makeMatch(
-                new Edge(systemNode1, new Clazz("Y"), EdgeType.INHERITANCE),
-                new Edge(patternNode1, new Clazz("X"), EdgeType.INHERITANCE)
+                new Edge(systemNode1, new Clazz("Y", "Y"), EdgeType.INHERITANCE),
+                new Edge(patternNode1, new Clazz("X", "X"), EdgeType.INHERITANCE)
         );
 
         // Match is possible

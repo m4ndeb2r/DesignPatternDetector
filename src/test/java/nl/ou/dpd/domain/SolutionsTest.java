@@ -88,13 +88,13 @@ public class SolutionsTest {
 
     private Set<Edge> createSuperfluousEdges() {
         Set<Edge> result = new HashSet<>();
-        result.add(new Edge(new Clazz("sysE"), new Clazz("sysB"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("sysE", "sysE"), new Clazz("sysB", "sysB"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 
     private Set<Edge> createMissingEdges() {
         Set<Edge> result = new HashSet<>();
-        result.add(new Edge(new Clazz("dpP"), new Clazz("dpQ"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("dpP", "dpP"), new Clazz("dpQ", "dpQ"), EdgeType.AGGREGATE));
         return result;
     }
 
@@ -132,8 +132,8 @@ public class SolutionsTest {
 
     private void createMatch(MatchedNodes matchedNodes, String a, String b) {
         matchedNodes.makeMatch(
-                new Edge(new Clazz("sys" + a), new Clazz("sys" + b), EdgeType.AGGREGATE),
-                new Edge(new Clazz("dp" + a), new Clazz("dp" + b), EdgeType.DEPENDENCY)
+                new Edge(new Clazz("sys" + a, "sys" + a), new Clazz("sys" + b, "sys" + b), EdgeType.AGGREGATE),
+                new Edge(new Clazz("dp" + a, "dp" + a), new Clazz("dp" + b, "dp" + b), EdgeType.DEPENDENCY)
         );
     }
 

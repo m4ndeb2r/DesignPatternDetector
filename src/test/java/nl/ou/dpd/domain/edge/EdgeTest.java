@@ -21,7 +21,7 @@ public class EdgeTest {
      */
     @Test
     public void testConstructor() {
-        Edge edge = new Edge(new Clazz("class1"), new Clazz("class2"), EdgeType.DEPENDENCY, "edge");
+        Edge edge = new Edge(new Clazz("class1", "class1"), new Clazz("class2", "class2"), EdgeType.DEPENDENCY, "edge");
         Edge edge2 = new Edge(edge);
 
         assertThat(edge.getName(), is("edge"));
@@ -50,7 +50,7 @@ public class EdgeTest {
      */
     @Test
     public void testMakeVirtual() {
-        Edge edge = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name1");
+        Edge edge = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE, "name1");
         assertThat(edge.getLeftNode().getName(), is("A"));
         assertThat(edge.getRightNode().getName(), is("B"));
         assertFalse(edge.isVirtual());
@@ -71,7 +71,7 @@ public class EdgeTest {
     @Test
     public void testEquals() {
         // Compare with null. Not equal.
-        Edge edge1 = new Edge(new Clazz("class1"), new Clazz("class2"), EdgeType.DEPENDENCY);
+        Edge edge1 = new Edge(new Clazz("class1", "class1"), new Clazz("class2", "class2"), EdgeType.DEPENDENCY);
         assertFalse(edge1.equals(null));
 
         // Two duplicate edges. They are equal.
@@ -86,13 +86,13 @@ public class EdgeTest {
         assertTrue(edge1.equals(edge2));
 
         // Check if different class names are detected -> not equal
-        Edge edge3 = new Edge(new Clazz("class3"), new Clazz("class2"), EdgeType.DEPENDENCY);
+        Edge edge3 = new Edge(new Clazz("class3", "class3"), new Clazz("class2", "class2"), EdgeType.DEPENDENCY);
         assertFalse(edge1.equals(edge3));
-        Edge edge4 = new Edge(new Clazz("class1"), new Clazz("class3"), EdgeType.DEPENDENCY);
+        Edge edge4 = new Edge(new Clazz("class1", "class1"), new Clazz("class3", "class3"), EdgeType.DEPENDENCY);
         assertFalse(edge1.equals(edge4));
 
         // Check if different edge types are detected -> not equal
-        Edge edge5 = new Edge(new Clazz("class1"), new Clazz("class2"), EdgeType.AGGREGATE);
+        Edge edge5 = new Edge(new Clazz("class1", "class1"), new Clazz("class2", "class2"), EdgeType.AGGREGATE);
         assertFalse(edge1.equals(edge5));
 
         // Check that a virtual edge is not equal to a non-virtual edge
@@ -121,18 +121,18 @@ public class EdgeTest {
         assertFalse(edge7.equals(edge5));
 
         // Check that two edges with different names are not equal
-        Edge edge8a = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name1");
-        Edge edge8b = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name1");
+        Edge edge8a = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE, "name1");
+        Edge edge8b = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE, "name1");
         assertTrue(edge8a.equals(edge8b));
-        Edge edge9 = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.AGGREGATE, "name2");
+        Edge edge9 = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE, "name2");
         assertFalse(edge9.equals(edge8b));
     }
 
     @Test
     public void testIsSelfRef() {
-        Edge edge = new Edge(new Clazz("A"), new Clazz("A"), EdgeType.INHERITANCE);
+        Edge edge = new Edge(new Clazz("A", "A"), new Clazz("A", "A"), EdgeType.INHERITANCE);
         assertTrue(edge.isSelfRef());
-        edge = new Edge(new Clazz("A"), new Clazz("B"), EdgeType.INHERITANCE);
+        edge = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.INHERITANCE);
         assertFalse(edge.isSelfRef());
     }
 

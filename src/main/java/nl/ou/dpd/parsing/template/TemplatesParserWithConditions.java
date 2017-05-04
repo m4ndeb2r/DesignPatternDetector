@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.ou.dpd.parsing.template;
 
 import java.io.File;

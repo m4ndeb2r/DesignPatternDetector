@@ -22,9 +22,9 @@ public class InterfaceTest {
      */
     @Test
     public void testCompareName() {
-        Interface zero = new Interface(null);
-        Interface first = new Interface("first");
-        Interface second = new Interface("second");
+        Interface zero = new Interface(null, null);
+        Interface first = new Interface("first", "first");
+        Interface second = new Interface("second", "second");
 
         assertThat(first.compareTo(null), greaterThan(0));
         assertThat(first.compareTo(zero), greaterThan(0));
@@ -88,7 +88,7 @@ public class InterfaceTest {
         Interface b2 = new Interface("b", "2");
 
         assertTrue(Interface.EMPTY_NODE.equals(Interface.EMPTY_NODE));
-        assertTrue(zero.equals(new Interface(null)));
+        assertTrue(zero.equals(new Interface(null, null)));
         assertTrue(a1.equals(a1));
         assertFalse(a1.equals(a2));
         assertFalse(a1.equals(b1));
@@ -122,7 +122,7 @@ public class InterfaceTest {
      */
     @Test
     public void testConstructorsAndGetters() {
-        Interface i1 = new Interface("A");
+        Interface i1 = new Interface("A", "A");
         assertThat(i1.getName(), is("A"));
         assertThat(i1.getId(), is("A"));
         assertThat(i1.getAttributes().size(), is(0));

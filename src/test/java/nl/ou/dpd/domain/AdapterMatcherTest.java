@@ -53,10 +53,10 @@ public class AdapterMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Adapter"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("DrawingEditor")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Shape")).getName(), is("Target"));
-        assertThat(mc0.get(new Clazz("TextShape")).getName(), is("Adapter"));
-        assertThat(mc0.get(new Clazz("TextView")).getName(), is("Adaptee"));
+        assertThat(mc0.get(new Clazz("DrawingEditor", "DrawingEditor")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("Shape", "Shape")).getName(), is("Target"));
+        assertThat(mc0.get(new Clazz("TextShape", "TextShape")).getName(), is("Adapter"));
+        assertThat(mc0.get(new Clazz("TextView", "TextView")).getName(), is("Adaptee"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -67,9 +67,9 @@ public class AdapterMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("DrawingEditor"), new Clazz("Shape"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("TextShape"), new Clazz("Shape"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TextShape"), new Clazz("TextView"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("DrawingEditor", "DrawingEditor"), new Clazz("Shape", "Shape"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("TextShape", "TextShape"), new Clazz("Shape", "Shape"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("TextShape", "TextShape"), new Clazz("TextView", "TextView"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 

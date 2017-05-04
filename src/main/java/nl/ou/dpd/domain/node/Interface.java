@@ -10,18 +10,6 @@ package nl.ou.dpd.domain.node;
 public class Interface extends Node {
 
     /**
-     * Constructs a {@link Clazz} instance with the specified {@code name}.
-     * <p>
-     * TODO: this constructor has to go. (deprecated)
-     *
-     * @param name the classname of this {@link Interface}
-     * @deprecated
-     */
-    public Interface(String name) {
-        this(name, name);
-    }
-
-    /**
      * Constructs a {@link Clazz} instance with the specified {@code name} and {@code id}.
      * <p>
      *

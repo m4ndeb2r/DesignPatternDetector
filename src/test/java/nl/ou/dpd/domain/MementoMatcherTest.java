@@ -53,9 +53,9 @@ public class MementoMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Memento"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Editor")).getName(), is("Caretaker"));
-        assertThat(mc0.get(new Clazz("ConstraintSolver")).getName(), is("Originator"));
-        assertThat(mc0.get(new Clazz("SolverState")).getName(), is("Memento"));
+        assertThat(mc0.get(new Clazz("Editor", "Editor")).getName(), is("Caretaker"));
+        assertThat(mc0.get(new Clazz("ConstraintSolver", "ConstraintSolver")).getName(), is("Originator"));
+        assertThat(mc0.get(new Clazz("SolverState", "SolverState")).getName(), is("Memento"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -66,8 +66,8 @@ public class MementoMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("ConstraintSolver"), new Clazz("SolverState"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("SolverState"), new Clazz("Editor"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("ConstraintSolver", "ConstraintSolver"), new Clazz("SolverState", "SolverState"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("SolverState", "SolverState"), new Clazz("Editor", "Editor"), EdgeType.AGGREGATE));
         return result;
     }
 

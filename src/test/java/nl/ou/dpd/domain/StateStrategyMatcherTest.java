@@ -54,11 +54,11 @@ public class StateStrategyMatcherTest {
         assertThat(s0.getDesignPatternName(), is("State - Strategy"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("TCPConnection")).getName(), is("Context"));
-        assertThat(mc0.get(new Interface("TCPState")).getName(), is("Strategy"));
-        assertThat(mc0.get(new Clazz("TCPEstablished")).getName(), is("ConcreteStrategy"));
-        assertThat(mc0.get(new Clazz("TCPListen")).getName(), is("ConcreteStrategy"));
-        assertThat(mc0.get(new Clazz("TCPClosed")).getName(), is("ConcreteStrategy"));
+        assertThat(mc0.get(new Clazz("TCPConnection", "TCPConnection")).getName(), is("Context"));
+        assertThat(mc0.get(new Interface("TCPState", "TCPState")).getName(), is("Strategy"));
+        assertThat(mc0.get(new Clazz("TCPEstablished", "TCPEstablished")).getName(), is("ConcreteStrategy"));
+        assertThat(mc0.get(new Clazz("TCPListen", "TCPListen")).getName(), is("ConcreteStrategy"));
+        assertThat(mc0.get(new Clazz("TCPClosed", "TCPClosed")).getName(), is("ConcreteStrategy"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -68,11 +68,11 @@ public class StateStrategyMatcherTest {
     }
 
     private SystemUnderConsideration createSystemUnderConsideration() {
-        final Interface tcpState = new Interface("TCPState");
-        final Clazz tcpConnection = new Clazz("TCPConnection");
-        final Clazz tcpEstablished = new Clazz("TCPEstablished");
-        final Clazz tcpListen = new Clazz("TCPListen");
-        final Clazz tcpClosed = new Clazz("TCPClosed");
+        final Interface tcpState = new Interface("TCPState", "TCPState");
+        final Clazz tcpConnection = new Clazz("TCPConnection", "TCPConnection");
+        final Clazz tcpEstablished = new Clazz("TCPEstablished", "TCPEstablished");
+        final Clazz tcpListen = new Clazz("TCPListen", "TCPListen");
+        final Clazz tcpClosed = new Clazz("TCPClosed", "TCPClosed");
         final SystemUnderConsideration result = new SystemUnderConsideration();
 
         result.add(new Edge(tcpState, tcpConnection, EdgeType.AGGREGATE));

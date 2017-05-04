@@ -62,11 +62,11 @@ public class SolutionTest {
         assertThat(solution1a.getDesignPatternName(), is("Pattern1a"));
 
         assertThat(solution1a.getMissingEdges().size(), is(1));
-        final Edge expMissing = new Edge(new Clazz("dpP"), new Clazz("dpQ"), EdgeType.AGGREGATE);
+        final Edge expMissing = new Edge(new Clazz("dpP", "dpP"), new Clazz("dpQ", "dpQ"), EdgeType.AGGREGATE);
         assertTrue(solution1a.getMissingEdges().contains(expMissing));
 
         assertThat(solution1a.getSuperfluousEdges().size(), is(1));
-        final Edge expSuperfluous = new Edge(new Clazz("sysE"), new Clazz("sysB"), EdgeType.ASSOCIATION_DIRECTED);
+        final Edge expSuperfluous = new Edge(new Clazz("sysE", "sysE"), new Clazz("sysB", "sysB"), EdgeType.ASSOCIATION_DIRECTED);
         assertTrue(solution1a.getSuperfluousEdges().contains(expSuperfluous));
 
     }
@@ -90,13 +90,13 @@ public class SolutionTest {
 
     private Set<Edge> createSuperfluousEdges() {
         Set<Edge> result = new HashSet<>();
-        result.add(new Edge(new Clazz("sysE"), new Clazz("sysB"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("sysE", "sysE"), new Clazz("sysB", "sysB"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 
     private Set<Edge> createMissingEdges() {
         Set<Edge> result = new HashSet<>();
-        result.add(new Edge(new Clazz("dpP"), new Clazz("dpQ"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("dpP", "dpP"), new Clazz("dpQ", "dpQ"), EdgeType.AGGREGATE));
         return result;
     }
 
@@ -134,8 +134,8 @@ public class SolutionTest {
 
     private void createMatch(MatchedNodes matchedNodes, String a, String b) {
         matchedNodes.makeMatch(
-                new Edge(new Clazz("sys" + a), new Clazz("sys" + b), EdgeType.AGGREGATE),
-                new Edge(new Clazz("dp" + a), new Clazz("dp" + b), EdgeType.DEPENDENCY)
+                new Edge(new Clazz("sys" + a, "sys" + a), new Clazz("sys" + b, "sys" + b), EdgeType.AGGREGATE),
+                new Edge(new Clazz("dp" + a, "dp" + a), new Clazz("dp" + b, "dp" + b), EdgeType.DEPENDENCY)
         );
     }
 

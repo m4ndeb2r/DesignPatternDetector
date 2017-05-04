@@ -53,13 +53,13 @@ public class BridgeMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Bridge"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("WindowClient")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Window")).getName(), is("Abstraction"));
-        assertThat(mc0.get(new Clazz("WindowImp")).getName(), is("Implementor"));
-        assertThat(mc0.get(new Clazz("IconWindow")).getName(), is("RefinedAbstraction"));
-        assertThat(mc0.get(new Clazz("TransientWindow")).getName(), is("RefinedAbstraction"));
-        assertThat(mc0.get(new Clazz("XWindowImp")).getName(), is("ConcreteImplementor"));
-        assertThat(mc0.get(new Clazz("PMWindowImp")).getName(), is("ConcreteImplementor"));
+        assertThat(mc0.get(new Clazz("WindowClient", "WindowClient")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("Window", "Window")).getName(), is("Abstraction"));
+        assertThat(mc0.get(new Clazz("WindowImp", "WindowImp")).getName(), is("Implementor"));
+        assertThat(mc0.get(new Clazz("IconWindow", "IconWindow")).getName(), is("RefinedAbstraction"));
+        assertThat(mc0.get(new Clazz("TransientWindow", "TransientWindow")).getName(), is("RefinedAbstraction"));
+        assertThat(mc0.get(new Clazz("XWindowImp", "XWindowImp")).getName(), is("ConcreteImplementor"));
+        assertThat(mc0.get(new Clazz("PMWindowImp", "PMWindowImp")).getName(), is("ConcreteImplementor"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -70,12 +70,12 @@ public class BridgeMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("WindowClient"), new Clazz("Window"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("WindowImp"), new Clazz("Window"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("IconWindow"), new Clazz("Window"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TransientWindow"), new Clazz("Window"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("XWindowImp"), new Clazz("WindowImp"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("PMWindowImp"), new Clazz("WindowImp"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("WindowClient", "WindowClient"), new Clazz("Window", "Window"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("WindowImp", "WindowImp"), new Clazz("Window", "Window"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("IconWindow", "IconWindow"), new Clazz("Window", "Window"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("TransientWindow", "TransientWindow"), new Clazz("Window", "Window"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("XWindowImp", "XWindowImp"), new Clazz("WindowImp", "WindowImp"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("PMWindowImp", "PMWindowImp"), new Clazz("WindowImp", "WindowImp"), EdgeType.INHERITANCE));
         return result;
     }
 

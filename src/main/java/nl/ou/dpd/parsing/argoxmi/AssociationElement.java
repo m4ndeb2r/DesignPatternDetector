@@ -104,8 +104,8 @@ public final class AssociationElement implements Constants, ElementHandler {
         }
 
         return new Edge(
-                new Clazz(ArgoXMIParser.classElements.get(leftElement).getName()),
-                new Clazz(ArgoXMIParser.classElements.get(rightElement).getName()),
+                new Clazz(ArgoXMIParser.classElements.get(leftElement).getName(), ArgoXMIParser.classElements.get(leftElement).getName()),
+                new Clazz(ArgoXMIParser.classElements.get(rightElement).getName(), ArgoXMIParser.classElements.get(rightElement).getName()),
                 type);
     }
 }

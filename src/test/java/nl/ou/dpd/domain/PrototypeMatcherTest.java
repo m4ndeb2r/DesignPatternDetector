@@ -58,10 +58,10 @@ public class PrototypeMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Prototype"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("GraphicTool")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Graphic")).getName(), is("Prototype"));
-        assertThat(mc0.get(new Clazz("Staff")).getName(), is("ConcretePrototype"));
-        assertThat(mc0.get(new Clazz("MusicalNote")).getName(), is("ConcretePrototype"));
+        assertThat(mc0.get(new Clazz("GraphicTool", "GraphicTool")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("Graphic", "Graphic")).getName(), is("Prototype"));
+        assertThat(mc0.get(new Clazz("Staff", "Staff")).getName(), is("ConcretePrototype"));
+        assertThat(mc0.get(new Clazz("MusicalNote", "MusicalNote")).getName(), is("ConcretePrototype"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -72,9 +72,9 @@ public class PrototypeMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("GraphicTool"), new Clazz("Graphic"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Staff"), new Clazz("Graphic"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MusicalNote"), new Clazz("Graphic"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("GraphicTool", "GraphicTool"), new Clazz("Graphic", "Graphic"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Staff", "Staff"), new Clazz("Graphic", "Graphic"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("MusicalNote", "MusicalNote"), new Clazz("Graphic", "Graphic"), EdgeType.INHERITANCE));
         return result;
     }
 

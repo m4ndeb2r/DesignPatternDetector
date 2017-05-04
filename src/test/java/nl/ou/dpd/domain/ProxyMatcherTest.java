@@ -53,10 +53,10 @@ public class ProxyMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Proxy"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("DocumentEditor")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Graphic")).getName(), is("Subject"));
-        assertThat(mc0.get(new Clazz("Image")).getName(), is("RealSubject"));
-        assertThat(mc0.get(new Clazz("ImageProxy")).getName(), is("Proxy"));
+        assertThat(mc0.get(new Clazz("DocumentEditor", "DocumentEditor")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("Graphic", "Graphic")).getName(), is("Subject"));
+        assertThat(mc0.get(new Clazz("Image", "Image")).getName(), is("RealSubject"));
+        assertThat(mc0.get(new Clazz("ImageProxy", "ImageProxy")).getName(), is("Proxy"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -67,10 +67,10 @@ public class ProxyMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("DocumentEditor"), new Clazz("Graphic"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Image"), new Clazz("Graphic"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("ImageProxy"), new Clazz("Graphic"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("ImageProxy"), new Clazz("Image"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("DocumentEditor", "DocumentEditor"), new Clazz("Graphic", "Graphic"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Image", "Image"), new Clazz("Graphic", "Graphic"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("ImageProxy", "ImageProxy"), new Clazz("Graphic", "Graphic"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("ImageProxy", "ImageProxy"), new Clazz("Image", "Image"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 

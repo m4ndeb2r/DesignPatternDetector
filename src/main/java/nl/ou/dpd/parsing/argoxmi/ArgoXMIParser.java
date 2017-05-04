@@ -96,8 +96,8 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
             if (dependencies != null) {
                 for (String dep : dependencies) {
                     final String name = classElements.get(key).getName();
-                    final Clazz leftClass = new Clazz(name);
-                    final Clazz rightClass = new Clazz(dep);
+                    final Clazz leftClass = new Clazz(name, name);
+                    final Clazz rightClass = new Clazz(dep, dep);
                     system.add(new Edge(leftClass, rightClass, EdgeType.DEPENDENCY));
                 }
             }
@@ -113,8 +113,8 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
         for (String key : inheritanceElements.keySet()) {
             final String nameLeftClass = ArgoXMIParser.classElements.get(key).getName();
             final String nameRightClass = ArgoXMIParser.classElements.get(inheritanceElements.get(key)).getName();
-            final Clazz leftClass = new Clazz(nameLeftClass);
-            final Clazz rightClass = new Clazz(nameRightClass);
+            final Clazz leftClass = new Clazz(nameLeftClass, nameLeftClass);
+            final Clazz rightClass = new Clazz(nameRightClass, nameRightClass);
             system.add(new Edge(leftClass, rightClass, EdgeType.INHERITANCE));
         }
     }
@@ -128,8 +128,8 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
         for (AbstractionElement elem : abstractElements) {
             final String nameLeftClass = ArgoXMIParser.classElements.get(elem.getImplementer()).getName();
             final String nameRightClass = ArgoXMIParser.classElements.get(elem.getSuper()).getName();
-            final Clazz leftClass = new Clazz(nameLeftClass);
-            final Clazz rightClass = new Clazz(nameRightClass);
+            final Clazz leftClass = new Clazz(nameLeftClass, nameLeftClass);
+            final Clazz rightClass = new Clazz(nameRightClass, nameRightClass);
             system.add(new Edge(leftClass, rightClass, EdgeType.INHERITANCE));
         }
     }

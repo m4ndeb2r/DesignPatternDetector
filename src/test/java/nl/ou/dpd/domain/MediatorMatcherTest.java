@@ -61,11 +61,11 @@ public class MediatorMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Mediator"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("DialogDirector")).getName(), is("Mediator"));
-        assertThat(mc0.get(new Clazz("FrontDialogDirector")).getName(), is("ConcreteMediator"));
-        assertThat(mc0.get(new Clazz("Widget")).getName(), is("Colleague"));
-        assertThat(mc0.get(new Clazz("ListBox")).getName(), is("ConcreteColleague1"));
-        assertThat(mc0.get(new Clazz("EntryField")).getName(), is("ConcreteColleague2"));
+        assertThat(mc0.get(new Clazz("DialogDirector", "DialogDirector")).getName(), is("Mediator"));
+        assertThat(mc0.get(new Clazz("FrontDialogDirector", "FrontDialogDirector")).getName(), is("ConcreteMediator"));
+        assertThat(mc0.get(new Clazz("Widget", "Widget")).getName(), is("Colleague"));
+        assertThat(mc0.get(new Clazz("ListBox", "ListBox")).getName(), is("ConcreteColleague1"));
+        assertThat(mc0.get(new Clazz("EntryField", "EntryField")).getName(), is("ConcreteColleague2"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -76,12 +76,12 @@ public class MediatorMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("Widget"), new Clazz("DialogDirector"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("FrontDialogDirector"), new Clazz("DialogDirector"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("ListBox"), new Clazz("Widget"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("EntryField"), new Clazz("Widget"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("FrontDialogDirector"), new Clazz("ListBox"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("FrontDialogDirector"), new Clazz("EntryField"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Widget", "Widget"), new Clazz("DialogDirector", "DialogDirector"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("FrontDialogDirector", "FrontDialogDirector"), new Clazz("DialogDirector", "DialogDirector"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("ListBox", "ListBox"), new Clazz("Widget", "Widget"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("EntryField", "EntryField"), new Clazz("Widget", "Widget"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("FrontDialogDirector", "FrontDialogDirector"), new Clazz("ListBox", "ListBox"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("FrontDialogDirector", "FrontDialogDirector"), new Clazz("EntryField", "EntryField"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 

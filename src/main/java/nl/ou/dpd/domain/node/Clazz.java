@@ -12,18 +12,6 @@ import java.util.List;
 public class Clazz extends Node {
 
     /**
-     * Constructs a {@link Clazz} instance with the specified {@code name} and similar {@code id}.
-     * <p>
-     * TODO: this constructor has to go. (deprecated)
-     *
-     * @param name the classname of this {@link Clazz}
-     * @deprecated
-     */
-    public Clazz(String name) {
-        this(name, name);
-    }
-
-    /**
      * Constructs a {@link Clazz} instance with the specified {@code name} and similar {@code id}. Use this constructor
      * for design pattern {@link Clazz}es only! In case of {@link Clazz}es in a system under consideration all
      * properties should be known, so then, the constructor with all properties as arguments should be used.
@@ -55,4 +43,5 @@ public class Clazz extends Node {
                  Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
         super(id, name, NodeType.CLASS, visibility, attributes, isRoot, isLeaf, isAbstract, isActive);
     }
+
  }

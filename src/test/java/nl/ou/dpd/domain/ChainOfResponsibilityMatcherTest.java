@@ -58,10 +58,10 @@ public class ChainOfResponsibilityMatcherTest {
         assertThat(s0.getDesignPatternName(), is("ChainOfResponsibility"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("HelpClient")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("HelpHandler")).getName(), is("Handler"));
-        assertThat(mc0.get(new Clazz("Application")).getName(), is("ConcreteHandler"));
-        assertThat(mc0.get(new Clazz("Widget")).getName(), is("ConcreteHandler"));
+        assertThat(mc0.get(new Clazz("HelpClient", "HelpClient")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("HelpHandler", "HelpHandler")).getName(), is("Handler"));
+        assertThat(mc0.get(new Clazz("Application", "Application")).getName(), is("ConcreteHandler"));
+        assertThat(mc0.get(new Clazz("Widget", "Widget")).getName(), is("ConcreteHandler"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -72,10 +72,10 @@ public class ChainOfResponsibilityMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("HelpClient"), new Clazz("HelpHandler"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("HelpHandler"), new Clazz("HelpHandler"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Application"), new Clazz("HelpHandler"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("Widget"), new Clazz("HelpHandler"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("HelpClient", "HelpClient"), new Clazz("HelpHandler", "HelpHandler"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("HelpHandler", "HelpHandler"), new Clazz("HelpHandler", "HelpHandler"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Application", "Application"), new Clazz("HelpHandler", "HelpHandler"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("Widget", "Widget"), new Clazz("HelpHandler", "HelpHandler"), EdgeType.INHERITANCE));
         return result;
     }
 

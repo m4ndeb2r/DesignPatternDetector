@@ -54,14 +54,14 @@ public class FactoryMethodMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Factory Method"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Application")).getName(), is("Creator"));
-        assertThat(mc0.get(new Clazz("Document")).getName(), is("Product"));
-        assertThat(mc0.get(new Clazz("MyDocument")).getName(), is("ConcreteProduct"));
-        assertThat(mc0.get(new Clazz("MyApplication")).getName(), is("ConcreteCreator"));
+        assertThat(mc0.get(new Clazz("Application", "Application")).getName(), is("Creator"));
+        assertThat(mc0.get(new Clazz("Document", "Document")).getName(), is("Product"));
+        assertThat(mc0.get(new Clazz("MyDocument", "MyDocument")).getName(), is("ConcreteProduct"));
+        assertThat(mc0.get(new Clazz("MyApplication", "MyApplication")).getName(), is("ConcreteCreator"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(1));
-        assertTrue(se0.contains(new Edge(new Clazz("Document"), new Clazz("Application"), EdgeType.AGGREGATE)));
+        assertTrue(se0.contains(new Edge(new Clazz("Document", "Document"), new Clazz("Application", "Application"), EdgeType.AGGREGATE)));
 
         // Check missing edges
         assertThat(me0.size(), is(0));
@@ -69,10 +69,10 @@ public class FactoryMethodMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("Document"), new Clazz("Application"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("MyDocument"), new Clazz("Document"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MyApplication"), new Clazz("Application"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MyApplication"), new Clazz("MyDocument"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("Document", "Document"), new Clazz("Application", "Application"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("MyDocument", "MyDocument"), new Clazz("Document", "Document"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("MyApplication", "MyApplication"), new Clazz("Application", "Application"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("MyApplication", "MyApplication"), new Clazz("MyDocument", "MyDocument"), EdgeType.DEPENDENCY));
         return result;
     }
 

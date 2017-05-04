@@ -26,9 +26,9 @@ public class ClazzTest {
      */
     @Test
     public void testCompareName() {
-        Clazz zero = new Clazz(null);
-        Clazz first = new Clazz("first");
-        Clazz second = new Clazz("second");
+        Clazz zero = new Clazz(null, null);
+        Clazz first = new Clazz("first", "first");
+        Clazz second = new Clazz("second", "second");
 
         assertThat(first.compareTo(null), greaterThan(0));
         assertThat(first.compareTo(zero), greaterThan(0));
@@ -92,7 +92,7 @@ public class ClazzTest {
         final Clazz b2 = new Clazz("b", "2");
 
         assertTrue(Clazz.EMPTY_NODE.equals(Clazz.EMPTY_NODE));
-        assertTrue(zero.equals(new Clazz(null)));
+        assertTrue(zero.equals(new Clazz(null, null)));
         assertTrue(a1.equals(a1));
         assertFalse(a1.equals(a2));
         assertFalse(a1.equals(b1));
@@ -145,7 +145,7 @@ public class ClazzTest {
      */
     @Test
     public void testConstructorsAndGetters() {
-        final Clazz c1 = new Clazz("A");
+        final Clazz c1 = new Clazz("A", "A");
         assertThat(c1.getName(), is("A"));
         assertThat(c1.getId(), is("A"));
         assertThat(c1.getAttributes().size(), is(0));

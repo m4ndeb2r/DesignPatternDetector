@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.ou.dpd.parsing.template;
 
 import nl.ou.dpd.domain.rule.Rule;

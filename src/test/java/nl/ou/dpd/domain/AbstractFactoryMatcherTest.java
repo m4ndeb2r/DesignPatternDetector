@@ -84,20 +84,20 @@ public class AbstractFactoryMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Abstract Factory"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("FactoryClient")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("WidgetFactory")).getName(), is("AbstractFactory"));
+        assertThat(mc0.get(new Clazz("FactoryClient", "FactoryClient")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("WidgetFactory", "WidgetFactory")).getName(), is("AbstractFactory"));
 
         for (int i = 0; i < factories; i++) {
             assertThat(
-                    mc0.get(new Clazz("ConcreteWidgetFactory" + (i + 1))).getName(),
+                    mc0.get(new Clazz("ConcreteWidgetFactory" + (i + 1), "ConcreteWidgetFactory" + (i + 1))).getName(),
                     is("ConcreteFact" + (i + 1)));
             for (int j = 0; j < products; j++) {
                 String postfix = Character.toString((char) (65 + j));
                 assertThat(
-                        mc0.get(new Clazz("AbstractWidget" + postfix)).getName(),
+                        mc0.get(new Clazz("AbstractWidget" + postfix, "AbstractWidget" + postfix)).getName(),
                         is("AbstractProduct" + postfix));
                 assertThat(
-                        mc0.get(new Clazz("ConcreteWidget" + postfix + (i + 1))).getName(),
+                        mc0.get(new Clazz("ConcreteWidget" + postfix + (i + 1), "ConcreteWidget" + postfix + (i + 1))).getName(),
                         is("Product" + postfix + (i + 1)));
             }
         }
@@ -114,24 +114,24 @@ public class AbstractFactoryMatcherTest {
 
         // Add directed associations from the client to the WidgetFactory and every every abstract product
         // Add concrete products (inheritances to abstract products, and dependencies to concrete factories)
-        result.add(new Edge(new Clazz("FactoryClient"), new Clazz("AbstractWidgetFactory"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("FactoryClient", "FactoryClient"), new Clazz("AbstractWidgetFactory", "AbstractWidgetFactory"), EdgeType.ASSOCIATION_DIRECTED));
         for (int i = 0; i < products; i++) {
             String postfix = Character.toString((char) (65 + i));
             result.add(
                     new Edge(
-                            new Clazz("FactoryClient"),
-                            new Clazz("AbstractWidget" + postfix),
+                            new Clazz("FactoryClient", "FactoryClient"),
+                            new Clazz("AbstractWidget" + postfix, "AbstractWidget" + postfix),
                             EdgeType.ASSOCIATION_DIRECTED));
             for (int j = 0; j < factories; j++) {
                 result.add(
                         new Edge(
-                                new Clazz("ConcreteWidget" + postfix + (j + 1)),
-                                new Clazz("AbstractWidget" + postfix),
+                                new Clazz("ConcreteWidget" + postfix + (j + 1), "ConcreteWidget" + postfix + (j + 1)),
+                                new Clazz("AbstractWidget" + postfix, "AbstractWidget" + postfix),
                                 EdgeType.INHERITANCE));
                 result.add(
                         new Edge(
-                                new Clazz("ConcreteWidgetFactory" + (j + 1)),
-                                new Clazz("ConcreteWidget" + postfix + (j + 1)),
+                                new Clazz("ConcreteWidgetFactory" + (j + 1), "ConcreteWidgetFactory" + (j + 1)),
+                                new Clazz("ConcreteWidget" + postfix + (j + 1), "ConcreteWidget" + postfix + (j + 1)),
                                 EdgeType.DEPENDENCY));
             }
         }
@@ -140,8 +140,8 @@ public class AbstractFactoryMatcherTest {
         for (int i = 0; i < factories; i++) {
             result.add(
                     new Edge(
-                            new Clazz("ConcreteWidgetFactory" + (i + 1)),
-                            new Clazz("WidgetFactory"),
+                            new Clazz("ConcreteWidgetFactory" + (i + 1), "ConcreteWidgetFactory" + (i + 1)),
+                            new Clazz("WidgetFactory", "WidgetFactory"),
                             EdgeType.INHERITANCE));
         }
 
