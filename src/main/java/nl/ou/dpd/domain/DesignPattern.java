@@ -48,40 +48,35 @@ public class DesignPattern extends Edges {
      * Example: A->B, C->D, A->C becomes A->B, A->C, C->D.
      */
     void order() {
-        // Skip the first element. It stays where it is. Start with i = 1.
-        final List<Edge> graph = getEdges();
-        for (int i = 1; i < graph.size(); i++) {
-
-            boolean found = false;
-
-            // The i-element should have a class that occurs in the elements 0.. (i-1)
-            for (int j = i; j < graph.size() && !found; j++) {
-                for (int k = 0; k < i && !found; k++) {
-                    found = areEdgesConnected(graph.get(j), graph.get(k));
-                    if (found && (j != i)) {
-                        // Switch elements
-                        final Edge temp = graph.get(j);
-                        graph.set(j, graph.get(i));
-                        graph.set(i, temp);
-                    }
-                }
-            }
-
-            if (!found) {
-                LOGGER.warn("Template is not a connected graph.");
-            }
-        }
-        this.setEdges(graph);
+        order(getEdges(), 0, 1, 2);
     }
 
-    /**
-     * Determines if two {@link Edge}s are connected. They are connected if one or more vertices (classes/interfaces)
-     * in one are equal to one or more vertices in the other.
-     *
-     * @param edge1 the edge to compare to {@code edge2}
-     * @param edge2 the edge to compare to {@code edge1}
-     * @return {@code true} if the edges are connected, or {@code false} otherwise
-     */
+    private void order(List<Edge> graph, int base, int switchable, int start) {
+        for(int i = start; i < graph.size(); i++) {
+            final boolean switchableConnected = isConnectedToPrecedingEdge(graph, switchable, base);
+            final boolean currentConnected = isConnectedToPrecedingEdge(graph, i, base);
+            if (currentConnected && !switchableConnected) {
+                switchEdges(graph, i, switchable);
+                order(graph, ++base, ++switchable, ++start);
+            }
+        }
+    }
+
+    private boolean isConnectedToPrecedingEdge(List<Edge> graph, int test, int base) {
+        for(int i = 0; i <= base; i++) {
+            if (areEdgesConnected(graph.get(test), graph.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void switchEdges(List<Edge> graph, int i, int j) {
+        final Edge temp = graph.get(j);
+        graph.set(j, graph.get(i));
+        graph.set(i, temp);
+    }
+
     private boolean areEdgesConnected(Edge edge1, Edge edge2) {
         final Node v1 = edge1.getLeftNode();
         final Node v2 = edge1.getRightNode();
