@@ -94,9 +94,9 @@ public class Edge {
 
     /*18/04/17*/
     /**
-     * This constructor returns a duplicate of the specified {@link Edge}.
+     * This method returns a duplicate of this {@link Edge}.
      *
-     * @param edge an {@link Edge} to construct a duplicate of.
+     * @return a duplicate of this {@link Edge}.
      */
     public Edge duplicate() {
     	Edge newEdge = new Edge(this.getId(), this.getName(),this.getLeftNode(), this.getRightNode());
@@ -108,15 +108,13 @@ public class Edge {
     }
 
     /**
-     * Creates a virtual (none-visible) counterpart of a {@link Edge}.
+     * Turns this {@link Edge} into a virtual (none-visible) {@link Edge}. It reverses the left and right {@link Node},
+     * and sets the the {@code virtual} flag to {@code true}.
      */
     public void makeVirtual() {
-        Node tmp;
-
-        tmp = leftNode;
+        final Node tmp = leftNode;
         leftNode = rightNode;
         rightNode = tmp;
-
         virtual = true;
     }
 
