@@ -1,6 +1,5 @@
 package nl.ou.dpd.parsing.template;
 
-import com.sun.deploy.util.StringUtils;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.node.Clazz;
