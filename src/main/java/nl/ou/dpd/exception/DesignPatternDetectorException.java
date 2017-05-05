@@ -10,6 +10,13 @@ public class DesignPatternDetectorException extends RuntimeException {
     /**
      * {@inheritDoc}
      */
+    public DesignPatternDetectorException(String message) {
+        super(message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public DesignPatternDetectorException(String message, Throwable cause) {
         super(message, cause);
     }
