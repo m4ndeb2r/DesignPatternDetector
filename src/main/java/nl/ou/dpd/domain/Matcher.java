@@ -55,7 +55,7 @@ public final class Matcher {
     }
 
     /**
-     * TODO: simplify this method. It is to long and incomprehensive.
+     * TODO: simplify this method. It is too long and incomprehensive.
      *
      * @param pattern
      * @param system

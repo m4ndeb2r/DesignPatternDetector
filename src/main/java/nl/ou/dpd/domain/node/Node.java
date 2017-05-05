@@ -207,7 +207,8 @@ public abstract class Node implements Comparable<Node> {
     }
     
 
-    /*27/04/17*//**
+    /*27/04/17*/
+    /**
      * Sets this {@link Node} as a abstract node, not a abstract node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a abstract node, {@code false} if it is not a abstract node, or {@code null} if
@@ -228,7 +229,8 @@ public abstract class Node implements Comparable<Node> {
     }
 
 
-    /*27/04/17*//**
+    /*27/04/17*/
+    /**
      * Sets this {@link Node} as a active node, not a active node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a active node, {@code false} if it is not a active node, or {@code null} if

@@ -24,6 +24,8 @@ public abstract class Edges {
      * Adds a new {@link Edge} to this {@link Edges}. Whenever the {@link EdgeType} of the new {@link Edge}
      * equals {@link EdgeType#ASSOCIATION}, an extra, virtual (non-visible) is also added.
      *
+     * TODO: this method can be replaced by {@link #addRealEdge(Edge)}. It has been tested to work.
+     *
      * @param edge the {@link Edge} to add.
      */
     public void add(Edge edge) {
