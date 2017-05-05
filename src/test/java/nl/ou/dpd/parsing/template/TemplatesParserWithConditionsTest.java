@@ -1,13 +1,16 @@
 package nl.ou.dpd.parsing.template;
 
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.domain.rule.Condition;
+import nl.ou.dpd.parsing.ParseException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -26,143 +29,140 @@ import static org.hamcrest.core.Is.is;
  */
 public class TemplatesParserWithConditionsTest {
 
+    // The XML Schema for validation
+    private static final String XML_SCHEMA = "/templates.xsd";
+    // A test file containing two nodes with the same name.
+    private static final String DUPLICATE_NODE_XML = "/template_parser_test_duplicateNode.xml";
+    // A test file containing two edges with the same name.
+    private static final String DUPLICATE_EDGE_XML = "/template_parser_test_duplicateEdge.xml";
+    // A test file containing an invalid edge tag.
+    private static final String MISSING_EDGE_FOR_ATTRIBUTE_XML = "/template_parser_test_missingEdgeForAttr.xml";
     // A test file containing valid XML.
     private static final String ADAPTERTEMPLATES_XML = "/template_adapters.xml";
-    // A test file containing invalid XML.
-    private static final String INVALID_XML = "/invalid.xml";
-    // A test file containing two nodes with the same name.
-    private static final String DOUBLE_NODE_XML = "/template_adapters_test_doubleNode.xml";
-    // A test file containing two nodes with the same name.
-    private static final String DOUBLE_EDGE_XML = "/template_adapters_test_doubleEdge.xml";
-    // A test file containing an invalid edge tag.
-    private static final String MISSING_EDGE_XML = "/template_adapters_test_missingEdge.xml";
-    // A test file containing an invalid edge tag.
-    private static final String INVALID_TAG_XML = "/template_adapters_test_invalidTag.xml";
-	
-    // A test file containing invalid XML.
 
-    /**
-     * Exception rule.
-     */
+    private URL xsdURL;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    /**
-     * Tests the exception handling in case of document which could not be parsed, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
-     */
-    @Test
-    public void testXMLStreamException() {
-        final String path = getPath(INVALID_XML);
-        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
-
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
-
-        templatesParser.parse(path);
+    @Before
+    public void initXmlSchemaURL() {
+        xsdURL = TemplatesParserWithConditionsTest.class.getResource(XML_SCHEMA);
     }
 
     /**
-     * Tests the exception handling a case of a node id which is not unique, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
+     * Tests the happy flow of parsing an XML templates file.
      */
     @Test
-    public void testDoubleNodeException() {
-        final String path = getPath(DOUBLE_NODE_XML);
-        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
+    public void testParse() {
+        final TemplatesParserWithConditions parser = new TemplatesParserWithConditions();
+        final String xmlPath = getPath(ADAPTERTEMPLATES_XML);
 
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The node id Adaptee is not unique in this pattern.");
+        final List<DesignPattern> parseResult = parser.parse(xmlPath, xsdURL);
 
-        templatesParser.parse(path);
+        assertThat(parseResult.size(), is(3));
+        assertObjectAdapterWithAbstractClass(parseResult.get(0));
+        assertObjectAdapterWithInterface(parseResult.get(1));
+        assertClassAdapter(parseResult.get(2));
+    }
+
+    private void assertObjectAdapterWithAbstractClass(DesignPattern designPattern) {
+        assertThat(designPattern.getEdges().size(), is(3));
+
+        // We expect 12 conditions, being: 6 user conditions + 2 system condtions for attributes + 4 system conditions
+        // for node types
+        assertThat(designPattern.getConditions().size(), is(12));
+        assertSystemConditions(designPattern.getConditions(), 6);
+        assertUserConditions(designPattern.getConditions(), 6);
+
+    }
+
+    private void assertObjectAdapterWithInterface(DesignPattern designPattern) {
+        assertThat(designPattern.getEdges().size(), is(3));
+
+        // We expect 11 conditions, being: 5 user conditions + 2 system condtions for attributes + 4 system conditions
+        // for node types
+        assertThat(designPattern.getConditions().size(), is(11));
+        assertSystemConditions(designPattern.getConditions(), 6);
+        assertUserConditions(designPattern.getConditions(), 5);
+
+    }
+
+    private void assertClassAdapter(DesignPattern designPattern) {
+        assertThat(designPattern.getEdges().size(), is(3));
+
+        // We expect 8 conditions, being: 3 user conditions + 1 system condtion for attributes + 4 system conditions
+        // for node types
+        assertThat(designPattern.getConditions().size(), is(8));
+        assertSystemConditions(designPattern.getConditions(), 5);
+        assertUserConditions(designPattern.getConditions(), 3);
+
+    }
+
+    private void assertSystemConditions(List<Condition> conditions, long expectedAmount) {
+        assertThat(conditions.stream().filter(c -> c.getId().startsWith("System")).count(), is(expectedAmount));
+    }
+
+    private void assertUserConditions(List<Condition> conditions, long expectedAmount) {
+        assertThat(conditions.stream().filter(c -> !c.getId().startsWith("System")).count(), is(expectedAmount));
     }
 
     /**
-     * Tests the exception handling  a case of an edge id which is not unique, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
+     * Tests the exception handling in case of a node id that is not unique, resulting in a {@link ParseException}.
      */
     @Test
-    public void testDoubleEdgeException() {
-        final String path = getPath(DOUBLE_EDGE_XML);
+    public void testDuplicateNodeException() {
+        final String xmlPath = getPath(DUPLICATE_NODE_XML);
         final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
 
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The edge id ClientTarget is not unique in this pattern.");
+        thrown.expect(ParseException.class);
+        thrown.expectMessage("The node id 'C' is not unique in this pattern.");
 
-        templatesParser.parse(path);
+        templatesParser.parse(xmlPath, xsdURL);
     }
 
     /**
-     * Tests the exception handling  a case of a missing edge, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
+     * Tests the exception handling in case of an edge id which is not unique, resulting in a {@link ParseException}.
      */
     @Test
-    public void testEdgeNotFoundException() {
-        final String path = getPath(MISSING_EDGE_XML);
+    public void testDuplicateEdgeException() {
+        final String xmlPath = getPath(DUPLICATE_EDGE_XML);
         final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
 
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("An edge between Adapter and Adaptee could not be found.");
+        thrown.expect(ParseException.class);
+        thrown.expectMessage("The edge id 'AB' is not unique in this pattern.");
 
-        templatesParser.parse(path);
+        templatesParser.parse(xmlPath, xsdURL);
     }
 
     /**
-     * Tests the exception handling  a case of a missing edge, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
+     * Tests the exception handling in case of a missing edge.
      */
     @Test
-    public void testTagNotFoundException() {
-        final String path = getPath(INVALID_TAG_XML);
+    public void testMissingEdgeForAttributeException() {
+        final String xmlPath = getPath(MISSING_EDGE_FOR_ATTRIBUTE_XML);
         final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
 
-        thrown.expect(DesignPatternDetectorException.class);
-        thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The pattern template tag invalidtag could not be handled.");
+        thrown.expect(ParseException.class);
+        thrown.expectMessage("An edge between 'A' and 'B' could not be found.");
 
-        templatesParser.parse(path);
+        templatesParser.parse(xmlPath, xsdURL);
     }
+
      /**
-     * Tests the exception handling in case of a {@link IOException} during parsing a template file by a
-     * {@link TemplatesParserWithConditions}.
+     * Tests the exception handling in case of a missing xml-file.
      */
     @Test
     public void testFileNotFoundException() {
         final TemplatesParserWithConditions parser = new TemplatesParserWithConditions();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The pattern template file missing.xml could not be found.");
+        thrown.expectMessage("The pattern template file 'missing.xml' could not be parsed.");
 
-        parser.parse("missing.xml");
+        parser.parse("missing.xml", xsdURL);
     }
 
-    /**
-     * Test the happy flow of parsing an XMI input file by the {@link TemplatesParser}.
-     */
-    @Test
-    public void testParse() {
-        final TemplatesParserWithConditions parser = new TemplatesParserWithConditions();
-        final String path = getPath(ADAPTERTEMPLATES_XML);
-
-        final List<DesignPattern> parseResult = parser.parse(path);
-
-        DesignPattern dp1 = parseResult.get(0);
-        DesignPattern dp2 = parseResult.get(1);
-        DesignPattern dp3 = parseResult.get(2);
-        
-        assertThat(parseResult.size(), is(3));
-        assertThat(parseResult.get(0).getEdges().size(), is(3));
-    }
-
-	/**
-	 * @param adaptertemplatesXml
-	 * @return
-	 */
 	private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
 	}

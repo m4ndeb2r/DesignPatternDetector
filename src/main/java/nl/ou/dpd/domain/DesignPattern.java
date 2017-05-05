@@ -3,13 +3,16 @@ package nl.ou.dpd.domain;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.Edges;
 import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.rule.Condition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents an design pattern.
+ * Represents an design pattern. The structur of a design pattern is defined by its {@link Edges}. Apart form structure
+ * a design pattern has a set of {@link Condition}s defining its character.
  *
  * @author Martin de Boer
  */
@@ -18,24 +21,20 @@ public class DesignPattern extends Edges {
     private static final Logger LOGGER = LogManager.getLogger(DesignPattern.class);
 
     private final String name;
+    private final List<Condition> conditions;
 
-    /**
-     * Constructs a {@link DesignPattern} instance with the specified name.
-     *
-     * @param name the name of this design pattern
-     */
     public DesignPattern(String name) {
         super();
         this.name = name;
+        this.conditions = new ArrayList<>();
     }
 
-    /**
-     * Getter for the pattern name.
-     *
-     * @return the name of this design pattern.
-     */
     public String getName() {
         return name;
+    }
+
+    public List<Condition> getConditions() {
+        return conditions;
     }
 
     /**
