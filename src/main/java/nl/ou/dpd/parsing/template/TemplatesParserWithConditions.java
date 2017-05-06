@@ -82,7 +82,6 @@ public class TemplatesParserWithConditions {
 
     private List<DesignPattern> designPatterns;
     private DesignPattern designPattern;
-    //private List<Condition> conditions;
     private List<Node> nodes;
 
     private Map<XMLEvent, Node> attributeEventsPerNode;
@@ -96,7 +95,6 @@ public class TemplatesParserWithConditions {
     public List<DesignPattern> parse(String xmlFilename, URL xsdUrl) {
         designPatterns = new ArrayList<>();
         nodes = new ArrayList<>();
-        //conditions = new ArrayList<>();
         attributeEventsPerNode = new HashMap<>();
 
         try {
@@ -409,7 +407,7 @@ public class TemplatesParserWithConditions {
         }
         final EdgeRule rule = new EdgeRule(edge, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS);
         condition.getEdgeRules().add(rule);
-        conditions.add(condition); // TODO Dit even checken....?? Ook unittesten??
+        conditions.add(condition); 
     }
 
     private Edge findEdgeByTwoNodes(Node leftNode, Node rightNode) {

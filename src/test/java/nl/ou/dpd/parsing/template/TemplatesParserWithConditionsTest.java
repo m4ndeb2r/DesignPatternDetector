@@ -9,11 +9,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-
-import javax.xml.stream.XMLStreamException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -51,10 +48,11 @@ public class TemplatesParserWithConditionsTest {
     }
 
     /**
-     * Tests the happy flow of parsing an XML templates file.
+     * Tests the happy flow of parsing an XML templates file. This test uses an XML containing the definition of
+     * three Adapter patters: two Object Adapter pattern variaties and one Class Adapter Pattern.
      */
     @Test
-    public void testParse() {
+    public void testParseAdapterTemplates() {
         final TemplatesParserWithConditions parser = new TemplatesParserWithConditions();
         final String xmlPath = getPath(ADAPTERTEMPLATES_XML);
 
@@ -72,8 +70,8 @@ public class TemplatesParserWithConditionsTest {
         // We expect 12 conditions, being: 6 user conditions + 2 system condtions for attributes + 4 system conditions
         // for node types
         assertThat(designPattern.getConditions().size(), is(12));
-        assertSystemConditions(designPattern.getConditions(), 6);
-        assertUserConditions(designPattern.getConditions(), 6);
+        assertSystemConditionsCount(designPattern.getConditions(), 6);
+        assertUserConditionsCount(designPattern.getConditions(), 6);
 
     }
 
@@ -83,8 +81,8 @@ public class TemplatesParserWithConditionsTest {
         // We expect 11 conditions, being: 5 user conditions + 2 system condtions for attributes + 4 system conditions
         // for node types
         assertThat(designPattern.getConditions().size(), is(11));
-        assertSystemConditions(designPattern.getConditions(), 6);
-        assertUserConditions(designPattern.getConditions(), 5);
+        assertSystemConditionsCount(designPattern.getConditions(), 6);
+        assertUserConditionsCount(designPattern.getConditions(), 5);
 
     }
 
@@ -94,16 +92,16 @@ public class TemplatesParserWithConditionsTest {
         // We expect 8 conditions, being: 3 user conditions + 1 system condtion for attributes + 4 system conditions
         // for node types
         assertThat(designPattern.getConditions().size(), is(8));
-        assertSystemConditions(designPattern.getConditions(), 5);
-        assertUserConditions(designPattern.getConditions(), 3);
+        assertSystemConditionsCount(designPattern.getConditions(), 5);
+        assertUserConditionsCount(designPattern.getConditions(), 3);
 
     }
 
-    private void assertSystemConditions(List<Condition> conditions, long expectedAmount) {
+    private void assertSystemConditionsCount(List<Condition> conditions, long expectedAmount) {
         assertThat(conditions.stream().filter(c -> c.getId().startsWith("System")).count(), is(expectedAmount));
     }
 
-    private void assertUserConditions(List<Condition> conditions, long expectedAmount) {
+    private void assertUserConditionsCount(List<Condition> conditions, long expectedAmount) {
         assertThat(conditions.stream().filter(c -> !c.getId().startsWith("System")).count(), is(expectedAmount));
     }
 
