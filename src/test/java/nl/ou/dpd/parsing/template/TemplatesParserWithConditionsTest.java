@@ -34,6 +34,8 @@ public class TemplatesParserWithConditionsTest {
     private static final String DUPLICATE_EDGE_XML = "/template_parser_test_duplicateEdge.xml";
     // A test file containing an invalid edge tag.
     private static final String MISSING_EDGE_FOR_ATTRIBUTE_XML = "/template_parser_test_missingEdgeForAttr.xml";
+    // A test file containing an invalid applies attribute, referring to a missing edge.
+    private static final String MISSING_EDGE_FOR_RULE_XML = "/template_parser_test_missingEdgeForRule.xml";
     // A test file containing valid XML.
     private static final String ADAPTERTEMPLATES_XML = "/template_adapters.xml";
 
@@ -147,7 +149,21 @@ public class TemplatesParserWithConditionsTest {
         templatesParser.parse(xmlPath, xsdURL);
     }
 
-     /**
+    /**
+     * Tests the exception handling in case of a missing edge.
+     */
+    @Test
+    public void testMissingEdgeForRuleException() {
+        final String xmlPath = getPath(MISSING_EDGE_FOR_RULE_XML);
+        final TemplatesParserWithConditions templatesParser = new TemplatesParserWithConditions();
+
+        thrown.expect(ParseException.class);
+        thrown.expectMessage("Rules must apply to existing elements. No element 'CB' was found.");
+
+        templatesParser.parse(xmlPath, xsdURL);
+    }
+
+    /**
      * Tests the exception handling in case of a missing xml-file.
      */
     @Test

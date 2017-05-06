@@ -441,16 +441,22 @@ public class TemplatesParserWithConditions {
         final String topic = attributes.get(TOPIC);
         final String operator = attributes.get(OPERATOR);
 
-        if (findNodeById(applies) != null) {
-            return new NodeRule(findNodeById(applies), Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
-        }
-        if (findEdgeById(applies) != null) {
-            return new EdgeRule(findEdgeById(applies), Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
-        }
-        if (findAttributeById(applies) != null) {
-            return new AttributeRule(findAttributeById(applies), Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
+        final Node node = findNodeById(applies);
+        if (node != null) {
+            return new NodeRule(node, Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
         }
 
+        final Edge edge = findEdgeById(applies);
+        if (edge != null) {
+            return new EdgeRule(edge, Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
+        }
+
+        final nl.ou.dpd.domain.node.Attribute attribute = findAttributeById(applies);
+        if (attribute != null) {
+            return new AttributeRule(attribute, Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
+        }
+
+        error(String.format("Rules must apply to existing elements. No element '%s' was found.", applies));
         return null;
     }
 
