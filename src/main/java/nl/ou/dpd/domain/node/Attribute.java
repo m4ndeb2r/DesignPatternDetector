@@ -8,7 +8,7 @@ package nl.ou.dpd.domain.node;
 public class Attribute {
 
     private final String id;
-	private final String name;
+    private final String name;
     private Node type;
     private Visibility visibility;
 
@@ -19,7 +19,7 @@ public class Attribute {
      * @param type the type of the attribute
      */
     public Attribute(String name, Node type) {
-    	this.id = name;
+        this.id = name;
         this.name = name;
         this.type = type;
         this.visibility = null;
@@ -32,7 +32,7 @@ public class Attribute {
      * @param type the type of the attribute
      */
     public Attribute(String id, String name, Node type) {
-    	this.id = id;
+        this.id = id;
         this.name = name;
         this.type = type;
         this.visibility = null;
@@ -55,7 +55,8 @@ public class Attribute {
     public String getId() {
         return id;
     }
-   /**
+
+    /**
      * Get the type of the attribute.
      *
      * @return the type of the attribute as {@link Node}
@@ -63,7 +64,7 @@ public class Attribute {
     public Node getType() {
         return type;
     }
-    
+
     /**
      * Set the type of the attribute.
      *
@@ -72,7 +73,7 @@ public class Attribute {
     public void setType(Node type) {
         this.type = type;
     }
-  
+
     /**
      * Get the name of the attribute.
      *
@@ -91,5 +92,5 @@ public class Attribute {
         this.visibility = visibility;
     }
 
-    
+
 }

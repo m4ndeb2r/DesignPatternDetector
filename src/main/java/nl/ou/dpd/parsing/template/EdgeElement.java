@@ -1,9 +1,9 @@
 package nl.ou.dpd.parsing.template;
 
-import nl.ou.dpd.parsing.ElementHandler;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.parsing.ElementHandler;
 import org.xml.sax.Attributes;
 
 /**

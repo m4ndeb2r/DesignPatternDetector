@@ -163,11 +163,6 @@ public class EdgeRule extends Rule<Edge> {
         return leftOkay && rightOkay;
     }
 
-    private boolean error(String message) {
-        LOGGER.error(message);
-        throw new RuleException(message);
-    }
-
     private boolean processAttribute(Edge systemEdge) {
         switch (getTopic()) {
             case TYPE:
@@ -196,11 +191,12 @@ public class EdgeRule extends Rule<Edge> {
     private boolean processAttributeTypeExists(Edge systemEdge) {
         final Node rightNode = systemEdge.getRightNode();
         final List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
-        for (Attribute attribute : systemAttributes) {
-            if (attribute.getType().equals(rightNode)) {
-                return true;
-            }
-        }
-        return false;
+        return systemAttributes.stream().anyMatch(attr -> attr.getType().equals(rightNode));
     }
+
+    private boolean error(String message) {
+        LOGGER.error(message);
+        throw new RuleException(message);
+    }
+
 }

@@ -15,7 +15,7 @@ public enum EdgeType {
     INHERITANCE(4, "INHERITANCE"),
     INHERITANCE_MULTI(40, "INHERITANCE_MULTI"),
     DEPENDENCY(5, "DEPENDENCY"),
-	REALIZATION(6, "REALIZATION");
+    REALIZATION(6, "REALIZATION");
 
     private final int code;
     private final String name;

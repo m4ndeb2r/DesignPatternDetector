@@ -1,9 +1,9 @@
 package nl.ou.dpd.parsing.template;
 
 
-import nl.ou.dpd.parsing.Parser;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.Parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;

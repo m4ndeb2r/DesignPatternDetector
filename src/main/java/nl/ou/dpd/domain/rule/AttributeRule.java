@@ -33,6 +33,7 @@ public class AttributeRule extends Rule<Attribute> {
      * <p>
      * TODO: Consider returning feedback instead of a boolean
      * <p>
+     *
      * @param systemAttribute the attribute under consideration
      * @return {@code true} if the {@link Attribute} meets the conditions set in this {@link AttributeRule}, or {@code false}
      * otherwise.
@@ -48,10 +49,10 @@ public class AttributeRule extends Rule<Attribute> {
 
     private boolean processObject(Attribute systemAttribute) {
         switch (getTopic()) {
-        case VISIBILITY:
-        	return processObjectVisibility(systemAttribute);
-        default:
-            return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
+            case VISIBILITY:
+                return processObjectVisibility(systemAttribute);
+            default:
+                return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
         }
     }
 
@@ -70,7 +71,7 @@ public class AttributeRule extends Rule<Attribute> {
         return systemAttribute.getVisibility() == getMould().getVisibility();
     }
 
-	private boolean error(String message) {
+    private boolean error(String message) {
         LOGGER.error(message);
         throw new RuleException(message);
     }

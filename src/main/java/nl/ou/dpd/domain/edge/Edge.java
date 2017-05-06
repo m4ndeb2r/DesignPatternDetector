@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public class Edge {
 
-	private String id;
+    private String id;
     private String name;
     private Node leftNode, rightNode;
     private EdgeType relationType;
@@ -63,6 +63,7 @@ public class Edge {
     }
 
     /*18/04/17*/
+
     /**
      * Constructs an instance of a {@link Edge} with the specified nodes and a name of the edge. The
      * nodes represent the vertices in a graph (when the design pattern is viewed as a graph).
@@ -73,12 +74,12 @@ public class Edge {
      * @param name      the name of the edge. Recommended as being unique (in a pattern).
      */
     public Edge(String id, String name, Node leftNode, Node rightNode) {
-    	this.id = id;
+        this.id = id;
         this.name = name;
         this.leftNode = leftNode;
         this.rightNode = rightNode;
     }
-    
+
     /**
      * This constructor returns a duplicate of the specified {@link Edge}.
      *
@@ -93,13 +94,14 @@ public class Edge {
     }
 
     /*18/04/17*/
+
     /**
      * This method returns a duplicate of this {@link Edge}.
      *
      * @return a duplicate of this {@link Edge}.
      */
     public Edge duplicate() {
-    	Edge newEdge = new Edge(this.getId(), this.getName(),this.getLeftNode(), this.getRightNode());
+        Edge newEdge = new Edge(this.getId(), this.getName(), this.getLeftNode(), this.getRightNode());
         newEdge.cardinalityLeft = this.cardinalityLeft;
         newEdge.cardinalityRight = this.cardinalityRight;
         newEdge.locked = this.locked;
@@ -137,6 +139,7 @@ public class Edge {
     }
 
     /*18/04/17*/
+
     /**
      * Get the id of this edge.
      *
@@ -147,6 +150,7 @@ public class Edge {
     }
 
     /*18/04/17*/
+
     /**
      * Set the id of this edge.
      *
@@ -157,27 +161,7 @@ public class Edge {
     } 
     
     /*27/04/17*/
-    /**
-     * Set the left node of this edge.
-     *
-     * @param Node
-     */
-    public void setLeftNode(Node node) {
-        this.leftNode = node;
-    } 
-    
-   
-    /*27/04/17*/
-    /**
-     * Set the right node of this edge.
-     *
-     * @param Node
-     */
-    public void setRightNode(Node node) {
-        this.rightNode = node;
-    } 
 
-    
     /**
      * Indicates whether or not this {@link Edge} is virtual (non-visible).
      *
@@ -186,6 +170,9 @@ public class Edge {
     public boolean isVirtual() {
         return virtual;
     }
+    
+   
+    /*27/04/17*/
 
     /**
      * Locks a {@link Edge} to prevent it from being matched (again).
@@ -226,12 +213,30 @@ public class Edge {
     }
 
     /**
+     * Set the left node of this edge.
+     *
+     * @param Node
+     */
+    public void setLeftNode(Node node) {
+        this.leftNode = node;
+    }
+
+    /**
      * Returns the second {@link Node}.
      *
      * @return the second {@link Node}.
      */
     public Node getRightNode() {
         return rightNode;
+    }
+
+    /**
+     * Set the right node of this edge.
+     *
+     * @param Node
+     */
+    public void setRightNode(Node node) {
+        this.rightNode = node;
     }
 
     /**

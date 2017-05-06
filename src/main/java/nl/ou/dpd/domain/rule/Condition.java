@@ -3,7 +3,6 @@ package nl.ou.dpd.domain.rule;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,20 +68,10 @@ public class Condition {
         processed = false;
     }
 
-    /**
-     * Get the id of the {@link Condition}.
-     *
-     * @return the id
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * Get the description of the {@link Condition}.
-     *
-     * @return the description
-     */
     public String getDescription() {
         return description;
     }
@@ -126,55 +115,27 @@ public class Condition {
     public void setAtributeRules(List<AttributeRule> attributeRules) {
         this.attributeRules = attributeRules;
     }
-    
-    /**
-     * Get the purview.
-     *
-     * @return the purview
-     */
+
     public Purview getPurview() {
         return purview;
     }
 
-    /**
-     * Set the purview.
-     *
-     * @param purview the new {@link Purview} for this {@link Condition}.
-     */
     public void setPurview(Purview purview) {
         this.purview = purview;
     }
 
-    /**
-     * Indicates whether this {@link Condition} is processed, and was processed successfully.
-     *
-     * @return {@code true} if the process method was executed and returned {@code true}.
-     */
     public boolean isProcessedSuccessfully() {
         return isProcessed() && processResult == true;
     }
 
-    /**
-     * Indicates whether this {@link Condition} is processed, and was processed unsuccessfully.
-     *
-     * @return {@code true} if the process method was executed, but returned {@code false}.
-     */
     public boolean isProcessedUnsuccessfully() {
         return isProcessed() && processResult == false;
     }
 
-    /**
-     * Indicates whether this {@link Condition} was processed.
-     *
-     * @return {@code false} if the condition has not been processed yet. {@code true} otherwise.
-     */
     public boolean isProcessed() {
         return processed;
     }
 
-    /**
-     * Reset the processed attribute to {@code false}.
-     */
     public void clearProcessed() {
         this.processed = false;
     }
@@ -186,7 +147,8 @@ public class Condition {
      * @param edge an edge of the system under consideration.
      * @return {@code true} if all the {@link Rule}s have been met, or {@code null} if the {@link Purview} is set to
      * {@link Purview#IGNORE}, or {@code false} in all other cases.
-     */    public boolean process(Edge edge) {
+     */
+    boolean process(Edge edge) {
         if (processed == true) {
             return processResult;
         }
@@ -204,17 +166,16 @@ public class Condition {
         }
     }
 
-
     /**
      * Process the {@link Condition}. A {@link Condition} is only processed once. To force reprocessing of a
      * {@link Condition}, please call {@link Condition#clearProcessed()} beforehand.
      *
-     * @param the systemEdge to be processed
-     * @param patternEdge the mould holding the desired values of this edge
+     * @param systemEdge  the systemEdge to be processed
+     * @param patternEdge the mould containing the desired values of this edge
      * @return {@code true} if all the {@link Rule}s have been met, or {@code null} if the {@link Purview} is set to
      * {@link Purview#IGNORE}, or {@code false} in all other cases.
      */
-    public boolean process(Edge systemEdge, Edge patternEdge) {
+    boolean process(Edge systemEdge, Edge patternEdge) {
         if (processed == true) {
             return processResult;
         }
@@ -233,16 +194,14 @@ public class Condition {
     }
     
     /*NEW 12 april 2017*/
+
     /**
-     * Process the {@link Condition}. A {@link Condition} is only processed once. To force reprocessing of a
-     * {@link Condition}, please call {@link Condition#clearProcessed()} beforehand.
+     * TODO: JavaDoc
      *
-     * @param the systemEdge to be processed
-     * @param patternEdge the mould holding the desired values of this edge
-     * @return {@code true} if all the {@link Rule}s have been met, or {@code null} if the {@link Purview} is set to
-     * {@link Purview#IGNORE}, or {@code false} in all other cases.
+     * @param matchedNodes
+     * @return
      */
-    public boolean process(Map<Node, Node> matchedNodes) {
+    boolean process(Map<Node, Node> matchedNodes) {
         if (processed == true) {
             return processResult;
         }
@@ -259,7 +218,7 @@ public class Condition {
                 return error("Unexpected purview: " + purview + ".");
         }
     }
-    
+
     /**
      * Processes the all rules of this {@link Condition}, the edge rules as well as the node rules for either node.
      *
@@ -297,110 +256,100 @@ public class Condition {
      * {@code false} otherwise.
      */
     private boolean processRules(Edge systemEdge, Edge patternEdge) {
-        boolean result = true;
-        
-        //evaluate all edge rules matching the given edge
+
+        // Evaluate all edge rules matching the given edge
         for (Rule<Edge> rule : this.edgeRules) {
-        	if (rule.getMould() == patternEdge) {
-	            result = result && rule.process(systemEdge);
-	            if (result == false) {
-	                return false;
-	            }
-        	}
-        }
-
-        //evaluate all node rules matching the given left node
-        for (Rule<Node> rule : this.nodeRules) {
-        	if (rule.getMould() == patternEdge.getLeftNode()) {
-	            result = result && rule.process(systemEdge.getLeftNode());
-	            if (result == false) {
-	                return false;
-	            }
-        	}
-        }
-
-        //evaluate all node rules matching the given right node
-        for (Rule<Node> rule : this.nodeRules) {
-        	if (rule.getMould() == patternEdge.getRightNode()) {
-	            result = result && rule.process(systemEdge.getRightNode());
-	            if (result == false) {
-	                return false;
-	            }
-        	}
-        }
-
-        //evaluate all attribute rules matching the left node attributes with the type of the right node
-        //(other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
-        for (Rule<Attribute> rule : this.attributeRules) {
-        	boolean partialResult = false;
-        	boolean ruleProcessed = false;
-        	for (Attribute systemAttribute : findAttributesOfRightNodeType(systemEdge)) {
-        		if (rule.getMould().getType().getName() == patternEdge.getRightNode().getName()) {
-		            partialResult = partialResult || rule.process(systemAttribute);
-		            ruleProcessed = true;
-        		}
-        	}
-        	partialResult = partialResult || !ruleProcessed;
-            result = result && partialResult;
-            if (result == false) {
+            if (rule.getMould() == patternEdge && !rule.process(systemEdge)) {
                 return false;
             }
         }
-     return result;
+
+        // Evaluate all node rules matching the given left node
+        for (Rule<Node> rule : this.nodeRules) {
+            if (rule.getMould() == patternEdge.getLeftNode() && !rule.process(systemEdge.getLeftNode())) {
+                return false;
+            }
+            if (rule.getMould() == patternEdge.getRightNode() && !rule.process(systemEdge.getRightNode())) {
+                return false;
+            }
+        }
+
+        // Evaluate all attribute rules matching the left node attributes with the type of the right node
+        // (other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
+        for (Rule<Attribute> rule : this.attributeRules) {
+            boolean partialResult = false;
+            boolean ruleProcessed = false;
+            for (Attribute systemAttribute : findAttributesOfRightNodeType(systemEdge)) {
+                if (rule.getMould().getType().getName() == patternEdge.getRightNode().getName()) {
+                    partialResult = partialResult || rule.process(systemAttribute);
+                    ruleProcessed = true;
+                }
+            }
+            partialResult = partialResult || !ruleProcessed;
+            if (partialResult == false) {
+                return false;
+            }
+        }
+        return true;
     }
-    
-	/** Find all attributes in the left node which has the type of the right node.
-	 * (other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
-	 * @param systemEdge
-	 * @return
-	 */
-	private List<Attribute> findAttributesOfRightNodeType(Edge systemEdge) {
-		List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
-		List<Attribute> foundAttributes = new ArrayList<Attribute>();
-		for(Attribute attribute : systemAttributes) {
-			if (attribute.getType().getName().equals(systemEdge.getRightNode().getName())) {
-				foundAttributes.add(attribute);
-			}
-		}
-		return foundAttributes;
-	}
+
+    /**
+     * Find all attributes in the left node which has the type of the right node.
+     * (other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
+     *
+     * @param systemEdge
+     * @return
+     */
+    private List<Attribute> findAttributesOfRightNodeType(Edge systemEdge) {
+        List<Attribute> systemAttributes = systemEdge.getLeftNode().getAttributes();
+        List<Attribute> foundAttributes = new ArrayList<>();
+        for (Attribute attribute : systemAttributes) {
+            if (attribute.getType().getName().equals(systemEdge.getRightNode().getName())) {
+                foundAttributes.add(attribute);
+            }
+        }
+        return foundAttributes;
+    }
      
     /*NEW 12 april 2017*/
+
     /**
-     * Processes all the noderules of this {@link Condition}, which have a matched node in the matchedNodes-map.
-     * If the node on which the rule applies does not exist or the rule is an edgerule, return is {@code true}.
-     * 
-     * @param a map with system edges as keys and matched pattern edges as values
-     * @return the accumulated result of processed node{@link Rule}s: {@code true} if all the rules succeed, or the node does not exist in the map.
-     * {@code false} otherwise.
+     * Processes all the {@link NodeRule}s of this {@link Condition}, that have a matched node in the
+     * {@code matchedNodes}. If the {@link Node} to which the {@link Rule} applies does not exist or the
+     * {@link Rule} is not a {@link NodeRule}, return {@code true}.
+     *
+     * @param matchedNodes a map with system edges as keys and matched pattern edges as values
+     * @return the accumulated result of processed node{@link Rule}s: {@code true} if all the rules succeed, or the
+     * node does not exist in the map, or {@code false} otherwise.
      */
     private boolean processRules(Map<Node, Node> matchedNodes) {
         boolean result = true;
-        
+
         for (Rule<Node> rule : this.nodeRules) {
-        	if (matchedNodes.containsValue(rule.getMould())) {
-	            result = result && rule.process(getMapKey(matchedNodes, rule.getMould()));
-	            if (result == false) {
-	                return false;
-	            }
-        	}
+            if (matchedNodes.containsValue(rule.getMould())) {
+                result = result && rule.process(getMapKey(matchedNodes, rule.getMould()));
+                if (result == false) {
+                    return false;
+                }
+            }
         }
         return result;
     }
-    
-	/**
-	 * Returns the key of the value in the given map.
-	 * @param map
-	 * @param value
-	 * @return
-	 */
-     private Node getMapKey(Map<Node, Node> map, Node value) {
-    	for (Entry<Node, Node> e : map.entrySet()) {
-    		if (e.getValue() == value) {
-    			return e.getKey();
-    		}
-    	}
-    	return null;
+
+    /**
+     * Returns the key of the value in the given map.
+     *
+     * @param map   the {@link Map} to search
+     * @param value the {@link Node} value to look for
+     * @return the key {@link Node} for the specified {@code value}
+     */
+    private Node getMapKey(Map<Node, Node> map, Node value) {
+        for (Entry<Node, Node> e : map.entrySet()) {
+            if (e.getValue() == value) {
+                return e.getKey();
+            }
+        }
+        return null;
     }
 
     private boolean error(String message) {

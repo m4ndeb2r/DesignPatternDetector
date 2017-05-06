@@ -51,7 +51,7 @@ public class DesignPattern extends Edges {
     }
 
     private void order(List<Edge> graph, int base, int switchable, int start) {
-        for(int i = start; i < graph.size(); i++) {
+        for (int i = start; i < graph.size(); i++) {
             final boolean switchableConnected = isConnectedToPrecedingEdge(graph, switchable, base);
             final boolean currentConnected = isConnectedToPrecedingEdge(graph, i, base);
             if (currentConnected && !switchableConnected) {
@@ -62,7 +62,7 @@ public class DesignPattern extends Edges {
     }
 
     private boolean isConnectedToPrecedingEdge(List<Edge> graph, int test, int base) {
-        for(int i = 0; i <= base; i++) {
+        for (int i = 0; i <= base; i++) {
             if (areEdgesConnected(graph.get(test), graph.get(i))) {
                 return true;
             }

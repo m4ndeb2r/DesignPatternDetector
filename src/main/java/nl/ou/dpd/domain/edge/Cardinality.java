@@ -57,16 +57,16 @@ public class Cardinality {
      */
     @Override
     public String toString() {
-    	String s = "";
+        String s = "";
         String sl = Integer.valueOf(lower).toString();
         String su = Integer.valueOf(upper).toString();
         if (upper == Cardinality.UNLIMITED) {
-        	su = "*";
+            su = "*";
         }
         if (lower == upper) {
-        	s = su;
+            s = su;
         } else {
-        	s = sl + ".." + su;
+            s = sl + ".." + su;
         }
         return s;
     }

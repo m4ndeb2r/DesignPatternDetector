@@ -14,7 +14,6 @@ import nl.ou.dpd.domain.rule.Operator;
 import nl.ou.dpd.domain.rule.Rule;
 import nl.ou.dpd.domain.rule.Scope;
 import nl.ou.dpd.domain.rule.Topic;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
 import nl.ou.dpd.parsing.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,13 +99,11 @@ public class TemplatesParserWithConditions {
         try {
             validate(xmlFilename, xsdUrl);
             parse(xmlFilename);
-        }
-        catch (ParseException pe) {
+        } catch (ParseException pe) {
             // We don't need to repackage a ParseException in a ParseException.
             // Rethrow ParseExceptions directly
             throw pe;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             final String message = String.format("The pattern template file '%s' could not be parsed.", xmlFilename);
             error(message, e);
         }

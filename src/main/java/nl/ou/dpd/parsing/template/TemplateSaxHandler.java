@@ -1,7 +1,7 @@
 package nl.ou.dpd.parsing.template;
 
-import nl.ou.dpd.parsing.ElementHandler;
 import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.parsing.ElementHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;

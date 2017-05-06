@@ -84,7 +84,7 @@ public abstract class Node implements Comparable<Node> {
     public String getName() {
         return name;
     }
-    
+
     /**
      * Sets the name of this {@link Node}.
      *
@@ -114,6 +114,7 @@ public abstract class Node implements Comparable<Node> {
     }
 
     /*27/04/17*/
+
     /**
      * Sets the {@link Visibility} of this {@link Node}. The visibility depends on the access modifier of a class or
      * interface. For example, an interface or a public class always returns: {@link Visibility#PUBLIC}.
@@ -166,11 +167,12 @@ public abstract class Node implements Comparable<Node> {
     }
 
     /*27/04/17*/
+
     /**
      * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
-     * undefined
+     *               undefined
      */
     public void setRoot(Boolean value) {
         isRoot = value;
@@ -187,15 +189,17 @@ public abstract class Node implements Comparable<Node> {
     }
     
     /*27/04/17*/
+
     /**
      * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
-     * undefined
+     *               undefined
      */
     public void setLeaf(Boolean value) {
         isLeaf = value;
     }
+
     /**
      * Indicates whether or not this {@link Node} is abstract, not abstract, or whether that is undefined.
      *
@@ -208,11 +212,12 @@ public abstract class Node implements Comparable<Node> {
     
 
     /*27/04/17*/
+
     /**
      * Sets this {@link Node} as a abstract node, not a abstract node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a abstract node, {@code false} if it is not a abstract node, or {@code null} if
-     * undefined
+     *               undefined
      */
     public void setAbstract(Boolean value) {
         isAbstract = value;
@@ -230,11 +235,12 @@ public abstract class Node implements Comparable<Node> {
 
 
     /*27/04/17*/
+
     /**
      * Sets this {@link Node} as a active node, not a active node, or whether ii is undefined.
      *
      * @param {@code true} if this node is a active node, {@code false} if it is not a active node, or {@code null} if
-     * undefined
+     *               undefined
      */
     public void setActive(Boolean value) {
         isActive = value;

@@ -1,11 +1,11 @@
 package nl.ou.dpd.parsing.argoxmi;
 
-import nl.ou.dpd.parsing.Parser;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.Parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;

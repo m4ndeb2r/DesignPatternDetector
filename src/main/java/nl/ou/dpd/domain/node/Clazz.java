@@ -44,4 +44,4 @@ public class Clazz extends Node {
         super(id, name, NodeType.CLASS, visibility, attributes, isRoot, isLeaf, isAbstract, isActive);
     }
 
- }
+}
