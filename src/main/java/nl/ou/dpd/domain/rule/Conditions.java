@@ -48,17 +48,9 @@ public class Conditions {
             c.clearProcessed();
             c.process(edge);
         }
-        for (Condition c : conditions) {
-            if (c.getPurview() == Purview.MANDATORY && !c.isProcessed()) {
-                return null;
-            }
-            if (c.getPurview() == Purview.MANDATORY && c.isProcessedUnsuccessfully()) {
-                return false;
-            }
-        }
-        return true;
+        return getAccumulatedProcessResult();
     }
- 
+
 
     /**
      * Processes all the conditions for a specified {@link Edge} and its {@link Node}s, and returns the accumulative result:
@@ -68,7 +60,7 @@ public class Conditions {
      * <li>{@code true} if the combination of mandatory conditions have been met</li>
      * </ul>
      *
-     * @param systemEdge the systemEdge to be processed
+     * @param systemEdge  the systemEdge to be processed
      * @param patternEdge the mould holding the desired values of this edge
      * @return the accumulative result value of the processed attribute;
      */
@@ -77,18 +69,11 @@ public class Conditions {
             c.clearProcessed();
             c.process(systemEdge, patternEdge);
         }
-        for (Condition c : conditions) {
-            if (c.getPurview() == Purview.MANDATORY && !c.isProcessed()) {
-                return null;
-            }
-            if (c.getPurview() == Purview.MANDATORY && c.isProcessedUnsuccessfully()) {
-                return false;
-            }
-        }
-        return true;
+        return getAccumulatedProcessResult();
     }
     
     /*NEW 12 april 2017*/
+
     /**
      * Processes all the conditions for a mapping of system nodes and pattern nodes, and returns the accumulative result:
      * <ul>
@@ -97,7 +82,7 @@ public class Conditions {
      * <li>{@code true} if the combination of mandatory conditions have been met</li>
      * </ul>
      *
-     * @param systemEdge the systemEdge to be processed
+     * @param systemEdge  the systemEdge to be processed
      * @param patternEdge the mould holding the desired values of this edge
      * @return the accumulative result value of the processed attribute;
      */
@@ -106,6 +91,10 @@ public class Conditions {
             c.clearProcessed();
             c.process(matchedNodes);
         }
+        return getAccumulatedProcessResult();
+    }
+
+    private Boolean getAccumulatedProcessResult() {
         for (Condition c : conditions) {
             if (c.getPurview() == Purview.MANDATORY && !c.isProcessed()) {
                 return null;
