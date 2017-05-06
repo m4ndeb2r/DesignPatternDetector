@@ -1,40 +1,38 @@
 package nl.ou.dpd.parsing.template;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.domain.rule.AttributeRule;
 import nl.ou.dpd.domain.rule.Rule;
 import nl.ou.dpd.domain.rule.RuleException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class that applies a AttributeRule using a specified value.
  * Results in the Attribute, given in the Rule, implementing the Rule in the Attribute itself.
- * 
- * @author Peter Vansweevelt
  *
+ * @author Peter Vansweevelt
  */
 public class ApplyAttributeRule extends ApplyRule<Attribute> {
 
     private static final Logger LOGGER = LogManager.getLogger(ApplyAttributeRule.class);
 
-	private Attribute attribute;
+    private Attribute attribute;
 
-	/**
-	 * @param rule
-	 * @param value
-	 */
-	public ApplyAttributeRule(Rule<Attribute> rule, String value) {
-		super(rule, value);
-		attribute = rule.getMould();
-	}
-	
-	 /**
-	  * Applies this {@link AttributeRule} on a given {@ink Attribute}.
-	  * Results in the Attribute, given in the Rule, implementing the Rule in the Attribute itself.
-	  */
+    /**
+     * @param rule
+     * @param value
+     */
+    public ApplyAttributeRule(Rule<Attribute> rule, String value) {
+        super(rule, value);
+        attribute = rule.getMould();
+    }
+
+    /**
+     * Applies this {@link AttributeRule} on a given {@ink Attribute}.
+     * Results in the Attribute, given in the Rule, implementing the Rule in the Attribute itself.
+     */
     public void apply() {
         switch (rule.getScope()) {
             case OBJECT:
@@ -66,22 +64,22 @@ public class ApplyAttributeRule extends ApplyRule<Attribute> {
     }
 
     private void applyObjectVisibilityEquals() {
-    	attribute.setVisibility(findVisibilityByName(value));
+        attribute.setVisibility(findVisibilityByName(value));
     }
 
-	private Visibility findVisibilityByName(String visibilityName) {
-		for (Visibility visibility : Visibility.values()) {
-		  if (visibility.toString().contains(visibilityName.toUpperCase())) {
-			  return visibility;
-		  }
-		}
-		return null;
-	}
+    private Visibility findVisibilityByName(String visibilityName) {
+        for (Visibility visibility : Visibility.values()) {
+            if (visibility.toString().contains(visibilityName.toUpperCase())) {
+                return visibility;
+            }
+        }
+        return null;
+    }
 
     private void error(String message) {
         LOGGER.error(message);
         throw new RuleException(message);
     }
 
-	
+
 }
