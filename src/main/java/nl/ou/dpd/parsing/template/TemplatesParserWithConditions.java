@@ -190,7 +190,7 @@ public class TemplatesParserWithConditions {
 
     private void handleEdgeStartElement(XMLEvent event) {
         Edge edge = createEdge(readAttributes(event));
-        designPattern.addRealEdge(edge);
+        designPattern.add(edge);
     }
 
     private void handleAttributeStartElement(XMLEvent event) {
@@ -407,7 +407,7 @@ public class TemplatesParserWithConditions {
         }
         final EdgeRule rule = new EdgeRule(edge, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS);
         condition.getEdgeRules().add(rule);
-        conditions.add(condition); 
+        conditions.add(condition);
     }
 
     private Edge findEdgeByTwoNodes(Node leftNode, Node rightNode) {

@@ -252,7 +252,7 @@ public class ArgoUMLSystemParser {
 	
 	//add an association
 	private void handleAssociationEvent(XMLEvent event) {
-		system.addRealEdge(createUncompleteEdge(event));
+		system.add(createUncompleteEdge(event));
 	}
 	
 	//add an abstraction
@@ -261,7 +261,7 @@ public class ArgoUMLSystemParser {
 			//create an uncomplete edge
 			Edge edge = createUncompleteEdge(event);
 			edge.setRelationType(EdgeType.REALIZATION);
-			system.addRealEdge(edge);			
+			system.add(edge);
 		}
 	}
 	
@@ -271,7 +271,7 @@ public class ArgoUMLSystemParser {
 			//create an uncomplete edge
 			Edge edge = createUncompleteEdge(event);
 			edge.setRelationType(EdgeType.INHERITANCE);
-			system.addRealEdge(edge);			
+			system.add(edge);
 		}
 	}
 
@@ -353,7 +353,7 @@ public class ArgoUMLSystemParser {
 			if (dependencyId != null && findEdgeById(dependencyId) == null) {//create an uncomplete edge if the edge does not exist yet
 				Edge edge = new Edge(dependencyId, null, null, null);
 				edge.setRelationType(EdgeType.DEPENDENCY);
-				system.addRealEdge(edge);	
+				system.add(edge);
 			}
 		}		
 	}
