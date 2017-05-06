@@ -14,9 +14,9 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Peter Vansweevelt
  */
-public class ApplyAttributeRule extends ApplyRule<Attribute> {
+public class AttributeRuleElementApplicator extends RuleElementApplicator<Attribute> {
 
-    private static final Logger LOGGER = LogManager.getLogger(ApplyAttributeRule.class);
+    private static final Logger LOGGER = LogManager.getLogger(AttributeRuleElementApplicator.class);
 
     private Attribute attribute;
 
@@ -24,7 +24,7 @@ public class ApplyAttributeRule extends ApplyRule<Attribute> {
      * @param rule
      * @param value
      */
-    public ApplyAttributeRule(Rule<Attribute> rule, String value) {
+    public AttributeRuleElementApplicator(Rule<Attribute> rule, String value) {
         super(rule, value);
         attribute = rule.getMould();
     }
@@ -34,37 +34,37 @@ public class ApplyAttributeRule extends ApplyRule<Attribute> {
      * Results in the Attribute, given in the Rule, implementing the Rule in the Attribute itself.
      */
     public void apply() {
-        switch (rule.getScope()) {
+        switch (getScope()) {
             case OBJECT:
                 applyObject();
                 break;
             default:
-                error("Unexpected scope: " + rule.getScope() + ".");
+                error(String.format("Unexpected scope: '%s'.", getScope()));
         }
     }
 
     private void applyObject() {
-        switch (rule.getTopic()) {
+        switch (getTopic()) {
             case VISIBILITY:
                 applyObjectVisibility();
                 break;
             default:
-                error("Unexpected topic while applying OBJECT: " + rule.getTopic() + ".");
+                error(String.format("Unexpected topic while applying OBJECT: '%s'.", getTopic()));
         }
     }
 
     private void applyObjectVisibility() {
-        switch (rule.getOperator()) {
+        switch (getOperator()) {
             case EQUALS:
-                attribute.setVisibility(findVisibilityByName(value));
+                attribute.setVisibility(findVisibilityByName(getValue()));
                 break;
             default:
-                error("Unexpected operator while applying TOPIC: " + rule.getOperator() + ".");
+                error(String.format("Unexpected operator while applying TOPIC: '%s'.", getOperator()));
         }
     }
 
     private void applyObjectVisibilityEquals() {
-        attribute.setVisibility(findVisibilityByName(value));
+        attribute.setVisibility(findVisibilityByName(getValue()));
     }
 
     private Visibility findVisibilityByName(String visibilityName) {

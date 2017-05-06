@@ -39,4 +39,54 @@ public class CardinalityTest {
         thrown.expectMessage("Upperbound value must be >= lowerbound value.");
         new Cardinality(1, 0);
     }
+
+    @Test
+    public void testFromValue() {
+        assertThat(Cardinality.fromValue("1").getLower(), is(1));
+        assertThat(Cardinality.fromValue("1").getUpper(), is(1));
+
+        assertThat(Cardinality.fromValue("1,2").getLower(), is(1));
+        assertThat(Cardinality.fromValue("1,2").getUpper(), is(2));
+
+        assertThat(Cardinality.fromValue("1..2").getLower(), is(1));
+        assertThat(Cardinality.fromValue("1..2").getUpper(), is(2));
+
+        assertThat(Cardinality.fromValue("1..*").getLower(), is(1));
+        assertThat(Cardinality.fromValue("1..*").getUpper(), is(Cardinality.UNLIMITED));
+
+        assertThat(Cardinality.fromValue("*").getLower(), is(0));
+        assertThat(Cardinality.fromValue("*").getUpper(), is(Cardinality.UNLIMITED));
+
+        assertThat(Cardinality.fromValue("2..2").getLower(), is(2));
+        assertThat(Cardinality.fromValue("2..2").getUpper(), is(2));
+    }
+
+    @Test
+    public void testFromValueLowerValueUnlimited() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Unlimited value not allowed for lowerbound value.");
+        Cardinality.fromValue("*..0");
+    }
+
+    @Test
+    public void testFromValueLowerTooLarge() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Upperbound value must be >= lowerbound value.");
+        Cardinality.fromValue("1..0");
+    }
+
+    @Test
+    public void testFromValueTooManyArgs() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Illegal cardinality value: '1..2..3'.");
+        Cardinality.fromValue("1..2..3");
+    }
+
+    @Test
+    public void testFromValueCharacters() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Illegal cardinality value: 'a..*'.");
+        Cardinality.fromValue("a..*");
+    }
+
 }

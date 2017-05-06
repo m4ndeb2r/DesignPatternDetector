@@ -268,58 +268,37 @@ public class Edge {
         return selfRef;
     }
 
-    /**
-     * Set the cardinality of {@link #leftNode}.
-     *
-     * @param lower the lower cardinality value
-     * @param upper the upper cardinality value
-     */
     public void setCardinalityLeft(int lower, int upper) {
         this.cardinalityLeft = new Cardinality(lower, upper);
     }
 
-    /**
-     * Set the cardinality of {@link #rightNode}.
-     *
-     * @param lower the lower cardinality value
-     * @param upper the upper cardinality value
-     */
+    public void setCardinalityLeft(Cardinality cardinality) {
+        this.cardinalityLeft = cardinality;
+    }
+
     public void setCardinalityRight(int lower, int upper) {
         this.cardinalityRight = new Cardinality(lower, upper);
     }
 
-    /**
-     * Get the cardinality of the left node.
-     *
-     * @return the cardinality
-     */
+    public void setCardinalityRight(Cardinality cardinality) {
+        this.cardinalityRight = cardinality;
+    }
+
     public Cardinality getCardinalityLeft() {
         return cardinalityLeft;
     }
 
-    /**
-     * Get the cardinality of the right node.
-     *
-     * @return the cardinality
-     */
     public Cardinality getCardinalityRight() {
         return cardinalityRight;
     }
 
-    /**
-     * Remove the cardinality of {@link #leftNode}.
-     */
     public void removeCardinalityLeft() {
         cardinalityLeft = null;
     }
 
-    /**
-     * Remove the cardinality of {@link #rightNode}.
-     */
     public void removeCardinalityRight() {
         cardinalityRight = null;
     }
-
 
     /**
      * Checks if the specified {@link Object} equals this {@link Edge}. The attrbute {@link #locked} is omitted in the

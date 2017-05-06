@@ -1,5 +1,6 @@
 package nl.ou.dpd.domain.edge;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,12 @@ public class Cardinality {
         if (upper < lower && upper != UNLIMITED) {
             throw new IllegalArgumentException("Upperbound value must be >= lowerbound value.");
         }
+        if (lower == UNLIMITED) {
+            throw new IllegalArgumentException("Unlimited value not allowed for lowerbound value.");
+        }
+        if (lower < UNLIMITED || upper < UNLIMITED) {
+            throw new IllegalArgumentException("No negative values allowed in cardinality.");
+        }
         this.lower = lower;
         this.upper = upper;
     }
@@ -50,6 +57,49 @@ public class Cardinality {
      */
     public int getUpper() {
         return upper;
+    }
+
+    /**
+     * Returns a {@link Cardinality} instance based on a string. The allowed values for {@code value} are "m..n",
+     * "m, n" and "p" where m represents the lower and n the upper value of the cardinality, and where p represents
+     * a combination of both. The value for n and p may also be "*" for unlimited values.
+     * @return a cardinality [m,n]
+     */
+    public static Cardinality fromValue(String value) {
+        final int[] cardinalityValues = findCardinalityValues(value.trim());
+        int lower = cardinalityValues[0];
+        int upper = cardinalityValues[cardinalityValues.length - 1];
+        return new Cardinality(lower, upper);
+    }
+
+    private static int[] findCardinalityValues(String cardinality) {
+        if (cardinality.equals("*")) {
+            return new int[]{0, UNLIMITED};
+        }
+        String[] values = splitCardinalityString(cardinality, "\\.\\.", ",");
+        int[] result = new int[values.length];
+        try {
+            for (int i = 0; i < values.length; i++) {
+                result[i] = values[i].equals("*") ? UNLIMITED : Integer.parseInt(values[i]);
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(String.format("Illegal cardinality value: '%s'.", cardinality));
+        }
+        return result;
+    }
+
+    private static String[] splitCardinalityString(String cardinality, String... separators) {
+        String[] values = new String[]{cardinality};
+        for (int i = 0; i < separators.length; i++) {
+            values = cardinality.split(separators[i]);
+            if (values.length > 2) {
+                throw new IllegalArgumentException(String.format("Illegal cardinality value: '%s'.", cardinality));
+            }
+            if (values.length > 1) {
+                return values;
+            }
+        }
+        return values;
     }
 
     /**

@@ -14,9 +14,9 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Peter Vansweevelt
  */
-public class ApplyNodeRule extends ApplyRule<Node> {
+public class NodeRuleElementApplicator extends RuleElementApplicator<Node> {
 
-    private static final Logger LOGGER = LogManager.getLogger(ApplyNodeRule.class);
+    private static final Logger LOGGER = LogManager.getLogger(NodeRuleElementApplicator.class);
 
     private Node node;
 
@@ -24,7 +24,7 @@ public class ApplyNodeRule extends ApplyRule<Node> {
      * @param rule
      * @param value
      */
-    public ApplyNodeRule(Rule<Node> rule, String value) {
+    public NodeRuleElementApplicator(Rule<Node> rule, String value) {
         super(rule, value);
         node = rule.getMould();
     }
@@ -34,17 +34,17 @@ public class ApplyNodeRule extends ApplyRule<Node> {
      * Results in the Node, given in the Rule, implementing the Rule in the Node itself.
      */
     public void apply() {
-        switch (rule.getScope()) {
+        switch (getScope()) {
             case OBJECT:
                 applyObject();
                 break;
             default:
-                error("Unexpected scope: " + rule.getScope() + ".");
+                error(String.format("Unexpected scope: '%s'.", getScope()));
         }
     }
 
     private void applyObject() {
-        switch (rule.getTopic()) {
+        switch (getTopic()) {
             case VISIBILITY:
                 applyObjectVisibility();
                 break;
@@ -53,102 +53,90 @@ public class ApplyNodeRule extends ApplyRule<Node> {
                 break;
             case MODIFIER_LEAF:
                 applyObjectModifierLeaf();
-                node.setLeaf(Boolean.valueOf(value));
+                node.setLeaf(Boolean.valueOf(getValue()));
                 break;
             case MODIFIER_ABSTRACT:
                 applyObjectModifierAbstract();
-                node.setAbstract(Boolean.valueOf(value));
+                node.setAbstract(Boolean.valueOf(getValue()));
                 break;
             case MODIFIER_ACTIVE:
                 applyObjectModifierActive();
-                node.setActive(Boolean.valueOf(value));
+                node.setActive(Boolean.valueOf(getValue()));
                 break;
             default:
-                error("Unexpected topic while applying OBJECT: " + rule.getTopic() + ".");
+                error(String.format("Unexpected topic while applying OBJECT: '%s'.", getTopic()));
         }
     }
 
     private void applyObjectVisibility() {
-        switch (rule.getOperator()) {
+        switch (getOperator()) {
             case EQUALS:
                 applyObjectVisibilityEquals();
                 break;
             default:
-                error("Unexpected operator while applying CARDINALITY: " + rule.getOperator() + ".");
+                error(String.format("Unexpected operator while applying CARDINALITY: '%s'.", getOperator()));
 
         }
     }
 
     private void applyObjectModifierRoot() {
-        switch (rule.getOperator()) {
+        switch (getOperator()) {
             case EQUALS:
                 applyObjectModifierRootEquals();
                 break;
             default:
-                error("Unexpected operator while applying MODIFIER_ROOT: " + rule.getOperator() + ".");
+                error(String.format("Unexpected operator while applying MODIFIER_ROOT: '%s'.", getOperator()));
         }
     }
 
     private void applyObjectModifierActive() {
-        switch (rule.getOperator()) {
+        switch (getOperator()) {
             case EQUALS:
                 applyObjectModifierActiveEquals();
                 break;
             default:
-                error("Unexpected operator while applying MODIFIER_ACTIVE: " + rule.getOperator() + ".");
+                error(String.format("Unexpected operator while applying MODIFIER_ACTIVE: '%s'.", getOperator()));
         }
     }
 
     private void applyObjectModifierLeaf() {
-        switch (rule.getOperator()) {
+        switch (getOperator()) {
             case EQUALS:
                 applyObjectModifierLeafEquals();
                 break;
             default:
-                error("Unexpected operator while applying MODIFIER_LEAF: " + rule.getOperator() + ".");
+                error(String.format("Unexpected operator while applying MODIFIER_LEAF: '%s'.", getOperator()));
         }
     }
 
     private void applyObjectModifierAbstract() {
-        switch (rule.getOperator()) {
+        switch (getOperator()) {
             case EQUALS:
                 applyObjectModifierAbstractEquals();
                 break;
             default:
-                error("Unexpected operator while applying MODIFIER_ABSTRACT: " + rule.getOperator() + ".");
+                error(String.format("Unexpected operator while applying MODIFIER_ABSTRACT: '%s'.", getOperator()));
         }
     }
 
     private void applyObjectModifierActiveEquals() {
-        node.setActive(Boolean.valueOf(value));
+        node.setActive(Boolean.valueOf(getValue()));
     }
 
-
     private void applyObjectModifierAbstractEquals() {
-        node.setAbstract(Boolean.valueOf(value));
+        node.setAbstract(Boolean.valueOf(getValue()));
     }
 
     private void applyObjectModifierLeafEquals() {
-        node.setLeaf(Boolean.valueOf(value));
+        node.setLeaf(Boolean.valueOf(getValue()));
     }
-
 
     private void applyObjectModifierRootEquals() {
-        node.setRoot(Boolean.valueOf(value));
+        node.setRoot(Boolean.valueOf(getValue()));
     }
-
 
     private void applyObjectVisibilityEquals() {
-        node.setVisibility(findVisibilityByName(value));
-    }
-
-    private Visibility findVisibilityByName(String visibilityName) {
-        for (Visibility visibility : Visibility.values()) {
-            if (visibility.toString().contains(visibilityName.toUpperCase())) {
-                return visibility;
-            }
-        }
-        return null;
+        node.setVisibility(Visibility.valueOf(getValue().toUpperCase()));
     }
 
     private void error(String message) {

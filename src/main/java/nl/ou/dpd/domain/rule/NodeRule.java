@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
  * @author Peter Vansweevelt
  * @author Martin de Boer
  * @see EdgeRule
- * @see Rule
+ * @see AttributeRule
  */
 public class NodeRule extends Rule<Node> {
 

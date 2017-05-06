@@ -28,11 +28,11 @@ import static org.junit.Assert.*;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
-public class ApplyRuleTest {
+public class RuleElementApplicatorTest {
 	
-    private ApplyEdgeRule aer;
-    private ApplyNodeRule anr;
-    private ApplyAttributeRule aar;
+    private EdgeRuleElementApplicator aer;
+    private NodeRuleElementApplicator anr;
+    private AttributeRuleElementApplicator aar;
 
     // A test file containing valid XML.
     private static final String ADAPTERTEMPLATES_XML = "/template_adapters.xml";
@@ -65,41 +65,41 @@ public class ApplyRuleTest {
         EdgeRule cardinalityLeftRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_LEFT, Operator.EQUALS);
         EdgeRule cardinalityRightRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_RIGHT, Operator.EQUALS);
 
-        aer = new ApplyEdgeRule(relationRule, "Association_directed");
+        aer = new EdgeRuleElementApplicator(relationRule, "Association_directed");
         aer.apply();
         assertEquals(EdgeType.ASSOCIATION_DIRECTED, mould.getRelationType());
 
         //test different cardinality formats
-        aer = new ApplyEdgeRule(cardinalityLeftRule, "0..*");
+        aer = new EdgeRuleElementApplicator(cardinalityLeftRule, "0..*");
         aer.apply();
         assertEquals(0, mould.getCardinalityLeft().getLower());
         assertEquals(-1, mould.getCardinalityLeft().getUpper());
 
-        aer = new ApplyEdgeRule(cardinalityRightRule, "1");
+        aer = new EdgeRuleElementApplicator(cardinalityRightRule, "1");
         aer.apply();
         assertEquals(1, mould.getCardinalityRight().getLower());
         assertEquals(1, mould.getCardinalityRight().getUpper());
 
-        aer = new ApplyEdgeRule(cardinalityRightRule, "1,5");
+        aer = new EdgeRuleElementApplicator(cardinalityRightRule, "1,5");
         aer.apply();
         assertEquals(1, mould.getCardinalityRight().getLower());
         assertEquals(5, mould.getCardinalityRight().getUpper());
         
-        aer = new ApplyEdgeRule(cardinalityRightRule, "0,*");
+        aer = new EdgeRuleElementApplicator(cardinalityRightRule, "0,*");
         aer.apply();
         assertEquals(0, mould.getCardinalityRight().getLower());
         assertEquals(-1, mould.getCardinalityRight().getUpper());
 
-        aer = new ApplyEdgeRule(cardinalityRightRule, "1..1");
+        aer = new EdgeRuleElementApplicator(cardinalityRightRule, "1..1");
         aer.apply();
         assertEquals(1, mould.getCardinalityRight().getLower());
         assertEquals(1, mould.getCardinalityRight().getUpper());
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected topic while applying RELATION: MODIFIER_ABSTRACT.");
+        thrown.expectMessage("Unexpected topic while applying RELATION: 'MODIFIER_ABSTRACT'.");
 
         EdgeRule wrongTopicRule = new EdgeRule(mould, Scope.RELATION, Topic.MODIFIER_ABSTRACT, Operator.EQUALS);
-        aer = new ApplyEdgeRule(wrongTopicRule, "1..1");
+        aer = new EdgeRuleElementApplicator(wrongTopicRule, "1..1");
         aer.apply();
     }
 
@@ -118,55 +118,55 @@ public class ApplyRuleTest {
 
         assertNull(mould.getVisibility());
         
-        anr = new ApplyNodeRule(visibility, "private");
+        anr = new NodeRuleElementApplicator(visibility, "private");
         anr.apply();
         assertEquals(Visibility.PRIVATE, mould.getVisibility());
 
-        anr = new ApplyNodeRule(visibility, "public");
+        anr = new NodeRuleElementApplicator(visibility, "public");
         anr.apply();
         assertEquals(Visibility.PUBLIC, mould.getVisibility());
 
-        anr = new ApplyNodeRule(visibility, "protected");
+        anr = new NodeRuleElementApplicator(visibility, "protected");
         anr.apply();
         assertEquals(Visibility.PROTECTED, mould.getVisibility());
         
-        anr = new ApplyNodeRule(visibility, "package");
+        anr = new NodeRuleElementApplicator(visibility, "package");
         anr.apply();
         assertEquals(Visibility.PACKAGE, mould.getVisibility());
         
         assertNull(mould.isAbstract());
         
-        anr = new ApplyNodeRule(modifierAbstract, "true");
+        anr = new NodeRuleElementApplicator(modifierAbstract, "true");
         anr.apply();
         assertTrue(mould.isAbstract());
         
         assertNull(mould.isActive());
         
-        anr = new ApplyNodeRule(modifierActive, "false");
+        anr = new NodeRuleElementApplicator(modifierActive, "false");
         anr.apply();
         assertFalse(mould.isActive());
         
         assertNull(mould.isRoot());
 
-        anr = new ApplyNodeRule(modifierRoot, "true");
+        anr = new NodeRuleElementApplicator(modifierRoot, "true");
         anr.apply();
         assertTrue(mould.isRoot());
         
         assertNull(mould.isLeaf());
         
-        anr = new ApplyNodeRule(modifierLeaf, "false");
+        anr = new NodeRuleElementApplicator(modifierLeaf, "false");
         anr.apply();
         assertFalse(mould.isLeaf());
 
         //false if boolean-translation to 'true' has not succeeded.
-        anr = new ApplyNodeRule(modifierLeaf, "dummie");
+        anr = new NodeRuleElementApplicator(modifierLeaf, "dummie");
         anr.apply();
         assertFalse(mould.isLeaf());
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected topic while applying OBJECT: TYPE.");
+        thrown.expectMessage("Unexpected topic while applying OBJECT: 'TYPE'.");
 
-        anr = new ApplyNodeRule(wrongTopic, "dummie");
+        anr = new NodeRuleElementApplicator(wrongTopic, "dummie");
         anr.apply();
     }
 
@@ -183,31 +183,31 @@ public class ApplyRuleTest {
 
         assertNull(mould.isActive());
         
-        anr = new ApplyNodeRule(modifierActive, "false");
+        anr = new NodeRuleElementApplicator(modifierActive, "false");
         anr.apply();
         assertFalse(mould.isActive());
         
         assertNull(mould.isRoot());
 
-        anr = new ApplyNodeRule(modifierRoot, "true");
+        anr = new NodeRuleElementApplicator(modifierRoot, "true");
         anr.apply();
         assertTrue(mould.isRoot());
         
         assertNull(mould.isLeaf());
         
-        anr = new ApplyNodeRule(modifierLeaf, "false");
+        anr = new NodeRuleElementApplicator(modifierLeaf, "false");
         anr.apply();
         assertFalse(mould.isLeaf());
 
         //false if boolean-translation to 'true' has not succeeded.
-        anr = new ApplyNodeRule(modifierLeaf, "dummie");
+        anr = new NodeRuleElementApplicator(modifierLeaf, "dummie");
         anr.apply();
         assertFalse(mould.isLeaf());
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected scope: RELATION.");
+        thrown.expectMessage("Unexpected scope: 'RELATION'.");
 
-        anr = new ApplyNodeRule(wrongScope, "Inheritance");
+        anr = new NodeRuleElementApplicator(wrongScope, "Inheritance");
         anr.apply();
     }
 
@@ -223,32 +223,32 @@ public class ApplyRuleTest {
         
         assertNull(mould.getVisibility());
         
-        aar = new ApplyAttributeRule(visibility, "private");
+        aar = new AttributeRuleElementApplicator(visibility, "private");
         aar.apply();
         assertEquals(Visibility.PRIVATE, mould.getVisibility());
 
-        aar = new ApplyAttributeRule(visibility, "public");
+        aar = new AttributeRuleElementApplicator(visibility, "public");
         aar.apply();
         assertEquals(Visibility.PUBLIC, mould.getVisibility());
 
-        aar = new ApplyAttributeRule(visibility, "protected");
+        aar = new AttributeRuleElementApplicator(visibility, "protected");
         aar.apply();
         assertEquals(Visibility.PROTECTED, mould.getVisibility());
         
-        aar = new ApplyAttributeRule(visibility, "package");
+        aar = new AttributeRuleElementApplicator(visibility, "package");
         aar.apply();
         assertEquals(Visibility.PACKAGE, mould.getVisibility());
         
      
         //null if no conversion from String to Visibility could be made
-        aar = new ApplyAttributeRule(visibility, "dummie");
+        aar = new AttributeRuleElementApplicator(visibility, "dummie");
         aar.apply();
         assertNull(mould.getVisibility());
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected operator while applying TOPIC: EXISTS");
+        thrown.expectMessage("Unexpected operator while applying TOPIC: 'EXISTS'");
 
-        aar = new ApplyAttributeRule(wrongOperator, "Inheritance");
+        aar = new AttributeRuleElementApplicator(wrongOperator, "Inheritance");
         aar.apply();
     }
  }

@@ -15,6 +15,8 @@ import java.util.List;
  *
  * @author Peter Vansweevelt
  * @author Martin de Boer
+ * @see NodeRule
+ * @see AttributeRule
  */
 public class EdgeRule extends Rule<Edge> {
 

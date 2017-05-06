@@ -395,12 +395,19 @@ public class TemplatesParserWithConditions {
         final List<Condition> conditions = designPattern.getConditions();
         final Node attributeType = attr.getType();
         final String id = "SystemCondition " + conditions.size() + 1;
-        final String description = String.format("The node '%s' must have an attribute of type '%s'.", node.getName(), attributeType.getId());
+        final String description = String.format(
+                "The node '%s' must have an attribute of type '%s'.",
+                node.getName(),
+                attributeType.getId()
+        );
         final Condition condition = new Condition(id, description);
-
         final Edge edge = findEdgeByTwoNodes(node, attributeType);
         if (edge == null) {
-            error(String.format("An edge between '%s' and '%s' could not be found.", node.getId(), attributeType.getId()));
+            error(String.format(
+                    "An edge between '%s' and '%s' could not be found.",
+                    node.getId(),
+                    attributeType.getId()
+            ));
         }
         final EdgeRule rule = new EdgeRule(edge, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS);
         condition.getEdgeRules().add(rule);
@@ -434,23 +441,23 @@ public class TemplatesParserWithConditions {
      */
     private Rule makeRule(Map<String, String> attributes) {
         final String applies = attributes.get(APPLIES);
-        final String scope = attributes.get(SCOPE);
-        final String topic = attributes.get(TOPIC);
-        final String operator = attributes.get(OPERATOR);
+        final Scope scope = Scope.valueOf(attributes.get(SCOPE));
+        final Topic topic = Topic.valueOf(attributes.get(TOPIC));
+        final Operator operator = Operator.valueOf(attributes.get(OPERATOR));
 
         final Node node = findNodeById(applies);
         if (node != null) {
-            return new NodeRule(node, Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
+            return new NodeRule(node, scope, topic, operator);
         }
 
         final Edge edge = findEdgeById(applies);
         if (edge != null) {
-            return new EdgeRule(edge, Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
+            return new EdgeRule(edge, scope, topic, operator);
         }
 
         final nl.ou.dpd.domain.node.Attribute attribute = findAttributeById(applies);
         if (attribute != null) {
-            return new AttributeRule(attribute, Scope.valueOf(scope), Topic.valueOf(topic), Operator.valueOf(operator));
+            return new AttributeRule(attribute, scope, topic, operator);
         }
 
         error(String.format("Rules must apply to existing elements. No element '%s' was found.", applies));
@@ -484,16 +491,13 @@ public class TemplatesParserWithConditions {
      */
     private void applyRule(Rule rule, String value) {
         if (rule instanceof NodeRule) {
-            ApplyRule applyRule = new ApplyNodeRule(rule, value);
-            applyRule.apply();
+            new NodeRuleElementApplicator(rule, value).apply();
         }
         if (rule instanceof EdgeRule) {
-            ApplyRule applyRule = new ApplyEdgeRule(rule, value);
-            applyRule.apply();
+            new EdgeRuleElementApplicator(rule, value).apply();
         }
         if (rule instanceof AttributeRule) {
-            ApplyRule applyRule = new ApplyAttributeRule(rule, value);
-            applyRule.apply();
+            new AttributeRuleElementApplicator(rule, value).apply();
         }
     }
 
