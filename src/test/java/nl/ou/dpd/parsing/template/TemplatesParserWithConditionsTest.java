@@ -74,7 +74,7 @@ public class TemplatesParserWithConditionsTest {
         assertThat(designPattern.getConditions().size(), is(12));
         assertSystemConditionsCount(designPattern.getConditions(), 6);
         assertUserConditionsCount(designPattern.getConditions(), 6);
-
+        // TODO: more extensive checking here
     }
 
     private void assertObjectAdapterWithInterface(DesignPattern designPattern) {
@@ -136,7 +136,9 @@ public class TemplatesParserWithConditionsTest {
     }
 
     /**
-     * Tests the exception handling in case of a missing edge.
+     * Tests the exception handling in case of a missing edge fot an attribute. When an attribute is present in a class
+     * there must also be a relation for this attribute (between the class it's defined in to the class that represents
+     * its type.
      */
     @Test
     public void testMissingEdgeForAttributeException() {
@@ -150,7 +152,8 @@ public class TemplatesParserWithConditionsTest {
     }
 
     /**
-     * Tests the exception handling in case of a missing edge.
+     * Tests the exception handling in case of a missing edge. When a rule applies to an element, and this element is
+     * not present, this must generate an exception.
      */
     @Test
     public void testMissingEdgeForRuleException() {
