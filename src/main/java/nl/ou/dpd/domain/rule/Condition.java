@@ -277,17 +277,12 @@ public class Condition {
         // Evaluate all attribute rules matching the left node attributes with the type of the right node
         // (other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
         for (Rule<Attribute> rule : this.attributeRules) {
-            boolean partialResult = false;
-            boolean ruleProcessed = false;
             for (Attribute systemAttribute : findAttributesOfRightNodeType(systemEdge)) {
-                if (rule.getMould().getType().getName() == patternEdge.getRightNode().getName()) {
-                    partialResult = partialResult || rule.process(systemAttribute);
-                    ruleProcessed = true;
+                final String mouldTypeName = rule.getMould().getType().getName();
+                final String patternRightNodeName = patternEdge.getRightNode().getName();
+                if (mouldTypeName == patternRightNodeName && !rule.process(systemAttribute)) {
+                    return false;
                 }
-            }
-            partialResult = partialResult || !ruleProcessed;
-            if (partialResult == false) {
-                return false;
             }
         }
         return true;
