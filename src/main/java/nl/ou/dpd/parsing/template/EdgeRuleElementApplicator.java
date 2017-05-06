@@ -92,11 +92,11 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     }
 
     private void applyCardinalityLeftEquals() {
-        edge.setCardinalityLeft(Cardinality.fromValue(getValue()));
+        edge.setCardinalityLeft(Cardinality.valueOf(getValue()));
     }
 
     private void applyCardinalityRightEquals() {
-        edge.setCardinalityRight(Cardinality.fromValue(getValue()));
+        edge.setCardinalityRight(Cardinality.valueOf(getValue()));
     }
 
     private EdgeType findEdgeTypeByName(String edgeTypeName) {

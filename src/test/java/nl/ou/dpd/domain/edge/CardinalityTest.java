@@ -42,51 +42,69 @@ public class CardinalityTest {
 
     @Test
     public void testFromValue() {
-        assertThat(Cardinality.fromValue("1").getLower(), is(1));
-        assertThat(Cardinality.fromValue("1").getUpper(), is(1));
+        Cardinality cardinality = Cardinality.valueOf("1");
+        assertThat(cardinality.getLower(), is(1));
+        assertThat(cardinality.getUpper(), is(1));
 
-        assertThat(Cardinality.fromValue("1,2").getLower(), is(1));
-        assertThat(Cardinality.fromValue("1,2").getUpper(), is(2));
+        cardinality = Cardinality.valueOf("1,2");
+        assertThat(cardinality.getLower(), is(1));
+        assertThat(cardinality.getUpper(), is(2));
 
-        assertThat(Cardinality.fromValue("1..2").getLower(), is(1));
-        assertThat(Cardinality.fromValue("1..2").getUpper(), is(2));
+        cardinality = Cardinality.valueOf("1..99");
+        assertThat(cardinality.getLower(), is(1));
+        assertThat(cardinality.getUpper(), is(99));
 
-        assertThat(Cardinality.fromValue("1..*").getLower(), is(1));
-        assertThat(Cardinality.fromValue("1..*").getUpper(), is(Cardinality.UNLIMITED));
+        cardinality = Cardinality.valueOf("1..*");
+        assertThat(cardinality.getLower(), is(1));
+        assertThat(cardinality.getUpper(), is(Cardinality.UNLIMITED));
 
-        assertThat(Cardinality.fromValue("*").getLower(), is(0));
-        assertThat(Cardinality.fromValue("*").getUpper(), is(Cardinality.UNLIMITED));
-
-        assertThat(Cardinality.fromValue("2..2").getLower(), is(2));
-        assertThat(Cardinality.fromValue("2..2").getUpper(), is(2));
+        cardinality = Cardinality.valueOf("*");
+        assertThat(cardinality.getLower(), is(0));
+        assertThat(cardinality.getUpper(), is(Cardinality.UNLIMITED));
     }
 
     @Test
     public void testFromValueLowerValueUnlimited() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Unlimited value not allowed for lowerbound value.");
-        Cardinality.fromValue("*..0");
+        Cardinality.valueOf("*..0");
     }
 
     @Test
     public void testFromValueLowerTooLarge() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Upperbound value must be >= lowerbound value.");
-        Cardinality.fromValue("1..0");
+        Cardinality.valueOf("1..0");
     }
 
     @Test
     public void testFromValueTooManyArgs() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Illegal cardinality value: '1..2..3'.");
-        Cardinality.fromValue("1..2..3");
+        Cardinality.valueOf("1..2..3");
     }
 
     @Test
     public void testFromValueCharacters() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Illegal cardinality value: 'a..*'.");
-        Cardinality.fromValue("a..*");
+        Cardinality.valueOf("a..*");
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(Cardinality.valueOf("1").toString(), is("1"));
+        assertThat(Cardinality.valueOf("*").toString(), is("*"));
+
+        assertThat(Cardinality.valueOf("0..*").toString(), is("*"));
+        assertThat(Cardinality.valueOf("1..1").toString(), is("1"));
+        assertThat(Cardinality.valueOf("3..5").toString(), is("3..5"));
+        assertThat(Cardinality.valueOf("1..*").toString(), is("1..*"));
+
+        assertThat(Cardinality.valueOf("0,*").toString(), is("*"));
+        assertThat(Cardinality.valueOf("1,1").toString(), is("1"));
+        assertThat(Cardinality.valueOf("3,5").toString(), is("3..5"));
+        assertThat(Cardinality.valueOf("1,*").toString(), is("1..*"));
     }
 
 }
