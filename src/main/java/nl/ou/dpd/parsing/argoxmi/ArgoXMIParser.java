@@ -4,7 +4,7 @@ import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.ParseException;
 import nl.ou.dpd.parsing.Parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,11 +61,11 @@ public class ArgoXMIParser implements Parser<SystemUnderConsideration> {
         } catch (SAXException | ParserConfigurationException e) {
             final String msg = "The file " + fileName + " could not be parsed.";
             LOGGER.error("***" + msg, e);
-            throw new DesignPatternDetectorException(msg, e);
+            throw new ParseException(msg, e);
         } catch (IOException e) {
             final String msg = "The file " + fileName + " could not be found.";
             LOGGER.error(msg, e);
-            throw new DesignPatternDetectorException(msg, e);
+            throw new ParseException(msg, e);
         }
     }
 

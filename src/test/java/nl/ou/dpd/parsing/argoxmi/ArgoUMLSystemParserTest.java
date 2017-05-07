@@ -7,7 +7,7 @@ import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.node.Visibility;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.ParseException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -69,7 +69,7 @@ public class ArgoUMLSystemParserTest {
         final String path = getPath(INVALID_XML);
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
         thrown.expectMessage("The XMI file " + path + " could not be parsed.");
 
@@ -84,7 +84,7 @@ public class ArgoUMLSystemParserTest {
     public void testFileNotFoundException() {
         final ArgoUMLSystemParser parser = new ArgoUMLSystemParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
         thrown.expectMessage("The XMI file missing.xml could not be found.");
 

@@ -7,7 +7,7 @@ import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.Visibility;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -97,11 +97,11 @@ public class ArgoUMLSystemParser {
         } catch (XMLStreamException e) {
             final String msg = "The XMI file " + filename + " could not be parsed.";
             LOGGER.error(msg, e);
-            throw new DesignPatternDetectorException(msg, e);
+            throw new ParseException(msg, e);
         } catch (FileNotFoundException e) {
             final String msg = "The XMI file " + filename + " could not be found.";
             LOGGER.error(msg, e);
-            throw new DesignPatternDetectorException(msg, e);
+            throw new ParseException(msg, e);
         }
         return system;
     }

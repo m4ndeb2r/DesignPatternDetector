@@ -3,7 +3,7 @@ package nl.ou.dpd.parsing.argoxmi;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.ParseException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -49,7 +49,7 @@ public class ArgoXMIParserTest {
         final String path = getPath(INVALID_XMI);
         final ArgoXMIParser argoXMIParser = new ArgoXMIParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXParseException.class));
         thrown.expectMessage("The file " + path + " could not be parsed.");
 
@@ -64,7 +64,7 @@ public class ArgoXMIParserTest {
     public void testFileNotFoundException() {
         final ArgoXMIParser argoXMIParser = new ArgoXMIParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
         thrown.expectMessage("The file oops.xmi could not be found.");
 

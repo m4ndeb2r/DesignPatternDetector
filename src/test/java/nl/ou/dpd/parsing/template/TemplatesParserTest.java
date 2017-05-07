@@ -3,7 +3,7 @@ package nl.ou.dpd.parsing.template;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.ParseException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -48,7 +48,7 @@ public class TemplatesParserTest {
         final String path = getPath(INVALID_XML);
         final TemplatesParser templatesParser = new TemplatesParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXParseException.class));
         thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
 
@@ -64,7 +64,7 @@ public class TemplatesParserTest {
         final String path = getPath(INVALID_EDGE_TAG_XML);
         final TemplatesParser templatesParser = new TemplatesParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXException.class));
         thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
 
@@ -80,7 +80,7 @@ public class TemplatesParserTest {
         final String path = getPath(INVALID_TEMPLATE_TAG_XML);
         final TemplatesParser templatesParser = new TemplatesParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXException.class));
         thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
 
@@ -95,7 +95,7 @@ public class TemplatesParserTest {
     public void testFileNotFoundException() {
         final TemplatesParser templatesParser = new TemplatesParser();
 
-        thrown.expect(DesignPatternDetectorException.class);
+        thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
         thrown.expectMessage("The pattern template file missing.xml could not be found.");
 

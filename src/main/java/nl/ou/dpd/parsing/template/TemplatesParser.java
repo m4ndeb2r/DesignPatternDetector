@@ -2,7 +2,7 @@ package nl.ou.dpd.parsing.template;
 
 
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
+import nl.ou.dpd.parsing.ParseException;
 import nl.ou.dpd.parsing.Parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,11 +44,11 @@ public class TemplatesParser implements Parser<List<DesignPattern>> {
         } catch (SAXException | ParserConfigurationException e) {
             final String msg = "The pattern template file " + filename + " could not be parsed.";
             LOGGER.error(msg, e);
-            throw new DesignPatternDetectorException(msg, e);
+            throw new ParseException(msg, e);
         } catch (IOException e) {
             final String msg = "The pattern template file " + filename + " could not be found.";
             LOGGER.error(msg, e);
-            throw new DesignPatternDetectorException(msg, e);
+            throw new ParseException(msg, e);
         }
     }
 }
