@@ -33,6 +33,7 @@ public class ConditionWithAttributeRulesTest {
     private AttributeRule attribRule1;
     @Mock
     private AttributeRule attribRule2;
+
     @Mock
     private Edge systemEdge;
     @Mock
@@ -61,6 +62,7 @@ public class ConditionWithAttributeRulesTest {
         systemLeftAttributes.add(systemLeftAttribute1);
         systemLeftAttributes.add(systemLeftAttribute2);
 
+        // Mock systemEdge behaviour
         when(systemEdge.getLeftNode()).thenReturn(systemLeftNode);
         when(systemEdge.getRightNode()).thenReturn(systemRightNode);
         when(systemLeftNode.getAttributes()).thenReturn(systemLeftAttributes);
@@ -68,11 +70,13 @@ public class ConditionWithAttributeRulesTest {
         when(systemLeftAttribute2.getType()).thenReturn(systemRightNode);
         when(systemRightNode.getName()).thenReturn("SystemRightNodeName");
 
+        // Mock patternEdge behaviour
         when(patternEdge.getRightNode()).thenReturn(patternRightNode);
         when(patternLeftAttribute1.getType()).thenReturn(patternRightNode);
         when(patternLeftAttribute2.getType()).thenReturn(patternRightNode);
         when(patternRightNode.getName()).thenReturn("PatternRightNodeName");
 
+        // Mock rules' behaviour
         when(attribRule1.getMould()).thenReturn(patternLeftAttribute1);
         when(attribRule2.getMould()).thenReturn(patternLeftAttribute2);
 
@@ -84,7 +88,7 @@ public class ConditionWithAttributeRulesTest {
 
     @Test
     public void testConditionOK() {
-        // Set expectations
+        // Mock rules' behaviour for this test
         when(attribRule1.process(any(Attribute.class))).thenReturn(true);
         when(attribRule2.process(any(Attribute.class))).thenReturn(true);
 
@@ -99,7 +103,7 @@ public class ConditionWithAttributeRulesTest {
 
     @Test
     public void testConditionNotOK() {
-        // Set expectations
+        // Mock rules' behaviour for this test
         when(attribRule1.process(systemLeftAttribute1)).thenReturn(true);
         when(attribRule1.process(systemLeftAttribute2)).thenReturn(false);
         when(attribRule2.process(systemLeftAttribute1)).thenReturn(true);

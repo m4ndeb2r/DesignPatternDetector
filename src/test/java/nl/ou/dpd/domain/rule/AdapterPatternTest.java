@@ -302,94 +302,10 @@ public class AdapterPatternTest {
 
     }
 
-    /**
-     * Test a system with mapped system and patternedges
-     * Map<Node, Node> = map<systemedge, patternedge>
-     */
-    @Test
-    public void testMatchedNodesOK() {
-        Map<Node, Node> matchedNodes = new HashMap<>();
-        matchedNodes.put(drawingEditor, client);
-        matchedNodes.put(shape, target);
-        matchedNodes.put(textShape, adapter);
-        matchedNodes.put(textView, adaptee);
-
-        assertTrue(conditions.processConditions(matchedNodes));
-
-        //only node conditions are evaluated
-        for (Condition c : conditions.getConditions()) {
-            assertTrue(c.isProcessed());
-        }
-
-    }
-
-    /**
-     * Test a system building mapped system and patternedges
-     * Map<Node, Node> = map<systemedge, patternedge>
-     */
-    @Test
-    public void testMatchedNodesBuildingOK() {
-
-        Map<Node, Node> matchedNodes = new HashMap<>();
-        if (conditions.processConditions(editorShape, clientTarget)) {
-            matchedNodes.put(editorShape.getLeftNode(), clientTarget.getLeftNode());
-            matchedNodes.put(editorShape.getRightNode(), clientTarget.getRightNode());
-        }
-        if (conditions.processConditions(textshapeTextview, adapterAdaptee)) {
-            matchedNodes.put(textshapeTextview.getLeftNode(), adapterAdaptee.getLeftNode());
-            matchedNodes.put(textshapeTextview.getRightNode(), adapterAdaptee.getRightNode());
-        }
-        if (conditions.processConditions(textshapeShape, adapterTarget)) {
-            matchedNodes.put(textshapeShape.getLeftNode(), adapterTarget.getLeftNode());
-            matchedNodes.put(textshapeShape.getRightNode(), adapterTarget.getRightNode());
-        }
-
-        boolean structureOK = conditions.processConditions(editorShape, clientTarget) && conditions.processConditions(textshapeTextview, adapterAdaptee) && conditions.processConditions(textshapeShape, adapterTarget);
-        assertTrue(conditions.processConditions(matchedNodes) && structureOK);
-
-
-    }
-
-    /**
-     * Test a system building mapped system and patternedges with a wrong relationship.
-     * Map<Node, Node> = map<systemedge, patternedge>
-     */
-    @Test
-    public void testMatchedNodesBuildingWrongRelationship() {
-
-        Map<Node, Node> matchedNodes = new HashMap<>();
-        //clientTarget has a wrong relationship
-        editorShape = new Edge(drawingEditor, shape, EdgeType.DEPENDENCY, "editor-shape");
-
-        if (conditions.processConditions(editorShape, clientTarget)) {
-            matchedNodes.put(editorShape.getLeftNode(), clientTarget.getLeftNode());
-            matchedNodes.put(editorShape.getRightNode(), clientTarget.getRightNode());
-        }
-        if (conditions.processConditions(textshapeTextview, adapterAdaptee)) {
-            matchedNodes.put(textshapeTextview.getLeftNode(), adapterAdaptee.getLeftNode());
-            matchedNodes.put(textshapeTextview.getRightNode(), adapterAdaptee.getRightNode());
-        }
-        if (conditions.processConditions(textshapeShape, adapterTarget)) {
-            matchedNodes.put(textshapeShape.getLeftNode(), adapterTarget.getLeftNode());
-            matchedNodes.put(textshapeShape.getRightNode(), adapterTarget.getRightNode());
-        }
-
-        //nodes of a wrong edge are not mentioned in the map, thus not processed with the matchedNodes.
-        //assert all conditions are evaluated
-        for (Condition c : conditions.getConditions()) {
-            assertTrue(c.isProcessed());
-        }
-
-        assertTrue(conditions.processConditions(matchedNodes));
-
-        //with an extra evaluation of the different edges, structure is not complete.
-        boolean structureOK = conditions.processConditions(editorShape, clientTarget) && conditions.processConditions(textshapeTextview, adapterAdaptee) && conditions.processConditions(textshapeShape, adapterTarget);
-        assertFalse(conditions.processConditions(matchedNodes) && structureOK);
-    }
-
     private Clazz createClazz(String id) {
         return new Clazz(id, id, Visibility.PUBLIC, null, null, null, null, null);
     }
+
     private Clazz createAbstractClazz(String id) {
         return new Clazz(id, id, Visibility.PUBLIC, null, null, null, true, null);
     }

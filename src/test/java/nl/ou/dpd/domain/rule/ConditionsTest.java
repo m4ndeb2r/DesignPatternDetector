@@ -39,6 +39,9 @@ public class ConditionsTest {
     @Mock
     private Edge systemEdge;
 
+    @Mock
+    private Edge patternEdge;
+
     private Conditions conditions;
 
     @Before
@@ -60,52 +63,51 @@ public class ConditionsTest {
     @Test
     public void testAllOK() {
         // Set test specific expectations
-        when(mandatoryCondition.process(systemEdge)).thenReturn(true);
+        when(mandatoryCondition.process(systemEdge, patternEdge)).thenReturn(true);
         when(mandatoryCondition.isProcessedUnsuccessfully()).thenReturn(false);
-        when(feedbackCondition.process(systemEdge)).thenReturn(true);
-        when(ignoredCondition.process(systemEdge)).thenReturn(true);
+        when(feedbackCondition.process(systemEdge, patternEdge)).thenReturn(true);
+        when(ignoredCondition.process(systemEdge, patternEdge)).thenReturn(true);
 
-        assertTrue(conditions.processConditions(systemEdge));
+        assertTrue(conditions.processConditions(systemEdge, patternEdge));
 
         // Verifiy number of calls
-        verify(mandatoryCondition, times(1)).process(systemEdge);
+        verify(mandatoryCondition, times(1)).process(systemEdge, patternEdge);
         verify(mandatoryCondition, times(1)).isProcessedUnsuccessfully();
-        verify(feedbackCondition, times(1)).process(systemEdge);
-        verify(ignoredCondition, times(1)).process(systemEdge);
+        verify(feedbackCondition, times(1)).process(systemEdge, patternEdge);
+        verify(ignoredCondition, times(1)).process(systemEdge, patternEdge);
     }
-
     @Test
     public void testMandatoryNOK() {
         // Set test specific expectations
-        when(mandatoryCondition.process(systemEdge)).thenReturn(false);
+        when(mandatoryCondition.process(systemEdge, patternEdge)).thenReturn(false);
         when(mandatoryCondition.isProcessedUnsuccessfully()).thenReturn(true);
-        when(feedbackCondition.process(systemEdge)).thenReturn(true);
-        when(ignoredCondition.process(systemEdge)).thenReturn(true);
+        when(feedbackCondition.process(systemEdge, patternEdge)).thenReturn(true);
+        when(ignoredCondition.process(systemEdge, patternEdge)).thenReturn(true);
 
-        assertFalse(conditions.processConditions(systemEdge));
+        assertFalse(conditions.processConditions(systemEdge, patternEdge));
 
         // Verifiy number of calls
-        verify(mandatoryCondition, times(1)).process(systemEdge);
+        verify(mandatoryCondition, times(1)).process(systemEdge, patternEdge);
         verify(mandatoryCondition, times(1)).isProcessedUnsuccessfully();
-        verify(feedbackCondition, times(1)).process(systemEdge);
-        verify(ignoredCondition, times(1)).process(systemEdge);
+        verify(feedbackCondition, times(0)).process(systemEdge, patternEdge);
+        verify(ignoredCondition, times(0)).process(systemEdge, patternEdge);
     }
 
     @Test
     public void testFeedBackNOK() {
         // Set test specific expectations
-        when(mandatoryCondition.process(systemEdge)).thenReturn(true);
+        when(mandatoryCondition.process(systemEdge, patternEdge)).thenReturn(true);
         when(mandatoryCondition.isProcessedUnsuccessfully()).thenReturn(false);
-        when(feedbackCondition.process(systemEdge)).thenReturn(false);
-        when(ignoredCondition.process(systemEdge)).thenReturn(true);
+        when(feedbackCondition.process(systemEdge, patternEdge)).thenReturn(false);
+        when(ignoredCondition.process(systemEdge, patternEdge)).thenReturn(true);
 
-        assertTrue(conditions.processConditions(systemEdge));
+        assertTrue(conditions.processConditions(systemEdge, patternEdge));
 
         // Verifiy number of calls
-        verify(mandatoryCondition, times(1)).process(systemEdge);
+        verify(mandatoryCondition, times(1)).process(systemEdge, patternEdge);
         verify(mandatoryCondition, times(1)).isProcessedUnsuccessfully();
-        verify(feedbackCondition, times(1)).process(systemEdge);
-        verify(ignoredCondition, times(1)).process(systemEdge);
+        verify(feedbackCondition, times(1)).process(systemEdge, patternEdge);
+        verify(ignoredCondition, times(1)).process(systemEdge, patternEdge);
     }
 
 }
