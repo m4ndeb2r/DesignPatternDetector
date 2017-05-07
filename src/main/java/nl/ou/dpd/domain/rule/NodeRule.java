@@ -43,7 +43,7 @@ public class NodeRule extends Rule<Node> {
             case OBJECT:
                 return processObject(systemNode);
             default:
-                return error("Unexpected scope: " + getScope() + ".");
+                return error(String.format("Unexpected scope: '%s'.", getScope()));
         }
     }
 
@@ -62,7 +62,7 @@ public class NodeRule extends Rule<Node> {
             case MODIFIER_ACTIVE:
                 return processObjectModifierActive(systemNode);
             default:
-                return error("Unexpected topic while processing OBJECT: " + getTopic() + ".");
+                return error(String.format("Unexpected topic '%s' while processing scope 'OBJECT'.", getTopic()));
         }
     }
 
@@ -77,7 +77,7 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectTypeEquals(systemNode);
             default:
-                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing scope 'TYPE'.", getOperator()));
         }
     }
 
@@ -92,7 +92,7 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectVisibilityEquals(systemNode);
             default:
-                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing scope 'VISIBILITY'.", getOperator()));
         }
     }
 
@@ -107,7 +107,7 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierRootEquals(systemNode);
             default:
-                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_ROOT'.", getOperator()));
         }
     }
 
@@ -122,7 +122,7 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierLeafEquals(systemNode);
             default:
-                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_LEAF'.", getOperator()));
         }
     }
 
@@ -137,7 +137,7 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierAbstractEquals(systemNode);
             default:
-                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_ABSTRACT'.", getOperator()));
         }
     }
 
@@ -152,7 +152,7 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierActiveEquals(systemNode);
             default:
-                return error("Unexpected operator while processing OBJECT: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_ACTIVE'.", getOperator()));
         }
     }
 
@@ -161,9 +161,7 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processObjectTypeEquals(Node systemNode) {
-        if (getMould().getType() == null) {
-            return error("Cannot perform rule on topic TYPE. Unable to detect what to check for.");
-        }
+        validateTopic(getMould().getType(), Topic.TYPE);
         return systemNode.getType() == getMould().getType();
     }
 
@@ -172,9 +170,7 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processObjectVisibilityEquals(Node systemNode) {
-        if (getMould().getVisibility() == null) {
-            return error("Cannot perform rule on topic VISIBILITY. Unable to detect what to check for.");
-        }
+        validateTopic(getMould().getVisibility(), Topic.VISIBILITY);
         return systemNode.getVisibility() == getMould().getVisibility();
     }
 
@@ -183,9 +179,7 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processObjectModifierRootEquals(Node systemNode) {
-        if (getMould().isRoot() == null) {
-            return error("Cannot perform rule on topic MODIFIER_ROOT. Unable to detect what to check for.");
-        }
+        validateTopic(getMould().isRoot(), Topic.MODIFIER_ROOT);
         return systemNode.isRoot() == getMould().isRoot();
     }
 
@@ -194,9 +188,7 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processObjectModifierLeafEquals(Node systemNode) {
-        if (getMould().isLeaf() == null) {
-            return error("Cannot perform rule on topic MODIFIER_LEAF. Unable to detect what to check for.");
-        }
+        validateTopic(getMould().isLeaf(), Topic.MODIFIER_LEAF);
         return systemNode.isLeaf() == getMould().isLeaf();
     }
 
@@ -205,9 +197,7 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processObjectModifierAbstractEquals(Node systemNode) {
-        if (getMould().isAbstract() == null) {
-            return error("Cannot perform rule on topic MODIFIER_ABSTRACT. Unable to detect what to check for.");
-        }
+        validateTopic(getMould().isAbstract(), Topic.MODIFIER_ABSTRACT);
         return systemNode.isAbstract() == getMould().isAbstract();
     }
 
@@ -216,10 +206,14 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processObjectModifierActiveEquals(Node systemNode) {
-        if (getMould().isActive() == null) {
-            return error("Cannot perform rule on topic MODIFIER_ACTIVE. Unable to detect what to check for.");
-        }
+        validateTopic(getMould().isActive(), Topic.MODIFIER_ACTIVE);
         return systemNode.isActive() == getMould().isActive();
+    }
+
+    private void validateTopic(Object topicValue, Topic topic) {
+        if (topicValue == null) {
+            error(String.format("Cannot perform rule on topic '%s'. Unable to detect what to check for.", topic));
+        }
     }
 
     private boolean error(String message) {

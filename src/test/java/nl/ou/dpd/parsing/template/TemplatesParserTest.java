@@ -50,7 +50,7 @@ public class TemplatesParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXParseException.class));
-        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+        thrown.expectMessage(String.format("The pattern template file %s could not be parsed.", path));
 
         templatesParser.parse(path);
     }
@@ -66,7 +66,7 @@ public class TemplatesParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXException.class));
-        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+        thrown.expectMessage(String.format("The pattern template file %s could not be parsed.", path));
 
         templatesParser.parse(path);
     }
@@ -82,7 +82,7 @@ public class TemplatesParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXException.class));
-        thrown.expectMessage("The pattern template file " + path + " could not be parsed.");
+        thrown.expectMessage(String.format("The pattern template file %s could not be parsed.", path));
 
         templatesParser.parse(path);
     }

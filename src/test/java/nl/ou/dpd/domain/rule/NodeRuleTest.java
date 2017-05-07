@@ -28,9 +28,6 @@ public class NodeRuleTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    /**
-     * Tests if the constructor handles a missing mould argument correctly, by throwing an exception.
-     */
     @Test
     public void testConstructorMissingMould() {
         thrown.expect(IllegalArgumentException.class);
@@ -38,19 +35,6 @@ public class NodeRuleTest {
         new NodeRule(null, Scope.OBJECT, Topic.TYPE, Operator.EQUALS);
     }
 
-    /**
-     * Tests if the constructor handles a missing topic argument correctly, by throwing an exception.
-     */
-    @Test
-    public void testConstructorMissingTopic() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("All arguments are mandatory.");
-        new NodeRule(new Interface("", ""), Scope.ATTRIBUTE, null, Operator.EXISTS);
-    }
-
-    /**
-     * Tests if the constructor handles a missing scope argument correctly, by throwing an exception.
-     */
     @Test
     public void testConstructorMissingScope() {
         thrown.expect(IllegalArgumentException.class);
@@ -58,9 +42,13 @@ public class NodeRuleTest {
         new NodeRule(new Interface("", ""), null, Topic.TYPE, Operator.EQUALS);
     }
 
-    /**
-     * Tests if the constructor handles a missing operator argument correctly, by throwing an exception.
-     */
+    @Test
+    public void testConstructorMissingTopic() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("All arguments are mandatory.");
+        new NodeRule(new Interface("", ""), Scope.ATTRIBUTE, null, Operator.EXISTS);
+    }
+
     @Test
     public void testConstructorMissingOperator() {
         thrown.expect(IllegalArgumentException.class);
@@ -77,7 +65,7 @@ public class NodeRuleTest {
         final NodeRule failingScopeRule = new NodeRule(mould, Scope.RELATION, Topic.TYPE, Operator.EQUALS);
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected scope: RELATION");
+        thrown.expectMessage("Unexpected scope: 'RELATION'");
         failingScopeRule.process(new Clazz("id2", "ClassName2"));
     }
 
@@ -90,7 +78,7 @@ public class NodeRuleTest {
         final NodeRule failingScopeRule = new NodeRule(everythingSetNode, Scope.OBJECT, Topic.CARDINALITY, Operator.EQUALS);
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected topic while processing OBJECT: CARDINALITY");
+        thrown.expectMessage("Unexpected topic 'CARDINALITY' while processing scope 'OBJECT'.");
         failingScopeRule.process(new Clazz("id2", "ClassName"));
     }
 
@@ -215,7 +203,7 @@ public class NodeRuleTest {
         final NodeRule visibilityNotSetRule = new NodeRule(visibilityNotSetNode, Scope.OBJECT, Topic.VISIBILITY, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Cannot perform rule on topic VISIBILITY. Unable to detect what to check for.");
+        thrown.expectMessage("Cannot perform rule on topic 'VISIBILITY'. Unable to detect what to check for.");
         visibilityNotSetRule.process(new Clazz("id2", "ClassName", Visibility.PUBLIC, null, false, false, true, false));
     }
 
@@ -238,7 +226,7 @@ public class NodeRuleTest {
         final NodeRule rootModifierNotSetRule = new NodeRule(rootModifierNotSetNode, Scope.OBJECT, Topic.MODIFIER_ROOT, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Cannot perform rule on topic MODIFIER_ROOT. Unable to detect what to check for.");
+        thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_ROOT'. Unable to detect what to check for.");
         rootModifierNotSetRule.process(new Clazz("id2", "ClassName", Visibility.PRIVATE, null, true, false, false, false));
     }
 
@@ -261,7 +249,7 @@ public class NodeRuleTest {
         final NodeRule leafModifierNotSetRule = new NodeRule(leafModifierNotSetNode, Scope.OBJECT, Topic.MODIFIER_LEAF, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Cannot perform rule on topic MODIFIER_LEAF. Unable to detect what to check for.");
+        thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_LEAF'. Unable to detect what to check for.");
         leafModifierNotSetRule.process(new Clazz("id2", "ClassName", Visibility.PRIVATE, null, false, true, false, false));
     }
 
@@ -285,7 +273,7 @@ public class NodeRuleTest {
         final NodeRule abstractModifierNotSetRule = new NodeRule(abstractModifierNotSetNode, Scope.OBJECT, Topic.MODIFIER_ABSTRACT, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Cannot perform rule on topic MODIFIER_ABSTRACT. Unable to detect what to check for.");
+        thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_ABSTRACT'. Unable to detect what to check for.");
         abstractModifierNotSetRule.process(new Interface("id2", "ClassName", false, false, false));
     }
 
@@ -308,7 +296,7 @@ public class NodeRuleTest {
         final NodeRule activeModifierNotSetRule = new NodeRule(activeModifierNotSetNode, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operator.EQUALS);
         thrown.expect(RuleException.class);
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Cannot perform rule on topic MODIFIER_ACTIVE. Unable to detect what to check for.");
+        thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_ACTIVE'. Unable to detect what to check for.");
         activeModifierNotSetRule.process(new Clazz("id2", "ClassName", Visibility.PRIVATE, null, false, false, false, true));
     }
 
@@ -321,7 +309,7 @@ public class NodeRuleTest {
         // TODO: attributes checking is not yet implemented and always throws an exception.
         thrown.expect(RuleException.class);
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected scope: ATTRIBUTE.");
+        thrown.expectMessage("Unexpected scope: 'ATTRIBUTE'.");
         rule.process(Clazz.EMPTY_NODE);
     }
 }
