@@ -1,6 +1,5 @@
 package nl.ou.dpd.domain.edge;
 
-import nl.ou.dpd.domain.edge.EdgeType;
 import org.hamcrest.core.Is;
 import org.junit.Test;
 

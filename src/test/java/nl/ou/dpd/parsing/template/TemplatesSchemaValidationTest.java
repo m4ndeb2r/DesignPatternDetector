@@ -1,7 +1,5 @@
 package nl.ou.dpd.parsing.template;
 
-import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.exception.DesignPatternDetectorException;
 import nl.ou.dpd.parsing.ParseException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -9,13 +7,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**

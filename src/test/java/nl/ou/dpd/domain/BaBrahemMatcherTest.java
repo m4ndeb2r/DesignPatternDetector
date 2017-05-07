@@ -2,8 +2,6 @@ package nl.ou.dpd.domain;
 
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.domain.node.Clazz;
-import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;

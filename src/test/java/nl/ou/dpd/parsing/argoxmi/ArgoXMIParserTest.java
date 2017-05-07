@@ -1,8 +1,8 @@
 package nl.ou.dpd.parsing.argoxmi;
 
+import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
-import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
 import org.junit.Rule;
 import org.junit.Test;
