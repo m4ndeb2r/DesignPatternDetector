@@ -41,7 +41,7 @@ public class AttributeRuleTest {
     @Test
     public void testIllegalTopicInAttributeRule() {
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected topic while processing OBJECT: 'CARDINALITY_LEFT'.");
+        thrown.expectMessage("Unexpected topic 'CARDINALITY_LEFT' while processing scope 'OBJECT'.");
         attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.CARDINALITY_LEFT, Operator.EQUALS);
         attributeRule.process(systemAttribute);
     }
@@ -49,7 +49,7 @@ public class AttributeRuleTest {
     @Test
     public void testIllegalOperatorInAttributeRule() {
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected operator while processing VISIBILITY: 'NOT_EXISTS'.");
+        thrown.expectMessage("Unexpected operator 'NOT_EXISTS' while processing topic 'VISIBILITY'.");
         attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operator.NOT_EXISTS);
         attributeRule.process(systemAttribute);
     }

@@ -48,7 +48,7 @@ public class EdgeRule extends Rule<Edge> {
             case ATTRIBUTE:
                 return processAttribute(systemEdge);
             default:
-                return error("Unexpected scope: " + getScope() + ".");
+                return error(String.format("Unexpected scope: '%s'.", getScope()));
         }
     }
 
@@ -63,7 +63,7 @@ public class EdgeRule extends Rule<Edge> {
             case CARDINALITY_RIGHT:
                 return processRelationCardinalityRight(systemEdge);
             default:
-                return error("Unexpected topic while processing RELATION: " + getTopic() + ".");
+                return error(String.format("Unexpected topic '%s' while processing scope 'RELATION'." , getTopic()));
         }
     }
 
@@ -78,7 +78,7 @@ public class EdgeRule extends Rule<Edge> {
             case NOT_EQUALS:
                 return !processCardinalityEquals(systemEdge);
             default:
-                return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing topic 'CARDINALITY'." , getOperator()));
         }
     }
 
@@ -93,7 +93,7 @@ public class EdgeRule extends Rule<Edge> {
             case NOT_EQUALS:
                 return !processCardinalityLeftEquals(systemEdge);
             default:
-                return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing topic 'CARDINALITY_LEFT'.", getOperator()));
         }
     }
 
@@ -108,7 +108,7 @@ public class EdgeRule extends Rule<Edge> {
             case NOT_EQUALS:
                 return !processCardinalityRightEquals(systemEdge);
             default:
-                return error("Unexpected operator while processing CARDINALITY: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing topic 'CARDINALITY_RIGHT'.", getOperator()));
         }
     }
 
@@ -117,8 +117,7 @@ public class EdgeRule extends Rule<Edge> {
             case EQUALS:
                 return systemEdge.getRelationType() == getMould().getRelationType();
             default:
-                return error("Unexpected operator while processing TYPE: " + getOperator() + ".");
-
+                return error(String.format("Unexpected operator '%s' while processing topic 'TYPE'.", getOperator()));
         }
     }
 
@@ -170,7 +169,7 @@ public class EdgeRule extends Rule<Edge> {
             case TYPE:
                 return processAttributeType(systemEdge);
             default:
-                return error("Unexpected topic while processing ATTRIBUTE: " + getTopic() + ".");
+                return error(String.format("Unexpected topic '%s' while processing scope 'ATTRIBUTE'.", getTopic()));
         }
     }
 
@@ -179,7 +178,7 @@ public class EdgeRule extends Rule<Edge> {
             case EXISTS:
                 return processAttributeTypeExists(systemEdge);
             default:
-                return error("Unexpected operator while processing ATTRIBUTE.TYPE: " + getOperator() + ".");
+                return error(String.format("Unexpected operator '%s' while processing topic 'TYPE'.", getOperator()));
         }
     }
 

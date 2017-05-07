@@ -52,7 +52,7 @@ public class AttributeRule extends Rule<Attribute> {
             case VISIBILITY:
                 return processObjectVisibility(systemAttribute);
             default:
-                return error(String.format("Unexpected topic while processing OBJECT: '%s'.", getTopic()));
+                return error(String.format("Unexpected topic '%s' while processing scope 'OBJECT'.", getTopic()));
         }
     }
 
@@ -63,7 +63,7 @@ public class AttributeRule extends Rule<Attribute> {
             case NOT_EQUALS:
                 return !processObjectVisibilityEquals(systemAttribute);
             default:
-                return error(String.format("Unexpected operator while processing VISIBILITY: '%s'.", getOperator()));
+                return error(String.format("Unexpected operator '%s' while processing topic 'VISIBILITY'.", getOperator()));
         }
     }
 
