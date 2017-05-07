@@ -54,12 +54,12 @@ public class AttributeRuleElementApplicator extends RuleElementApplicator<Attrib
     }
 
     private void applyObjectVisibility() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 attribute.setVisibility(findVisibilityByName(getValue()));
                 break;
             default:
-                error(String.format("Unexpected operator while applying TOPIC: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying TOPIC: '%s'.", getOperation()));
         }
     }
 

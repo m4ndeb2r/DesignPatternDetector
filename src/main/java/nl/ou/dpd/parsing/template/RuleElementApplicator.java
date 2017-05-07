@@ -1,6 +1,6 @@
 package nl.ou.dpd.parsing.template;
 
-import nl.ou.dpd.domain.rule.Operator;
+import nl.ou.dpd.domain.rule.Operation;
 import nl.ou.dpd.domain.rule.Rule;
 import nl.ou.dpd.domain.rule.Scope;
 import nl.ou.dpd.domain.rule.Topic;
@@ -38,8 +38,8 @@ public abstract class RuleElementApplicator<T> {
         return rule.getScope();
     }
 
-    public Operator getOperator() {
-        return rule.getOperator();
+    public Operation getOperation() {
+        return rule.getOperation();
     }
 
     public String getValue() {

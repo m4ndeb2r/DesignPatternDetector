@@ -22,10 +22,10 @@ public class AttributeRule extends Rule<Attribute> {
      * @param mould    the {@link Attribute} containing the rule's features
      * @param topic    holds the feature to be evaluated (type, visibility, ...)
      * @param scope    the scope of the evaluation (object, attributes, ...)
-     * @param operator the evaluation operator (equals, exists, ...)
+     * @param operation the evaluation operation (equals, exists, ...)
      */
-    public AttributeRule(Attribute mould, Scope scope, Topic topic, Operator operator) {
-        super(mould, scope, topic, operator);
+    public AttributeRule(Attribute mould, Scope scope, Topic topic, Operation operation) {
+        super(mould, scope, topic, operation);
     }
 
     /**
@@ -57,13 +57,13 @@ public class AttributeRule extends Rule<Attribute> {
     }
 
     private boolean processObjectVisibility(Attribute systemAttribute) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 return processObjectVisibilityEquals(systemAttribute);
             case NOT_EQUALS:
                 return !processObjectVisibilityEquals(systemAttribute);
             default:
-                return error(String.format("Unexpected operator '%s' while processing topic 'VISIBILITY'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing topic 'VISIBILITY'.", getOperation()));
         }
     }
 

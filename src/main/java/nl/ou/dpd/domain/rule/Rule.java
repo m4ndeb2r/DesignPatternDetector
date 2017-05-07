@@ -7,7 +7,7 @@ package nl.ou.dpd.domain.rule;
  * <li>a {@code mould} - a blueprint/template containing the properties an ideal subject should have</li>
  * <li>a {@code scope} - the {@link Scope} of the evaluation, i.e. object, relation, ...</li>
  * <li>a {@code topic} - the {@link Topic} to be evaluated by this {@link Rule}, i.e. type, visibility, ...</li>
- * <li>a {@code operator} - the evaluation {@link Operator}, i.e. equals, not_equals, exists, not_exists, ...</li>
+ * <li>a {@code operation} - the evaluation {@link Operation}, i.e. equals, not_equals, exists, not_exists, ...</li>
  * </ul>
  *
  * @param <SUBJECT_TYPE> the mould/subject type. This is the type of object this {@link Rule} applies to. Note that the
@@ -20,7 +20,7 @@ public abstract class Rule<SUBJECT_TYPE> {
     private final SUBJECT_TYPE mould;
     private final Scope scope;
     private final Topic topic;
-    private final Operator operator;
+    private final Operation operation;
 
     /**
      * Creates a rule based on the specified arguments.
@@ -29,16 +29,16 @@ public abstract class Rule<SUBJECT_TYPE> {
      *                 evaluate a subject will be applied to
      * @param scope    the scope of the evaluation (object, relation, ...)
      * @param topic    holds the feature to be evaluated (type, visibility, ...)
-     * @param operator the evaluation operator (equals, exists, ...)
+     * @param operation the evaluation operation (equals, exists, ...)
      */
-    public Rule(SUBJECT_TYPE mould, Scope scope, Topic topic, Operator operator) {
-        if (mould == null || scope == null || topic == null || operator == null) {
+    public Rule(SUBJECT_TYPE mould, Scope scope, Topic topic, Operation operation) {
+        if (mould == null || scope == null || topic == null || operation == null) {
             throw new IllegalArgumentException("All arguments are mandatory.");
         }
         this.mould = mould;
         this.scope = scope;
         this.topic = topic;
-        this.operator = operator;
+        this.operation = operation;
     }
 
     /**
@@ -77,11 +77,11 @@ public abstract class Rule<SUBJECT_TYPE> {
     }
 
     /**
-     * Returns the evaluation operator used by this {@link Rule}.
+     * Returns the evaluation operation used by this {@link Rule}.
      *
-     * @return the {@link Operator} this {@link Rule} is using when processing the evaluation.
+     * @return the {@link Operation} this {@link Rule} is using when processing the evaluation.
      */
-    public Operator getOperator() {
-        return operator;
+    public Operation getOperation() {
+        return operation;
     }
 }

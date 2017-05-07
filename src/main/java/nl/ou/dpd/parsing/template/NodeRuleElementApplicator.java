@@ -69,53 +69,53 @@ public class NodeRuleElementApplicator extends RuleElementApplicator<Node> {
     }
 
     private void applyObjectVisibility() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 applyObjectVisibilityEquals();
                 break;
             default:
-                error(String.format("Unexpected operator while applying CARDINALITY: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying CARDINALITY: '%s'.", getOperation()));
 
         }
     }
 
     private void applyObjectModifierRoot() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 applyObjectModifierRootEquals();
                 break;
             default:
-                error(String.format("Unexpected operator while applying MODIFIER_ROOT: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying MODIFIER_ROOT: '%s'.", getOperation()));
         }
     }
 
     private void applyObjectModifierActive() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 applyObjectModifierActiveEquals();
                 break;
             default:
-                error(String.format("Unexpected operator while applying MODIFIER_ACTIVE: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying MODIFIER_ACTIVE: '%s'.", getOperation()));
         }
     }
 
     private void applyObjectModifierLeaf() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 applyObjectModifierLeafEquals();
                 break;
             default:
-                error(String.format("Unexpected operator while applying MODIFIER_LEAF: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying MODIFIER_LEAF: '%s'.", getOperation()));
         }
     }
 
     private void applyObjectModifierAbstract() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 applyObjectModifierAbstractEquals();
                 break;
             default:
-                error(String.format("Unexpected operator while applying MODIFIER_ABSTRACT: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying MODIFIER_ABSTRACT: '%s'.", getOperation()));
         }
     }
 

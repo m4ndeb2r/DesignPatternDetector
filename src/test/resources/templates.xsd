@@ -68,16 +68,16 @@ Explanation:
 	    - applies: refers to the entity the rule applies to (a previously defines node or edge)
 	    - scope: the feature to be examined (OBJECT, RELATION, ATTRIBUTE)
 	    - topic: the sort of value to be examined (TYPE, VISIBILITY, ... see TopicType below for all values)
-	    - operator: the kind of evaluation (EQUALS, NOT_EQUALS, EXISTS, NOT_EXISTS)
+	    - operation: the kind of evaluation (EQUALS, NOT_EQUALS, EXISTS, NOT_EXISTS)
 	    - value: the value to be met.
 
 	Examples:
 	    To evaluate whether an edge is a directed association, apply the following rule:
-		<rule applies="SomeEdge" scope="RELATION" topic="TYPE" operator="EQUALS" value="ASSOCIATION_DIRECTED"/>
+		<rule applies="SomeEdge" scope="RELATION" topic="TYPE" operation="EQUALS" value="ASSOCIATION_DIRECTED"/>
 
         To evaluate if a node is an abstract class, apply the following two rules:
-		<rule applies="SomeClass" scope="OBJECT" topic="TYPE" operator="EQUALS" value="CLASS"/>
-		<rule applies="SomeClass" scope="OBJECT" topic="MODIFIER_ABSTRACT" operator="EQUALS" value="true"/>
+		<rule applies="SomeClass" scope="OBJECT" topic="TYPE"              operation="EQUALS" value="CLASS"/>
+		<rule applies="SomeClass" scope="OBJECT" topic="MODIFIER_ABSTRACT" operation="EQUALS" value="true"/>
 -->
 <xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
 
@@ -183,7 +183,7 @@ Explanation:
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name='operatorType'>
+    <xs:simpleType name='operationType'>
         <xs:restriction base='xs:normalizedString'>
             <xs:enumeration value='EXISTS'/>
             <xs:enumeration value='NOT_EXISTS'/>
@@ -197,7 +197,7 @@ Explanation:
             <xs:attribute name='applies' type='xs:string'/>
             <xs:attribute name='scope' type='scopeType'/>
             <xs:attribute name='topic' type='topicType'/>
-            <xs:attribute name='operator' type='operatorType'/>
+            <xs:attribute name='operation' type='operationType'/>
             <xs:attribute name='value' type='xs:string'/>
         </xs:complexType>
     </xs:element>

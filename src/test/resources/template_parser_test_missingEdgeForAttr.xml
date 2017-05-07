@@ -30,7 +30,7 @@
                     <rule applies="CB"
                           topic="TYPE"
                           scope="RELATION"
-                          operator="EQUALS"
+                          operation="EQUALS"
                           value="INHERITANCE"/>
                 </rules>
             </condition>

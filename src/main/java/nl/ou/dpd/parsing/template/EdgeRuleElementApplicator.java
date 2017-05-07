@@ -61,32 +61,32 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     }
 
     private void applyRelationCardinalityLeft() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 applyCardinalityLeftEquals();
                 break;
             default:
-                error(String.format("Unexpected operator while applying CARDINALITY_LEFT: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying CARDINALITY_LEFT: '%s'.", getOperation()));
         }
     }
 
     private void applyRelationCardinalityRight() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 applyCardinalityRightEquals();
                 break;
             default:
-                error(String.format("Unexpected operator while applying CARDINALITY_RIGHT: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying CARDINALITY_RIGHT: '%s'.", getOperation()));
         }
     }
 
     private void applyRelationType() {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 edge.setRelationType(findEdgeTypeByName(getValue()));
                 break;
             default:
-                error(String.format("Unexpected operator while applying TYPE: '%s'.", getOperator()));
+                error(String.format("Unexpected operation while applying TYPE: '%s'.", getOperation()));
 
         }
     }

@@ -34,7 +34,7 @@ public class AttributeRuleTest {
     public void testIllegalScopeInAttributeRule() {
         thrown.expect(RuleException.class);
         thrown.expectMessage("Unexpected scope: 'RELATION'.");
-        attributeRule = new AttributeRule(mould, Scope.RELATION, Topic.VISIBILITY, Operator.EQUALS);
+        attributeRule = new AttributeRule(mould, Scope.RELATION, Topic.VISIBILITY, Operation.EQUALS);
         attributeRule.process(systemAttribute);
     }
 
@@ -42,22 +42,22 @@ public class AttributeRuleTest {
     public void testIllegalTopicInAttributeRule() {
         thrown.expect(RuleException.class);
         thrown.expectMessage("Unexpected topic 'CARDINALITY_LEFT' while processing scope 'OBJECT'.");
-        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.CARDINALITY_LEFT, Operator.EQUALS);
+        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.CARDINALITY_LEFT, Operation.EQUALS);
         attributeRule.process(systemAttribute);
     }
 
     @Test
-    public void testIllegalOperatorInAttributeRule() {
+    public void testIllegalOperationInAttributeRule() {
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected operator 'NOT_EXISTS' while processing topic 'VISIBILITY'.");
-        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operator.NOT_EXISTS);
+        thrown.expectMessage("Unexpected operation 'NOT_EXISTS' while processing topic 'VISIBILITY'.");
+        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operation.NOT_EXISTS);
         attributeRule.process(systemAttribute);
     }
 
     /**
      * Test if the following XML rule is handled correctly:
      * <pre>
-     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operator="EQUALS" value="private"/>
+     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operation="EQUALS" value="private"/>
      * </pre>
      */
     @Test
@@ -68,7 +68,7 @@ public class AttributeRuleTest {
     /**
      * Test if the following XML rule is handled correctly:
      * <pre>
-     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operator="EQUALS" value="protected"/>
+     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operation="EQUALS" value="protected"/>
      * </pre>
      */
     @Test
@@ -79,7 +79,7 @@ public class AttributeRuleTest {
     /**
      * Test if the following XML rule is handled correctly:
      * <pre>
-     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operator="EQUALS" value="public"/>
+     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operation="EQUALS" value="public"/>
      * </pre>
      */
     @Test
@@ -90,7 +90,7 @@ public class AttributeRuleTest {
     /**
      * Test if the following XML rule is handled correctly:
      * <pre>
-     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operator="EQUALS" value="package"/>
+     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operation="EQUALS" value="package"/>
      * </pre>
      */
     @Test
@@ -101,7 +101,7 @@ public class AttributeRuleTest {
     /**
      * Test if the following XML rule is handled correctly:
      * <pre>
-     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operator="NOT_EQUALS" value="package"/>
+     *     <rule applies="someAttribute" scope="OBJECT" topic="VISIBILITY" operation="NOT_EQUALS" value="package"/>
      * </pre>
      */
     @Test
@@ -119,13 +119,13 @@ public class AttributeRuleTest {
 
     private void assertVisibility(Visibility mouldVisibility, Visibility attrVisibility) {
         defineMouldAndAttributeBehaviour(mouldVisibility, attrVisibility);
-        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operator.EQUALS);
+        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operation.EQUALS);
         assertThat(attributeRule.process(systemAttribute), is(mouldVisibility == attrVisibility));
     }
 
     private void assertVisibilityNotEquals(Visibility mouldVisibility, Visibility attrVisibility) {
         defineMouldAndAttributeBehaviour(mouldVisibility, attrVisibility);
-        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operator.NOT_EQUALS);
+        attributeRule = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operation.NOT_EQUALS);
         assertThat(attributeRule.process(systemAttribute), is(mouldVisibility != attrVisibility));
     }
 

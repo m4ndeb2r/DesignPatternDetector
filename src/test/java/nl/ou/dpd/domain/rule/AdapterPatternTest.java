@@ -93,37 +93,37 @@ public class AdapterPatternTest {
     public void createPatternConditions() {
 
         Condition cond1 = new Condition("1", "The Client has a directed association with the Target.");
-        cond1.getEdgeRules().add(new EdgeRule(clientTarget, Scope.RELATION, Topic.TYPE, Operator.EQUALS));
+        cond1.getEdgeRules().add(new EdgeRule(clientTarget, Scope.RELATION, Topic.TYPE, Operation.EQUALS));
 
         Condition cond2 = new Condition("2", "The Adapter has a directed association with the Adaptee.");
-        cond2.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.RELATION, Topic.TYPE, Operator.EQUALS));
+        cond2.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.RELATION, Topic.TYPE, Operation.EQUALS));
 
         Condition cond3 = new Condition("3", "The Adapter has a inheritance relation with the Target (abstract class).");
-        cond3.getEdgeRules().add(new EdgeRule(adapterTarget, Scope.RELATION, Topic.TYPE, Operator.EQUALS));
+        cond3.getEdgeRules().add(new EdgeRule(adapterTarget, Scope.RELATION, Topic.TYPE, Operation.EQUALS));
 
         Condition cond4 = new Condition("4", "The Target is an abstract class.");
-        cond4.getNodeRules().add(new NodeRule(target, Scope.OBJECT, Topic.MODIFIER_ABSTRACT, Operator.EQUALS));
+        cond4.getNodeRules().add(new NodeRule(target, Scope.OBJECT, Topic.MODIFIER_ABSTRACT, Operation.EQUALS));
 
         Condition cond5 = new Condition("5", "The Adapter uses exactly one Adaptee. An Adaptee can be used by none or more Adapters.");
-        cond5.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.RELATION, Topic.CARDINALITY, Operator.EQUALS));
+        cond5.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.RELATION, Topic.CARDINALITY, Operation.EQUALS));
 
         Condition cond6 = new Condition("6", "The Adapter is a class.");
-        cond6.getNodeRules().add(new NodeRule(adapter, Scope.OBJECT, Topic.TYPE, Operator.EQUALS));
+        cond6.getNodeRules().add(new NodeRule(adapter, Scope.OBJECT, Topic.TYPE, Operation.EQUALS));
 
         Condition cond7 = new Condition("7", "The Adaptee is a class.");
-        cond7.getNodeRules().add(new NodeRule(adaptee, Scope.OBJECT, Topic.TYPE, Operator.EQUALS));
+        cond7.getNodeRules().add(new NodeRule(adaptee, Scope.OBJECT, Topic.TYPE, Operation.EQUALS));
 
         Condition cond8 = new Condition("8", "The Client is a class.");
-        cond8.getNodeRules().add(new NodeRule(client, Scope.OBJECT, Topic.TYPE, Operator.EQUALS));
+        cond8.getNodeRules().add(new NodeRule(client, Scope.OBJECT, Topic.TYPE, Operation.EQUALS));
 
         Condition cond9 = new Condition("9", "The Client has a Target attribute.");
-        cond9.getEdgeRules().add(new EdgeRule(clientTarget, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS));
+        cond9.getEdgeRules().add(new EdgeRule(clientTarget, Scope.ATTRIBUTE, Topic.TYPE, Operation.EXISTS));
 
         Condition cond10 = new Condition("10", "The Adapter has an Adaptee attribute.");
-        cond10.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS));
+        cond10.getEdgeRules().add(new EdgeRule(adapterAdaptee, Scope.ATTRIBUTE, Topic.TYPE, Operation.EXISTS));
 
         Condition cond11 = new Condition("11", "The Adaptee attribute in the Adapter has a private visibility.");
-        cond11.getAttributeRules().add(new AttributeRule(adapteeAttr, Scope.OBJECT, Topic.VISIBILITY, Operator.EQUALS));
+        cond11.getAttributeRules().add(new AttributeRule(adapteeAttr, Scope.OBJECT, Topic.VISIBILITY, Operation.EQUALS));
 
         conditions = new Conditions();
         conditions.getConditions().add(cond1);

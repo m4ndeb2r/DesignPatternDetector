@@ -10,7 +10,7 @@ import nl.ou.dpd.domain.rule.AttributeRule;
 import nl.ou.dpd.domain.rule.Condition;
 import nl.ou.dpd.domain.rule.EdgeRule;
 import nl.ou.dpd.domain.rule.NodeRule;
-import nl.ou.dpd.domain.rule.Operator;
+import nl.ou.dpd.domain.rule.Operation;
 import nl.ou.dpd.domain.rule.Rule;
 import nl.ou.dpd.domain.rule.Scope;
 import nl.ou.dpd.domain.rule.Topic;
@@ -65,7 +65,7 @@ public class TemplatesParserWithConditions {
     private static final String APPLIES = "applies";
     private static final String SCOPE = "scope";
     private static final String TOPIC = "topic";
-    private static final String OPERATOR = "operator";
+    private static final String OPERATION = "operation";
     private static final String VALUE = "value";
 
     // Template tags
@@ -277,7 +277,7 @@ public class TemplatesParserWithConditions {
         final String id = String.format("SystemCondition %d", conditions.size() + 1);
         final String description = String.format("The node '%s' must be of type '%s'.", node.getName(), node.getType());
         final Condition condition = new Condition(id, description);
-        final NodeRule rule = new NodeRule(node, Scope.OBJECT, Topic.TYPE, Operator.EQUALS);
+        final NodeRule rule = new NodeRule(node, Scope.OBJECT, Topic.TYPE, Operation.EQUALS);
         condition.getNodeRules().add(rule);
         return condition;
     }
@@ -409,7 +409,7 @@ public class TemplatesParserWithConditions {
                     attributeType.getId()
             ));
         }
-        final EdgeRule rule = new EdgeRule(edge, Scope.ATTRIBUTE, Topic.TYPE, Operator.EXISTS);
+        final EdgeRule rule = new EdgeRule(edge, Scope.ATTRIBUTE, Topic.TYPE, Operation.EXISTS);
         condition.getEdgeRules().add(rule);
         conditions.add(condition);
     }
@@ -434,7 +434,7 @@ public class TemplatesParserWithConditions {
     }
 
     /**
-     * Makes a {@link Rule} with the elements (applies,scope, topic, operator and not) as given in the Map.
+     * Makes a {@link Rule} with the elements (applies,scope, topic, operation and not) as given in the Map.
      *
      * @param attributes a Map of attributenames and -values
      * @return a new Rule with the specified elements
@@ -443,21 +443,21 @@ public class TemplatesParserWithConditions {
         final String applies = attributes.get(APPLIES);
         final Scope scope = Scope.valueOf(attributes.get(SCOPE));
         final Topic topic = Topic.valueOf(attributes.get(TOPIC));
-        final Operator operator = Operator.valueOf(attributes.get(OPERATOR));
+        final Operation operation = Operation.valueOf(attributes.get(OPERATION));
 
         final Node node = findNodeById(applies);
         if (node != null) {
-            return new NodeRule(node, scope, topic, operator);
+            return new NodeRule(node, scope, topic, operation);
         }
 
         final Edge edge = findEdgeById(applies);
         if (edge != null) {
-            return new EdgeRule(edge, scope, topic, operator);
+            return new EdgeRule(edge, scope, topic, operation);
         }
 
         final nl.ou.dpd.domain.node.Attribute attribute = findAttributeById(applies);
         if (attribute != null) {
-            return new AttributeRule(attribute, scope, topic, operator);
+            return new AttributeRule(attribute, scope, topic, operation);
         }
 
         error(String.format("Rules must apply to existing elements. No element '%s' was found.", applies));

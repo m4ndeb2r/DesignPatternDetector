@@ -22,10 +22,10 @@ public class NodeRule extends Rule<Node> {
      * @param mould    the {@link Node} containing the rule's features
      * @param scope    the scope of the evaluation (object, attributes, ...)
      * @param topic    holds the feature to be evaluated (type, visibility, ...)
-     * @param operator the evaluation operator (equals, exists, ...)
+     * @param operation the evaluation operation (equals, exists, ...)
      */
-    public NodeRule(Node mould, Scope scope, Topic topic, Operator operator) {
-        super(mould, scope, topic, operator);
+    public NodeRule(Node mould, Scope scope, Topic topic, Operation operation) {
+        super(mould, scope, topic, operation);
     }
 
     /**
@@ -67,7 +67,7 @@ public class NodeRule extends Rule<Node> {
     }
 
     private boolean processObjectType(Node systemNode) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processObjectTypeExists(systemNode);
             case NOT_EXISTS:
@@ -77,12 +77,12 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectTypeEquals(systemNode);
             default:
-                return error(String.format("Unexpected operator '%s' while processing scope 'TYPE'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing scope 'TYPE'.", getOperation()));
         }
     }
 
     private boolean processObjectVisibility(Node systemNode) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processObjectVisibilityExists(systemNode);
             case NOT_EXISTS:
@@ -92,12 +92,12 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectVisibilityEquals(systemNode);
             default:
-                return error(String.format("Unexpected operator '%s' while processing scope 'VISIBILITY'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing scope 'VISIBILITY'.", getOperation()));
         }
     }
 
     private boolean processObjectModifierRoot(Node systemNode) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processObjectModifierRootExists(systemNode);
             case NOT_EXISTS:
@@ -107,12 +107,12 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierRootEquals(systemNode);
             default:
-                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_ROOT'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_ROOT'.", getOperation()));
         }
     }
 
     private boolean processObjectModifierLeaf(Node systemNode) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processObjectModifierLeafExists(systemNode);
             case NOT_EXISTS:
@@ -122,12 +122,12 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierLeafEquals(systemNode);
             default:
-                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_LEAF'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_LEAF'.", getOperation()));
         }
     }
 
     private boolean processObjectModifierAbstract(Node systemNode) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processObjectModifierAbstractExists(systemNode);
             case NOT_EXISTS:
@@ -137,12 +137,12 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierAbstractEquals(systemNode);
             default:
-                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_ABSTRACT'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_ABSTRACT'.", getOperation()));
         }
     }
 
     private boolean processObjectModifierActive(Node systemNode) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processObjectModifierActiveExists(systemNode);
             case NOT_EXISTS:
@@ -152,7 +152,7 @@ public class NodeRule extends Rule<Node> {
             case NOT_EQUALS:
                 return !processObjectModifierActiveEquals(systemNode);
             default:
-                return error(String.format("Unexpected operator '%s' while processing scope 'MODIFIER_ACTIVE'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_ACTIVE'.", getOperation()));
         }
     }
 

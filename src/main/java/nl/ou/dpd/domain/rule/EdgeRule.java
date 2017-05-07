@@ -28,10 +28,10 @@ public class EdgeRule extends Rule<Edge> {
      * @param mould    the {@link Edge} containing the rule's features
      * @param topic    holds the feature to be evaluated (type, visibility, ...)
      * @param scope    the scope of the evaluation (object, relation, ...)
-     * @param operator the evaluation operator (equals, exists, ...)
+     * @param operation the evaluation operation (equals, exists, ...)
      */
-    public EdgeRule(Edge mould, Scope scope, Topic topic, Operator operator) {
-        super(mould, scope, topic, operator);
+    public EdgeRule(Edge mould, Scope scope, Topic topic, Operation operation) {
+        super(mould, scope, topic, operation);
     }
 
     /**
@@ -68,7 +68,7 @@ public class EdgeRule extends Rule<Edge> {
     }
 
     private boolean processRelationCardinality(Edge systemEdge) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processCardinalityExists(systemEdge);
             case NOT_EXISTS:
@@ -78,12 +78,12 @@ public class EdgeRule extends Rule<Edge> {
             case NOT_EQUALS:
                 return !processCardinalityEquals(systemEdge);
             default:
-                return error(String.format("Unexpected operator '%s' while processing topic 'CARDINALITY'." , getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing topic 'CARDINALITY'." , getOperation()));
         }
     }
 
     private boolean processRelationCardinalityLeft(Edge systemEdge) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processCardinalityLeftExists(systemEdge);
             case NOT_EXISTS:
@@ -93,12 +93,12 @@ public class EdgeRule extends Rule<Edge> {
             case NOT_EQUALS:
                 return !processCardinalityLeftEquals(systemEdge);
             default:
-                return error(String.format("Unexpected operator '%s' while processing topic 'CARDINALITY_LEFT'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing topic 'CARDINALITY_LEFT'.", getOperation()));
         }
     }
 
     private boolean processRelationCardinalityRight(Edge systemEdge) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processCardinalityRightExists(systemEdge);
             case NOT_EXISTS:
@@ -108,16 +108,16 @@ public class EdgeRule extends Rule<Edge> {
             case NOT_EQUALS:
                 return !processCardinalityRightEquals(systemEdge);
             default:
-                return error(String.format("Unexpected operator '%s' while processing topic 'CARDINALITY_RIGHT'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing topic 'CARDINALITY_RIGHT'.", getOperation()));
         }
     }
 
     private boolean processRelationType(Edge systemEdge) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EQUALS:
                 return systemEdge.getRelationType() == getMould().getRelationType();
             default:
-                return error(String.format("Unexpected operator '%s' while processing topic 'TYPE'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing topic 'TYPE'.", getOperation()));
         }
     }
 
@@ -174,11 +174,11 @@ public class EdgeRule extends Rule<Edge> {
     }
 
     private boolean processAttributeType(Edge systemEdge) {
-        switch (getOperator()) {
+        switch (getOperation()) {
             case EXISTS:
                 return processAttributeTypeExists(systemEdge);
             default:
-                return error(String.format("Unexpected operator '%s' while processing topic 'TYPE'.", getOperator()));
+                return error(String.format("Unexpected operation '%s' while processing topic 'TYPE'.", getOperation()));
         }
     }
 

@@ -10,7 +10,7 @@ import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.domain.rule.AttributeRule;
 import nl.ou.dpd.domain.rule.EdgeRule;
 import nl.ou.dpd.domain.rule.NodeRule;
-import nl.ou.dpd.domain.rule.Operator;
+import nl.ou.dpd.domain.rule.Operation;
 import nl.ou.dpd.domain.rule.RuleException;
 import nl.ou.dpd.domain.rule.Scope;
 import nl.ou.dpd.domain.rule.Topic;
@@ -62,9 +62,9 @@ public class RuleElementApplicatorTest {
     @Test
     public void testApplyEdgeRule() {
         Edge mould = new Edge("id1", "node1node2", new Clazz("nodeId1", "node1"), new Clazz("nodeId2", "node2"));
-        EdgeRule relationRule = new EdgeRule(mould, Scope.RELATION, Topic.TYPE, Operator.EQUALS);
-        EdgeRule cardinalityLeftRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_LEFT, Operator.EQUALS);
-        EdgeRule cardinalityRightRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_RIGHT, Operator.EQUALS);
+        EdgeRule relationRule = new EdgeRule(mould, Scope.RELATION, Topic.TYPE, Operation.EQUALS);
+        EdgeRule cardinalityLeftRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_LEFT, Operation.EQUALS);
+        EdgeRule cardinalityRightRule = new EdgeRule(mould, Scope.RELATION, Topic.CARDINALITY_RIGHT, Operation.EQUALS);
 
         aer = new EdgeRuleElementApplicator(relationRule, "Association_directed");
         aer.apply();
@@ -99,7 +99,7 @@ public class RuleElementApplicatorTest {
         thrown.expect(RuleException.class);
         thrown.expectMessage("Unexpected topic while applying RELATION: 'MODIFIER_ABSTRACT'.");
 
-        EdgeRule wrongTopicRule = new EdgeRule(mould, Scope.RELATION, Topic.MODIFIER_ABSTRACT, Operator.EQUALS);
+        EdgeRule wrongTopicRule = new EdgeRule(mould, Scope.RELATION, Topic.MODIFIER_ABSTRACT, Operation.EQUALS);
         aer = new EdgeRuleElementApplicator(wrongTopicRule, "1..1");
         aer.apply();
     }
@@ -110,12 +110,12 @@ public class RuleElementApplicatorTest {
     @Test
     public void testApplyClazzRule() {
         Node mould = new Clazz("id1", "clazz1");
-        NodeRule visibility = new NodeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operator.EQUALS);
-        NodeRule modifierAbstract = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ABSTRACT, Operator.EQUALS);
-        NodeRule modifierActive = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operator.EQUALS);
-        NodeRule modifierLeaf = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_LEAF, Operator.EQUALS);
-        NodeRule modifierRoot = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ROOT, Operator.EQUALS);
-        NodeRule wrongTopic = new NodeRule(mould, Scope.OBJECT, Topic.TYPE, Operator.EQUALS);
+        NodeRule visibility = new NodeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operation.EQUALS);
+        NodeRule modifierAbstract = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ABSTRACT, Operation.EQUALS);
+        NodeRule modifierActive = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.EQUALS);
+        NodeRule modifierLeaf = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_LEAF, Operation.EQUALS);
+        NodeRule modifierRoot = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ROOT, Operation.EQUALS);
+        NodeRule wrongTopic = new NodeRule(mould, Scope.OBJECT, Topic.TYPE, Operation.EQUALS);
 
         assertNull(mould.getVisibility());
         
@@ -177,10 +177,10 @@ public class RuleElementApplicatorTest {
     @Test
     public void testApplyInterfaceRule() {
         Node mould = new Interface("id1", "interface1");
-        NodeRule modifierActive = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operator.EQUALS);
-        NodeRule modifierLeaf = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_LEAF, Operator.EQUALS);
-        NodeRule modifierRoot = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ROOT, Operator.EQUALS);
-        NodeRule wrongScope = new NodeRule(mould, Scope.RELATION, Topic.TYPE, Operator.EQUALS);
+        NodeRule modifierActive = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.EQUALS);
+        NodeRule modifierLeaf = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_LEAF, Operation.EQUALS);
+        NodeRule modifierRoot = new NodeRule(mould, Scope.OBJECT, Topic.MODIFIER_ROOT, Operation.EQUALS);
+        NodeRule wrongScope = new NodeRule(mould, Scope.RELATION, Topic.TYPE, Operation.EQUALS);
 
         assertNull(mould.isActive());
         
@@ -213,14 +213,14 @@ public class RuleElementApplicatorTest {
     }
 
     /**
-     * Tests the applyAttributeRules and exception handling in case of an operator that cannot be applied.
+     * Tests the applyAttributeRules and exception handling in case of an operation that cannot be applied.
      */
     @Test
     public void testApplyAttributeRule() {
         Node node = new Clazz("id1", "attribute1");
         Attribute mould = new Attribute("id1", "attr1", node); 
-        AttributeRule visibility = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operator.EQUALS);
-        AttributeRule wrongOperator = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operator.EXISTS);
+        AttributeRule visibility = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operation.EQUALS);
+        AttributeRule wrongOperation = new AttributeRule(mould, Scope.OBJECT, Topic.VISIBILITY, Operation.EXISTS);
         
         assertNull(mould.getVisibility());
         
@@ -247,9 +247,9 @@ public class RuleElementApplicatorTest {
         assertNull(mould.getVisibility());
 
         thrown.expect(RuleException.class);
-        thrown.expectMessage("Unexpected operator while applying TOPIC: 'EXISTS'");
+        thrown.expectMessage("Unexpected operation while applying TOPIC: 'EXISTS'");
 
-        aar = new AttributeRuleElementApplicator(wrongOperator, "Inheritance");
+        aar = new AttributeRuleElementApplicator(wrongOperation, "Inheritance");
         aar.apply();
     }
  }

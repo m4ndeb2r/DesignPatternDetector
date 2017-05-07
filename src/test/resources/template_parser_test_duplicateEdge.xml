@@ -25,7 +25,7 @@
                     <rule applies="AB"
                           scope="RELATION"
                           topic="TYPE"
-                          operator="EQUALS"
+                          operation="EQUALS"
                           value="ASSOCIATION_DIRECTED"/>
                 </rules>
             </condition>
@@ -34,7 +34,7 @@
                     <rule applies="BA"
                           scope="RELATION"
                           topic="TYPE"
-                          operator="EQUALS"
+                          operation="EQUALS"
                           value="ASSOCIATION_DIRECTED"/>
                 </rules>
             </condition>
