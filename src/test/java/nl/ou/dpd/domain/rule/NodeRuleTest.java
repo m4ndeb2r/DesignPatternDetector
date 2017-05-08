@@ -56,9 +56,6 @@ public class NodeRuleTest {
         new NodeRule(new Interface("", ""), Scope.OBJECT, Topic.TYPE, null);
     }
 
-    /**
-     * Test if the {@link NodeRule} throws an exception when an unexpected {@link Scope} is provided.
-     */
     @Test
     public void testNodeRuleWithUnknownScope() {
         final Node mould = new Clazz("id1", "ClassName1");
@@ -69,13 +66,10 @@ public class NodeRuleTest {
         failingScopeRule.process(new Clazz("id2", "ClassName2"));
     }
 
-    /**
-     * Test if the {@link NodeRule} throws an exception when an unexpected {@link Topic} is provided.
-     */
     @Test
     public void testNodeRuleWithUnknownTopic() {
-        final Node everythingSetNode = new Clazz("id1", "ClassName", Visibility.PRIVATE, null, true, false, false, true);
-        final NodeRule failingScopeRule = new NodeRule(everythingSetNode, Scope.OBJECT, Topic.CARDINALITY, Operation.EQUALS);
+        final Node mould = new Clazz("id1", "ClassName");
+        final NodeRule failingScopeRule = new NodeRule(mould, Scope.OBJECT, Topic.CARDINALITY, Operation.EQUALS);
 
         thrown.expect(RuleException.class);
         thrown.expectMessage("Unexpected topic 'CARDINALITY' while processing scope 'OBJECT'.");

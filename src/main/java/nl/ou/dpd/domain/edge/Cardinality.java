@@ -1,9 +1,6 @@
 package nl.ou.dpd.domain.edge;
 
-import nl.ou.dpd.domain.rule.Conditions;
-
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 

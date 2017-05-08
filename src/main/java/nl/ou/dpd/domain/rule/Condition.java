@@ -164,7 +164,7 @@ public class Condition {
                 return error("Unexpected purview: " + purview + ".");
         }
     }
-    
+
     /**
      * Processes all the rules of this {@link Condition} for either edge, adhering nodes and their attributes.
      *
@@ -191,12 +191,11 @@ public class Condition {
         }
 
         // Evaluate all attribute rules matching the left node attributes with the type of the right node
-        // (other attributes must be handled in the 'Map'-version which gives us an overview of the whole system)
         for (Rule<Attribute> rule : this.attributeRules) {
             for (Attribute systemAttribute : findAttributesOfRightNodeType(systemEdge)) {
-                final String mouldTypeName = rule.getMould().getType().getName();
-                final String patternRightNodeName = patternEdge.getRightNode().getName();
-                if (mouldTypeName == patternRightNodeName && !rule.process(systemAttribute)) {
+                final Node mouldType = rule.getMould().getType();
+                final Node patternRightNode = patternEdge.getRightNode();
+                if (mouldType == patternRightNode && !rule.process(systemAttribute)) {
                     return false;
                 }
             }

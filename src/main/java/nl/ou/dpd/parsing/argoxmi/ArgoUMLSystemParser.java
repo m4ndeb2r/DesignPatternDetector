@@ -1,6 +1,7 @@
 package nl.ou.dpd.parsing.argoxmi;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
@@ -300,9 +301,9 @@ public class ArgoUMLSystemParser {
             int lower = Integer.parseInt(readAttributes(event).get(LOWER));
             int upper = Integer.parseInt(readAttributes(event).get(UPPER));
             if (edge.getCardinalityLeft() == null) {
-                edge.setCardinalityLeft(lower, upper);
+                edge.setCardinalityLeft(new Cardinality(lower, upper));
             } else {
-                edge.setCardinalityRight(lower, upper);
+                edge.setCardinalityRight(new Cardinality(lower, upper));
             }
         }
     }
@@ -547,15 +548,9 @@ public class ArgoUMLSystemParser {
         return nodes.get(nodes.size() - 1);
     }
 
-    /**
-     * General method to read {@link Attribute}s of an xml-startevent.
-     *
-     * @param {@link XMLEvent}
-     * @return a Map<String, String> holding the attributes with the attribute name as key and the attribute value as value
-     */
     private Map<String, String> readAttributes(XMLEvent event) {
-        //holds the attributes with the attribute name as key and the attribute value as value
-        Map<String, String> attributes = new HashMap<String, String>();
+        // Attributes Map with the attribute name as key and the attribute value as value
+        Map<String, String> attributes = new HashMap<>();
         Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
         while (attrIterator.hasNext()) {
             Attribute attr = attrIterator.next();

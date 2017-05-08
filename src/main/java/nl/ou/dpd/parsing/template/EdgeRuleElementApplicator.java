@@ -9,6 +9,8 @@ import nl.ou.dpd.domain.rule.RuleException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
+
 /**
  * Class that applies an {@link EdgeRule} using a specified value.
  * Results in the Edge, given in the Rule, implementing the Rule in the Edge itself.
@@ -31,7 +33,7 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     }
 
     /**
-     * Applies this {@link EdgeRule} on a given {@ink Edge}.
+     * Applies this {@link EdgeRule} on a given {@link Edge}.
      * Results in the Edge, given in the Rule, implementing the Rule in the Edge itself.
      */
     public void apply() {
@@ -100,12 +102,10 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     }
 
     private EdgeType findEdgeTypeByName(String edgeTypeName) {
-        for (EdgeType edgeType : EdgeType.values()) {
-            if (edgeType.getName().contains(edgeTypeName.toUpperCase())) {
-                return edgeType;
-            }
-        }
-        return null;
+        return Arrays.stream(EdgeType.values())
+                .filter(edgeType -> edgeType.getName().contains(edgeTypeName.toUpperCase()))
+                .findFirst()
+                .orElse(null);
     }
 
     private void error(String message) {

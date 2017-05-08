@@ -268,16 +268,8 @@ public class Edge {
         return selfRef;
     }
 
-    public void setCardinalityLeft(int lower, int upper) {
-        this.cardinalityLeft = new Cardinality(lower, upper);
-    }
-
     public void setCardinalityLeft(Cardinality cardinality) {
         this.cardinalityLeft = cardinality;
-    }
-
-    public void setCardinalityRight(int lower, int upper) {
-        this.cardinalityRight = new Cardinality(lower, upper);
     }
 
     public void setCardinalityRight(Cardinality cardinality) {

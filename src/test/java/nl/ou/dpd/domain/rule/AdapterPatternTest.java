@@ -1,5 +1,6 @@
 package nl.ou.dpd.domain.rule;
 
+import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Attribute;
@@ -82,8 +83,8 @@ public class AdapterPatternTest {
         adapterTarget = new Edge(adapter, target, EdgeType.INHERITANCE, "Adapter-Target");
 
         // Set cardinality
-        adapterAdaptee.setCardinalityLeft(0, -1);
-        adapterAdaptee.setCardinalityRight(1, 1);
+        adapterAdaptee.setCardinalityLeft(Cardinality.valueOf("0..*"));
+        adapterAdaptee.setCardinalityRight(Cardinality.valueOf("1"));
     }
 
     /**
@@ -181,8 +182,8 @@ public class AdapterPatternTest {
         textshapeShape = new Edge(textShape, shape, EdgeType.INHERITANCE, "textShape-shape");
 
         // Set cardinality
-        textshapeTextview.setCardinalityLeft(0, -1);
-        textshapeTextview.setCardinalityRight(1, 1);
+        textshapeTextview.setCardinalityLeft(Cardinality.valueOf("0..*"));
+        textshapeTextview.setCardinalityRight(Cardinality.valueOf("1"));
     }
 
     /**
@@ -252,8 +253,8 @@ public class AdapterPatternTest {
         //textView has a wrong nodeType
         textView = new Interface("textView", "TextView");
         textshapeTextview = new Edge(textShape, textView, EdgeType.ASSOCIATION_DIRECTED, "textShape-textView");
-        textshapeTextview.setCardinalityLeft(0, -1);
-        textshapeTextview.setCardinalityRight(1, 1);
+        textshapeTextview.setCardinalityLeft(Cardinality.valueOf("0..*"));
+        textshapeTextview.setCardinalityRight(Cardinality.valueOf("1"));
 
         //run test
         assertTrue(conditions.processConditions(editorShape, clientTarget));
