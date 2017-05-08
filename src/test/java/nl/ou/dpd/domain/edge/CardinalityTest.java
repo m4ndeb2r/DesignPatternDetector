@@ -92,6 +92,13 @@ public class CardinalityTest {
     }
 
     @Test
+    public void testNegativeValues() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("No negative values allowed in cardinality.");
+        Cardinality.valueOf("-2..-1");
+    }
+
+    @Test
     public void testToString() {
         assertThat(Cardinality.valueOf("1").toString(), is("1"));
         assertThat(Cardinality.valueOf("*").toString(), is("*"));
