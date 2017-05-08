@@ -1,6 +1,9 @@
 package nl.ou.dpd.domain.edge;
 
 import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.node.Node;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNull;
@@ -16,8 +19,105 @@ import static org.junit.Assert.assertTrue;
  */
 public class EdgeTest {
 
+    private Edge edgeForEqTests1;
+    private Edge edgeForEqTests2;
+
+    /**
+     * There are several equality tests in this test class. Set up two equal edges before each test here, so in the
+     * test one attribute at a time can be changed and the edge can be tested for (in)equality.
+     */
+    @Before
+    public void initEdgesForEqualityTests() {
+        final Node leftNode = new Clazz("a", "A");
+        final Node rightNode = new Clazz("b", "B");
+        edgeForEqTests1 = new Edge("id", "name", leftNode, rightNode);
+        edgeForEqTests1.setRelationType(EdgeType.DEPENDENCY);
+        edgeForEqTests1.setCardinalityLeft(Cardinality.valueOf("1"));
+        edgeForEqTests1.setCardinalityRight(Cardinality.valueOf("*"));
+        edgeForEqTests2 = edgeForEqTests1.duplicate();
+    }
+
+    @Test
+    public void testEdgeNotEqualsNull() {
+        assertFalse(edgeForEqTests1.equals(null));
+    }
+
+    @Test
+    public void testEqualsOkay() {
+        assertTrue(edgeForEqTests1.equals(edgeForEqTests1));
+        assertTrue(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsIgnoresLock() {
+        // A locked edge is still regarded as equal to an unlocked one
+        edgeForEqTests2.lock();
+        assertFalse(edgeForEqTests1.isLocked());
+        assertTrue(edgeForEqTests2.isLocked());
+        assertTrue(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsNotOkWhenNameDiffers() {
+        edgeForEqTests1.setName("different");
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    @Ignore("In the current version the id is not always set. Fix that and activate this test.") // TODO
+    public void testEqualsNotOkWhenIdDiffers() {
+        edgeForEqTests1.setId("different");
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsNotOkWhenClassNameDiffer() {
+        // Check if different class names are detected -> not equal
+        edgeForEqTests1.setLeftNode(new Clazz("a", "NotA"));
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+        edgeForEqTests1.setLeftNode(edgeForEqTests2.getLeftNode());
+        edgeForEqTests1.setRightNode(new Clazz("b", "NotB"));
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsNotOkWhenClassIdsDiffer() {
+        // Check if different class ids are detected -> not equal
+        edgeForEqTests1.setLeftNode(new Clazz("not_a", "A"));
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+        edgeForEqTests1.setLeftNode(edgeForEqTests2.getLeftNode());
+        assertTrue(edgeForEqTests1.equals(edgeForEqTests2));
+        edgeForEqTests1.setRightNode(new Clazz("not_b", "B"));
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsNotOkWhenEdgeTypesDiffer() {
+        edgeForEqTests1.setRelationType(EdgeType.AGGREGATE);
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsNotOkayWhenVirtuallityDiffers() {
+        edgeForEqTests1.makeVirtual();
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsNotOkWhenLeftCardinalitiesDiffer() {
+        edgeForEqTests1.removeCardinalityLeft();
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
+    @Test
+    public void testEqualsNotOkWhenRightCardinalitiesDiffer() {
+        edgeForEqTests1.setCardinalityRight(Cardinality.valueOf("1..5"));
+        assertFalse(edgeForEqTests1.equals(edgeForEqTests2));
+    }
+
     /**
      * Test the {@link Edge} constructor(s).
+     * // TODO: there are several constructors; clean that up, and write a test for the ones that stay ....
      */
     @Test
     public void testConstructor() {
@@ -61,71 +161,6 @@ public class EdgeTest {
         assertThat(edge.getLeftNode().getName(), is("B"));
         assertThat(edge.getRightNode().getName(), is("A"));
         assertTrue(edge.isVirtual());
-    }
-
-    /**
-     * Tests the {@link Edge#equals(Object)} method explicitly. Implicitly the constructor and most
-     * of the getter methods are tested as well. Edges are considered equal when all their attributes are
-     * equal, except for the locked attribute.
-     */
-    @Test
-    public void testEquals() {
-        // Compare with null. Not equal.
-        Edge edge1 = new Edge(new Clazz("class1", "class1"), new Clazz("class2", "class2"), EdgeType.DEPENDENCY);
-        assertFalse(edge1.equals(null));
-
-        // Two duplicate edges. They are equal.
-        Edge edge2 = edge1.duplicate();
-        assertTrue(edge1.equals(edge2));
-        assertTrue(edge1.equals(edge1));
-
-        // A locked edge is still regarded as equal to an unlocked one
-        edge2.lock();
-        assertFalse(edge1.isLocked());
-        assertTrue(edge2.isLocked());
-        assertTrue(edge1.equals(edge2));
-
-        // Check if different class names are detected -> not equal
-        Edge edge3 = new Edge(new Clazz("class3", "class3"), new Clazz("class2", "class2"), EdgeType.DEPENDENCY);
-        assertFalse(edge1.equals(edge3));
-        Edge edge4 = new Edge(new Clazz("class1", "class1"), new Clazz("class3", "class3"), EdgeType.DEPENDENCY);
-        assertFalse(edge1.equals(edge4));
-
-        // Check if different edge types are detected -> not equal
-        Edge edge5 = new Edge(new Clazz("class1", "class1"), new Clazz("class2", "class2"), EdgeType.AGGREGATE);
-        assertFalse(edge1.equals(edge5));
-
-        // Check that a virtual edge is not equal to a non-virtual edge
-        Edge edge6 = edge5.duplicate();
-        assertTrue(edge5.equals(edge6));
-        edge6.makeVirtual();
-        assertTrue(edge6.isVirtual());
-        assertFalse(edge5.isVirtual());
-        assertFalse(edge5.equals(edge6));
-
-        // Check that edges with different cardinalities are not equal
-        Edge edge7 = edge5.duplicate();
-        assertTrue(edge7.equals(edge5));
-        edge7.setCardinalityRight(Cardinality.valueOf("0..*"));
-        assertThat(edge7.getCardinalityRight().getLower(), is(0));
-        assertThat(edge7.getCardinalityRight().getUpper(), is(Cardinality.UNLIMITED));
-        assertNull(edge5.getCardinalityRight());
-        assertFalse(edge7.equals(edge5));
-
-        edge5.setCardinalityRight(Cardinality.valueOf("0..*"));
-        assertTrue(edge7.equals(edge5));
-        edge7.setCardinalityLeft(Cardinality.valueOf("1"));
-        assertThat(edge7.getCardinalityLeft().getLower(), is(1));
-        assertThat(edge7.getCardinalityLeft().getUpper(), is(1));
-        assertNull(edge5.getCardinalityLeft());
-        assertFalse(edge7.equals(edge5));
-
-        // Check that two edges with different names are not equal
-        Edge edge8a = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE, "name1");
-        Edge edge8b = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE, "name1");
-        assertTrue(edge8a.equals(edge8b));
-        Edge edge9 = new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.AGGREGATE, "name2");
-        assertFalse(edge9.equals(edge8b));
     }
 
     @Test
