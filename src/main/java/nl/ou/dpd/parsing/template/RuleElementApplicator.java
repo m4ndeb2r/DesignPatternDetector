@@ -6,8 +6,17 @@ import nl.ou.dpd.domain.rule.Scope;
 import nl.ou.dpd.domain.rule.Topic;
 
 /**
- * Class that applies a Rule using a specified value.
- * Results in the mould, given in the Rule, implementing the Rule in the mould itself.
+ * This class applies a specfief {@link Rule} to a specified {@code value}. This results in the {@link Rule}'s
+ * {@code mould} being updated according to the rule-value combination. We need this class because some {@link Rule}s
+ * cannot be instantiated definitively during parsing, and need to be enriched during the parsing process.
+ * <p>
+ * * Suppose we need to apply the following rule (from a design patterns template XML file):
+ * <pre>
+ *     <rule applies="SomeSubject" scope="RELATION" topic="CARDINALITY_LEFT" operation="EQUALS" value="0..*" />
+ * </pre>
+ * Then this class, instantiated with a {@link Rule} (with the correct {@code mould}, {@code scope}, {@code topic}
+ * and {@code operation} already in place), and the {@code value} "0..*", will set the left cardinality of the
+ * {@link Rule}'s {@code mould} to cardinality[0,*] when the {@link #apply()} method is called.
  *
  * @author Peter Vansweevelt
  * @author Martin de Boer
@@ -23,26 +32,30 @@ public abstract class RuleElementApplicator<T> {
     }
 
     /**
-     * Applies the Rule of this class with value of this class.
+     * Applies a {@link Rule} to a {@code value}. The {@link Rule} and {@code value} are passed as a parameter to the
+     * constructor of this class.
      *
-     * @param subject the subject to apply this {@link Rule} to.
-     * @return {@code true} if this {@link Rule} applies to the specified {@code subject}, or {@code false} otherwise.
+     * @return {@code true} if the {@link Rule} applies to the specified {@code value}, or {@code false} otherwise.
      */
     public abstract void apply();
 
-    public Topic getTopic() {
+    protected Topic getTopic() {
         return rule.getTopic();
     }
 
-    public Scope getScope() {
+    protected Scope getScope() {
         return rule.getScope();
     }
 
-    public Operation getOperation() {
+    protected Operation getOperation() {
         return rule.getOperation();
     }
 
-    public String getValue() {
+    protected T getMould() {
+        return rule.getMould();
+    }
+
+    protected String getValue() {
         return value;
     }
 }

@@ -9,19 +9,17 @@ import nl.ou.dpd.domain.rule.RuleException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-
 /**
- * Class that applies an {@link EdgeRule} using a specified value.
- * Results in the Edge, given in the Rule, implementing the Rule in the Edge itself.
+ * A {@link RuleElementApplicator} implementation for {@link Edge}s.
  *
  * @author Peter Vansweevelt
+ * @author Martin de Boer
+ * @see NodeRuleElementApplicator
+ * @see AttributeRuleElementApplicator
  */
 public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
 
     private static final Logger LOGGER = LogManager.getLogger(EdgeRuleElementApplicator.class);
-
-    private Edge edge;
 
     /**
      * @param rule
@@ -29,7 +27,6 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
      */
     public EdgeRuleElementApplicator(Rule<Edge> rule, String value) {
         super(rule, value);
-        edge = rule.getMould();
     }
 
     /**
@@ -65,7 +62,7 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     private void applyRelationCardinalityLeft() {
         switch (getOperation()) {
             case EQUALS:
-                applyCardinalityLeftEquals();
+                getMould().setCardinalityLeft(Cardinality.valueOf(getValue()));
                 break;
             default:
                 error(String.format("Unexpected operation while applying CARDINALITY_LEFT: '%s'.", getOperation()));
@@ -75,7 +72,7 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     private void applyRelationCardinalityRight() {
         switch (getOperation()) {
             case EQUALS:
-                applyCardinalityRightEquals();
+                getMould().setCardinalityRight(Cardinality.valueOf(getValue()));
                 break;
             default:
                 error(String.format("Unexpected operation while applying CARDINALITY_RIGHT: '%s'.", getOperation()));
@@ -85,27 +82,12 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     private void applyRelationType() {
         switch (getOperation()) {
             case EQUALS:
-                edge.setRelationType(findEdgeTypeByName(getValue()));
+                getMould().setRelationType(EdgeType.valueOf(getValue().toUpperCase()));
                 break;
             default:
                 error(String.format("Unexpected operation while applying TYPE: '%s'.", getOperation()));
 
         }
-    }
-
-    private void applyCardinalityLeftEquals() {
-        edge.setCardinalityLeft(Cardinality.valueOf(getValue()));
-    }
-
-    private void applyCardinalityRightEquals() {
-        edge.setCardinalityRight(Cardinality.valueOf(getValue()));
-    }
-
-    private EdgeType findEdgeTypeByName(String edgeTypeName) {
-        return Arrays.stream(EdgeType.values())
-                .filter(edgeType -> edgeType.getName().contains(edgeTypeName.toUpperCase()))
-                .findFirst()
-                .orElse(null);
     }
 
     private void error(String message) {

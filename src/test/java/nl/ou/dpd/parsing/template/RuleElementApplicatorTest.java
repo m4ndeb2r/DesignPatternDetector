@@ -240,12 +240,6 @@ public class RuleElementApplicatorTest {
         aar.apply();
         assertEquals(Visibility.PACKAGE, mould.getVisibility());
         
-     
-        //null if no conversion from String to Visibility could be made
-        aar = new AttributeRuleElementApplicator(visibility, "dummie");
-        aar.apply();
-        assertNull(mould.getVisibility());
-
         thrown.expect(RuleException.class);
         thrown.expectMessage("Unexpected operation while applying TOPIC: 'EXISTS'");
 
