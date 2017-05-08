@@ -22,7 +22,7 @@ public class EdgeTest {
     @Test
     public void testConstructor() {
         Edge edge = new Edge(new Clazz("class1", "class1"), new Clazz("class2", "class2"), EdgeType.DEPENDENCY, "edge");
-        Edge edge2 = new Edge(edge);
+        Edge edge2 = edge.duplicate();
 
         assertThat(edge.getName(), is("edge"));
         assertNull(edge.getCardinalityLeft());
@@ -75,7 +75,7 @@ public class EdgeTest {
         assertFalse(edge1.equals(null));
 
         // Two duplicate edges. They are equal.
-        Edge edge2 = new Edge(edge1);
+        Edge edge2 = edge1.duplicate();
         assertTrue(edge1.equals(edge2));
         assertTrue(edge1.equals(edge1));
 
@@ -96,7 +96,7 @@ public class EdgeTest {
         assertFalse(edge1.equals(edge5));
 
         // Check that a virtual edge is not equal to a non-virtual edge
-        Edge edge6 = new Edge(edge5);
+        Edge edge6 = edge5.duplicate();
         assertTrue(edge5.equals(edge6));
         edge6.makeVirtual();
         assertTrue(edge6.isVirtual());
@@ -104,7 +104,7 @@ public class EdgeTest {
         assertFalse(edge5.equals(edge6));
 
         // Check that edges with different cardinalities are not equal
-        Edge edge7 = new Edge(edge5);
+        Edge edge7 = edge5.duplicate();
         assertTrue(edge7.equals(edge5));
         edge7.setCardinalityRight(Cardinality.valueOf("0..*"));
         assertThat(edge7.getCardinalityRight().getLower(), is(0));

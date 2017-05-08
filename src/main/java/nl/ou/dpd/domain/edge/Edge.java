@@ -80,19 +80,6 @@ public class Edge {
         this.rightNode = rightNode;
     }
 
-    /**
-     * This constructor returns a duplicate of the specified {@link Edge}.
-     *
-     * @param edge an {@link Edge} to construct a duplicate of.
-     */
-    public Edge(Edge edge) {
-        this(edge.leftNode, edge.rightNode, edge.relationType, edge.name);
-        this.cardinalityLeft = edge.cardinalityLeft;
-        this.cardinalityRight = edge.cardinalityRight;
-        this.locked = edge.locked;
-        this.virtual = edge.virtual;
-    }
-
     /*18/04/17*/
 
     /**
@@ -102,6 +89,7 @@ public class Edge {
      */
     public Edge duplicate() {
         Edge newEdge = new Edge(this.getId(), this.getName(), this.getLeftNode(), this.getRightNode());
+        newEdge.setRelationType(this.getRelationType());
         newEdge.cardinalityLeft = this.cardinalityLeft;
         newEdge.cardinalityRight = this.cardinalityRight;
         newEdge.locked = this.locked;

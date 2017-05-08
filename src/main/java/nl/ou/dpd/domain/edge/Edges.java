@@ -34,7 +34,7 @@ public abstract class Edges {
 
         if (edge.getRelationType() == EdgeType.ASSOCIATION) {
             // For edge (A, B, ....) a second but virtual edge (B, A, ...) will be added.
-            final Edge duplicate = new Edge(edge);
+            final Edge duplicate = edge.duplicate();
             duplicate.makeVirtual();
             edges.add(duplicate);
         }
