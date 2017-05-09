@@ -14,11 +14,4 @@ public class RuleException extends RuntimeException {
         super(message);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public RuleException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
 }
