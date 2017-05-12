@@ -33,8 +33,6 @@ public class Condition {
     private final String description;
 
     private List<EdgeRule> edgeRules;
-    private List<NodeRule> leftNodeRules;
-    private List<NodeRule> rightNodeRules;
     private List<NodeRule> nodeRules;
     private List<AttributeRule> attributeRules;
 
@@ -54,8 +52,6 @@ public class Condition {
         this.description = description;
 
         edgeRules = new ArrayList<>();
-        leftNodeRules = new ArrayList<>();
-        rightNodeRules = new ArrayList<>();
         nodeRules = new ArrayList<>();
         attributeRules = new ArrayList<>();
 
@@ -78,40 +74,12 @@ public class Condition {
         return edgeRules;
     }
 
-    public void setEdgeRules(List<EdgeRule> edgeRules) {
-        this.edgeRules = edgeRules;
-    }
-
-    public List<NodeRule> getLeftNodeRules() {
-        return leftNodeRules;
-    }
-
-    public void setLeftNodeRules(List<NodeRule> leftNodeRules) {
-        this.leftNodeRules = leftNodeRules;
-    }
-
-    public List<NodeRule> getRightNodeRules() {
-        return rightNodeRules;
-    }
-
-    public void setRightNodeRules(List<NodeRule> rightNodeRules) {
-        this.rightNodeRules = rightNodeRules;
-    }
-
     public List<NodeRule> getNodeRules() {
         return nodeRules;
     }
 
-    public void setNodeRules(List<NodeRule> nodeRules) {
-        this.nodeRules = nodeRules;
-    }
-
     public List<AttributeRule> getAttributeRules() {
         return attributeRules;
-    }
-
-    public void setAtributeRules(List<AttributeRule> attributeRules) {
-        this.attributeRules = attributeRules;
     }
 
     public Purview getPurview() {
