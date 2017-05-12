@@ -5,6 +5,7 @@ import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
 import nl.ou.dpd.domain.node.Clazz;
+import nl.ou.dpd.domain.node.DataType;
 import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.Visibility;
@@ -19,7 +20,6 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,8 +82,6 @@ public class ArgoUMLSystemParser {
      * @return a new {@link SystemUnderConsideration}.
      */
     public SystemUnderConsideration parse(String filename) {
-
-        //initialize lists
         nodes = new ArrayList<>();
         XMLInputFactory factory = XMLInputFactory.newInstance();
 
@@ -91,15 +89,15 @@ public class ArgoUMLSystemParser {
             InputStream input = new FileInputStream(new File(filename));
             XMLEventReader eventReader = factory.createXMLEventReader(input);
             handleEvents(eventReader);
-        } catch (XMLStreamException e) {
+        } catch (ParseException pe) {
+            // We don't need to repackage a ParseException in a ParseException.
+            // Rethrow ParseExceptions directly
+            throw pe;
+        } catch (Exception e) {
             final String msg = "The XMI file " + filename + " could not be parsed.";
-            LOGGER.error(msg, e);
-            throw new ParseException(msg, e);
-        } catch (FileNotFoundException e) {
-            final String msg = "The XMI file " + filename + " could not be found.";
-            LOGGER.error(msg, e);
-            throw new ParseException(msg, e);
+            error(msg, e);
         }
+
         return system;
     }
 
@@ -323,32 +321,16 @@ public class ArgoUMLSystemParser {
 
     //set the type of an attribute
     private void handleDatatypeEvent(XMLEvent event) {
-        Node node;
         //look for the event one level higher
         switch (events.peek().asStartElement().getName().getLocalPart()) {
             case ATTRIBUTE:
                 //if last remembered event is attribute, set the type of the attribute
                 //see http://argouml.tigris.org//profiles/uml14/default-uml14.xmi
-                Node lastNode = nodes.get(nodes.size() - 1);
-                nl.ou.dpd.domain.node.Attribute attr = lastNode.getAttributes().get(lastNode.getAttributes().size() - 1);
-                String href = readAttributes(event).get(HREF);
-                if (href.substring(href.length() - 56).equals("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087C")) {
-                    node = new Clazz("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087C", "Integer");
-                    nodes.add(node);
-                    attr.setType(node);
-                }
-                if (href.substring(href.length() - 56).equals("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087D")) {
-                    node = new Clazz("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087C", "UnlimitedInteger");
-                    nodes.add(node);
-                    attr.setType(node);
-                }
-                if (href.substring(href.length() - 56).equals("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087E")) {
-                    node = new Clazz("-84-17--56-5-43645a83:11466542d86:-8000:000000000000087C", "String");
-                    nodes.add(node);
-                    attr.setType(node);
-                }
-                if (href.substring(href.length() - 56).equals("-84-17--56-5-43645a83:11466542d86:-8000:0000000000000880")) {
-                    node = new Clazz("-84-17--56-5-43645a83:11466542d86:-8000:0000000000000880", "Boolean");
+                final Node lastNode = nodes.get(nodes.size() - 1);
+                final nl.ou.dpd.domain.node.Attribute attr = lastNode.getAttributes().get(lastNode.getAttributes().size() - 1);
+                final String href = readAttributes(event).get(HREF);
+                final Node node = new DataType(href.substring(href.length() - 56));
+                if (node != null) {
                     nodes.add(node);
                     attr.setType(node);
                 }
@@ -359,10 +341,11 @@ public class ArgoUMLSystemParser {
     //add a dependency edge
     private void handleDependencyEvent(XMLEvent event) {
         if (events.peek().asStartElement().getName().getLocalPart() == CLASS) {
-            //create an uncomplete edge
+            //create an incomplete edge
             Map<String, String> attributes = readAttributes(event);
             String dependencyId = getIdOrIdref(attributes);
-            if (dependencyId != null && findEdgeById(dependencyId) == null) {//create an uncomplete edge if the edge does not exist yet
+            if (dependencyId != null && findEdgeById(dependencyId) == null) {
+                //create an incomplete edge if the edge does not exist yet
                 Edge edge = new Edge(dependencyId, null, null, null);
                 edge.setRelationType(EdgeType.DEPENDENCY);
                 system.add(edge);
@@ -373,16 +356,20 @@ public class ArgoUMLSystemParser {
     //Create a node with the specified id if it does not exist and add it to the nodes -list.
     //Set the properties of the (new or existing) node.
     private void createAndAddNode(XMLEvent event) {
-        if (readAttributes(event).get(ID) != null) {
-            Node node = findNodeById(readAttributes(event).get(ID));
+        final Map<String, String> attributes = readAttributes(event);
+        if (attributes.get(ID) != null) {
+            Node node = findNodeById(attributes.get(ID));
             if (node == null) {
                 //node does not exist
                 node = createIncompleteNode(event);
                 nodes.add(node);
             }
             if (node.getName() == null) {
-                //properties are not set yet
-                setNodeProperties(event);
+                node.setName(attributes.get(NAME));
+                if (event.asStartElement().getName().getLocalPart().equals(CLASS)) {
+                    node.setVisibility(Visibility.valueOf(attributes.get(VISIBILITY).toUpperCase()));
+                    node.setAbstract(Boolean.valueOf(attributes.get(IS_ABSTRACT)));
+                }
             }
         }
     }
@@ -440,13 +427,11 @@ public class ArgoUMLSystemParser {
     private Node createIncompleteNode(XMLEvent event) {
         Map<String, String> attributes = readAttributes(event);
         String id = getIdOrIdref(attributes);
-        Node node;
         if (event.asStartElement().getName().getLocalPart() == CLASS) {
-            node = new Clazz(id, null);
+            return new Clazz(id, null);
         } else {
-            node = new Interface(id, null);
+            return new Interface(id, null);
         }
-        return node;
     }
 
     /**
@@ -465,29 +450,6 @@ public class ArgoUMLSystemParser {
         return attr;
     }
 
-    /**
-     * Create a new {@link Interface) with given id and type.
-     *
-     * @param attributes a map of attributes holding the id and type
-     * @return a new Node with the specified name and type.
-     */
-    private void setNodeProperties(XMLEvent event) {
-        Map<String, String> attributes = readAttributes(event);
-        String name = attributes.get(NAME);
-        Visibility visibility = Visibility.valueOf(attributes.get(VISIBILITY).toUpperCase());
-        Boolean isAbstract = Boolean.valueOf(attributes.get(IS_ABSTRACT));
-
-        if (event.asStartElement().getName().getLocalPart() == CLASS) {
-            Clazz clazz = (Clazz) findNodeById(attributes.get(ID));
-            clazz.setName(name);
-            clazz.setVisibility(visibility);
-            clazz.setAbstract(isAbstract);
-        } else {
-            Interface iface = (Interface) findNodeById(attributes.get(ID));
-            iface.setName(name);
-        }
-    }
-
     private Node findNodeById(String id) {
         return nodes.stream()
                 .filter(n -> n.getId().equals(id))
@@ -495,19 +457,11 @@ public class ArgoUMLSystemParser {
                 .orElse(null);
     }
 
-    /**
-     * Find an Edge by id.
-     *
-     * @param id the id as a String
-     * @return the edge object with the id of 'id'
-     */
     private Edge findEdgeById(String id) {
-        for (Edge e : system.getEdges()) {
-            if (e.getId().equals(id)) {
-                return e;
-            }
-        }
-        return null;
+        return system.getEdges().stream()
+                .filter(edge -> edge.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     private String getIdOrIdref(Map<String, String> attributes) {
@@ -539,5 +493,10 @@ public class ArgoUMLSystemParser {
             attributes.put(attr.getName().getLocalPart(), attr.getValue());
         }
         return attributes;
+    }
+
+    private void error(String msg, Exception cause) {
+        LOGGER.error(msg, cause);
+        throw new ParseException(msg, cause);
     }
 }

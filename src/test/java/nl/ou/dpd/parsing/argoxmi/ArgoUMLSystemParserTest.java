@@ -86,7 +86,7 @@ public class ArgoUMLSystemParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The XMI file missing.xml could not be found.");
+        thrown.expectMessage("The XMI file missing.xml could not be parsed.");
 
         parser.parse("missing.xml");
     }
