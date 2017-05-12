@@ -1,11 +1,14 @@
 package nl.ou.dpd.domain.node;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Arrays;
 
 /**
  * Represents a data type node in a system design. A data type can be a String, Integer, UnlimitedInteger or Boolean.
  * All other types are represented by {@link Clazz}es or {@link Interface}s.
- *
+ * <p>
  * For the allowed id's and their meaning, see: <a href="http://argouml.tigris.org//profiles/uml14/default-uml14.xmi" />
  *
  * @author Martin de Boer
@@ -13,6 +16,8 @@ import java.util.Arrays;
  * @see Interface
  */
 public class DataType extends Node {
+
+    private static final Logger LOGGER = LogManager.getLogger(DataType.class);
 
     /**
      * Contains the allowed data types (id's and names).
@@ -50,7 +55,7 @@ public class DataType extends Node {
     /**
      * Constructs a {@link DataType} instance, based on the specified {@code id}.
      *
-     * @param id   a unique id for this {@link DataType}
+     * @param id a unique id for this {@link DataType}
      */
     public DataType(String id) {
         this(id, null, null);
@@ -73,7 +78,22 @@ public class DataType extends Node {
         if (Allowed.containsId(id)) {
             return id;
         }
-        throw new IllegalArgumentException(String.format("Unexpected DataType id: '%s'.", id));
+        return handleUnexpectedIdError(id);
+    }
+
+    private static String handleUnexpectedIdError(String id) {
+        final StringBuilder builder = new StringBuilder(String.format("Unexpected DataType id: '%s'.\nAllowed ids are:", id));
+        appendAllowedIds(builder);
+        final String msg = builder.toString();
+
+        LOGGER.error(msg);
+        throw new IllegalArgumentException(msg);
+    }
+
+    private static void appendAllowedIds(StringBuilder builder) {
+        for (Allowed allowed : Allowed.values()) {
+            builder.append(String.format("\n\t'%s'", allowed.getId()));
+        }
     }
 
     private static String getNameForId(String id) {
