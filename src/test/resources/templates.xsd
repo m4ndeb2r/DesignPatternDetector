@@ -173,10 +173,7 @@ Explanation:
         <xs:restriction base='xs:normalizedString'>
             <xs:enumeration value='TYPE'/>
             <xs:enumeration value='VISIBILITY'/>
-            <xs:enumeration value='MODIFIER_ROOT'/>
-            <xs:enumeration value='MODIFIER_LEAF'/>
             <xs:enumeration value='MODIFIER_ABSTRACT'/>
-            <xs:enumeration value='MODIFIER_ACTIVE'/>
             <xs:enumeration value='CARDINALITY'/>
             <xs:enumeration value='CARDINALITY_LEFT'/>
             <xs:enumeration value='CARDINALITY_RIGHT'/>

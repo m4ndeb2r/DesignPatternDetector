@@ -98,42 +98,17 @@ public class ClazzTest {
         assertFalse(a1.equals(b1));
         assertFalse(a2.equals(b2));
 
-        final Clazz publicClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, null);
-        Clazz protectedClazz = new Clazz("id", "name", Visibility.PROTECTED, null, null, null, null, null);
+        final Clazz publicClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null);
+        Clazz protectedClazz = new Clazz("id", "name", Visibility.PROTECTED, null, null);
         assertFalse(publicClazz.equals(protectedClazz));
-        protectedClazz = new Clazz("id", "name", Visibility.PROTECTED, null, null, null, null, null);
+        protectedClazz = new Clazz("id", "name", Visibility.PROTECTED, null, null);
         assertFalse(publicClazz.equals(protectedClazz));
 
-        final Clazz rootClazz = new Clazz("id", "name", Visibility.PUBLIC, null, true, null, null, null);
-        Clazz nonRootClazz = new Clazz("id", "name", Visibility.PUBLIC, null, false, null, null, null);
-        assertFalse(rootClazz.equals(nonRootClazz));
-        nonRootClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, null);
-        assertFalse(rootClazz.equals(nonRootClazz));
-
-        final Clazz leafClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, true, null, null);
-        Clazz nonLeafClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, false, null, null);
-        assertFalse(leafClazz.equals(nonLeafClazz));
-        nonLeafClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, null);
-        assertFalse(leafClazz.equals(nonLeafClazz));
-
-        final Clazz abstractClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, true, null);
-        Clazz nonAbstractClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, false, null);
+        final Clazz abstractClazz = new Clazz("id", "name", Visibility.PUBLIC, null, true);
+        Clazz nonAbstractClazz = new Clazz("id", "name", Visibility.PUBLIC, null, false);
         assertFalse(abstractClazz.equals(nonAbstractClazz));
-        nonAbstractClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, null);
+        nonAbstractClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null);
         assertFalse(abstractClazz.equals(nonAbstractClazz));
-
-        final Clazz activeClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, true);
-        Clazz nonActiveClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, false);
-        assertFalse(activeClazz.equals(nonActiveClazz));
-        nonActiveClazz = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, null);
-        assertFalse(activeClazz.equals(nonActiveClazz));
-
-        final List<Attribute> attributes = new ArrayList<>();
-        attributes.add(new Attribute("attr1", TestHelper.createClazz("myClass1")));
-        attributes.add(new Attribute("attr2", TestHelper.createClazz("myClass2")));
-        final Clazz clazzWithAttributes = new Clazz("id", "name", Visibility.PUBLIC, attributes, null, null, null, false);
-        final Clazz clazzWithoutAttributes = new Clazz("id", "name", Visibility.PUBLIC, null, null, null, null, false);
-        assertFalse(activeClazz.equals(nonActiveClazz));
 
         final Node aClazz = new Clazz("A", "A");
         final Node anInterface = new Interface("A", "A");
@@ -151,24 +126,18 @@ public class ClazzTest {
         assertThat(c1.getAttributes().size(), is(0));
         assertThat(c1.getType(), is(NodeType.CLASS));
         assertNull(c1.getVisibility());
-        assertNull(c1.isRoot());
-        assertNull(c1.isLeaf());
         assertNull(c1.isAbstract());
-        assertNull(c1.isActive());
 
         final List<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("attr1", TestHelper.createClazz("myClass1")));
         attributes.add(new Attribute("attr2", TestHelper.createClazz("myClass2")));
 
-        final Clazz c2 = new Clazz("id", "name", Visibility.PACKAGE, attributes, true, false, true, false);
+        final Clazz c2 = new Clazz("id", "name", Visibility.PACKAGE, attributes, true);
         assertThat(c2.getId(), is("id"));
         assertThat(c2.getName(), is("name"));
         assertThat(c2.getType(), is(NodeType.CLASS));
         assertThat(c2.getVisibility(), is(Visibility.PACKAGE));
-        assertTrue(c2.isRoot());
-        assertFalse(c2.isLeaf());
         assertTrue(c2.isAbstract());
-        assertFalse(c2.isActive());
         assertThat(c2.getAttributes().size(), is(2));
         assertThat(c2.getAttributesByName("attr1").size(), is(1));
         assertThat(c2.getAttributesByName("attr2").size(), is(1));

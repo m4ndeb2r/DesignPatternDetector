@@ -1446,10 +1446,7 @@ public class ArgoUMLSystemParserTest {
 			}
 			s += "\tVisibility = " + nodeLeft.getVisibility() + "\n";
 			s += "\tisAbstract = " + nodeLeft.isAbstract().toString() + "\n";
-			s += "\tisActive = " + nodeLeft.isActive().toString() + "\n";
-			s += "\tisRoot = " + nodeLeft.isRoot().toString() + "\n";
-			s += "\tisLeaf = " + nodeLeft.isLeaf().toString() + "\n";
-			s += "\tAttributes:\n";		
+			s += "\tAttributes:\n";
 			for (Attribute a : nodeLeft.getAttributes()) {
 				s += "\tAttribute name = " + a.getName() + "; id = " + a.getId() + "\n";			
 				if (a.getType() != null) {
@@ -1473,10 +1470,7 @@ public class ArgoUMLSystemParserTest {
 			}			
 			s += "\tVisibility = " + nodeRight.getVisibility() + "\n";
 			s += "\tisAbstract = " + nodeRight.isAbstract().toString() + "\n";
-			s += "\tisActive = " + nodeRight.isActive().toString() + "\n";
-			s += "\tisRoot = " + nodeRight.isRoot().toString() + "\n";
-			s += "\tisLeaf = " + nodeRight.isLeaf().toString() + "\n";
-			s += "\tAttributes:\n";		
+			s += "\tAttributes:\n";
 			for (Attribute a : nodeRight.getAttributes()) {
 				s += "\tAttribute name = " + a.getName() + "; id = " + a.getId() + "\n";			
 				if (a.getType() != null) {

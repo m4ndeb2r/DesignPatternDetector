@@ -53,14 +53,8 @@ public class NodeRule extends Rule<Node> {
                 return processObjectType(systemNode);
             case VISIBILITY:
                 return processObjectVisibility(systemNode);
-            case MODIFIER_ROOT:
-                return processObjectModifierRoot(systemNode);
-            case MODIFIER_LEAF:
-                return processObjectModifierLeaf(systemNode);
             case MODIFIER_ABSTRACT:
                 return processObjectModifierAbstract(systemNode);
-            case MODIFIER_ACTIVE:
-                return processObjectModifierActive(systemNode);
             default:
                 return error(String.format("Unexpected topic '%s' while processing scope 'OBJECT'.", getTopic()));
         }
@@ -96,36 +90,6 @@ public class NodeRule extends Rule<Node> {
         }
     }
 
-    private boolean processObjectModifierRoot(Node systemNode) {
-        switch (getOperation()) {
-            case EXISTS:
-                return processObjectModifierRootExists(systemNode);
-            case NOT_EXISTS:
-                return !processObjectModifierRootExists(systemNode);
-            case EQUALS:
-                return processObjectModifierRootEquals(systemNode);
-            case NOT_EQUALS:
-                return !processObjectModifierRootEquals(systemNode);
-            default:
-                return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_ROOT'.", getOperation()));
-        }
-    }
-
-    private boolean processObjectModifierLeaf(Node systemNode) {
-        switch (getOperation()) {
-            case EXISTS:
-                return processObjectModifierLeafExists(systemNode);
-            case NOT_EXISTS:
-                return !processObjectModifierLeafExists(systemNode);
-            case EQUALS:
-                return processObjectModifierLeafEquals(systemNode);
-            case NOT_EQUALS:
-                return !processObjectModifierLeafEquals(systemNode);
-            default:
-                return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_LEAF'.", getOperation()));
-        }
-    }
-
     private boolean processObjectModifierAbstract(Node systemNode) {
         switch (getOperation()) {
             case EXISTS:
@@ -138,21 +102,6 @@ public class NodeRule extends Rule<Node> {
                 return !processObjectModifierAbstractEquals(systemNode);
             default:
                 return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_ABSTRACT'.", getOperation()));
-        }
-    }
-
-    private boolean processObjectModifierActive(Node systemNode) {
-        switch (getOperation()) {
-            case EXISTS:
-                return processObjectModifierActiveExists(systemNode);
-            case NOT_EXISTS:
-                return !processObjectModifierActiveExists(systemNode);
-            case EQUALS:
-                return processObjectModifierActiveEquals(systemNode);
-            case NOT_EQUALS:
-                return !processObjectModifierActiveEquals(systemNode);
-            default:
-                return error(String.format("Unexpected operation '%s' while processing scope 'MODIFIER_ACTIVE'.", getOperation()));
         }
     }
 
@@ -174,24 +123,6 @@ public class NodeRule extends Rule<Node> {
         return systemNode.getVisibility() == getMould().getVisibility();
     }
 
-    private boolean processObjectModifierRootExists(Node systemNode) {
-        return systemNode.isRoot() != null;
-    }
-
-    private boolean processObjectModifierRootEquals(Node systemNode) {
-        validateTopic(getMould().isRoot(), Topic.MODIFIER_ROOT);
-        return systemNode.isRoot() == getMould().isRoot();
-    }
-
-    private boolean processObjectModifierLeafExists(Node systemNode) {
-        return systemNode.isLeaf() != null;
-    }
-
-    private boolean processObjectModifierLeafEquals(Node systemNode) {
-        validateTopic(getMould().isLeaf(), Topic.MODIFIER_LEAF);
-        return systemNode.isLeaf() == getMould().isLeaf();
-    }
-
     private boolean processObjectModifierAbstractExists(Node systemNode) {
         return systemNode.isAbstract() != null;
     }
@@ -199,15 +130,6 @@ public class NodeRule extends Rule<Node> {
     private boolean processObjectModifierAbstractEquals(Node systemNode) {
         validateTopic(getMould().isAbstract(), Topic.MODIFIER_ABSTRACT);
         return systemNode.isAbstract() == getMould().isAbstract();
-    }
-
-    private boolean processObjectModifierActiveExists(Node systemNode) {
-        return systemNode.isActive() != null;
-    }
-
-    private boolean processObjectModifierActiveEquals(Node systemNode) {
-        validateTopic(getMould().isActive(), Topic.MODIFIER_ACTIVE);
-        return systemNode.isActive() == getMould().isActive();
     }
 
     private void validateTopic(Object topicValue, Topic topic) {

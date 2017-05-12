@@ -47,10 +47,7 @@ public class ArgoUMLSystemParser {
     private static final String NAME = "name";
     private static final String ID = "xmi.id";
     private static final String VISIBILITY = "visibility";
-    private static final String IS_ROOT = "isRoot";
-    private static final String IS_LEAF = "isLeaf";
     private static final String IS_ABSTRACT = "isAbstract";
-    private static final String IS_ACTIVE = "isActive";
     private static final String IDREF = "xmi.idref";
     private static final String LOWER = "lower";
     private static final String UPPER = "upper";
@@ -62,25 +59,17 @@ public class ArgoUMLSystemParser {
     private static final String CLASS = "Class";
     private static final String INTERFACE = "Interface";
     private static final String ATTRIBUTE = "Attribute";
-    private static final String OPERATION = "Operation";
     private static final String ASSOCIATION = "Association";
     private static final String ASSOCIATION_END = "AssociationEnd";
     private static final String MULTIPLICITY_RANGE = "MultiplicityRange";
-    private static final String MULTIPLICITY_DOT_RANGE = "Multiplicity.range";
-    private static final String ASSOCIATION_END_DOT_PARTICIPANT = "AssociationEnd.participant";
     private static final String ABSTRACTION = "Abstraction";
     private static final String DEPENDENCY = "Dependency";
-    private static final String DEPENDENCY_DOT_CLIENT = "Dependency.client";
-    private static final String DEPENDENCY_DOT_SUPPLIER = "Dependency.supplier";
     private static final String GENERALIZATION = "Generalization";
-    private static final String GENERALIZATION_DOT_CHILD = "Generalization.child";
-    private static final String GENERALIZATION_DOT_PARENT = "Generalization.parent";
-    private static final String NAMESPACE_DOT_OWNED_ELEMENT = "Namespace.ownedElement";
     private static final String DATATYPE = "DataType";
 
     private SystemUnderConsideration system;
     private List<Node> nodes;
-    private Stack<XMLEvent> events = new Stack<XMLEvent>();
+    private Stack<XMLEvent> events = new Stack<>();
 
     public int getNumberOfNodes() {
         return nodes.size();
@@ -384,9 +373,8 @@ public class ArgoUMLSystemParser {
     //Create a node with the specified id if it does not exist and add it to the nodes -list.
     //Set the properties of the (new or existing) node.
     private void createAndAddNode(XMLEvent event) {
-        Node node = null;
         if (readAttributes(event).get(ID) != null) {
-            node = findNodeById(readAttributes(event).get(ID));
+            Node node = findNodeById(readAttributes(event).get(ID));
             if (node == null) {
                 //node does not exist
                 node = createIncompleteNode(event);
@@ -486,9 +474,6 @@ public class ArgoUMLSystemParser {
     private void setNodeProperties(XMLEvent event) {
         Map<String, String> attributes = readAttributes(event);
         String name = attributes.get(NAME);
-        Boolean isRoot = Boolean.valueOf(attributes.get(IS_ROOT));
-        Boolean isLeaf = Boolean.valueOf(attributes.get(IS_LEAF));
-        Boolean isActive = Boolean.valueOf(attributes.get(IS_ACTIVE));
         Visibility visibility = Visibility.valueOf(attributes.get(VISIBILITY).toUpperCase());
         Boolean isAbstract = Boolean.valueOf(attributes.get(IS_ABSTRACT));
 
@@ -496,16 +481,10 @@ public class ArgoUMLSystemParser {
             Clazz clazz = (Clazz) findNodeById(attributes.get(ID));
             clazz.setName(name);
             clazz.setVisibility(visibility);
-            clazz.setRoot(isRoot);
-            clazz.setLeaf(isLeaf);
             clazz.setAbstract(isAbstract);
-            clazz.setActive(isActive);
         } else {
             Interface iface = (Interface) findNodeById(attributes.get(ID));
             iface.setName(name);
-            iface.setRoot(isRoot);
-            iface.setLeaf(isLeaf);
-            iface.setActive(isActive);
         }
     }
 
@@ -530,7 +509,6 @@ public class ArgoUMLSystemParser {
         }
         return null;
     }
-
 
     private String getIdOrIdref(Map<String, String> attributes) {
         String id = attributes.get(ID);

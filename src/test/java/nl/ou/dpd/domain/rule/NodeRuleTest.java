@@ -1,6 +1,5 @@
 package nl.ou.dpd.domain.rule;
 
-import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
@@ -13,9 +12,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -118,30 +114,6 @@ public class NodeRuleTest {
     }
 
     /**
-     * Test the existence of the scopes in the systemNode (whatever the mould demands).
-     */
-    @Test
-    public void testNodeForTopicExistence() {
-        final List<Attribute> attributes = new ArrayList<>();
-        attributes.add(new Attribute("Class1", new Clazz("id0a", "Class")));
-        attributes.add(new Attribute("Interface1", new Clazz("id0b", "Interface")));
-
-        final Node nothingSetNode = new Clazz("id1a", "ClassName");
-        final Node everythingSetNode = new Clazz("id1b", "ClassName", Visibility.PRIVATE, attributes, true, false, false, true);
-
-        //activeModifier
-        final NodeRule activeModifierNotSetRule = new NodeRule(nothingSetNode, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.EXISTS);
-        final NodeRule activeModifierSetRule = new NodeRule(everythingSetNode, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.EXISTS);
-        assertTrue(activeModifierNotSetRule.process(new Clazz("id2", "ClassName", Visibility.PUBLIC, null, false, false, true, false)));
-        assertFalse(activeModifierNotSetRule.process(new Clazz("id3", "ClassName")));
-        assertTrue(activeModifierSetRule.process(new Clazz("id4", "ClassName", Visibility.PROTECTED, null, true, true, false, true)));
-        assertFalse(activeModifierSetRule.process(new Clazz("id5", "ClassName")));
-
-        assertTrue(activeModifierNotSetRule.process(new Interface("id6", "ClassName", true, false, false)));
-        assertFalse(activeModifierNotSetRule.process(new Interface("id6", "ClassName")));
-    }
-
-    /**
      * Test the {@link NodeRule} class for {@link Topic#TYPE} checking.
      */
     @Test
@@ -224,84 +196,6 @@ public class NodeRuleTest {
     }
 
     /**
-     * Test the {@link NodeRule} class for {@link Topic#MODIFIER_ROOT} checking.
-     */
-    @Test
-    public void testNodeRuleForRootModifier() {
-        when(clazz.isRoot()).thenReturn(true);
-        when(publicNode.isRoot()).thenReturn(true);
-        when(protectedNode.isRoot()).thenReturn(false);
-
-        NodeRule rootRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ROOT, Operation.EQUALS);
-        assertTrue(rootRule.process(publicNode));
-        assertFalse(rootRule.process(protectedNode));
-        assertFalse(rootRule.process(privateNode));
-
-        rootRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ROOT, Operation.NOT_EQUALS);
-        assertFalse(rootRule.process(publicNode));
-        assertTrue(rootRule.process(protectedNode));
-        assertTrue(rootRule.process(privateNode));
-
-        rootRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ROOT, Operation.EXISTS);
-        assertTrue(rootRule.process(publicNode));
-        assertTrue(rootRule.process(protectedNode));
-        assertTrue(rootRule.process(privateNode));
-
-        rootRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ROOT, Operation.NOT_EXISTS);
-        assertFalse(rootRule.process(publicNode));
-        assertFalse(rootRule.process(protectedNode));
-        assertFalse(rootRule.process(privateNode));
-
-        // Test situation in which root modifier is not set in the mould, for all operations.
-        when(interfaze.isRoot()).thenReturn(null);
-        for (Operation operation : Operation.values()) {
-            rootRule = new NodeRule(interfaze, Scope.OBJECT, Topic.MODIFIER_ROOT, operation);
-            thrown.expect(RuleException.class);
-            thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_ROOT'. Unable to detect what to check for.");
-            rootRule.process(publicNode);
-        }
-    }
-
-    /**
-     * Test the {@link NodeRule} class for {@link Topic#MODIFIER_LEAF} checking.
-     */
-    @Test
-    public void testNodeRuleForLeafModifier() {
-        when(clazz.isLeaf()).thenReturn(true);
-        when(publicNode.isLeaf()).thenReturn(true);
-        when(protectedNode.isLeaf()).thenReturn(false);
-
-        NodeRule leafRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_LEAF, Operation.EQUALS);
-        assertTrue(leafRule.process(publicNode));
-        assertFalse(leafRule.process(protectedNode));
-        assertFalse(leafRule.process(privateNode));
-
-        leafRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_LEAF, Operation.NOT_EQUALS);
-        assertFalse(leafRule.process(publicNode));
-        assertTrue(leafRule.process(protectedNode));
-        assertTrue(leafRule.process(privateNode));
-
-        leafRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_LEAF, Operation.EXISTS);
-        assertTrue(leafRule.process(publicNode));
-        assertTrue(leafRule.process(protectedNode));
-        assertTrue(leafRule.process(privateNode));
-
-        leafRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_LEAF, Operation.NOT_EXISTS);
-        assertFalse(leafRule.process(publicNode));
-        assertFalse(leafRule.process(protectedNode));
-        assertFalse(leafRule.process(privateNode));
-
-        // Test situation in which root modifier is not set in the mould, for all operations.
-        when(interfaze.isLeaf()).thenReturn(null);
-        for (Operation operation : Operation.values()) {
-            leafRule = new NodeRule(interfaze, Scope.OBJECT, Topic.MODIFIER_LEAF, operation);
-            thrown.expect(RuleException.class);
-            thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_LEAF'. Unable to detect what to check for.");
-            leafRule.process(publicNode);
-        }
-    }
-
-    /**
      * Test the {@link NodeRule} class for {@link Topic#MODIFIER_ABSTRACT} checking.
      */
     @Test
@@ -337,45 +231,6 @@ public class NodeRuleTest {
             thrown.expect(RuleException.class);
             thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_ABSTRACT'. Unable to detect what to check for.");
             abstractRule.process(publicNode);
-        }
-    }
-
-    /**
-     * Test the {@link NodeRule} class for {@link Topic#MODIFIER_ACTIVE} checking.
-     */
-    @Test
-    public void testNodeRuleForActiveModifier() {
-        when(clazz.isActive()).thenReturn(true);
-        when(publicNode.isActive()).thenReturn(true);
-        when(protectedNode.isActive()).thenReturn(false);
-
-        NodeRule activeRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.EQUALS);
-        assertTrue(activeRule.process(publicNode));
-        assertFalse(activeRule.process(protectedNode));
-        assertFalse(activeRule.process(privateNode));
-
-        activeRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.NOT_EQUALS);
-        assertFalse(activeRule.process(publicNode));
-        assertTrue(activeRule.process(protectedNode));
-        assertTrue(activeRule.process(privateNode));
-
-        activeRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.EXISTS);
-        assertTrue(activeRule.process(publicNode));
-        assertTrue(activeRule.process(protectedNode));
-        assertTrue(activeRule.process(privateNode));
-
-        activeRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ACTIVE, Operation.NOT_EXISTS);
-        assertFalse(activeRule.process(publicNode));
-        assertFalse(activeRule.process(protectedNode));
-        assertFalse(activeRule.process(privateNode));
-
-        // Test situation in which root modifier is not set in the mould, for all operations.
-        when(clazz.isActive()).thenReturn(null);
-        for (Operation operation : Operation.values()) {
-            activeRule = new NodeRule(clazz, Scope.OBJECT, Topic.MODIFIER_ACTIVE, operation);
-            thrown.expect(RuleException.class);
-            thrown.expectMessage("Cannot perform rule on topic 'MODIFIER_ACTIVE'. Unable to detect what to check for.");
-            activeRule.process(publicNode);
         }
     }
 

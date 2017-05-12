@@ -11,10 +11,7 @@ package nl.ou.dpd.domain.rule;
 public enum Topic {
     TYPE,
     VISIBILITY,
-    MODIFIER_ROOT,
-    MODIFIER_LEAF,
     MODIFIER_ABSTRACT,
-    MODIFIER_ACTIVE,
     CARDINALITY,
     CARDINALITY_LEFT,
     CARDINALITY_RIGHT

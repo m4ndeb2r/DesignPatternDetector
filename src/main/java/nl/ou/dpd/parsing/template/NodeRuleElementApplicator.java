@@ -38,17 +38,8 @@ public class NodeRuleElementApplicator extends RuleElementApplicator<Node> {
             case VISIBILITY:
                 applyObjectVisibility();
                 break;
-            case MODIFIER_ROOT:
-                applyObjectModifierRoot();
-                break;
-            case MODIFIER_LEAF:
-                applyObjectModifierLeaf();
-                break;
             case MODIFIER_ABSTRACT:
                 applyObjectModifierAbstract();
-                break;
-            case MODIFIER_ACTIVE:
-                applyObjectModifierActive();
                 break;
             default:
                 error(String.format("Unexpected topic while applying OBJECT: '%s'.", getTopic()));
@@ -63,36 +54,6 @@ public class NodeRuleElementApplicator extends RuleElementApplicator<Node> {
             default:
                 error(String.format("Unexpected operation while applying CARDINALITY: '%s'.", getOperation()));
 
-        }
-    }
-
-    private void applyObjectModifierRoot() {
-        switch (getOperation()) {
-            case EQUALS:
-                getMould().setRoot(Boolean.valueOf(getValue()));
-                break;
-            default:
-                error(String.format("Unexpected operation while applying MODIFIER_ROOT: '%s'.", getOperation()));
-        }
-    }
-
-    private void applyObjectModifierActive() {
-        switch (getOperation()) {
-            case EQUALS:
-                getMould().setActive(Boolean.valueOf(getValue()));
-                break;
-            default:
-                error(String.format("Unexpected operation while applying MODIFIER_ACTIVE: '%s'.", getOperation()));
-        }
-    }
-
-    private void applyObjectModifierLeaf() {
-        switch (getOperation()) {
-            case EQUALS:
-                getMould().setLeaf(Boolean.valueOf(getValue()));
-                break;
-            default:
-                error(String.format("Unexpected operation while applying MODIFIER_LEAF: '%s'.", getOperation()));
         }
     }
 

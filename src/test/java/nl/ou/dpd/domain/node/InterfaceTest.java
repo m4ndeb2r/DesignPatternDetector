@@ -94,24 +94,6 @@ public class InterfaceTest {
         assertFalse(a1.equals(b1));
         assertFalse(a2.equals(b2));
 
-        Interface rootInterface = new Interface("id", "name", true, null, null);
-        Interface nonRootInterface = new Interface("id", "name", false, null, null);
-        assertFalse(rootInterface.equals(nonRootInterface));
-        nonRootInterface = new Interface("id", "name", null, null, null);
-        assertFalse(rootInterface.equals(nonRootInterface));
-
-        Interface leafInterface = new Interface("id", "name", null, true, null);
-        Interface nonLeafInterface = new Interface("id", "name", null, false, null);
-        assertFalse(leafInterface.equals(nonLeafInterface));
-        nonLeafInterface = new Interface("id", "name", null, null, null);
-        assertFalse(leafInterface.equals(nonLeafInterface));
-
-        Interface activeInterface = new Interface("id", "name", null, null, true);
-        Interface nonActiveInterface = new Interface("id", "name", null, null, false);
-        assertFalse(activeInterface.equals(nonActiveInterface));
-        nonActiveInterface = new Interface("id", "name", null, null, null);
-        assertFalse(activeInterface.equals(nonActiveInterface));
-
         Node aClazz = new Clazz("A", "A");
         Node anInterface = new Interface("A", "A");
         assertFalse(aClazz.equals(anInterface));
@@ -128,20 +110,6 @@ public class InterfaceTest {
         assertThat(i1.getAttributes().size(), is(0));
         assertThat(i1.getType(), is(NodeType.INTERFACE));
         assertThat(i1.getVisibility(), is(Visibility.PUBLIC));
-        assertNull(i1.isRoot());
-        assertNull(i1.isLeaf());
         assertTrue(i1.isAbstract());
-        assertNull(i1.isActive());
-
-        Interface i2 = new Interface("id", "name", true, false, true);
-        assertThat(i2.getId(), is("id"));
-        assertThat(i2.getName(), is("name"));
-        assertThat(i2.getAttributes().size(), is(0));
-        assertThat(i2.getType(), is(NodeType.INTERFACE));
-        assertThat(i2.getVisibility(), is(Visibility.PUBLIC));
-        assertTrue(i2.isRoot());
-        assertFalse(i2.isLeaf());
-        assertTrue(i2.isAbstract());
-        assertTrue(i2.isActive());
     }
 }

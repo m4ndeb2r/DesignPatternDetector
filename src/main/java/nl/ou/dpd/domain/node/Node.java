@@ -29,10 +29,7 @@ public abstract class Node implements Comparable<Node> {
     private Visibility visibility;
 
     private List<Attribute> attributes;
-    private Boolean isRoot;
-    private Boolean isLeaf;
     private Boolean isAbstract;
-    private Boolean isActive;
 
     /**
      * Constructor with protected access because it is only accessible from within subclasses.
@@ -42,29 +39,25 @@ public abstract class Node implements Comparable<Node> {
      * @param type       the type of this {@link Node}: class, abstract class or interface
      * @param visibility the visibility of this node (access modifiers: public, protected, package or private)
      * @param attributes a list of attributes
-     * @param isRoot     {@code true} is this {@link Node} is a root node, {@code false} if not, or {@code null} if
-     *                   undefined
-     * @param isLeaf     {@code true} is this {@link Node} is a leaf node, {@code false} if not, or {@code null} if
-     *                   undefined
      * @param isAbstract {@code true} is this {@link Node} is an abstract class or interface, {@code false} if not, or
      *                   {@code null} if undefined
-     * @param isActive   {@code true} is this {@link Node} is active, {@code false} if not, or {@code null} if undefined
      */
-    protected Node(String id, String name, NodeType type, Visibility visibility, List<Attribute> attributes,
-                   Boolean isRoot, Boolean isLeaf, Boolean isAbstract, Boolean isActive) {
+    protected Node(String id,
+                   String name,
+                   NodeType type,
+                   Visibility visibility,
+                   List<Attribute> attributes,
+                   Boolean isAbstract) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.isAbstract = isAbstract;
         this.visibility = visibility;
         if (attributes == null) {
             this.attributes = new ArrayList<>();
         } else {
             this.attributes = attributes;
         }
-        this.isRoot = isRoot;
-        this.isLeaf = isLeaf;
-        this.isAbstract = isAbstract;
-        this.isActive = isActive;
     }
 
     /**
@@ -156,94 +149,12 @@ public abstract class Node implements Comparable<Node> {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Indicates whether or not this {@link Node} is a root node, is not a root node, or whether it is undefined.
-     *
-     * @return {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
-     * undefined
-     */
-    public Boolean isRoot() {
-        return isRoot;
-    }
-
-    /*27/04/17*/
-
-    /**
-     * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
-     *
-     * @param {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
-     *               undefined
-     */
-    public void setRoot(Boolean value) {
-        isRoot = value;
-    }
-
-    /**
-     * Indicates whether or not this {@link Node} is a leaf node, is not a leaf node, or whether it is undefined.
-     *
-     * @return {@code true} is this node is a leaf node, {@code false} if it is not a root node, or {@code null} if
-     * undefined
-     */
-    public Boolean isLeaf() {
-        return isLeaf;
-    }
-    
-    /*27/04/17*/
-
-    /**
-     * Sets this {@link Node} as a root node, not a root node, or whether ii is undefined.
-     *
-     * @param {@code true} if this node is a root node, {@code false} if it is not a root node, or {@code null} if
-     *               undefined
-     */
-    public void setLeaf(Boolean value) {
-        isLeaf = value;
-    }
-
-    /**
-     * Indicates whether or not this {@link Node} is abstract, not abstract, or whether that is undefined.
-     *
-     * @return {@code true} is this node is abstract, {@code false} if it is not a root node, or {@code null} if
-     * undefined
-     */
     public Boolean isAbstract() {
         return isAbstract;
     }
     
-
-    /*27/04/17*/
-
-    /**
-     * Sets this {@link Node} as a abstract node, not a abstract node, or whether ii is undefined.
-     *
-     * @param {@code true} if this node is a abstract node, {@code false} if it is not a abstract node, or {@code null} if
-     *               undefined
-     */
     public void setAbstract(Boolean value) {
         isAbstract = value;
-    }
-
-    /**
-     * Indicates whether or not this {@link Node} is active, not active, or whether that is undefined.
-     *
-     * @return {@code true} is this node is a active, {@code false} if it is not a root node, or {@code null} if
-     * undefined
-     */
-    public Boolean isActive() {
-        return isActive;
-    }
-
-
-    /*27/04/17*/
-
-    /**
-     * Sets this {@link Node} as a active node, not a active node, or whether ii is undefined.
-     *
-     * @param {@code true} if this node is a active node, {@code false} if it is not a active node, or {@code null} if
-     *               undefined
-     */
-    public void setActive(Boolean value) {
-        isActive = value;
     }
 
     /**
@@ -254,10 +165,7 @@ public abstract class Node implements Comparable<Node> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        return isRoot == node.isRoot &&
-                isLeaf == node.isLeaf &&
-                isAbstract == node.isAbstract &&
-                isActive == node.isActive &&
+        return isAbstract == node.isAbstract &&
                 Objects.equals(id, node.id) &&
                 Objects.equals(name, node.name) &&
                 type == node.type &&
@@ -270,7 +178,7 @@ public abstract class Node implements Comparable<Node> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, type, visibility, attributes, isRoot, isLeaf, isAbstract, isActive);
+        return Objects.hash(id, name, type, visibility, attributes, isAbstract);
     }
 
     /**
@@ -323,7 +231,7 @@ public abstract class Node implements Comparable<Node> {
          * Creates an empty {@link Node}.
          */
         EmptyNode() {
-            super("", "", null, null, null, null, null, null, null);
+            super("", "", null, null, null,null);
         }
     }
 }

@@ -8,6 +8,7 @@ import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.Visibility;
+import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,10 +64,10 @@ public class AdapterPatternTest {
     public void createPatternEdges() {
 
         // Create Nodes
-        client = createClazz("client");
-        target = createAbstractClazz("target");
-        adapter = createClazz("adapter");
-        adaptee = createClazz("adaptee");
+        client = TestHelper.createClazz("client");
+        target = TestHelper.createAbstractClazz("target");
+        adapter = TestHelper.createClazz("adapter");
+        adaptee = TestHelper.createClazz("adaptee");
 
         // Create attributes
         adapteeAttr = new Attribute("adaptee", adaptee);
@@ -162,10 +163,10 @@ public class AdapterPatternTest {
     public void createSystemEdges() {
 
         // Create nodes
-        drawingEditor = createClazz("drawingEditor");
-        shape = createAbstractClazz("shape");
-        textShape = createClazz("textShape");
-        textView = createClazz("textView");
+        drawingEditor = TestHelper.createClazz("drawingEditor");
+        shape = TestHelper.createAbstractClazz("shape");
+        textShape = TestHelper.createClazz("textShape");
+        textView = TestHelper.createClazz("textView");
 
         // Create attributes
         final Attribute drawingEditorAttr = new Attribute("Shape", shape);
@@ -275,7 +276,7 @@ public class AdapterPatternTest {
     @Test
     public void testWrongModifier() {
         //shape is not an abstract class
-        shape = new Clazz("shape", "Shape", Visibility.PUBLIC, null, null, null, false, null);
+        shape = new Clazz("shape", "Shape", Visibility.PUBLIC, null, false);
         textshapeShape = new Edge(textShape, shape, EdgeType.INHERITANCE, "textShape-shape");
 
         //run test
@@ -290,7 +291,7 @@ public class AdapterPatternTest {
         assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
 
         //modifier abstract class is not set
-        shape = new Clazz("shape", "Shape", Visibility.PUBLIC, null, null, null, null, null);
+        shape = new Clazz("shape", "Shape", Visibility.PUBLIC, null, null);
         textshapeShape = new Edge(textShape, shape, EdgeType.INHERITANCE, "textShape-shape");
 
         conditions.getConditions().get(3).setPurview(Purview.MANDATORY);
@@ -298,14 +299,6 @@ public class AdapterPatternTest {
         assertTrue(conditions.processConditions(textshapeTextview, adapterAdaptee));
         assertFalse(conditions.processConditions(textshapeShape, adapterTarget));
 
-    }
-
-    private Clazz createClazz(String id) {
-        return new Clazz(id, id, Visibility.PUBLIC, null, null, null, null, null);
-    }
-
-    private Clazz createAbstractClazz(String id) {
-        return new Clazz(id, id, Visibility.PUBLIC, null, null, null, true, null);
     }
 
 }

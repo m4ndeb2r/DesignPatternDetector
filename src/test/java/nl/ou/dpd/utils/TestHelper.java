@@ -8,43 +8,12 @@ import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.Visibility;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A utility class for unittest support.
  *
  * @author Martin de Boer
  */
 public class TestHelper {
-
-    /**
-     * Creates a "template" containing 17 GoF design patterns represented by an {@link ArrayList} of
-     * {@link DesignPattern} instances.
-     *
-     * @return an {@link List} containing 17 GoF design patterns.
-     */
-    public static List<DesignPattern> createDesignPatternsTemplates() {
-        final List<DesignPattern> dps = new ArrayList<>();
-        dps.add(createBridgePattern());
-        dps.add(createStateStrategyPattern());
-        dps.add(createMediatorPattern());
-        dps.add(createMementoPattern());
-        dps.add(createObserverPattern());
-        dps.add(createProxyPattern());
-        dps.add(createCommandPattern());
-        dps.add(createCompositePattern());
-        dps.add(createDecoratorPattern());
-        dps.add(createFactoryMethodPattern());
-        dps.add(createInterpreterPattern());
-        dps.add(createChainOfResponsibilityPattern());
-        dps.add(createAbstractFactoryPattern());
-        dps.add(createAdapterPattern());
-        dps.add(createBuilderPattern());
-        dps.add(createFlyweightPattern());
-        dps.add(createIteratorPattern());
-        return dps;
-    }
 
     /**
      * Creates an AbstractFactory design pattern.
@@ -461,7 +430,7 @@ public class TestHelper {
      * @return the created {@link Interface}
      */
     public static Interface createInterface(String name) {
-        return new Interface(name, name, false, false, false);
+        return new Interface(name, name);
     }
 
     /**
@@ -471,7 +440,7 @@ public class TestHelper {
      * @return the created {@link Clazz}
      */
     public static Clazz createAbstractClazz(String name) {
-        return new Clazz(name, name, Visibility.PUBLIC, null, false, false, true, false);
+        return new Clazz(name, name, Visibility.PUBLIC, null, true);
     }
 
     /**
@@ -481,7 +450,7 @@ public class TestHelper {
      * @return the created {@link Clazz}
      */
     public static Clazz createClazz(String name) {
-        return new Clazz(name, name, Visibility.PUBLIC, null, false, false, false, false);
+        return new Clazz(name, name, Visibility.PUBLIC, null, false);
     }
 
 }
