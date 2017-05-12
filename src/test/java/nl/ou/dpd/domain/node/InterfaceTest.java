@@ -69,8 +69,11 @@ public class InterfaceTest {
         assertThat(first.compareTo(zero), greaterThan(0));
         assertThat(second.compareTo(null), greaterThan(0));
         assertThat(second.compareTo(first), greaterThan(0));
+
         assertThat(first.compareTo(second), lessThan(0));
         assertThat(zero.compareTo(first), lessThan(0));
+
+        assertThat(zero.compareTo(zero), is(0));
         assertThat(first.compareTo(first), is(0));
         assertThat(second.compareTo(second), is(0));
         assertThat(third.compareTo(second), greaterThan(0));
