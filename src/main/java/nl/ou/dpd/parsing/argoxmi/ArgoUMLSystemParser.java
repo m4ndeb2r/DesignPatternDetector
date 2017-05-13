@@ -367,7 +367,7 @@ public class ArgoUMLSystemParser {
             if (node.getName() == null) {
                 node.setName(attributes.get(NAME));
                 if (event.asStartElement().getName().getLocalPart().equals(CLASS)) {
-                    node.setVisibility(Visibility.valueOf(attributes.get(VISIBILITY).toUpperCase()));
+                    node.setVisibility(Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY)));
                     node.setAbstract(Boolean.valueOf(attributes.get(IS_ABSTRACT)));
                 }
             }

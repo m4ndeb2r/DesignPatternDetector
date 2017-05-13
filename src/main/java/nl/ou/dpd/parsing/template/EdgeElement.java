@@ -28,7 +28,7 @@ public final class EdgeElement implements ElementHandler {
         edge = new Edge(
                 new Clazz(attributes.getValue("node1"), attributes.getValue("node1")),
                 new Clazz(attributes.getValue("node2"), attributes.getValue("node2")),
-                EdgeType.valueOf(attributes.getValue("type").toUpperCase()));
+                EdgeType.valueOfIgnoreCase(attributes.getValue("type")));
     }
 
     /**
