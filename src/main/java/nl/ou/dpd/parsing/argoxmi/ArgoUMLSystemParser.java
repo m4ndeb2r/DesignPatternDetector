@@ -353,8 +353,12 @@ public class ArgoUMLSystemParser {
         }
     }
 
-    //Create a node with the specified id if it does not exist and add it to the nodes -list.
-    //Set the properties of the (new or existing) node.
+    /**
+     * Find a node with the ID specified in the attributes of the given event. If not found, create and add it. Finally,
+     * set the appropriate properties of the (found or newly created) node.
+     *
+     * @param event the {@link XMLEvent} currently handled. Contains the attributes necessary for the creation of a node.
+     */
     private void createAndAddNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
         if (attributes.get(ID) != null) {
@@ -411,6 +415,12 @@ public class ArgoUMLSystemParser {
         }
     }
 
+    /**
+     * Creates a new {@link Edge} with the name and id, specified in the event attributes.
+     *
+     * @param event the {@link XMLEvent} containing the name and id in its attributes.
+     * @return the newly created {@link Edge}
+     */
     private Edge createIncompleteEdge(XMLEvent event) {
         String id = readAttributes(event).get(ID);
         String name = readAttributes(event).get(NAME);
@@ -419,10 +429,10 @@ public class ArgoUMLSystemParser {
     }
 
     /**
-     * Create a new {@link Node) with given id and type.
+     * Create a new {@link Node) with given id and type. The properties of this node with be completed later.
      *
-     * @param an {@link XMLEvent}
-     * @return a new Node with the specified name and type.
+     * @param event the {@link XMLEvent} containing the name and id in its attributes
+     * @return the newly created {@link Node}
      */
     private Node createIncompleteNode(XMLEvent event) {
         Map<String, String> attributes = readAttributes(event);
@@ -435,16 +445,16 @@ public class ArgoUMLSystemParser {
     }
 
     /**
-     * Create a new node-attribute with the name and type specified in the Map.
+     * Create a new node attribute with the name, type and visibility specified in the event's attributes.
      *
-     * @param attributes a Map of attributes of the Attribute XML StartEvent.
-     * @return a new node-attribute with the specified name and type (found in the list of Nodes).
+     * @param event the {@link XMLEvent} containing the name and type in its attributes.
+     * @return the newly created attribute (found in the list of Nodes).
      */
     private nl.ou.dpd.domain.node.Attribute createUncompleteAttribute(XMLEvent event) {
         Map<String, String> attributes = readAttributes(event);
         String id = attributes.get(ID);
         String name = attributes.get(NAME);
-        Visibility visibility = Visibility.valueOf(attributes.get(VISIBILITY).toUpperCase());
+        Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
         nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, name, null);
         attr.setVisibility(visibility);
         return attr;
@@ -484,8 +494,14 @@ public class ArgoUMLSystemParser {
         return nodes.get(nodes.size() - 1);
     }
 
+    /**
+     * Return an Attributes Map with the attribute name as key and the attribute value as value, retrieved from the
+     * specified {@link XMLEvent}.
+     *
+     * @param event the {@link XMLEvent} containing the attributes.
+     * @return a Map containing attributes, extracted from the {@code event}.
+     */
     private Map<String, String> readAttributes(XMLEvent event) {
-        // Attributes Map with the attribute name as key and the attribute value as value
         Map<String, String> attributes = new HashMap<>();
         Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
         while (attrIterator.hasNext()) {
