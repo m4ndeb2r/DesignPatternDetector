@@ -156,11 +156,11 @@ public class ArgoUMLSystemParser {
                 events.push(event);
                 break;
             case ABSTRACTION:
-                handleAbstraction(event);
+                handleInheritance(event, EdgeType.REALIZATION);
                 events.push(event);
                 break;
             case GENERALIZATION:
-                handleGeneralization(event);
+                handleInheritance(event, EdgeType.INHERITANCE);
                 events.push(event);
                 break;
             case ASSOCIATION_END:
@@ -238,30 +238,22 @@ public class ArgoUMLSystemParser {
         node.getAttributes().add(attr);
     }
 
-    /**
-     * Ad
-     *
-     * @param event
-     */
     //add an association
     private void handleAssociationEvent(XMLEvent event) {
         system.add(createIncompleteEdge(event));
     }
 
-    //add an abstraction
-    private void handleAbstraction(XMLEvent event) {
+    /**
+     * Adds an inheritance (abstraction (realization) or generalization (inheritance)) relation to the system under
+     * consideration.
+     *
+     * @param event           the current XML event
+     * @param inheritanceType {@link EdgeType#REALIZATION} or {@link EdgeType#INHERITANCE}.
+     */
+    private void handleInheritance(XMLEvent event, EdgeType inheritanceType) {
         if (MODEL.equals(getParentElementNameLocalPart())) {
             Edge edge = createIncompleteEdge(event);
-            edge.setRelationType(EdgeType.REALIZATION);
-            system.add(edge);
-        }
-    }
-
-    //add a generalization
-    private void handleGeneralization(XMLEvent event) {
-        if (MODEL.equals(getParentElementNameLocalPart())) {
-            Edge edge = createIncompleteEdge(event);
-            edge.setRelationType(EdgeType.INHERITANCE);
+            edge.setRelationType(inheritanceType);
             system.add(edge);
         }
     }
