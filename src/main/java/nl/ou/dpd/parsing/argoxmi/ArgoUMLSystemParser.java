@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -66,6 +67,11 @@ public class ArgoUMLSystemParser {
     private static final String DEPENDENCY = "Dependency";
     private static final String GENERALIZATION = "Generalization";
     private static final String DATATYPE = "DataType";
+
+    private static final List<String> eventTags = Arrays.asList(new String[]{
+            MODEL, CLASS, INTERFACE, ATTRIBUTE, ASSOCIATION, ASSOCIATION_END,
+            MULTIPLICITY_RANGE, ABSTRACTION, DEPENDENCY, GENERALIZATION, DATATYPE
+    });
 
     private SystemUnderConsideration system;
     private List<Node> nodes;
@@ -181,21 +187,8 @@ public class ArgoUMLSystemParser {
     }
 
     private void handleEndElement(XMLEvent event) {
-        switch (event.asEndElement().getName().getLocalPart()) {
-            case MODEL:
-            case CLASS:
-            case INTERFACE:
-            case ATTRIBUTE:
-            case ASSOCIATION:
-            case ABSTRACTION:
-            case GENERALIZATION:
-            case ASSOCIATION_END:
-            case MULTIPLICITY_RANGE:
-            case DATATYPE:
-            case DEPENDENCY:
-                events.pop();
-            default:
-                break;
+        if (eventTags.contains(event.asEndElement().getName().getLocalPart())) {
+            events.pop();
         }
     }
 
@@ -203,27 +196,17 @@ public class ArgoUMLSystemParser {
         //look for the event one level higher
         switch (events.peek().asStartElement().getName().getLocalPart()) {
             case MODEL:
-                //this is genuine node event
                 createAndAddNode(event);
                 break;
             case ASSOCIATION_END:
-                //if last remembered event is associationEnd.participant, this is the type of an association end
-                setLeftOrRightNode(event);
-                break;
             case ABSTRACTION:
-                //if last remembered event is abstraction, this is the type of an abstraction node
-                setLeftOrRightNode(event);
-                break;
             case GENERALIZATION:
-                //if last remembered event is generalization, this is the type of an abstraction node
                 setLeftOrRightNode(event);
                 break;
             case ATTRIBUTE:
-                //if last remembered event is attribute, set the type of the attribute
                 setAttributeType(event);
                 break;
             case DEPENDENCY:
-                //if last remembered event is dependency, this is the type of an abstraction node
                 setDependencyNode(event);
                 break;
             default:
