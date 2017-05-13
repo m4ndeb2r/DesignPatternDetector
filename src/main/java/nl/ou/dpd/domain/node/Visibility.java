@@ -10,5 +10,12 @@ public enum Visibility {
     PUBLIC,
     PROTECTED,
     PACKAGE,
-    PRIVATE
+    PRIVATE;
+
+    public static Visibility valueOfIgnoreCase(String s) {
+        if (s == null) {
+            return null;
+        }
+        return valueOf(s.toUpperCase());
+    }
 };

@@ -49,7 +49,7 @@ public class NodeRuleElementApplicator extends RuleElementApplicator<Node> {
     private void applyObjectVisibility() {
         switch (getOperation()) {
             case EQUALS:
-                getMould().setVisibility(Visibility.valueOf(getValue().toUpperCase()));
+                getMould().setVisibility(Visibility.valueOfIgnoreCase(getValue()));
                 break;
             default:
                 error(String.format("Unexpected operation while applying CARDINALITY: '%s'.", getOperation()));

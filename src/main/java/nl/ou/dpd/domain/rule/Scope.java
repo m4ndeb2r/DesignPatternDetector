@@ -9,5 +9,13 @@ package nl.ou.dpd.domain.rule;
 public enum Scope {
     RELATION,
     OBJECT,
-    ATTRIBUTE
+    ATTRIBUTE;
+
+    public static Scope valueOfIgnoreCase(String s) {
+        if (s == null) {
+            return null;
+        }
+        return valueOf(s.toUpperCase());
+    }
+
 }

@@ -14,5 +14,13 @@ public enum Topic {
     MODIFIER_ABSTRACT,
     CARDINALITY,
     CARDINALITY_LEFT,
-    CARDINALITY_RIGHT
+    CARDINALITY_RIGHT;
+
+    public static Topic valueOfIgnoreCase(String s) {
+        if (s == null) {
+            return null;
+        }
+        return valueOf(s.toUpperCase());
+    }
+
 }

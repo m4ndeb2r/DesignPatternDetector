@@ -27,14 +27,24 @@ public class EdgeTypeTest {
      */
     @Test
     public void testValueof() {
-        assertThat(EdgeType.valueOf("EMPTY"), is(EMPTY));
-        assertThat(EdgeType.valueOf("ASSOCIATION"), Is.is(ASSOCIATION));
-        assertThat(EdgeType.valueOf("ASSOCIATION_DIRECTED"), is(ASSOCIATION_DIRECTED));
-        assertThat(EdgeType.valueOf("AGGREGATE"), is(AGGREGATE));
-        assertThat(EdgeType.valueOf("COMPOSITE"), is(COMPOSITE));
-        assertThat(EdgeType.valueOf("INHERITANCE"), is(INHERITANCE));
-        assertThat(EdgeType.valueOf("INHERITANCE_MULTI"), is(INHERITANCE_MULTI));
-        assertThat(EdgeType.valueOf("DEPENDENCY"), is(DEPENDENCY));
+        for (EdgeType edgeType : EdgeType.values()) {
+            final String s = edgeType.name();
+            assertThat(EdgeType.valueOfIgnoreCase(s), is(edgeType));
+        }
+    }
+
+
+    /**
+     * Tests the {@link EdgeType#valueOfIgnoreCase(String)} method.
+     */
+    @Test
+    public void testValueOfIgnoreCase() {
+        for (EdgeType edgeType : EdgeType.values()) {
+            final String lower = edgeType.name().toLowerCase();
+            final String upper = edgeType.name();
+            assertThat(EdgeType.valueOfIgnoreCase(lower), is(edgeType));
+            assertThat(EdgeType.valueOfIgnoreCase(upper), is(edgeType));
+        }
     }
 
     /**

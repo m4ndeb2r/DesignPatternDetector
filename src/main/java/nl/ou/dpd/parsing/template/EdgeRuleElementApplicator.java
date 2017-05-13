@@ -82,7 +82,7 @@ public class EdgeRuleElementApplicator extends RuleElementApplicator<Edge> {
     private void applyRelationType() {
         switch (getOperation()) {
             case EQUALS:
-                getMould().setRelationType(EdgeType.valueOf(getValue().toUpperCase()));
+                getMould().setRelationType(EdgeType.valueOfIgnoreCase(getValue()));
                 break;
             default:
                 error(String.format("Unexpected operation while applying TYPE: '%s'.", getOperation()));
