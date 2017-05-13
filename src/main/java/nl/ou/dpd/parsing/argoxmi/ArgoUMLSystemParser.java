@@ -362,11 +362,14 @@ public class ArgoUMLSystemParser {
     }
 
     private void setLeftOrRightNode(XMLEvent event) {
-        Edge edge = getLastEdge();
+        setLeftOrRightNode(getLastEdge(), findNodeById(readAttributes(event).get(IDREF)));
+    }
+
+    private void setLeftOrRightNode(Edge edge, Node node) {
         if (edge.getLeftNode() == null) {
-            edge.setLeftNode(findNodeById(readAttributes(event).get(IDREF)));
+            edge.setLeftNode(node);
         } else {
-            edge.setRightNode(findNodeById(readAttributes(event).get(IDREF)));
+            edge.setRightNode(node);
         }
     }
 
@@ -391,11 +394,7 @@ public class ArgoUMLSystemParser {
             node = createIncompleteNode(event);
             nodes.add(node);
         }
-        if (edge.getLeftNode() == null) {
-            edge.setLeftNode(findNodeById(idrefNode));
-        } else {
-            edge.setRightNode(findNodeById(idrefNode));
-        }
+        setLeftOrRightNode(edge, node);
     }
 
     /**
