@@ -29,7 +29,7 @@ public class NodeRule extends Rule<Node> {
     }
 
     /**
-     * Applies the rule on a given {@ink Node}.
+     * Applies the rule on a given {@link Node}.
      * <p>
      * TODO: Consider returning feedback instead of a boolean
      * <p>

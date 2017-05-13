@@ -35,7 +35,7 @@ public class EdgeRule extends Rule<Edge> {
     }
 
     /**
-     * Applies this {@link EdgeRule} on a given {@ink Edge}.
+     * Applies this {@link EdgeRule} on a given {@link Edge}.
      *
      * @param systemEdge the edge that has to be evaluated
      * @return {@code true} if {@code systemEdge} meets the conditions set in the {@link EdgeRule}, or {@code false}

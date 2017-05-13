@@ -29,7 +29,7 @@ public class AttributeRule extends Rule<Attribute> {
     }
 
     /**
-     * Applies the rule on a given {@ink Attribute}.
+     * Applies the rule on a given {@link Attribute}.
      * <p>
      * TODO: Consider returning feedback instead of a boolean
      * <p>
