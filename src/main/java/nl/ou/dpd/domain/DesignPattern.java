@@ -18,8 +18,6 @@ import java.util.List;
  */
 public class DesignPattern extends Edges {
 
-    private static final Logger LOGGER = LogManager.getLogger(DesignPattern.class);
-
     private final String name;
     private final List<Condition> conditions;
 
