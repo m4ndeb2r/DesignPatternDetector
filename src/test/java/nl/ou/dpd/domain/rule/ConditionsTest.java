@@ -47,9 +47,9 @@ public class ConditionsTest {
     @Before
     public void setUp() {
         conditions = new Conditions();
-        conditions.getConditions().add(mandatoryCondition);
-        conditions.getConditions().add(feedbackCondition);
-        conditions.getConditions().add(ignoredCondition);
+        conditions.add(mandatoryCondition);
+        conditions.add(feedbackCondition);
+        conditions.add(ignoredCondition);
 
         // Set general expectations
         when(mandatoryCondition.isProcessed()).thenReturn(true);

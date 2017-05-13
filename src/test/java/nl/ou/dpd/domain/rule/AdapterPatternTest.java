@@ -128,21 +128,21 @@ public class AdapterPatternTest {
         cond11.getAttributeRules().add(new AttributeRule(adapteeAttr, Scope.OBJECT, Topic.VISIBILITY, Operation.EQUALS));
 
         conditions = new Conditions();
-        conditions.getConditions().add(cond1);
-        conditions.getConditions().add(cond2);
-        conditions.getConditions().add(cond3);
-        conditions.getConditions().add(cond4);
-        conditions.getConditions().add(cond5);
-        conditions.getConditions().add(cond6);
-        conditions.getConditions().add(cond7);
-        conditions.getConditions().add(cond8);
-        conditions.getConditions().add(cond9);
-        conditions.getConditions().add(cond10);
-        conditions.getConditions().add(cond11);
+        conditions.add(cond1);
+        conditions.add(cond2);
+        conditions.add(cond3);
+        conditions.add(cond4);
+        conditions.add(cond5);
+        conditions.add(cond6);
+        conditions.add(cond7);
+        conditions.add(cond8);
+        conditions.add(cond9);
+        conditions.add(cond10);
+        conditions.add(cond11);
 
         //change default purview IGNORED to MANDATORY
-        for (Condition c : conditions.getConditions()) {
-            c.setPurview(Purview.MANDATORY);
+        for (int i = 0; i < conditions.size(); i++) {
+            conditions.get(i).setPurview(Purview.MANDATORY);
         }
     }
 
@@ -207,8 +207,8 @@ public class AdapterPatternTest {
     public void testFalsePositive() {
         //wrong combinations of systemedges and patternedges
         //don't evaluate cardinalities and attributes
-        conditions.getConditions().get(4).setPurview(Purview.IGNORE);
-        conditions.getConditions().get(10).setPurview(Purview.IGNORE);
+        conditions.get(4).setPurview(Purview.IGNORE);
+        conditions.get(10).setPurview(Purview.IGNORE);
         //wrong association but all conditions of adapter-adaptee are met (cond2,cond6, cond7)
         assertTrue(conditions.processConditions(editorShape, adapterAdaptee));
         assertFalse(conditions.processConditions(editorShape, adapterTarget));
@@ -220,7 +220,7 @@ public class AdapterPatternTest {
         //wrong combination cardinality condition on adapter-adaptee- relation, not set in systemedge
         //same problem with exception for null-settings of attributes
         //evaluate cardinalities
-        conditions.getConditions().get(4).setPurview(Purview.MANDATORY);
+        conditions.get(4).setPurview(Purview.MANDATORY);
         thrown.expect(RuleException.class);
         thrown.expectMessage("Either one or both cardinalities are not set.");
         conditions.processConditions(editorShape, adapterAdaptee);
@@ -240,7 +240,7 @@ public class AdapterPatternTest {
         assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
 
         //set condition1 on IGNORE
-        conditions.getConditions().get(0).setPurview(Purview.IGNORE);
+        conditions.get(0).setPurview(Purview.IGNORE);
         assertTrue(conditions.processConditions(editorShape, clientTarget));
         assertTrue(conditions.processConditions(textshapeTextview, adapterAdaptee));
         assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
@@ -263,8 +263,8 @@ public class AdapterPatternTest {
         assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
 
         //set condition 7 and 10 to IGNORE
-        conditions.getConditions().get(6).setPurview(Purview.IGNORE);
-        conditions.getConditions().get(9).setPurview(Purview.IGNORE);
+        conditions.get(6).setPurview(Purview.IGNORE);
+        conditions.get(9).setPurview(Purview.IGNORE);
         assertTrue(conditions.processConditions(editorShape, clientTarget));
         assertTrue(conditions.processConditions(textshapeTextview, adapterAdaptee));
         assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
@@ -285,7 +285,7 @@ public class AdapterPatternTest {
         assertFalse(conditions.processConditions(textshapeShape, adapterTarget));
 
         //set condition 4 on IGNORE
-        conditions.getConditions().get(3).setPurview(Purview.IGNORE);
+        conditions.get(3).setPurview(Purview.IGNORE);
         assertTrue(conditions.processConditions(editorShape, clientTarget));
         assertTrue(conditions.processConditions(textshapeTextview, adapterAdaptee));
         assertTrue(conditions.processConditions(textshapeShape, adapterTarget));
@@ -294,7 +294,7 @@ public class AdapterPatternTest {
         shape = new Clazz("shape", "Shape", Visibility.PUBLIC, null, null);
         textshapeShape = new Edge(textShape, shape, EdgeType.INHERITANCE, "textShape-shape");
 
-        conditions.getConditions().get(3).setPurview(Purview.MANDATORY);
+        conditions.get(3).setPurview(Purview.MANDATORY);
         assertTrue(conditions.processConditions(editorShape, clientTarget));
         assertTrue(conditions.processConditions(textshapeTextview, adapterAdaptee));
         assertFalse(conditions.processConditions(textshapeShape, adapterTarget));

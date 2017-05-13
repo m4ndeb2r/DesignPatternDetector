@@ -8,6 +8,7 @@ import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.rule.AttributeRule;
 import nl.ou.dpd.domain.rule.Condition;
+import nl.ou.dpd.domain.rule.Conditions;
 import nl.ou.dpd.domain.rule.EdgeRule;
 import nl.ou.dpd.domain.rule.NodeRule;
 import nl.ou.dpd.domain.rule.Operation;
@@ -50,6 +51,7 @@ import java.util.Map;
  * TODO: implement parsing of methods.
  *
  * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
 public class TemplatesParserWithConditions {
 
@@ -175,14 +177,12 @@ public class TemplatesParserWithConditions {
 
     private void handleRuleStartElement(XMLEvent event) {
         final Rule rule = makeRule(readAttributes(event));
-        final List<Condition> conditions = designPattern.getConditions();
-        addRuleToCondition(rule, conditions.get(conditions.size() - 1));
+        addRuleToCondition(rule, designPattern.getConditions().getLast());
         applyRule(rule, readAttributes(event).get(VALUE));
     }
 
     private void handleConditionStartElement(XMLEvent event) {
-        final List<Condition> conditions = designPattern.getConditions();
-        conditions.add(makeCondition(readAttributes(event)));
+        designPattern.getConditions().add(makeCondition(readAttributes(event)));
     }
 
     private void handleEdgeStartElement(XMLEvent event) {
@@ -195,13 +195,12 @@ public class TemplatesParserWithConditions {
     }
 
     private void handleNodeStartElement(XMLEvent event) {
-        final List<Condition> conditions = designPattern.getConditions();
         final Node node = createNode(readAttributes(event));
         if (!nodeIdIsUnique(node)) {
             error(String.format("The node id '%s' is not unique in this pattern.", node.getId()));
         }
         nodes.add(node);
-        conditions.add(makeNodeTypeCondition(node));
+        designPattern.getConditions().add(makeNodeTypeCondition(node));
     }
 
     private void handleTemplateStartElement(XMLEvent event) {
@@ -273,8 +272,8 @@ public class TemplatesParserWithConditions {
      * @return a new Condition with an auto-generated id and description.
      */
     private Condition makeNodeTypeCondition(Node node) {
-        final List<Condition> conditions = designPattern.getConditions();
-        final String id = String.format("SystemCondition %d", conditions.size() + 1);
+        final int nextIdx = designPattern.getConditions().size() + 1;
+        final String id = String.format("SystemCondition %d", nextIdx);
         final String description = String.format("The node '%s' must be of type '%s'.", node.getName(), node.getType());
         final Condition condition = new Condition(id, description);
         final NodeRule rule = new NodeRule(node, Scope.OBJECT, Topic.TYPE, Operation.EQUALS);
@@ -392,9 +391,9 @@ public class TemplatesParserWithConditions {
      * @return a new {@link Condition} with an auto-generated id and description
      */
     private void makeAttributeExistsCondition(Node node, nl.ou.dpd.domain.node.Attribute attr) {
-        final List<Condition> conditions = designPattern.getConditions();
+        final Conditions conditions = designPattern.getConditions();
         final Node attributeType = attr.getType();
-        final String id = "SystemCondition " + conditions.size() + 1;
+        final String id = String.format("SystemCondition %d", conditions.size() + 1);
         final String description = String.format(
                 "The node '%s' must have an attribute of type '%s'.",
                 node.getName(),

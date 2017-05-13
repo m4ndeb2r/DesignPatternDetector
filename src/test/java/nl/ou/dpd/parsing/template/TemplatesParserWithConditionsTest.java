@@ -1,7 +1,7 @@
 package nl.ou.dpd.parsing.template;
 
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.domain.rule.Condition;
+import nl.ou.dpd.domain.rule.Conditions;
 import nl.ou.dpd.parsing.ParseException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -99,12 +99,16 @@ public class TemplatesParserWithConditionsTest {
 
     }
 
-    private void assertSystemConditionsCount(List<Condition> conditions, long expectedAmount) {
-        assertThat(conditions.stream().filter(c -> c.getId().startsWith("System")).count(), is(expectedAmount));
+    private void assertSystemConditionsCount(Conditions conditions, long expectedAmount) {
+        assertThat(conditions.stream()
+                .filter(c -> c.getId().startsWith("System"))
+                .count(), is(expectedAmount));
     }
 
-    private void assertUserConditionsCount(List<Condition> conditions, long expectedAmount) {
-        assertThat(conditions.stream().filter(c -> !c.getId().startsWith("System")).count(), is(expectedAmount));
+    private void assertUserConditionsCount(Conditions conditions, long expectedAmount) {
+        assertThat(conditions.stream()
+                .filter(c -> !c.getId().startsWith("System"))
+                .count(), is(expectedAmount));
     }
 
     /**

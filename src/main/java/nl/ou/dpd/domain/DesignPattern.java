@@ -4,10 +4,8 @@ import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.Edges;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.rule.Condition;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import nl.ou.dpd.domain.rule.Conditions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,19 +17,19 @@ import java.util.List;
 public class DesignPattern extends Edges {
 
     private final String name;
-    private final List<Condition> conditions;
+    private final Conditions conditions;
 
     public DesignPattern(String name) {
         super();
         this.name = name;
-        this.conditions = new ArrayList<>();
+        this.conditions = new Conditions();
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Condition> getConditions() {
+    public Conditions getConditions() {
         return conditions;
     }
 

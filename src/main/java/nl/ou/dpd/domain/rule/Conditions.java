@@ -5,22 +5,52 @@ import nl.ou.dpd.domain.node.Node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This class manages all the {@link Condition}s of a {@code DesignPattern}.
  *
  * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
 public class Conditions {
 
-    private List<Condition> conditions;
+    private final List<Condition> conditions;
 
     public Conditions() {
         this.conditions = new ArrayList<Condition>();
     }
 
-    public List<Condition> getConditions() {
-        return conditions;
+    public Conditions add(Condition condition) {
+        this.conditions.add(condition);
+        return this;
+    }
+
+    public int size() {
+        return conditions.size();
+    }
+
+    public boolean isEmpty() {
+        return conditions.isEmpty();
+    }
+
+    public Condition get(int index) {
+        return conditions.get(index);
+    }
+
+    public Condition getLast() {
+        if (isEmpty()) {
+            return null;
+        }
+        return conditions.get(size() - 1);
+    }
+
+    public boolean contains(Condition condition) {
+        return conditions.contains(condition);
+    }
+
+    public Stream<Condition> stream() {
+        return conditions.stream();
     }
 
     /**
