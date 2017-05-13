@@ -345,12 +345,7 @@ public class ArgoUMLSystemParser {
     private void createAndAddNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
         if (attributes.get(ID) != null) {
-            Node node = findNodeById(attributes.get(ID));
-            if (node == null) {
-                //node does not exist
-                node = createIncompleteNode(event);
-                nodes.add(node);
-            }
+            Node node = findOrCreateIncompleteNode(event, attributes.get(ID));
             if (node.getName() == null) {
                 node.setName(attributes.get(NAME));
                 if (event.asStartElement().getName().getLocalPart().equals(CLASS)) {
@@ -374,27 +369,28 @@ public class ArgoUMLSystemParser {
     }
 
     private void setAttributeType(XMLEvent event) {
-        nl.ou.dpd.domain.node.Attribute attr = getLastNode().getAttributes().get(getLastNode().getAttributes().size() - 1);
-        String idref = readAttributes(event).get(IDREF);
-        Node node = findNodeById(idref);
-        if (node == null) {
-            node = createIncompleteNode(event);
-            nodes.add(node);
-        }
+        final List<nl.ou.dpd.domain.node.Attribute> attributes = getLastNode().getAttributes();
+        final nl.ou.dpd.domain.node.Attribute attr = attributes.get(attributes.size() - 1);
+        final String idref = readAttributes(event).get(IDREF);
+        final Node node = findOrCreateIncompleteNode(event, idref);
         attr.setType(node);
-
     }
 
     private void setDependencyNode(XMLEvent event) {
-        String dependencyId = readAttributes(events.peek()).get(ID);
-        String idrefNode = readAttributes(event).get(IDREF);
-        Node node = findNodeById(idrefNode);
-        Edge edge = findEdgeById(dependencyId);
+        final String dependencyId = readAttributes(events.peek()).get(ID);
+        final String idrefNode = readAttributes(event).get(IDREF);
+        final Edge edge = findEdgeById(dependencyId);
+        final Node node = findOrCreateIncompleteNode(event, idrefNode);
+        setLeftOrRightNode(edge, node);
+    }
+
+    private Node findOrCreateIncompleteNode(XMLEvent event, String idOrIdref) {
+        Node node = findNodeById(idOrIdref);
         if (node == null) {
             node = createIncompleteNode(event);
             nodes.add(node);
         }
-        setLeftOrRightNode(edge, node);
+        return node;
     }
 
     /**
@@ -404,9 +400,9 @@ public class ArgoUMLSystemParser {
      * @return the newly created {@link Edge}
      */
     private Edge createIncompleteEdge(XMLEvent event) {
-        String id = readAttributes(event).get(ID);
-        String name = readAttributes(event).get(NAME);
-        Edge edge = new Edge(id, name, null, null);
+        final String id = readAttributes(event).get(ID);
+        final String name = readAttributes(event).get(NAME);
+        final Edge edge = new Edge(id, name, null, null);
         return edge;
     }
 
@@ -417,8 +413,8 @@ public class ArgoUMLSystemParser {
      * @return the newly created {@link Node}
      */
     private Node createIncompleteNode(XMLEvent event) {
-        Map<String, String> attributes = readAttributes(event);
-        String id = getIdOrIdref(attributes);
+        final Map<String, String> attributes = readAttributes(event);
+        final String id = getIdOrIdref(attributes);
         if (event.asStartElement().getName().getLocalPart() == CLASS) {
             return new Clazz(id, null);
         } else {
