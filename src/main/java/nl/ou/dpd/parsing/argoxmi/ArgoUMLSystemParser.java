@@ -136,7 +136,7 @@ public class ArgoUMLSystemParser {
     }
 
     private void handleStartElement(XMLEvent event) {
-        switch (event.asStartElement().getName().getLocalPart()) {
+        switch (getStartElementNameLocalPart(event)) {
             case MODEL:
                 // Create the SystemUnderConsideration
                 system = createSystem(event);
@@ -194,7 +194,7 @@ public class ArgoUMLSystemParser {
 
     private void handleNodeEvent(XMLEvent event) {
         //look for the event one level higher
-        switch (events.peek().asStartElement().getName().getLocalPart()) {
+        switch (getParentElementNameLocalPart()) {
             case MODEL:
                 createAndAddNode(event);
                 break;
@@ -234,7 +234,7 @@ public class ArgoUMLSystemParser {
      */
     private void handleAttributeEvent(XMLEvent event) {
         Node node = findNodeById(readAttributes(events.peek()).get(ID));
-        nl.ou.dpd.domain.node.Attribute attr = createUncompleteAttribute(event);
+        nl.ou.dpd.domain.node.Attribute attr = createIncompleteAttribute(event);
         node.getAttributes().add(attr);
     }
 
@@ -250,7 +250,7 @@ public class ArgoUMLSystemParser {
 
     //add an abstraction
     private void handleAbstraction(XMLEvent event) {
-        if (events.peek().asStartElement().getName().getLocalPart() == MODEL) {
+        if (MODEL.equals(getParentElementNameLocalPart())) {
             Edge edge = createIncompleteEdge(event);
             edge.setRelationType(EdgeType.REALIZATION);
             system.add(edge);
@@ -259,7 +259,7 @@ public class ArgoUMLSystemParser {
 
     //add a generalization
     private void handleGeneralization(XMLEvent event) {
-        if (events.peek().asStartElement().getName().getLocalPart() == MODEL) {
+        if (MODEL.equals(getParentElementNameLocalPart())) {
             Edge edge = createIncompleteEdge(event);
             edge.setRelationType(EdgeType.INHERITANCE);
             system.add(edge);
@@ -291,7 +291,7 @@ public class ArgoUMLSystemParser {
     //set the multipicity of an association end
     private void handleMultiplicityRangeEvent(XMLEvent event) {
         Edge edge = getLastEdge();
-        if (!events.empty() && events.peek().asStartElement().getName().getLocalPart().equals(ASSOCIATION_END)) {
+        if (!events.empty() && getParentElementNameLocalPart().equals(ASSOCIATION_END)) {
             int lower = Integer.parseInt(readAttributes(event).get(LOWER));
             int upper = Integer.parseInt(readAttributes(event).get(UPPER));
             if (edge.getCardinalityLeft() == null) {
@@ -305,7 +305,7 @@ public class ArgoUMLSystemParser {
     //set the type of an attribute
     private void handleDatatypeEvent(XMLEvent event) {
         //look for the event one level higher
-        switch (events.peek().asStartElement().getName().getLocalPart()) {
+        switch (getParentElementNameLocalPart()) {
             case ATTRIBUTE:
                 //if last remembered event is attribute, set the type of the attribute
                 //see http://argouml.tigris.org//profiles/uml14/default-uml14.xmi
@@ -323,7 +323,7 @@ public class ArgoUMLSystemParser {
 
     //add a dependency edge
     private void handleDependencyEvent(XMLEvent event) {
-        if (events.peek().asStartElement().getName().getLocalPart() == CLASS) {
+        if (CLASS.equals(getParentElementNameLocalPart())) {
             //create an incomplete edge
             Map<String, String> attributes = readAttributes(event);
             String dependencyId = getIdOrIdref(attributes);
@@ -348,7 +348,7 @@ public class ArgoUMLSystemParser {
             Node node = findOrCreateIncompleteNode(event, attributes.get(ID));
             if (node.getName() == null) {
                 node.setName(attributes.get(NAME));
-                if (event.asStartElement().getName().getLocalPart().equals(CLASS)) {
+                if (CLASS.equals(getStartElementNameLocalPart(event))) {
                     node.setVisibility(Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY)));
                     node.setAbstract(Boolean.valueOf(attributes.get(IS_ABSTRACT)));
                 }
@@ -415,7 +415,7 @@ public class ArgoUMLSystemParser {
     private Node createIncompleteNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
         final String id = getIdOrIdref(attributes);
-        if (event.asStartElement().getName().getLocalPart() == CLASS) {
+        if (CLASS.equals(getStartElementNameLocalPart(event))) {
             return new Clazz(id, null);
         } else {
             return new Interface(id, null);
@@ -428,7 +428,7 @@ public class ArgoUMLSystemParser {
      * @param event the {@link XMLEvent} containing the name and type in its attributes.
      * @return the newly created attribute (found in the list of Nodes).
      */
-    private nl.ou.dpd.domain.node.Attribute createUncompleteAttribute(XMLEvent event) {
+    private nl.ou.dpd.domain.node.Attribute createIncompleteAttribute(XMLEvent event) {
         Map<String, String> attributes = readAttributes(event);
         String id = attributes.get(ID);
         String name = attributes.get(NAME);
@@ -458,7 +458,6 @@ public class ArgoUMLSystemParser {
             id = attributes.get(IDREF);
         }
         return id;
-
     }
 
     private Edge getLastEdge() {
@@ -489,8 +488,17 @@ public class ArgoUMLSystemParser {
         return attributes;
     }
 
+    private String getParentElementNameLocalPart() {
+        return getStartElementNameLocalPart(events.peek());
+    }
+
+    private String getStartElementNameLocalPart(XMLEvent event) {
+        return event.asStartElement().getName().getLocalPart();
+    }
+
     private void error(String msg, Exception cause) {
         LOGGER.error(msg, cause);
         throw new ParseException(msg, cause);
     }
+
 }
