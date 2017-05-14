@@ -77,10 +77,6 @@ public class ArgoUMLSystemParser {
     private List<Node> nodes;
     private Stack<XMLEvent> events = new Stack<>();
 
-    public int getNumberOfNodes() {
-        return nodes.size();
-    }
-
     /**
      * Parses an xmi file with the specified {@code filename}.
      *
@@ -301,14 +297,11 @@ public class ArgoUMLSystemParser {
             case ATTRIBUTE:
                 //if last remembered event is attribute, set the type of the attribute
                 //see http://argouml.tigris.org//profiles/uml14/default-uml14.xmi
-                final Node lastNode = nodes.get(nodes.size() - 1);
-                final nl.ou.dpd.domain.node.Attribute attr = lastNode.getAttributes().get(lastNode.getAttributes().size() - 1);
+                final nl.ou.dpd.domain.node.Attribute attr = getLastAttributeOfLastNode();
                 final String href = readAttributes(event).get(HREF);
                 final Node node = new DataType(href.substring(href.length() - 56));
-                if (node != null) {
-                    nodes.add(node);
-                    attr.setType(node);
-                }
+                nodes.add(node);
+                attr.setType(node);
                 break;
         }
     }
@@ -421,11 +414,11 @@ public class ArgoUMLSystemParser {
      * @return the newly created attribute (found in the list of Nodes).
      */
     private nl.ou.dpd.domain.node.Attribute createIncompleteAttribute(XMLEvent event) {
-        Map<String, String> attributes = readAttributes(event);
-        String id = attributes.get(ID);
-        String name = attributes.get(NAME);
-        Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
-        nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, name, null);
+        final Map<String, String> attributes = readAttributes(event);
+        final String id = attributes.get(ID);
+        final String name = attributes.get(NAME);
+        final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
+        final nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, name, null);
         attr.setVisibility(visibility);
         return attr;
     }
@@ -460,7 +453,21 @@ public class ArgoUMLSystemParser {
     }
 
     private Node getLastNode() {
+        if (nodes.isEmpty()) {
+            return null;
+        }
         return nodes.get(nodes.size() - 1);
+    }
+
+    private nl.ou.dpd.domain.node.Attribute getLastAttributeOfLastNode() {
+        final Node lastNode = getLastNode();
+        if (lastNode != null) {
+            final List<nl.ou.dpd.domain.node.Attribute> lastNodeAttributes = lastNode.getAttributes();
+            if (!lastNodeAttributes.isEmpty()) {
+                return lastNodeAttributes.get(lastNodeAttributes.size() - 1);
+            }
+        }
+        return null;
     }
 
     /**

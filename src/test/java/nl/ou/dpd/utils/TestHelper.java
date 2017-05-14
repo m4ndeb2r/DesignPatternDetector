@@ -1,12 +1,20 @@
 package nl.ou.dpd.utils;
 
 import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.edge.Cardinality;
 import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.domain.node.Interface;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.Visibility;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A utility class for unittest support.
@@ -451,6 +459,84 @@ public class TestHelper {
      */
     public static Clazz createClazz(String name) {
         return new Clazz(name, name, Visibility.PUBLIC, null, false);
+    }
+
+    /**
+     * Generate a string representation of a system under consideration for visual checking.
+     *
+     * @param system the system under consideration
+     * @return a string representation of {@code system}
+     */
+    public static String systemStructureToString(SystemUnderConsideration system) {
+        final StringBuilder builder = new StringBuilder("");
+
+        final String sysTitle = String.format("System name: %s; system id: %s", system.getName(), system.getId());
+        final String line = String.join("", Collections.nCopies(sysTitle.length(), "-"));
+        builder.append(String.format("%s\n", line));
+        builder.append(String.format("%s\n", sysTitle));
+        builder.append(String.format("%s\n", line));
+
+        builder.append(String.format("Number of edges = %d\n", system.getEdges().size()));
+        builder.append(String.format("Number of nodes = %d\n\n", countUniqueNodes(system.getEdges())));
+
+        for (int i = 0; i < system.getEdges().size(); i++) {
+            Edge edge = system.getEdges().get(i);
+            Node nodeLeft = edge.getLeftNode();
+            Node nodeRight = edge.getRightNode();
+
+            builder.append(String.format("Edge %d: id = %s; name = %s\n", i, edge.getId(), edge.getName()));
+            builder.append(String.format("%s - %s\n", nodeLeft.getName(), nodeRight.getName()));
+            builder.append(String.format("RelationType: %s\n\n", edge.getRelationType()));
+
+            builder.append(nodeToString(edge.getCardinalityLeft(), nodeLeft, "Left"));
+            builder.append(nodeToString(edge.getCardinalityRight(), nodeRight, "Right"));
+
+        }
+        return builder.toString();
+    }
+
+    private static String nodeToString(Cardinality cardinality, Node node, String side) {
+        StringBuilder builder = new StringBuilder("");
+        builder.append(String.format("\t%s node: name = %s; id = %s\n", side, node.getName(), node.getId()));
+        builder.append(String.format("\tClass = %s\n", node.getType()));
+        if (cardinality != null) {
+            builder.append(String.format("\tCardinality = %s\n", cardinality));
+        } else {
+            builder.append("\tCardinality not set\n");
+        }
+        builder.append(String.format("\tVisibility = %s\n", node.getVisibility()));
+        builder.append(String.format("\tisAbstract = %s\n", node.isAbstract()));
+        builder.append("\tAttributes:\n");
+        for (Attribute a : node.getAttributes()) {
+            builder.append(String.format("\tAttribute name = %s; id = %s\n", a.getName(), a.getId()));
+            if (a.getType() != null) {
+                builder.append(String.format("\t\tType = %s\n", a.getType().getName()));
+            } else {
+                builder.append("\tType not set\n");
+            }
+            if (a.getVisibility() != null) {
+                builder.append(String.format("\t\tVisibility = %s\n", a.getVisibility()));
+            } else {
+                builder.append("\tVisibility not set\n");
+            }
+        }
+        builder.append("\n");
+        return builder.toString();
+    }
+
+    /**
+     * Conuts all the unique nodes attached to the specified edges. Skips doubles.
+     *
+     * @param edges the edges to scan
+     * @return the number of unique nodes found
+     */
+    public static int countUniqueNodes(List<Edge> edges) {
+        Set<Node> nodeSet = new HashSet<>();
+        edges.forEach(edge -> {
+            nodeSet.add(edge.getLeftNode());
+            nodeSet.add(edge.getRightNode());
+        });
+        return nodeSet.size();
     }
 
 }
