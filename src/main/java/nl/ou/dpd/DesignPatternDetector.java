@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -13,6 +14,8 @@ import nl.ou.dpd.gui.controller.MenuController;
 import nl.ou.dpd.gui.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.InputStream;
 
 /**
  * The main class of the Design Pattern Detector application.
@@ -25,6 +28,7 @@ public final class DesignPatternDetector extends Application {
     private static final Logger LOGGER = LogManager.getLogger(DesignPatternDetector.class);
 
     private static final String APP_TITLE = "Design Pattern Detector";
+    public static final String ICON_NAME = "/img/cube.png";
 
     /**
      * The main method of the application. Starts a GUI.
@@ -55,12 +59,20 @@ public final class DesignPatternDetector extends Application {
         // Set the scene to the main view of the application
         model.showMainView();
 
-        // Set the primary stage settings and show it
+        // Set the primary stage settings
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.setWidth(1280.0);
         primaryStage.setHeight(800.0);
         primaryStage.setTitle(APP_TITLE);
+
+        // Get the app icon
+        final InputStream iconResource = DesignPatternDetector.class.getResourceAsStream(ICON_NAME);
+        if (iconResource != null) {
+            primaryStage.getIcons().add(new Image(iconResource));
+        }
+
+        // Initialization is done. Now, show the primary stage
         primaryStage.show();
 
         // Set a handler for the window close button. Lets the MenuController handle the closing of the application

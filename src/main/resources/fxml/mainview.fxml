@@ -15,16 +15,14 @@
     <center>
         <StackPane>
             <children>
-                <ImageView opacity="0.2" preserveRatio="true" BorderPane.alignment="CENTER">
+                <ImageView preserveRatio="true" BorderPane.alignment="CENTER">
                     <image>
-                        <Image url="@../img/triangle.gif"/>
+                        <Image url="@../img/dpd_logo.png"/>
                     </image>
-                    <effect>
-                        <BoxBlur/>
-                    </effect>
                 </ImageView>
-                <Label styleClass="app-title" text="Design Pattern Detector" StackPane.alignment="CENTER"/>
             </children>
         </StackPane>
     </center>
+    <bottom>
+    </bottom>
 </BorderPane>

@@ -1,6 +1,29 @@
 /*
  * General settings
  */
+.root {
+    /* A bright blue for highlighting/accenting objects.  For example: selected
+     * text; selected items in menus, lists, trees, and tables; progress bars;
+     * default buttons.
+     */
+    -fx-accent: #2a71e9;
+
+    /* A bright blue for the focus indicator of objects. Typically used as the
+     * first color in -fx-background-color for the "focused" pseudo-class. Also
+     * typically used with insets of -1.4 to provide a glowing effect.
+     */
+    -fx-focus-color: #2a71e9;
+
+    /* This is the color of the default button. It's similar to -fx-focus-color but more subtle
+     *
+     */
+    -fx-default-button: derive(-fx-focus-color, 60%);
+}
+
+
+/*
+ * Headers and titles
+ */
 #header {
     -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 18px;
@@ -10,7 +33,7 @@
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill: rgb(51, 151, 187);
+    -fx-text-fill: -fx-focus-color;
     -fx-stroke: black;
     -fx-stroke-width: 1px;
     -fx-font-size: 42px;
@@ -20,11 +43,76 @@
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill: rgb(51, 151, 187);
+    -fx-text-fill: -fx-focus-color;
     -fx-stroke: black;
     -fx-stroke-width: 1;
     -fx-font-size: 22px;
 }
+
+.error {
+    -fx-text-fill: crimson;
+}
+
+.warning {
+    -fx-text-fill: darkorange;
+}
+
+.okay {
+    -fx-text-fill: darkgreen;
+}
+
+/*
+ * Buttons, drop downs etc.
+ */
+.button:focused,
+.combo-box-base:focused {
+    -fx-border-color: -fx-focus-color;
+    -fx-effect: dropshadow(three-pass-box, -fx-focus-color, 5.0, 0.0, 0.0, 0.0);
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected,
+.combo-box-popup .list-view .list-cell:filled:selected:hover,
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: linear-gradient(to top, derive(-fx-focus-color, 3%), derive(-fx-focus-color, -3%));
+    -fx-text-fill: white;
+}
+.combo-box-popup .list-view .list-cell:filled:selected,
+.combo-box-popup .list-view .list-cell:filled:selected:hover {
+    -fx-border-color: derive(-fx-focus-color, 20%);
+    -fx-border-insets: 1px;
+}
+
+/*
+ * Treeview
+ */
+.tree-cell:selected {
+    -fx-background-color: linear-gradient(to top, derive(-fx-focus-color, 3%), derive(-fx-focus-color, -3%));
+    -fx-text-fill: white;
+}
+
+/*
+ * Menu
+ */
+.menu:hover,
+.menu:focused,
+.menu:showing {
+    -fx-background-color: linear-gradient(to top, derive(-fx-focus-color, 3%), derive(-fx-focus-color, -3%));
+}
+
+.menu-item:hover,
+.menu-item:focused {
+    -fx-background-color: linear-gradient(to top, derive(-fx-focus-color, 3%), derive(-fx-focus-color, -3%));
+}
+
+.menu:hover > .label,
+.menu:focused > .label,
+.menu:showing > .label,
+.menu-item:hover > .label,
+.menu-item:focused > .label {
+    -fx-text-fill: white;
+}
+
+
 
 /*
  * Project view
@@ -34,7 +122,7 @@
     -fx-font-weight: 600;
     -fx-font-family: sans-serif;
     -fx-font-style: normal;
-    -fx-text-fill: rgb(51, 151, 187);
+    -fx-text-fill: -fx-focus-color;
     -fx-font-size: 22px;
 }
 
@@ -92,18 +180,6 @@
 
 #feedbackScrollPane VBox {
     -fx-padding: 10px;
-}
-
-.error {
-    -fx-text-fill: crimson;
-}
-
-.warning {
-    -fx-text-fill: darkorange;
-}
-
-.okay {
-    -fx-text-fill: darkgreen;
 }
 
 
