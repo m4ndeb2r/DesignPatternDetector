@@ -76,6 +76,8 @@ public class ConditionWithAttributeRulesTest {
         // Mock rules' behaviour
         when(attribRule1.getMould()).thenReturn(patternLeftAttribute1);
         when(attribRule2.getMould()).thenReturn(patternLeftAttribute2);
+        when(attribRule1.process(any(Attribute.class))).thenReturn(true);
+        when(attribRule2.process(any(Attribute.class))).thenReturn(true);
 
         conditionWithAttributeRules = new Condition("1", "Attribute rules condition");
         conditionWithAttributeRules.getAttributeRules().add(attribRule1);
@@ -85,10 +87,6 @@ public class ConditionWithAttributeRulesTest {
 
     @Test
     public void testConditionOK() {
-        // Mock rules' behaviour for this test
-        when(attribRule1.process(any(Attribute.class))).thenReturn(true);
-        when(attribRule2.process(any(Attribute.class))).thenReturn(true);
-
         // Check situation before processing
         assertFalse(conditionWithAttributeRules.isProcessed());
         assertFalse(conditionWithAttributeRules.isProcessedSuccessfully());
@@ -106,9 +104,7 @@ public class ConditionWithAttributeRulesTest {
     @Test
     public void testConditionNotOK() {
         // Mock rules' behaviour for this test
-        when(attribRule1.process(systemLeftAttribute1)).thenReturn(true);
         when(attribRule1.process(systemLeftAttribute2)).thenReturn(false);
-        when(attribRule2.process(systemLeftAttribute1)).thenReturn(true);
         when(attribRule2.process(systemLeftAttribute2)).thenReturn(false);
 
         // Check situation before processing

@@ -61,6 +61,8 @@ public class ConditionWithNodeRulesTest {
         // Mock rules' behaviour
         when(nodeRule1.getMould()).thenReturn(patternLeftNode);
         when(nodeRule2.getMould()).thenReturn(patternRightNode);
+        when(nodeRule1.process(any(Node.class))).thenReturn(true);
+        when(nodeRule2.process(any(Node.class))).thenReturn(true);
 
         conditionWithNodeRules = new Condition("1", "Node rules condition");
         conditionWithNodeRules.getNodeRules().add(nodeRule1);
@@ -70,10 +72,6 @@ public class ConditionWithNodeRulesTest {
 
     @Test
     public void testConditionOK() {
-        // Mock rules' behaviour for this test
-        when(nodeRule1.process(any(Node.class))).thenReturn(true);
-        when(nodeRule2.process(any(Node.class))).thenReturn(true);
-
         // Check situation before processing
         assertFalse(conditionWithNodeRules.isProcessed());
         assertFalse(conditionWithNodeRules.isProcessedSuccessfully());
@@ -91,8 +89,6 @@ public class ConditionWithNodeRulesTest {
     @Test
     public void testConditionNotOK() {
         // Mock rules' behaviour for this test
-        when(nodeRule1.process(systemLeftNode)).thenReturn(true);
-        when(nodeRule2.process(systemLeftNode)).thenReturn(true);
         when(nodeRule2.process(systemRightNode)).thenReturn(false);
 
         // Check situation before processing
