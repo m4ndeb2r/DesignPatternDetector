@@ -15,10 +15,9 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import nl.ou.dpd.domain.Clazz;
-import nl.ou.dpd.domain.Edge;
-import nl.ou.dpd.domain.MatchedClasses;
+import nl.ou.dpd.domain.MatchedNodes;
 import nl.ou.dpd.domain.Solution;
+import nl.ou.dpd.domain.edge.Edge;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 import org.apache.logging.log4j.LogManager;
@@ -135,7 +134,7 @@ public class ProjectViewController extends Controller implements Observer {
     }
 
     /**
-     * Let the model select a desing pattern template file from disk, and store it in the currently open
+     * Let the model select a design pattern template file from disk, and store it in the currently open
      * {@link Project}. The {@link Model} will notify its {@link Observer}s (among which this
      * {@link ProjectViewController}).
      *
@@ -259,17 +258,17 @@ public class ProjectViewController extends Controller implements Observer {
             feedbackMatchedClassesLabel.setText("Matched classes");
             clearGridPane(feedbackMatchedClassesGridPane);
             int row = 0;
-            final MatchedClasses matchedClasses = solution.getMatchedClasses();
+            final MatchedNodes matchedNodes = solution.getMatchedNodes();
             feedbackMatchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
             feedbackMatchedClassesGridPane.add(new Text("System class"), 2, row);
             feedbackMatchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: 600");
             feedbackMatchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: 600");
-            for (Clazz cls : matchedClasses.getBoundSystemClassesSorted()) {
+            for (nl.ou.dpd.domain.node.Node node : matchedNodes.getBoundSystemNodesSorted()) {
                 int col = 0;
                 row++;
-                feedbackMatchedClassesGridPane.add(new Text(matchedClasses.get(cls).getName()), col++, row);
+                feedbackMatchedClassesGridPane.add(new Text(matchedNodes.get(node).getName()), col++, row);
                 feedbackMatchedClassesGridPane.add(new Text("-->"), col++, row);
-                feedbackMatchedClassesGridPane.add(new Text(cls.getName()), col, row);
+                feedbackMatchedClassesGridPane.add(new Text(node.getName()), col, row);
             }
 
             // Show superfluous edges
@@ -282,9 +281,9 @@ public class ProjectViewController extends Controller implements Observer {
             }
             for (Edge edge : superfluousEdges) {
                 int col = 0;
-                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getClass1().getName()), col++, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getLeftNode().getName()), col++, row);
                 feedbackSuperfluousEdgesGridPane.add(new Text("-->"), col++, row);
-                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getClass2().getName()), col, row);
+                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getRightNode().getName()), col, row);
                 row++;
             }
 
@@ -298,9 +297,9 @@ public class ProjectViewController extends Controller implements Observer {
             }
             for (Edge edge : missingEdges) {
                 int col = 0;
-                feedbackMissingEdgesGridPane.add(new Text(edge.getClass1().getName()), col++, row);
+                feedbackMissingEdgesGridPane.add(new Text(edge.getLeftNode().getName()), col++, row);
                 feedbackMissingEdgesGridPane.add(new Text("-->"), col++, row);
-                feedbackMissingEdgesGridPane.add(new Text(edge.getClass2().getName()), col, row);
+                feedbackMissingEdgesGridPane.add(new Text(edge.getRightNode().getName()), col, row);
                 row++;
             }
         }

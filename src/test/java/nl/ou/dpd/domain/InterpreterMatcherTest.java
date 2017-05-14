@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +52,7 @@ public class InterpreterMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -57,11 +60,11 @@ public class InterpreterMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Interpreter"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("ExpressionClient")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("ExpressionContext")).getName(), is("Context"));
-        assertThat(mc0.get(new Clazz("RegularExpression")).getName(), is("AbstractExpression"));
-        assertThat(mc0.get(new Clazz("LiteralExpression")).getName(), is("TerminalExpression"));
-        assertThat(mc0.get(new Clazz("SequenceExpression")).getName(), is("NonTerminalExpression"));
+        assertThat(mc0.get(new Clazz("ExpressionClient", "ExpressionClient")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("ExpressionContext", "ExpressionContext")).getName(), is("Context"));
+        assertThat(mc0.get(new Clazz("RegularExpression", "RegularExpression")).getName(), is("AbstractExpression"));
+        assertThat(mc0.get(new Clazz("LiteralExpression", "LiteralExpression")).getName(), is("TerminalExpression"));
+        assertThat(mc0.get(new Clazz("SequenceExpression", "SequenceExpression")).getName(), is("NonTerminalExpression"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -72,11 +75,11 @@ public class InterpreterMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("ExpressionClient"), new Clazz("ExpressionContext"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("ExpressionClient"), new Clazz("RegularExpression"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("LiteralExpression"), new Clazz("RegularExpression"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("SequenceExpression"), new Clazz("RegularExpression"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("RegularExpression"), new Clazz("SequenceExpression"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("ExpressionClient", "ExpressionClient"), new Clazz("ExpressionContext", "ExpressionContext"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("ExpressionClient", "ExpressionClient"), new Clazz("RegularExpression", "RegularExpression"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("LiteralExpression", "LiteralExpression"), new Clazz("RegularExpression", "RegularExpression"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("SequenceExpression", "SequenceExpression"), new Clazz("RegularExpression", "RegularExpression"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("RegularExpression", "RegularExpression"), new Clazz("SequenceExpression", "SequenceExpression"), EdgeType.AGGREGATE));
 
         // FIXME: the results are not as expected when we add these edges (example on page 264 in GoF)
         // result.add(new Edge(new Clazz("RepetitionExpression"), new Clazz("RegularExpression"), EdgeType.INHERITANCE));

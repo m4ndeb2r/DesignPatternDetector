@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +52,7 @@ public class FlyweightMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -57,16 +60,16 @@ public class FlyweightMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Flyweight"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Glyph")).getName(), is("Flyweight"));
-        assertThat(mc0.get(new Clazz("GlyphFactory")).getName(), is("FlyweightFactory"));
-        assertThat(mc0.get(new Clazz("Client")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Character")).getName(), is("ConcreteFlyweight"));
-        assertThat(mc0.get(new Clazz("Row")).getName(), is("UnsharedConcreteFlyweight"));
+        assertThat(mc0.get(new Clazz("Glyph", "Glyph")).getName(), is("Flyweight"));
+        assertThat(mc0.get(new Clazz("GlyphFactory", "GlyphFactory")).getName(), is("FlyweightFactory"));
+        assertThat(mc0.get(new Clazz("Client", "Client")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("Character", "Character")).getName(), is("ConcreteFlyweight"));
+        assertThat(mc0.get(new Clazz("Row", "Row")).getName(), is("UnsharedConcreteFlyweight"));
         // FIXME assertThat(mc0.get(new Clazz("Column")).getName(), is("UnsharedConcreteFlyweight"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(1));
-        assertTrue(se0.contains(new Edge(new Clazz("Glyph"), new Clazz("Row"), EdgeType.AGGREGATE)));
+        assertTrue(se0.contains(new Edge(new Clazz("Glyph", "Glyph"), new Clazz("Row", "Row"), EdgeType.AGGREGATE)));
 
         // Check missing edges
         assertThat(me0.size(), is(0));
@@ -74,16 +77,16 @@ public class FlyweightMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("Glyph"), new Clazz("GlyphFactory"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("Glyph"), new Clazz("Row"), EdgeType.AGGREGATE)); // Superfluous
+        result.add(new Edge(new Clazz("Glyph", "Glyph"), new Clazz("GlyphFactory", "GlyphFactory"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("Glyph", "Glyph"), new Clazz("Row", "Row"), EdgeType.AGGREGATE)); // Superfluous
         // FIXME result.add(new Edge(new Clazz("Glyph"), new Clazz("Column"), EdgeType.AGGREGATE)); // Superfluous
-        result.add(new Edge(new Clazz("Row"), new Clazz("Glyph"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("Row", "Row"), new Clazz("Glyph", "Glyph"), EdgeType.INHERITANCE));
         // FIXME result.add(new Edge(new Clazz("Column"), new Clazz("Glyph"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("Character"), new Clazz("Glyph"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("Client"), new Clazz("Character"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Client"), new Clazz("Row"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Character", "Character"), new Clazz("Glyph", "Glyph"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("Client", "Client"), new Clazz("Character", "Character"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Client", "Client"), new Clazz("Row", "Row"), EdgeType.ASSOCIATION_DIRECTED));
         // FIXME result.add(new Edge(new Clazz("Client"), new Clazz("Column"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Client"), new Clazz("GlyphFactory"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Client", "Client"), new Clazz("GlyphFactory", "GlyphFactory"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 

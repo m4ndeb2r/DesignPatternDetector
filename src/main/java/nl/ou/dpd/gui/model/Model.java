@@ -5,8 +5,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import nl.ou.dpd.data.argoxmi.ArgoXMIParser;
-import nl.ou.dpd.data.template.TemplatesParser;
+import nl.ou.dpd.parsing.argoxmi.ArgoXMIParser;
+import nl.ou.dpd.parsing.template.TemplatesParser;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.Matcher;
 import nl.ou.dpd.domain.Solution;
@@ -36,12 +36,11 @@ public class Model extends Observable {
     private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
     private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
     private static final String _DPD__PROJ_MRU = "";
-
+    private final Matcher matcher;
+    private final RetentionFileChooser fileChooser;
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
     private Project openProject = null;
-    private final Matcher matcher;
-    private final RetentionFileChooser fileChooser;
 
     /**
      * Constructor expecting a {@link Scene} as input parameter.

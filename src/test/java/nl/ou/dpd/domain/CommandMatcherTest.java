@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +45,7 @@ public class CommandMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -50,11 +53,11 @@ public class CommandMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Command"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Application")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Command")).getName(), is("Command"));
-        assertThat(mc0.get(new Clazz("OpenCommand")).getName(), is("ConcreteCommand"));
-        assertThat(mc0.get(new Clazz("MenuItem")).getName(), is("Invoker"));
-        assertThat(mc0.get(new Clazz("Document")).getName(), is("Receiver"));
+        assertThat(mc0.get(new Clazz("Application", "Application")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("Command", "Command")).getName(), is("Command"));
+        assertThat(mc0.get(new Clazz("OpenCommand", "OpenCommand")).getName(), is("ConcreteCommand"));
+        assertThat(mc0.get(new Clazz("MenuItem", "MenuItem")).getName(), is("Invoker"));
+        assertThat(mc0.get(new Clazz("Document", "Document")).getName(), is("Receiver"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -65,11 +68,11 @@ public class CommandMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("Application"), new Clazz("Document"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Application"), new Clazz("OpenCommand"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("OpenCommand"), new Clazz("Command"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("OpenCommand"), new Clazz("Document"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Command"), new Clazz("MenuItem"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("Application", "Application"), new Clazz("Document", "Document"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Application", "Application"), new Clazz("OpenCommand", "OpenCommand"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("OpenCommand", "OpenCommand"), new Clazz("Command", "Command"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("OpenCommand", "OpenCommand"), new Clazz("Document", "Document"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Command", "Command"), new Clazz("MenuItem", "MenuItem"), EdgeType.AGGREGATE));
         return result;
     }
 

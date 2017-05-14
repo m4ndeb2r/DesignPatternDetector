@@ -1,8 +1,10 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -52,9 +54,9 @@ public class BuilderMatcherTest {
         final Solution s1 = solutions.get(1);
         final Solution s2 = solutions.get(2);
 
-        final MatchedClasses mc0 = s0.getMatchedClasses();
-        final MatchedClasses mc1 = s1.getMatchedClasses();
-        final MatchedClasses mc2 = s2.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
+        final MatchedNodes mc1 = s1.getMatchedNodes();
+        final MatchedNodes mc2 = s2.getMatchedNodes();
 
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> se1 = s1.getSuperfluousEdges();
@@ -70,20 +72,20 @@ public class BuilderMatcherTest {
         assertThat(s2.getDesignPatternName(), is("Builder"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("RTFReader")).getName(), is("Director"));
-        assertThat(mc0.get(new Clazz("TextConverter")).getName(), is("Builder"));
-        assertThat(mc0.get(new Clazz("ASCIIConverter")).getName(), is("ConcreteBuilder"));
-        assertThat(mc0.get(new Clazz("ASCIIText")).getName(), is("Product"));
+        assertThat(mc0.get(new Clazz("RTFReader", "RTFReader")).getName(), is("Director"));
+        assertThat(mc0.get(new Clazz("TextConverter", "TextConverter")).getName(), is("Builder"));
+        assertThat(mc0.get(new Clazz("ASCIIConverter", "ASCIIConverter")).getName(), is("ConcreteBuilder"));
+        assertThat(mc0.get(new Clazz("ASCIIText", "ASCIIText")).getName(), is("Product"));
 
-        assertThat(mc1.get(new Clazz("RTFReader")).getName(), is("Director"));
-        assertThat(mc1.get(new Clazz("TextConverter")).getName(), is("Builder"));
-        assertThat(mc1.get(new Clazz("TeXConverter")).getName(), is("ConcreteBuilder"));
-        assertThat(mc1.get(new Clazz("TeXText")).getName(), is("Product"));
+        assertThat(mc1.get(new Clazz("RTFReader", "RTFReader")).getName(), is("Director"));
+        assertThat(mc1.get(new Clazz("TextConverter", "TextConverter")).getName(), is("Builder"));
+        assertThat(mc1.get(new Clazz("TeXConverter", "TeXConverter")).getName(), is("ConcreteBuilder"));
+        assertThat(mc1.get(new Clazz("TeXText", "TeXText")).getName(), is("Product"));
 
-        assertThat(mc2.get(new Clazz("RTFReader")).getName(), is("Director"));
-        assertThat(mc2.get(new Clazz("TextConverter")).getName(), is("Builder"));
-        assertThat(mc2.get(new Clazz("TextWidgetConverter")).getName(), is("ConcreteBuilder"));
-        assertThat(mc2.get(new Clazz("TextWidgetText")).getName(), is("Product"));
+        assertThat(mc2.get(new Clazz("RTFReader", "RTFReader")).getName(), is("Director"));
+        assertThat(mc2.get(new Clazz("TextConverter", "TextConverter")).getName(), is("Builder"));
+        assertThat(mc2.get(new Clazz("TextWidgetConverter", "TextWidgetConverter")).getName(), is("ConcreteBuilder"));
+        assertThat(mc2.get(new Clazz("TextWidgetText", "TextWidgetText")).getName(), is("Product"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -98,13 +100,13 @@ public class BuilderMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("TextConverter"), new Clazz("RTFReader"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("ASCIIConverter"), new Clazz("TextConverter"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TeXConverter"), new Clazz("TextConverter"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TextWidgetConverter"), new Clazz("TextConverter"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("ASCIIConverter"), new Clazz("ASCIIText"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("TeXConverter"), new Clazz("TeXText"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("TextWidgetConverter"), new Clazz("TextWidgetText"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("TextConverter", "TextConverter"), new Clazz("RTFReader", "RTFReader"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("ASCIIConverter", "ASCIIConverter"), new Clazz("TextConverter", "TextConverter"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("TeXConverter", "TeXConverter"), new Clazz("TextConverter", "TextConverter"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("TextWidgetConverter", "TextWidgetConverter"), new Clazz("TextConverter", "TextConverter"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("ASCIIConverter", "ASCIIConverter"), new Clazz("ASCIIText", "ASCIIText"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("TeXConverter", "TeXConverter"), new Clazz("TeXText", "TeXText"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("TextWidgetConverter", "TextWidgetConverter"), new Clazz("TextWidgetText", "TextWidgetText"), EdgeType.DEPENDENCY));
         return result;
     }
 

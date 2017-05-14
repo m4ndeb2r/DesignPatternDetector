@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +46,7 @@ public class FactoryMethodMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -51,14 +54,14 @@ public class FactoryMethodMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Factory Method"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Application")).getName(), is("Creator"));
-        assertThat(mc0.get(new Clazz("Document")).getName(), is("Product"));
-        assertThat(mc0.get(new Clazz("MyDocument")).getName(), is("ConcreteProduct"));
-        assertThat(mc0.get(new Clazz("MyApplication")).getName(), is("ConcreteCreator"));
+        assertThat(mc0.get(new Clazz("Application", "Application")).getName(), is("Creator"));
+        assertThat(mc0.get(new Clazz("Document", "Document")).getName(), is("Product"));
+        assertThat(mc0.get(new Clazz("MyDocument", "MyDocument")).getName(), is("ConcreteProduct"));
+        assertThat(mc0.get(new Clazz("MyApplication", "MyApplication")).getName(), is("ConcreteCreator"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(1));
-        assertTrue(se0.contains(new Edge(new Clazz("Document"), new Clazz("Application"), EdgeType.AGGREGATE)));
+        assertTrue(se0.contains(new Edge(new Clazz("Document", "Document"), new Clazz("Application", "Application"), EdgeType.AGGREGATE)));
 
         // Check missing edges
         assertThat(me0.size(), is(0));
@@ -66,10 +69,10 @@ public class FactoryMethodMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("Document"), new Clazz("Application"), EdgeType.AGGREGATE));
-        result.add(new Edge(new Clazz("MyDocument"), new Clazz("Document"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MyApplication"), new Clazz("Application"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("MyApplication"), new Clazz("MyDocument"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("Document", "Document"), new Clazz("Application", "Application"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("MyDocument", "MyDocument"), new Clazz("Document", "Document"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("MyApplication", "MyApplication"), new Clazz("Application", "Application"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("MyApplication", "MyApplication"), new Clazz("MyDocument", "MyDocument"), EdgeType.DEPENDENCY));
         return result;
     }
 

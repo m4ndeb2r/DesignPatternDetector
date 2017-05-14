@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,8 +46,8 @@ public class IteratorMatcherTest {
 
         final Solution s0 = solutions.get(0);
         final Solution s1 = solutions.get(1);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
-        final MatchedClasses mc1 = s1.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
+        final MatchedNodes mc1 = s1.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> se1 = s1.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
@@ -55,17 +58,17 @@ public class IteratorMatcherTest {
         assertThat(s1.getDesignPatternName(), is("Iterator"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Client")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("AbstractList")).getName(), is("Aggregate"));
-        assertThat(mc0.get(new Clazz("Iterator")).getName(), is("Iterator"));
-        assertThat(mc0.get(new Clazz("List")).getName(), is("ConcreteAggregate"));
-        assertThat(mc0.get(new Clazz("ListIterator")).getName(), is("ConcreteIterator"));
+        assertThat(mc0.get(new Clazz("Client", "Client")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("AbstractList", "AbstractList")).getName(), is("Aggregate"));
+        assertThat(mc0.get(new Clazz("Iterator", "Iterator")).getName(), is("Iterator"));
+        assertThat(mc0.get(new Clazz("List", "List")).getName(), is("ConcreteAggregate"));
+        assertThat(mc0.get(new Clazz("ListIterator", "ListIterator")).getName(), is("ConcreteIterator"));
 
-        assertThat(mc1.get(new Clazz("Client")).getName(), is("Client"));
-        assertThat(mc1.get(new Clazz("AbstractList")).getName(), is("Aggregate"));
-        assertThat(mc1.get(new Clazz("Iterator")).getName(), is("Iterator"));
-        assertThat(mc1.get(new Clazz("SkipList")).getName(), is("ConcreteAggregate"));
-        assertThat(mc1.get(new Clazz("SkipListIterator")).getName(), is("ConcreteIterator"));
+        assertThat(mc1.get(new Clazz("Client", "Client")).getName(), is("Client"));
+        assertThat(mc1.get(new Clazz("AbstractList", "AbstractList")).getName(), is("Aggregate"));
+        assertThat(mc1.get(new Clazz("Iterator", "Iterator")).getName(), is("Iterator"));
+        assertThat(mc1.get(new Clazz("SkipList", "SkipList")).getName(), is("ConcreteAggregate"));
+        assertThat(mc1.get(new Clazz("SkipListIterator", "SkipListIterator")).getName(), is("ConcreteIterator"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -78,16 +81,16 @@ public class IteratorMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("Client"), new Clazz("AbstractList"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Client"), new Clazz("Iterator"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("List"), new Clazz("AbstractList"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("SkipList"), new Clazz("AbstractList"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("ListIterator"), new Clazz("Iterator"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("SkipListIterator"), new Clazz("Iterator"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("List"), new Clazz("ListIterator"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("ListIterator"), new Clazz("List"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("SkipList"), new Clazz("SkipListIterator"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("SkipListIterator"), new Clazz("SkipList"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Client", "Client"), new Clazz("AbstractList", "AbstractList"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Client", "Client"), new Clazz("Iterator", "Iterator"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("List", "List"), new Clazz("AbstractList", "AbstractList"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("SkipList", "SkipList"), new Clazz("AbstractList", "AbstractList"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("ListIterator", "ListIterator"), new Clazz("Iterator", "Iterator"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("SkipListIterator", "SkipListIterator"), new Clazz("Iterator", "Iterator"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("List", "List"), new Clazz("ListIterator", "ListIterator"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("ListIterator", "ListIterator"), new Clazz("List", "List"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("SkipList", "SkipList"), new Clazz("SkipListIterator", "SkipListIterator"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("SkipListIterator", "SkipListIterator"), new Clazz("SkipList", "SkipList"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 

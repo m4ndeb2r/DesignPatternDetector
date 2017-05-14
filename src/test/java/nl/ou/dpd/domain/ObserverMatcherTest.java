@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,9 +48,9 @@ public class ObserverMatcherTest {
         final Solution s1 = solutions.get(1);
         final Solution s2 = solutions.get(2);
 
-        final MatchedClasses mc0 = s0.getMatchedClasses();
-        final MatchedClasses mc1 = s1.getMatchedClasses();
-        final MatchedClasses mc2 = s2.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
+        final MatchedNodes mc1 = s1.getMatchedNodes();
+        final MatchedNodes mc2 = s2.getMatchedNodes();
 
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> se1 = s1.getSuperfluousEdges();
@@ -63,20 +66,20 @@ public class ObserverMatcherTest {
         assertThat(s2.getDesignPatternName(), is("Observer"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Subject")).getName(), is("Subject"));
-        assertThat(mc0.get(new Clazz("Data")).getName(), is("ConcreteSubject"));
-        assertThat(mc0.get(new Clazz("Observer")).getName(), is("Observer"));
-        assertThat(mc0.get(new Clazz("TableView")).getName(), is("ConcreteObserver"));
+        assertThat(mc0.get(new Clazz("Subject", "Subject")).getName(), is("Subject"));
+        assertThat(mc0.get(new Clazz("Data", "Data")).getName(), is("ConcreteSubject"));
+        assertThat(mc0.get(new Clazz("Observer", "Observer")).getName(), is("Observer"));
+        assertThat(mc0.get(new Clazz("TableView", "TableView")).getName(), is("ConcreteObserver"));
 
-        assertThat(mc1.get(new Clazz("Subject")).getName(), is("Subject"));
-        assertThat(mc1.get(new Clazz("Data")).getName(), is("ConcreteSubject"));
-        assertThat(mc1.get(new Clazz("Observer")).getName(), is("Observer"));
-        assertThat(mc1.get(new Clazz("BarGraphView")).getName(), is("ConcreteObserver"));
+        assertThat(mc1.get(new Clazz("Subject", "Subject")).getName(), is("Subject"));
+        assertThat(mc1.get(new Clazz("Data", "Data")).getName(), is("ConcreteSubject"));
+        assertThat(mc1.get(new Clazz("Observer", "Observer")).getName(), is("Observer"));
+        assertThat(mc1.get(new Clazz("BarGraphView", "BarGraphView")).getName(), is("ConcreteObserver"));
 
-        assertThat(mc2.get(new Clazz("Subject")).getName(), is("Subject"));
-        assertThat(mc2.get(new Clazz("Data")).getName(), is("ConcreteSubject"));
-        assertThat(mc2.get(new Clazz("Observer")).getName(), is("Observer"));
-        assertThat(mc2.get(new Clazz("PieGraphView")).getName(), is("ConcreteObserver"));
+        assertThat(mc2.get(new Clazz("Subject", "Subject")).getName(), is("Subject"));
+        assertThat(mc2.get(new Clazz("Data", "Data")).getName(), is("ConcreteSubject"));
+        assertThat(mc2.get(new Clazz("Observer", "Observer")).getName(), is("Observer"));
+        assertThat(mc2.get(new Clazz("PieGraphView", "PieGraphView")).getName(), is("ConcreteObserver"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -91,14 +94,14 @@ public class ObserverMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("Subject"), new Clazz("Observer"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Data"), new Clazz("Subject"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TableView"), new Clazz("Observer"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("TableView"), new Clazz("Data"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("BarGraphView"), new Clazz("Observer"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("BarGraphView"), new Clazz("Data"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("PieGraphView"), new Clazz("Observer"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("PieGraphView"), new Clazz("Data"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Subject", "Subject"), new Clazz("Observer", "Observer"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Data", "Data"), new Clazz("Subject", "Subject"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("TableView", "TableView"), new Clazz("Observer", "Observer"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("TableView", "TableView"), new Clazz("Data", "Data"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("BarGraphView", "BarGraphView"), new Clazz("Observer", "Observer"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("BarGraphView", "BarGraphView"), new Clazz("Data", "Data"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("PieGraphView", "PieGraphView"), new Clazz("Observer", "Observer"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("PieGraphView", "PieGraphView"), new Clazz("Data", "Data"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 

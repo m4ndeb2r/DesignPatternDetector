@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +45,7 @@ public class CompositeMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -50,10 +53,10 @@ public class CompositeMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Composite"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("GraphicClient")).getName(), is("Client"));
-        assertThat(mc0.get(new Clazz("Graphic")).getName(), is("Component"));
-        assertThat(mc0.get(new Clazz("Rectangle")).getName(), is("Leaf"));
-        assertThat(mc0.get(new Clazz("Picture")).getName(), is("Composite"));
+        assertThat(mc0.get(new Clazz("GraphicClient", "GraphicClient")).getName(), is("Client"));
+        assertThat(mc0.get(new Clazz("Graphic", "Graphic")).getName(), is("Component"));
+        assertThat(mc0.get(new Clazz("Rectangle", "Rectangle")).getName(), is("Leaf"));
+        assertThat(mc0.get(new Clazz("Picture", "Picture")).getName(), is("Composite"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -64,10 +67,10 @@ public class CompositeMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("GraphicClient"), new Clazz("Graphic"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("Rectangle"), new Clazz("Graphic"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("Picture"), new Clazz("Graphic"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("Graphic"), new Clazz("Picture"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("GraphicClient", "GraphicClient"), new Clazz("Graphic", "Graphic"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("Rectangle", "Rectangle"), new Clazz("Graphic", "Graphic"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("Picture", "Picture"), new Clazz("Graphic", "Graphic"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("Graphic", "Graphic"), new Clazz("Picture", "Picture"), EdgeType.AGGREGATE));
         return result;
     }
 

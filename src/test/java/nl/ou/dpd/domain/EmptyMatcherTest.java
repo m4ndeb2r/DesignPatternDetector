@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,12 +52,12 @@ public class EmptyMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("D"), new Clazz("E"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("E"), new Clazz("C"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("D"), new Clazz("B"), EdgeType.INHERITANCE));
-        result.add(new Edge(new Clazz("C"), new Clazz("B"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("A"), new Clazz("B"), EdgeType.ASSOCIATION_DIRECTED));
-        result.add(new Edge(new Clazz("A"), new Clazz("C"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("D", "D"), new Clazz("E", "E"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("E", "E"), new Clazz("C", "C"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("D", "D"), new Clazz("B", "B"), EdgeType.INHERITANCE));
+        result.add(new Edge(new Clazz("C", "C"), new Clazz("B", "B"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("A", "A"), new Clazz("B", "B"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("A", "A"), new Clazz("C", "C"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 

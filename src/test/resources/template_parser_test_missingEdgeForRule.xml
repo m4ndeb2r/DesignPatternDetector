@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This test file contains a template that is missing an edge. Condition 2 refers to CB, but it is not there.
+
+-->
+<templates>
+    <template name="Template" superpattern="Super">
+        <structure>
+            <nodes>
+                <node id="A" type="CLASS">
+                    <attributes>
+                        <attribute id="b" type="B"/>
+                    </attributes>
+                </node>
+                <node id="B" type="CLASS"/>
+            </nodes>
+            <edges>
+                <edge id="AB" node1="A" node2="B"/>
+                <!-- Here, an edge is missing. Condition 2 refers to CB, but it is nog here ... -->
+            </edges>
+        </structure>
+        <conditions>
+            <condition id="1" description="A has a directed association to B.">
+                <rules>
+                    <rule applies="AB"
+                          topic="TYPE"
+                          scope="RELATION"
+                          operation="EQUALS"
+                          value="ASSOCIATION_DIRECTED"/>
+                </rules>
+            </condition>
+            <condition id="2" description="C inherits from B.">
+                <rules>
+                    <rule applies="CB"
+                          topic="TYPE"
+                          scope="RELATION"
+                          operation="EQUALS"
+                          value="INHERITANCE"/>
+                </rules>
+            </condition>
+        </conditions>
+    </template>
+</templates>
+    

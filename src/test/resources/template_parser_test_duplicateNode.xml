@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This test file contains an duplicate node tag: C.
+    This is not allowed, but cannot be detected by the XSD-validator.
+    We expect the parser to detect this.
+
+-->
+<templates>
+    <template name="Template" superpattern="Adapter">
+        <structure>
+            <nodes>
+                <node id="A" type="CLASS"/>
+                <node id="B" type="CLASS"/>
+                <node id="C" type="CLASS"/>
+                <node id="C" type="CLASS"/>
+            </nodes>
+            <edges>
+                <edge id="AB" node1="A" node2="B"/>
+                <edge id="AC" node1="A" node2="C"/>
+            </edges>
+        </structure>
+        <conditions>
+            <condition id="1"
+                       description="A has a directed association with B.">
+                <rules>
+                    <rule applies="AB"
+                          scope="RELATION"
+                          topic="TYPE"
+                          operation="EQUALS"
+                          value="ASSOCIATION_DIRECTED"/>
+                </rules>
+            </condition>
+            <condition id="2"
+                       description="A has a directed association with C.">
+                <rules>
+                    <rule applies="AC"
+                          scope="RELATION"
+                          topic="TYPE"
+                          operation="EQUALS"
+                          value="ASSOCIATION_DIRECTED"/>
+                </rules>
+            </condition>
+        </conditions>
+    </template>
+</templates>
+    

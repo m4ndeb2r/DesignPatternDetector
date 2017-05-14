@@ -1,13 +1,13 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -85,52 +85,52 @@ public class SolutionsTest {
 
     private Set<Edge> createSuperfluousEdges() {
         Set<Edge> result = new HashSet<>();
-        result.add(new Edge(new Clazz("sysE"), new Clazz("sysB"), EdgeType.ASSOCIATION_DIRECTED));
+        result.add(new Edge(new Clazz("sysE", "sysE"), new Clazz("sysB", "sysB"), EdgeType.ASSOCIATION_DIRECTED));
         return result;
     }
 
     private Set<Edge> createMissingEdges() {
         Set<Edge> result = new HashSet<>();
-        result.add(new Edge(new Clazz("dpP"), new Clazz("dpQ"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("dpP", "dpP"), new Clazz("dpQ", "dpQ"), EdgeType.AGGREGATE));
         return result;
     }
 
-    private MatchedClasses createMatchedClasses_WX_WY_YZ() {
-        MatchedClasses result = new MatchedClasses();
+    private MatchedNodes createMatchedClasses_WX_WY_YZ() {
+        MatchedNodes result = new MatchedNodes();
         createMatch(result, "W", "X");
         createMatch(result, "W", "Y");
         createMatch(result, "Y", "Z");
         return result;
     }
 
-    private MatchedClasses createMatchedClasses_WX_YZ_WY() {
-        MatchedClasses result = new MatchedClasses();
+    private MatchedNodes createMatchedClasses_WX_YZ_WY() {
+        MatchedNodes result = new MatchedNodes();
         createMatch(result, "W", "X");
         createMatch(result, "Y", "Z");
         createMatch(result, "W", "Y");
         return result;
     }
 
-    private MatchedClasses createMatchedClasses_AB_CD_AC() {
-        MatchedClasses result = new MatchedClasses();
+    private MatchedNodes createMatchedClasses_AB_CD_AC() {
+        MatchedNodes result = new MatchedNodes();
         createMatch(result, "A", "B");
         createMatch(result, "C", "D");
         createMatch(result, "A", "C");
         return result;
     }
 
-    private MatchedClasses createMatchedClasses_AC_CD_AB() {
-        MatchedClasses result = new MatchedClasses();
+    private MatchedNodes createMatchedClasses_AC_CD_AB() {
+        MatchedNodes result = new MatchedNodes();
         createMatch(result, "A", "C");
         createMatch(result, "C", "D");
         createMatch(result, "A", "B");
         return result;
     }
 
-    private void createMatch(MatchedClasses matchedClasses, String a, String b) {
-        matchedClasses.makeMatch(
-                new Edge(new Clazz("sys" + a), new Clazz("sys" + b), EdgeType.AGGREGATE),
-                new Edge(new Clazz("dp" + a), new Clazz("dp" + b), EdgeType.DEPENDENCY)
+    private void createMatch(MatchedNodes matchedNodes, String a, String b) {
+        matchedNodes.makeMatch(
+                new Edge(new Clazz("sys" + a, "sys" + a), new Clazz("sys" + b, "sys" + b), EdgeType.AGGREGATE),
+                new Edge(new Clazz("dp" + a, "dp" + a), new Clazz("dp" + b, "dp" + b), EdgeType.DEPENDENCY)
         );
     }
 

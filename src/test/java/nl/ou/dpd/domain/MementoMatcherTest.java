@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Clazz;
 import nl.ou.dpd.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +45,7 @@ public class MementoMatcherTest {
         assertThat(solutions.size(), is(1));
 
         final Solution s0 = solutions.get(0);
-        final MatchedClasses mc0 = s0.getMatchedClasses();
+        final MatchedNodes mc0 = s0.getMatchedNodes();
         final Set<Edge> se0 = s0.getSuperfluousEdges();
         final Set<Edge> me0 = s0.getMissingEdges();
 
@@ -50,9 +53,9 @@ public class MementoMatcherTest {
         assertThat(s0.getDesignPatternName(), is("Memento"));
 
         // Check matching classes
-        assertThat(mc0.get(new Clazz("Editor")).getName(), is("Caretaker"));
-        assertThat(mc0.get(new Clazz("ConstraintSolver")).getName(), is("Originator"));
-        assertThat(mc0.get(new Clazz("SolverState")).getName(), is("Memento"));
+        assertThat(mc0.get(new Clazz("Editor", "Editor")).getName(), is("Caretaker"));
+        assertThat(mc0.get(new Clazz("ConstraintSolver", "ConstraintSolver")).getName(), is("Originator"));
+        assertThat(mc0.get(new Clazz("SolverState", "SolverState")).getName(), is("Memento"));
 
         // Check superfluous edges
         assertThat(se0.size(), is(0));
@@ -63,8 +66,8 @@ public class MementoMatcherTest {
 
     private SystemUnderConsideration createSystemUnderConsideration() {
         SystemUnderConsideration result = new SystemUnderConsideration();
-        result.add(new Edge(new Clazz("ConstraintSolver"), new Clazz("SolverState"), EdgeType.DEPENDENCY));
-        result.add(new Edge(new Clazz("SolverState"), new Clazz("Editor"), EdgeType.AGGREGATE));
+        result.add(new Edge(new Clazz("ConstraintSolver", "ConstraintSolver"), new Clazz("SolverState", "SolverState"), EdgeType.DEPENDENCY));
+        result.add(new Edge(new Clazz("SolverState", "SolverState"), new Clazz("Editor", "Editor"), EdgeType.AGGREGATE));
         return result;
     }
 

@@ -1,5 +1,8 @@
 package nl.ou.dpd.domain;
 
+import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.edge.EdgeType;
+import nl.ou.dpd.domain.node.Node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,8 +38,8 @@ public final class Matcher {
         // Order the design pattern's edges
         pattern.order();
 
-        // Put every classname occuring in a 4-tuple in system in MatchedClasses with value = EMPTY.
-        MatchedClasses matchedClasses = prepareMatchedClasses(system);
+        // Put every classname occuring in a 4-tuple in system in MatchedNodes with value = EMPTY.
+        MatchedNodes matchedNodes = prepareMatchedNodes(system);
 
         // Initialise the solutions. These will be populated during the recursive match.
         solutions = new Solutions();
@@ -45,20 +48,20 @@ public final class Matcher {
         // We will remove them from the missing edges list as soon as they are matched.
         final HashSet<Edge> missingEdges = new HashSet<>();
         missingEdges.addAll(pattern.getEdges());
-        recursiveMatch(pattern, system, maxNotMatchable, 0, matchedClasses, missingEdges);
+        recursiveMatch(pattern, system, maxNotMatchable, 0, matchedNodes, missingEdges);
 
         // Return feedback
         return solutions;
     }
 
     /**
-     * TODO: simplify this method. It is to long and incomprehensive.
+     * TODO: simplify this method. It is too long and incomprehensive.
      *
      * @param pattern
      * @param system
      * @param maxNotMatchable
      * @param startIndex
-     * @param matchedClasses
+     * @param matchedNodes
      * @param missingEdges
      * @return
      */
@@ -67,7 +70,7 @@ public final class Matcher {
             final SystemUnderConsideration system,
             final int maxNotMatchable,
             final int startIndex,
-            final MatchedClasses matchedClasses,
+            final MatchedNodes matchedNodes,
             final Set<Edge> missingEdges) {
 
         if (startIndex >= pattern.getEdges().size()) {
@@ -75,7 +78,7 @@ public final class Matcher {
 
             if (maxNotMatchable >= 0) {
                 // This is an acceptable solution. Let's gather the information and keep it.
-                final Solution solution = createSolution(pattern, system, matchedClasses, missingEdges);
+                final Solution solution = createSolution(pattern, system, matchedNodes, missingEdges);
                 if (!solution.isEmpty() && solutions.isUniq(solution)) {
                     solutions.add(solution);
                 }
@@ -95,25 +98,25 @@ public final class Matcher {
         for (int j = 0; j < system.getEdges().size(); j++) {
 
             final Edge systemEdge = system.getEdges().get(j);
-            final MatchedClasses copyMatchedClasses = new MatchedClasses(matchedClasses);
+            final MatchedNodes copyMatchedNodes = new MatchedNodes(matchedNodes);
             final List<Integer> extraMatched = new ArrayList<>();
 
-            if (!systemEdge.isLocked() && matchedClasses.canMatch(systemEdge, patternEdge)) {
+            if (!systemEdge.isLocked() && matchedNodes.canMatch(systemEdge, patternEdge)) {
 
-                // Make match in copyMatchedClasses, and lock the matched edges to prevent them from being matched twice
-                copyMatchedClasses.makeMatch(systemEdge, patternEdge);
+                // Make match in copyMatchedNodes, and lock the matched edges to prevent them from being matched twice
+                copyMatchedNodes.makeMatch(systemEdge, patternEdge);
                 missingEdges.remove(patternEdge);
                 lockEdges(patternEdge, systemEdge);
 
-                if (patternEdge.getTypeRelation() == EdgeType.INHERITANCE_MULTI) {
+                if (patternEdge.getRelationType() == EdgeType.INHERITANCE_MULTI) {
                     // There may be more edges of se that contain an inheritance to the same parent and
                     // have unmatched children
                     for (int k = j + 1; k < system.getEdges().size(); k++) {
                         final Edge skEdge = system.getEdges().get(k);
                         if (!skEdge.isLocked()
-                                && skEdge.getClass2().equals(systemEdge.getClass2())
-                                && matchedClasses.canMatch(skEdge, patternEdge)) {
-                            copyMatchedClasses.makeMatch(skEdge, patternEdge);
+                                && skEdge.getRightNode().equals(systemEdge.getRightNode())
+                                && matchedNodes.canMatch(skEdge, patternEdge)) {
+                            copyMatchedNodes.makeMatch(skEdge, patternEdge);
                             missingEdges.remove(patternEdge);
                             extraMatched.add(new Integer(k));
                             skEdge.lock();
@@ -127,7 +130,7 @@ public final class Matcher {
                         system,
                         maxNotMatchable,
                         startIndex + 1,
-                        copyMatchedClasses,
+                        copyMatchedNodes,
                         missingEdges);
                 found = found || foundRecursively;
 
@@ -155,7 +158,7 @@ public final class Matcher {
                         system,
                         maxNotMatchable - 1,
                         startIndex + 1,
-                        matchedClasses, missingEdges);
+                        matchedNodes, missingEdges);
             }
             return false;
         }
@@ -167,46 +170,46 @@ public final class Matcher {
     /**
      * Create a {@link Solution} instance containing (feedback) information about a detected design pattern.
      *
-     * @param pattern        the detected design pattern
-     * @param system         the system under consideration that was analysed
-     * @param matchedClasses matched classes
+     * @param pattern      the detected design pattern
+     * @param system       the system under consideration that was analysed
+     * @param matchedNodes matched classes
      * @return feedback information about the detected design pattern
      */
     private Solution createSolution(
             final DesignPattern pattern,
             final SystemUnderConsideration system,
-            final MatchedClasses matchedClasses,
+            final MatchedNodes matchedNodes,
             final Set<Edge> missingEdges) {
 
         // Pattern name
         final String dpName = pattern.getName();
 
         // Classes that have been matched
-        final SortedSet<Clazz> boundedKeys = matchedClasses.getBoundSystemClassesSorted();
-        final MatchedClasses involvedClasses = matchedClasses.filter(boundedKeys);
+        final SortedSet<Node> boundedKeys = matchedNodes.getBoundSystemNodesSorted();
+        final MatchedNodes involvedNodes = matchedNodes.filter(boundedKeys);
 
         // Superfluous classes
         final Set<Edge> superfluousEdges = new HashSet<>();
         for (Edge systemEdge : system.getEdges()) {
-            if (matchedClasses.isSystemClassBound(systemEdge.getClass1())
-                    && matchedClasses.isSystemClassBound(systemEdge.getClass2())
+            if (matchedNodes.isSystemNodeBound(systemEdge.getLeftNode())
+                    && matchedNodes.isSystemNodeBound(systemEdge.getRightNode())
                     && !systemEdge.isLocked()) {
                 superfluousEdges.add(systemEdge);
             }
         }
-        return new Solution(dpName, involvedClasses, superfluousEdges, missingEdges);
+        return new Solution(dpName, involvedNodes, superfluousEdges, missingEdges);
     }
 
     /**
-     * Prepares a {@link MatchedClasses} for the matching process, based on the "system under consideration".
+     * Prepares a {@link MatchedNodes} for the matching process, based on the "system under consideration".
      *
      * @param system the "system under consideration"
-     * @return the prepared {@link MatchedClasses} instance.
+     * @return the prepared {@link MatchedNodes} instance.
      */
-    private MatchedClasses prepareMatchedClasses(final SystemUnderConsideration system) {
-        MatchedClasses matchedClasses = new MatchedClasses();
-        system.getEdges().forEach(edge -> matchedClasses.prepareMatch(edge));
-        return matchedClasses;
+    private MatchedNodes prepareMatchedNodes(final SystemUnderConsideration system) {
+        MatchedNodes matchedNodes = new MatchedNodes();
+        system.getEdges().forEach(edge -> matchedNodes.prepareMatch(edge));
+        return matchedNodes;
     }
 
     /**

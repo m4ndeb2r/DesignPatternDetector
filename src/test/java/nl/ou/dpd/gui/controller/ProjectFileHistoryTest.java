@@ -39,6 +39,7 @@ public class ProjectFileHistoryTest {
      */
     @Before
     public void initProjectFiles() throws IOException {
+        ProjectFileHistory.INSTANCE.getProjectFiles().removeAll(ProjectFileHistory.INSTANCE.getProjectFiles());
         testProjectHistoryFile1 = new File(getPath(TEST_PROJ_FILE_NAME1));
         testProjectHistoryFile2 = new File(getPath(TEST_PROJ_FILE_NAME2));
         testProjectHistoryFile3 = new File(getPath(TEST_PROJ_FILE_NAME3));
