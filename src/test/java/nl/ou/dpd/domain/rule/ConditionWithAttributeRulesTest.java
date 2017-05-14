@@ -96,6 +96,11 @@ public class ConditionWithAttributeRulesTest {
 
         // Check results: all rules return true, accumulated result should be true as well
         assertTrue(conditionWithAttributeRules.process(systemEdge, patternEdge));
+
+        // Check situation after processing
+        assertTrue(conditionWithAttributeRules.isProcessed());
+        assertTrue(conditionWithAttributeRules.isProcessedSuccessfully());
+        assertFalse(conditionWithAttributeRules.isProcessedUnsuccessfully());
     }
 
     @Test
@@ -113,6 +118,11 @@ public class ConditionWithAttributeRulesTest {
 
         // Check results: some rules true, some rules false, accumulated result should be false
         assertFalse(conditionWithAttributeRules.process(systemEdge, patternEdge));
+
+        // Check situation after processing
+        assertTrue(conditionWithAttributeRules.isProcessed());
+        assertFalse(conditionWithAttributeRules.isProcessedSuccessfully());
+        assertTrue(conditionWithAttributeRules.isProcessedUnsuccessfully());
     }
 
 }
