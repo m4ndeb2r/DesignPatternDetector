@@ -141,14 +141,14 @@ public class Condition {
      */
     private boolean processRules(Edge systemEdge, Edge patternEdge) {
 
-        // Evaluate all edge rules matching the given edge
+        // Evaluate all edge rules matching the given pattern edge
         for (Rule<Edge> rule : this.edgeRules) {
             if (rule.getMould() == patternEdge && !rule.process(systemEdge)) {
                 return false;
             }
         }
 
-        // Evaluate all node rules matching the given left node
+        // Evaluate all node rules matching the given pattern nodes (left and right)
         for (Rule<Node> rule : this.nodeRules) {
             if (rule.getMould() == patternEdge.getLeftNode() && !rule.process(systemEdge.getLeftNode())) {
                 return false;
@@ -160,9 +160,9 @@ public class Condition {
 
         // Evaluate all attribute rules matching the left node attributes with the type of the right node
         for (Rule<Attribute> rule : this.attributeRules) {
+            final Node mouldType = rule.getMould().getType();
+            final Node patternRightNode = patternEdge.getRightNode();
             for (Attribute systemAttribute : findAttributesOfRightNodeType(systemEdge)) {
-                final Node mouldType = rule.getMould().getType();
-                final Node patternRightNode = patternEdge.getRightNode();
                 if (mouldType == patternRightNode && !rule.process(systemAttribute)) {
                     return false;
                 }
