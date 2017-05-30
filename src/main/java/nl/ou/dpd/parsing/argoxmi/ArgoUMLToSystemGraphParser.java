@@ -236,11 +236,8 @@ public class ArgoUMLToSystemGraphParser {
             case ASSOCIATION_END:
             case ABSTRACTION:
             case GENERALIZATION:
-                setSourceOrTargetNode(event);
-                break;
             case DEPENDENCY:
-            	setSourceOrTargetNode(event);
-//               setDependency(event);
+                setSourceOrTargetNode(event);
                 break;
             case ATTRIBUTE:
                 setAttributeType(event);
@@ -372,13 +369,8 @@ public class ArgoUMLToSystemGraphParser {
     */
     private void handleDependencyEvent(XMLEvent event) {
         if (CLASS.equals(getParentElementNameLocalPart())) {
-/*        	lastNode = findSystemNodeById(readAttributes(events.peek()).get(ID));
-    		sourceAndTarget.push(lastNode);
-*/          String dependencyId = readAttributes(event).get(ID);
-/*			if (dependencyId == null) {
-				dependencyId = readAttributes(event).get(ID);
-			}
-*/            if (dependencyId != null && findSystemRelationById(dependencyId) == null) {
+          String dependencyId = readAttributes(event).get(ID);
+            if (dependencyId != null && findSystemRelationById(dependencyId) == null) {
                 //create an incomplete relation if the relation does not exist yet
                 lastRelation = createIncompleteRelation(dependencyId, null);
                 lastRelation.addRelationType(RelationType.D);
@@ -429,19 +421,6 @@ public class ArgoUMLToSystemGraphParser {
         }        
     }
 
-    private void setDependency(XMLEvent event) {
-        final String idref = readAttributes(event).get(IDREF);
-        final String name = readAttributes(event).get(NAME);
-	    String type = getStartElementNameLocalPart(event);   	
-	    final Node targetNode = findOrCreateSystemNodeById(type, idref);
-	    lastRelation = system.getEdge(lastNode, targetNode);
-	    if (lastRelation == null) {
-	    	lastRelation = createIncompleteRelation(idref, name);
-	    }
-	    lastRelation.addRelationType(RelationType.D);
-        setSourceOrTargetNode(event);
-    }
- 
     private void setAttributeType(XMLEvent event) {    
     	Node sourceNode = lastNode;
     	final String typeRefId = readAttributes(event).get(IDREF);
@@ -515,7 +494,6 @@ public class ArgoUMLToSystemGraphParser {
 	private void setMethodParameterType(Parameter parameter, Node targetNode) {
        	parameter.setType(targetNode);
 	}
-
 	
 	private void setParameterRelation(XMLEvent event, Node sourceNode, Node targetNode) {
         sourceAndTarget.push(sourceNode);
@@ -531,11 +509,9 @@ public class ArgoUMLToSystemGraphParser {
 	private void addEdgeToSystem(XMLEvent event) {
 		Node targetNode = sourceAndTarget.pop();
 		Node sourceNode = sourceAndTarget.pop();
-		Boolean s = system.containsVertex(sourceNode);
-		Boolean t = system.containsVertex(targetNode);
-		Relation relation = system.getEdge(sourceNode, targetNode);
+	Relation relation = system.getEdge(sourceNode, targetNode);
 		if (relation == null) {
-			Boolean ok = system.addEdge(sourceNode, targetNode, lastRelation);
+			system.addEdge(sourceNode, targetNode, lastRelation);
 			relation = system.getEdge(sourceNode, targetNode);
 		} else {
 			//compare relation with lastRelation
@@ -554,7 +530,6 @@ public class ArgoUMLToSystemGraphParser {
             node = createIncompleteNode(type, id);
            	system.addVertex(node);
         }
-//       lastNode = node;
         return node;
     }
 
@@ -618,20 +593,29 @@ public class ArgoUMLToSystemGraphParser {
 		//add a reverse edge with the same relationtype
 		Relation relation = system.getEdge(sourceNode, targetNode);
 		Boolean isAssociation = relation.getRelationTypes().contains(RelationType.S);
-		if (isAssociation && navigabilities.size() == 2) {
-			Boolean bidirectional = navigabilities.pop();
-			bidirectional = bidirectional && navigabilities.pop();
-			if (bidirectional) {
-				lastRelation = new Relation(relation.getId() + "-reversed", null);
-//				Relation reverseRelation = new Relation(getLastRelation().getId() + "-reversed", null);
-				lastRelation.addRelationType(RelationType.S);
-				sourceAndTarget.push(targetNode);
-				sourceAndTarget.push(sourceNode);
-				addEdgeToSystem(event);
+		Boolean reverseRelationExists = system.containsEdge(targetNode, sourceNode);
+		if (reverseRelationExists) {
+			system.getEdge(targetNode, sourceNode).getRelationTypes().add(RelationType.S);
+		} else {
+			if (isAssociation && navigabilities.size() == 2) {
+				Boolean bidirectional = navigabilities.pop();
+				bidirectional = bidirectional && navigabilities.pop();
+				if (bidirectional) {
+					lastRelation = createReverseRelation(event, relation, sourceNode, targetNode);
+					lastRelation.getRelationTypes().add(RelationType.S);
+				}
 			}
 		}
 	}
 
+	private Relation createReverseRelation(XMLEvent event, Relation originalRelation, Node originalSourceNode, Node originalTargetNode) {
+		Relation relation = new Relation(originalRelation.getId() + "-reversed", null);
+		sourceAndTarget.push(originalTargetNode);
+		sourceAndTarget.push(originalSourceNode);
+		addEdgeToSystem(event);
+		return relation;
+	}
+	
     private Node createIncompleteNode(String type, String id) {
         if (CLASS.equals(type)) {
             return new Clazz(id, null);
@@ -647,11 +631,7 @@ public class ArgoUMLToSystemGraphParser {
      * @return the newly created {@link Edge}
      */
     private Relation createIncompleteRelation(String id, String name) {
-//        final String id = readAttributes(event).get(ID);
-//        final String name = readAttributes(event).get(NAME);
-//        final RelationType relationType = findRelationTypeByString(getStartElementNameLocalPart(event));
         final Relation relation = new Relation(id, name);
-//        relation.addRelationType(relationType);
         return relation;
     }
 
@@ -704,14 +684,6 @@ public class ArgoUMLToSystemGraphParser {
                   }
               }
   	}
-
-    private String getIdOrIdref(Map<String, String> attributes) {
-        String id = attributes.get(ID);
-        if (id == null) {
-            id = attributes.get(IDREF);
-        }
-        return id;
-    }
 
     /**
      * Return an Attributes Map with the attribute name as key and the attribute value as value, retrieved from the
