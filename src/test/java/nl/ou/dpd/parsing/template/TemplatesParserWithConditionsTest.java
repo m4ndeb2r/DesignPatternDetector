@@ -51,7 +51,7 @@ public class TemplatesParserWithConditionsTest {
 
     /**
      * Tests the happy flow of parsing an XML templates file. This test uses an XML containing the definition of
-     * three Adapter patters: two Object Adapter pattern variaties and one Class Adapter Pattern.
+     * three Adapter patters: two Object Adapter pattern variations and one Class Adapter Pattern.
      */
     @Test
     public void testParseAdapterTemplates() {
@@ -69,7 +69,7 @@ public class TemplatesParserWithConditionsTest {
     private void assertObjectAdapterWithAbstractClass(DesignPattern designPattern) {
         assertThat(designPattern.getEdges().size(), is(3));
 
-        // We expect 12 conditions, being: 6 user conditions + 2 system condtions for attributes + 4 system conditions
+        // We expect 12 conditions, being: 6 user conditions + 2 system conditions for attributes + 4 system conditions
         // for node types
         assertThat(designPattern.getConditions().size(), is(12));
         assertSystemConditionsCount(designPattern.getConditions(), 6);
@@ -80,7 +80,7 @@ public class TemplatesParserWithConditionsTest {
     private void assertObjectAdapterWithInterface(DesignPattern designPattern) {
         assertThat(designPattern.getEdges().size(), is(3));
 
-        // We expect 11 conditions, being: 5 user conditions + 2 system condtions for attributes + 4 system conditions
+        // We expect 11 conditions, being: 5 user conditions + 2 system conditions for attributes + 4 system conditions
         // for node types
         assertThat(designPattern.getConditions().size(), is(11));
         assertSystemConditionsCount(designPattern.getConditions(), 6);
@@ -91,7 +91,7 @@ public class TemplatesParserWithConditionsTest {
     private void assertClassAdapter(DesignPattern designPattern) {
         assertThat(designPattern.getEdges().size(), is(3));
 
-        // We expect 8 conditions, being: 3 user conditions + 1 system condtion for attributes + 4 system conditions
+        // We expect 8 conditions, being: 3 user conditions + 1 system condition for attributes + 4 system conditions
         // for node types
         assertThat(designPattern.getConditions().size(), is(8));
         assertSystemConditionsCount(designPattern.getConditions(), 5);
