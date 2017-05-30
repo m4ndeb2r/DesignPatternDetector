@@ -29,7 +29,31 @@ public abstract class Node implements Comparable<Node> {
     private Visibility visibility;
 
     private List<Attribute> attributes;
-    private Boolean isAbstract;
+    private List<Method> methods;
+    /**
+	 * @return the methods
+	 */
+	public List<Method> getMethods() {
+		return methods;
+	}
+
+	/**
+	 * @param methods the methods to set
+	 */
+	public void setMethods(List<Method> methods) {
+		this.methods = methods;
+	}
+
+	/**
+	 * @param method the methods to add
+	 */
+
+	public void addMethod(Method method) {
+		this.methods.add(method);
+	}
+
+
+	private Boolean isAbstract;
 
     /**
      * Constructor with protected access because it is only accessible from within subclasses.
@@ -58,6 +82,7 @@ public abstract class Node implements Comparable<Node> {
         } else {
             this.attributes = attributes;
         }
+        this.methods = new ArrayList<>();
     }
 
     /**
@@ -176,11 +201,11 @@ public abstract class Node implements Comparable<Node> {
     /**
      * {@inheritDoc}
      */
-    @Override
+/*    @Override
     public int hashCode() {
         return Objects.hash(id, name, type, visibility, attributes, isAbstract);
     }
-
+*/
     /**
      * {@inheritDoc}
      */

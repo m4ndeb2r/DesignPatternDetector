@@ -109,15 +109,7 @@ public class TemplatesParserWithConditions {
             final String message = String.format("The pattern template file '%s' could not be parsed.", xmlFilename);
             error(message, e);
         }
-
         return designPatterns;
-    }
-
-    private void parse(String xmlFilename) throws FileNotFoundException, XMLStreamException {
-        final InputStream input = new FileInputStream(new File(xmlFilename));
-        final XMLInputFactory factory = XMLInputFactory.newInstance();
-        final XMLEventReader eventReader = factory.createXMLEventReader(input);
-        handleEvents(eventReader);
     }
 
     private void validate(String xmlFilename, URL xsdUrl) throws IOException, SAXException {
@@ -126,6 +118,13 @@ public class TemplatesParserWithConditions {
         final Validator validator = schema.newValidator();
         final InputStream stream = new FileInputStream(new File(xmlFilename));
         validator.validate(new StreamSource(stream));
+    }
+
+    private void parse(String xmlFilename) throws FileNotFoundException, XMLStreamException {
+        final InputStream input = new FileInputStream(new File(xmlFilename));
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        final XMLEventReader eventReader = factory.createXMLEventReader(input);
+        handleEvents(eventReader);
     }
 
     private void handleEvents(XMLEventReader eventReader) throws XMLStreamException {
