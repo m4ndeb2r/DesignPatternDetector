@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import nl.ou.dpd.parsing.argoxmi.ArgoXMIParser;
-import nl.ou.dpd.parsing.template.TemplatesParser;
+import nl.ou.dpd.parsing.pattern.TemplatesParser;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.Matcher;
 import nl.ou.dpd.domain.Solution;

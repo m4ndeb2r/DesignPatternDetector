@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8' ?>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Mon Jun 19 09:29:20 CEST 2017'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Fri Jun 16 15:00:08 CEST 2017'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -7,7 +7,7 @@
     <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
   <XMI.content>
     <UML:Model xmi.id = '-84-26-0-54--1e9ba376:15aad4320f4:-8000:0000000000000865'
-      name = 'Adapters' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+      name = 'AdaptersInterface' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
       isAbstract = 'false'>
       <UML:Namespace.ownedElement>
         <UML:Class xmi.id = '-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A67'
@@ -51,7 +51,7 @@
           </UML:ModelElement.comment>
           <UML:Classifier.feature>
             <UML:Attribute xmi.id = '-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A76'
-              name = 'adaptee' visibility = 'private' isSpecification = 'false' ownerScope = 'instance'
+              name = 'adaptee' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
               changeability = 'changeable' targetScope = 'instance'>
               <UML:StructuralFeature.multiplicity>
                 <UML:Multiplicity xmi.id = '-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A77'>
@@ -144,17 +144,17 @@
             <UML:Class xmi.idref = '-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A68'/>
           </UML:Comment.annotatedElement>
         </UML:Comment>
-        <UML:Association xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000000EC2'
+        <UML:Association xmi.id = '-84-26-0-54-38cba928:15aeb58a198:-8000:0000000000000A58'
           name = '' isSpecification = 'false' isRoot = 'false' isLeaf = 'false' isAbstract = 'false'>
           <UML:Association.connection>
-            <UML:AssociationEnd xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000000EC3'
-              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-38cba928:15aeb58a198:-8000:0000000000000A59'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
               aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
               <UML:AssociationEnd.participant>
                 <UML:Class xmi.idref = '-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A67'/>
               </UML:AssociationEnd.participant>
             </UML:AssociationEnd>
-            <UML:AssociationEnd xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000000EC4'
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-38cba928:15aeb58a198:-8000:0000000000000A5A'
               visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
               aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
               <UML:AssociationEnd.participant>

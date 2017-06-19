@@ -1,11 +1,8 @@
 package nl.ou.dpd.domain.node;
 
-import nl.ou.dpd.domain.edge.Edge;
+import java.util.HashSet;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * A {@link Node} represents a class, abstract class or interface in a system design or design pattern. {@link Node}s
@@ -14,249 +11,285 @@ import java.util.stream.Collectors;
  * A {@link Node} is a {@link Comparable} because it must be possible to add instances to a sorted set.
  *
  * @author Martin de Boer
+ * @author Peter Vansweevelt
  */
-public abstract class Node implements Comparable<Node> {
+
+public class Node {
+	
+	final private String id;
+	private String name;
+	private Set<NodeType> types;	
+	private Set<Attribute> attributes;
+    private Set<Operation> operations;
+	private Visibility visibility; //default PUBLIC
 
     /**
-     * An "empty" {@link Node}. The {@link #EMPTY_NODE} is used to prepare a "match" (similarity) between a node in a
-     * pattern and the system design. It is a placeholder for a matching {@link Node} that is not yet identified.
+     * Constructs a Class {@link Node}, with the given properties;
+     * default value of {@link Visibility} is PUBLIC and default value of {@code isAbstract} is {@code false}.
+     * @param id
+     * @param name
+     * @param nodeType
      */
-    public static final Node EMPTY_NODE = new EmptyNode();
-
-    private final String id;
-    private String name;
-    private NodeType type;
-    private Visibility visibility;
-
-    private List<Attribute> attributes;
-    private List<Method> methods;
+/*	public Node(String id, String name, Set<NodeType> nodeTypes) {
+		this.id = id;
+	    this.name = name;
+	    if (nodeTypes != null) {
+	    	this.types = nodeTypes;
+	    } else {
+	    	this.types = new HashSet<>();
+	    }
+    	this.attributes = new HashSet<>();
+    	this.operations = new HashSet<>();
+	    visibility = Visibility.PUBLIC;
+	}
+*/	
     /**
-	 * @return the methods
-	 */
-	public List<Method> getMethods() {
-		return methods;
+     * Constructs a Class {@link Node}, with the given properties;
+     * default value of {@link Visibility} is PUBLIC and default value of {@code isAbstract} is {@code false}.
+     * @param id
+     * @param name
+     * @param nodeType
+     */
+	public Node(String id, String name, NodeType nodeType) {
+		this.id = id;
+	    this.name = name;
+	    this.types = new HashSet<>();
+	    if (nodeType != null) {
+	    	types.add(nodeType);
+	    }
+    	this.attributes = new HashSet<>();
+    	this.operations = new HashSet<>();
+	    visibility = Visibility.PUBLIC;
+	}
+	
+    /**
+     * Constructs a Class {@link Node}, with the given id;
+     * default value of {@link Visibility} is PUBLIC and default value of {@code isAbstract} is {@code false}.
+     * @param id
+     */
+	public Node(String id) {
+	    this(id, null, null);
+	}
+	
+    /**
+     * Constructs a Class {@link Node}, with the id and name;
+     * default value of {@link Visibility} is PUBLIC and default value of {@code isAbstract} is {@code false}.
+     * @param id
+     * @param name
+     */
+	public Node(String id, String name) {
+	    this(id, name, null);
 	}
 
 	/**
-	 * @param methods the methods to set
+	 * @return the id.
 	 */
-	public void setMethods(List<Method> methods) {
-		this.methods = methods;
+	public String getId() {
+	    return id;
+	}
+	
+	/**
+	 * @return the name.
+	 */
+	public String getName() {
+	    return name;
+	}
+	
+	/**
+	 * Set the name.
+	 * @param name
+	 */
+	public void setName(String name) {
+	    this.name = name;
+	}
+	
+	/**
+	 * @return a Set of the types.
+	 */
+	public Set<NodeType> getTypes() {
+	    return types;
+	}
+	
+	/**
+	 * Add a {@link NodeType}.
+	 * @param name
+	 */
+	public void addType(NodeType type) {
+	    this.types.add(type);
+	}
+	
+	/**
+	 * @return a Set of the attributes.
+	 */
+	public Set<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	protected void addAttribute(Attribute attribute) {
+		this.attributes.add(attribute);
+	}
+	
+	/**
+	 * @return a Set of the Operations.
+	 */
+	public Set<Operation> getOperations() {
+		return operations;
+	}
+
+	protected void addOperation(Operation operation) {
+		this.operations.add(operation);
+	}
+	
+	/**
+	 * @return the visibility
+	 */
+	public Visibility getVisibility() {
+		return visibility;
 	}
 
 	/**
-	 * @param method the methods to add
+	 * @param visibility the visibility to set
 	 */
-
-	public void addMethod(Method method) {
-		this.methods.add(method);
+	public void setVisibility(Visibility visibility) {
+		this.visibility = visibility;
 	}
 
+	/**
+	 * Compares the signature of this Node with another Node comparing everything except the id. 
+	 * @param o
+	 * @return
+	 */
+	public boolean equalsSignature(Object node) {
+		if (this == node)
+			return true;
+		if (node == null)
+			return false;
+		if (getClass() != node.getClass())
+			return false;
+		Node other = (Node) node;
+		if (!equalsAttributesSignatures(attributes, other.attributes))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (!equalsOperationsSignatures(operations, other.operations))
+			return false;
+		if (types == null) {
+			if (other.types != null)
+				return false;
+		} else if (!types.equals(other.types))
+			return false;
+		if (visibility != other.visibility)
+			return false;
+		return true;
+	}
 
-	private Boolean isAbstract;
+	/**
+	 * @param sourceAttributes
+	 * @param targetAttributes
+	 * @return
+	 */
+	private boolean equalsAttributesSignatures(Set<Attribute> sourceAttributes, Set<Attribute> targetAttributes) {
+		if (sourceAttributes.size() == 0 && targetAttributes.size() == 0) {
+			return true;
+		}
+		if (sourceAttributes.size() != targetAttributes.size()) {
+			return false;
+		}
+		Boolean allTrue = true;
+		for (Attribute sourceAttribute : sourceAttributes) {
+			Boolean oneTrue = false;
+			for (Attribute targetAttribute : targetAttributes) {
+				if (sourceAttribute.equalsSignature(targetAttribute)) {
+					oneTrue = true;
+				}
+			}
+			allTrue = allTrue && oneTrue;
+		}
+		return allTrue;
+	}
 
-    /**
-     * Constructor with protected access because it is only accessible from within subclasses.
-     *
-     * @param id         a unique id of this {@link Node}
-     * @param name       the name of this {@link Node}
-     * @param type       the type of this {@link Node}: class, abstract class or interface
-     * @param visibility the visibility of this node (access modifiers: public, protected, package or private)
-     * @param attributes a list of attributes
-     * @param isAbstract {@code true} is this {@link Node} is an abstract class or interface, {@code false} if not, or
-     *                   {@code null} if undefined
-     */
-    protected Node(String id,
-                   String name,
-                   NodeType type,
-                   Visibility visibility,
-                   List<Attribute> attributes,
-                   Boolean isAbstract) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.isAbstract = isAbstract;
-        this.visibility = visibility;
-        if (attributes == null) {
-            this.attributes = new ArrayList<>();
-        } else {
-            this.attributes = attributes;
-        }
-        this.methods = new ArrayList<>();
-    }
+	
+	/**
+	 * @param sourceOperations
+	 * @param targetOperations
+	 * @return
+	 */
+	private boolean equalsOperationsSignatures(Set<Operation> sourceOperations, Set<Operation> targetOperations) {
+		if (sourceOperations.size() == 0 && targetOperations.size() == 0) {
+			return true;
+		}
+		if (sourceOperations.size() != targetOperations.size()) {
+			return false;
+		}
+		Boolean allTrue = true;
+		for (Operation sourceOperation : sourceOperations) {
+			Boolean oneTrue = false;
+			for (Operation targetOperation : targetOperations) {
+				if (sourceOperation.equalsSignature(targetOperation)) {
+					oneTrue = true;
+				}
+			}
+			allTrue = allTrue && oneTrue;
+		}
+		return allTrue;
+	}
 
-    /**
-     * Returns the unique id of this {@link Node}.
-     *
-     * @return a {@link String} representing this {@link Node}s unique id.
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Returns the name of this {@link Node}.
-     *
-     * @return a {@link String} representing this {@link Node}s name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of this {@link Node}.
-     *
-     * @param a {@link String} representing this {@link Node}s name.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns the {@link NodeType} of this {@link Node}: {@link NodeType#CLASS} or {@link NodeType#INTERFACE}.
-     *
-     * @return the {@link NodeType} of this {@link Node}: {@link NodeType#CLASS} or {@link NodeType#INTERFACE}.
-     */
-    public NodeType getType() {
-        return type;
-    }
-
-    /**
-     * Return the {@link Visibility} of this {@link Node}. The visibility depends on the access modifier of a class or
-     * interface. For example, an interface or a public class always returns: {@link Visibility#PUBLIC}.
-     *
-     * @return the {@link Visibility} of this {@link Node}.
-     */
-    public Visibility getVisibility() {
-        return visibility;
-    }
-
-    /*27/04/17*/
-
-    /**
-     * Sets the {@link Visibility} of this {@link Node}. The visibility depends on the access modifier of a class or
-     * interface. For example, an interface or a public class always returns: {@link Visibility#PUBLIC}.
-     *
-     * @param the {@link Visibility} of this {@link Node}.
-     */
-    public void setVisibility(Visibility visibility) {
-        this.visibility = visibility;
-    }
-
-    /**
-     * Returns all the attributes of this {@link Node}.
-     *
-     * @return a list of {@link Attribute}s
-     */
-    public List<Attribute> getAttributes() {
-        return attributes;
-    }
-
-    /**
-     * Gets the attributes with the specified name.
-     *
-     * @return the attributes of this {@link Node} which names equal the given name
-     */
-    public List<Attribute> getAttributesByName(String attributeName) {
-        return attributes.stream()
-                .filter(attribute -> attribute.getName().equals(attributeName))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Gets the attributes with the specified type.
-     *
-     * @return the attributes of the class which names equal the given type
-     */
-    public List<Attribute> getAttributesByType(Node attributeType) {
-        return attributes.stream()
-                .filter(attribute -> attribute.getType().equals(attributeType))
-                .collect(Collectors.toList());
-    }
-
-    public Boolean isAbstract() {
-        return isAbstract;
-    }
-    
-    public void setAbstract(Boolean value) {
-        isAbstract = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Node node = (Node) o;
-        return isAbstract == node.isAbstract &&
-                Objects.equals(id, node.id) &&
-                Objects.equals(name, node.name) &&
-                type == node.type &&
-                visibility == node.visibility &&
-                Objects.equals(attributes, node.attributes);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-/*    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, type, visibility, attributes, isAbstract);
-    }
-*/
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int compareTo(final Node other) {
-        if (other == null) {
-            return 1;
-        }
-        final int compareByName = compareByName(other);
-        if (compareByName == 0) {
-            return compareById(other);
-        }
-        return compareByName;
-    }
-
-    private int compareByName(final Node other) {
-        if (getName() == null && other.getName() != null) {
-            return -1;
-        }
-        if (getName() != null && other.getName() == null) {
-            return 1;
-        }
-        if (getName() == null && other.getName() == null) {
-            return 0;
-        }
-        return this.getName().compareTo(other.getName());
-    }
-
-    private int compareById(final Node other) {
-        if (getId() == null && other.getId() != null) {
-            return -1;
-        }
-        if (getId() != null && other.getId() == null) {
-            return 1;
-        }
-        if (getId() == null && other.getId() == null) {
-            return 0;
-        }
-        return this.getId().compareTo(other.getId());
-    }
-
-    /**
-     * An empty node, representing an undefined {@link Node}.
-     */
-    private static class EmptyNode extends Node {
-
-        /**
-         * Creates an empty {@link Node}.
-         */
-        EmptyNode() {
-            super("", "", null, null, null,null);
-        }
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		if (attributes == null) {
+			if (other.attributes != null)
+				return false;
+		} else if (!(attributes.hashCode() == other.attributes.hashCode()))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (operations == null) {
+			if (other.operations != null)
+				return false;
+		} else if (!(operations.hashCode() == other.operations.hashCode()))
+			return false;
+		if (types == null) {
+			if (other.types != null)
+				return false;
+		} else if (!types.equals(other.types))
+			return false;
+		if (visibility != other.visibility)
+			return false;
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((types == null) ? 0 : types.hashCode());
+		result = prime * result + ((visibility == null) ? 0 : visibility.hashCode());
+		return result;
+	}
 }

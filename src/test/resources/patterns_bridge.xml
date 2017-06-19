@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patterns>
+    <pattern name="Bridge" family="Bridge">
+        <nodes>
+            <node id="Abstraction">
+                <node.rule nodeType="ABSTRACT_CLASS"/>
+            </node>
+            <node id="Implementor">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="RefinedAbstraction">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteImplementor">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+        	<relation node1="Abstraction" node2="Implementor">
+        		<relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>        					   
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteImplementor" node2="Implementor">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="RefinedAbstraction" node2="Abstraction">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+</patterns>
+
