@@ -1,10 +1,13 @@
 package nl.ou.dpd.parsing.argoxmi;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.domain.relation.*;
-import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.node.Parameter;
+import nl.ou.dpd.domain.relation.Cardinality;
+import nl.ou.dpd.domain.relation.Relation;
+import nl.ou.dpd.domain.relation.RelationProperty;
+import nl.ou.dpd.domain.relation.RelationType;
 import nl.ou.dpd.parsing.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

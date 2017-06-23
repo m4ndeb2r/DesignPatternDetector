@@ -1,10 +1,7 @@
 package nl.ou.dpd.domain.matching;
 
-
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.domain.matching.PatternInspector;
-import nl.ou.dpd.domain.matching.Solution;
 import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
 import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.junit.Before;
@@ -14,73 +11,67 @@ import java.net.URL;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 /**
- * Test xml-files against the patterns.xsd.
+ * Test the matching process for a Observer pattern.
  *
  * @author Martin de Boer
+ * @author Peter Vansweevelt
  */
 public class ObserverMatchingTest {
 
-    private URL xsdUrl;
-    private URL patternsXmlUrl;
-    private URL sucXmiUrl;
+    private String patternsXmlFilename;
     private PatternsParser patternsParser;
     private ArgoUMLParser xmiParser;
 
     @Before
     public void initTests() {
-        xsdUrl = ObserverMatchingTest.class.getResource("/patterns.xsd");
         xmiParser = new ArgoUMLParser();
+        patternsXmlFilename = ObserverMatchingTest.class.getResource("/patterns_observer_adapted.xml").getFile();
+        patternsParser = new PatternsParser();
     }
-   
-   //test a pure Observer pattern, written conforming the pattern   
-   @Test
-   public void testMatchingObserverExample() {
 
-      patternsXmlUrl = ObserverMatchingTest.class.getResource("/patterns_observer_adapted.xml");
-      patternsParser = new PatternsParser();
-      sucXmiUrl = ObserverMatchingTest.class.getResource("/ObserverExample.xmi");
+    @Test
+    public void testMatchingObserverExample() {
+        // Parse the observer pattern xml ands create a DesignPattern
+        final DesignPattern designPattern = patternsParser.parse(patternsXmlFilename).get(0);
 
-	   // Parse the observer pattern xml ands create a DesignPattern
-       final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl, xsdUrl);
-       final DesignPattern designPattern = designPatterns.get(0);
+        // Create a system under consideration containing the observer pattern
+        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/ObserverExample.xmi");
+        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
-       // Create a system under consideration containing the observer pattern
-       final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
-       final Solution solution = new Solution(designPattern.getName());
+        // Inspect the system for patterns
+        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
-       // Inspect the system for patterns
-       final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-       //TODO
-       TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
-       //TODO Looks like not all nodes are compared
-       assertTrue(patternInspector.isomorphismExists());
-   }
-   
-   //test an observerpattern without explicit relations between subject-observer and concreteSubject-concreteObsrver
-   //and extra method override between concreteObserver and Observer
-   @Test
-   public void testMatchingObserverExampleWithExtras() {
+        // TODO Temporary method for visual feedback
+        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
 
-      patternsXmlUrl = ObserverMatchingTest.class.getResource("/patterns_observer_adapted.xml");
-      patternsParser = new PatternsParser();
-      sucXmiUrl = ObserverMatchingTest.class.getResource("/ObserverExampleWithExtras.xmi");
+        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
+        assertTrue(patternInspector.isomorphismExists());
+    }
 
-	   // Parse the observer pattern xml ands create a DesignPattern
-       final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl, xsdUrl);
-       final DesignPattern designPattern = designPatterns.get(0);
+    /**
+     * Test an observerpattern without explicit relations between subject-observer and concreteSubject-concreteObsrver
+     * and extra method override between concreteObserver and Observer.
+     */
+    @Test
+    public void testMatchingObserverExampleWithExtras() {
+        // Parse the observer pattern xml ands create a DesignPattern
+        final DesignPattern designPattern = patternsParser.parse(patternsXmlFilename).get(0);
 
-       // Create a system under consideration containing the observer pattern
-       final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
-       final Solution solution = new Solution(designPattern.getName());
+        // Create a system under consideration containing the observer pattern
+        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/ObserverExampleWithExtras.xmi");
+        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
-       // Inspect the system for patterns
-       final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-       //TODO
-       TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
-       //TODO extra relationproperty 'Overrides' prevents recognizing the pattern 
-       assertFalse(patternInspector.isomorphismExists());
-   }
+        // Inspect the system for patterns
+        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
+
+        // TODO Temporary method for visual feedback
+        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+
+        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
+        // TODO extra relationproperty 'Overrides' prevents recognizing the pattern
+        assertFalse(patternInspector.isomorphismExists());
+    }
 }

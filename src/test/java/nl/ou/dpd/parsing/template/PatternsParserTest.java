@@ -26,24 +26,23 @@ import static org.hamcrest.core.Is.is;
  */
 public class PatternsParserTest {
 
-    private URL xsdUrl;
     private PatternsParser parser;
 
     @Before
     public void initParser() {
-        xsdUrl = PatternsParserTest.class.getResource("/patterns.xsd");
         parser = new PatternsParser();
     }
 
     @Test
     public void testParsingSingletonXml() {
         final URL xmlUrl = PatternsParserTest.class.getResource("/patterns_singleton.xml");
-        final List<DesignPattern> designPatterns = parser.parse(xmlUrl, xsdUrl);
+        final List<DesignPattern> designPatterns = parser.parse(xmlUrl.getFile());
         assertThat(designPatterns.size(), is(1));
 
         // Check name of pattern
         final DesignPattern designPattern = designPatterns.get(0);
         assertThat(designPattern.getName(), is("Singleton"));
+        assertThat(designPattern.getFamily(), is("Singleton"));
 
         // Check number of edges and vertices
         assertThat(designPattern.edgeSet().size(), is(1));
@@ -75,12 +74,13 @@ public class PatternsParserTest {
     @Test
     public void testParsingObserverXml() {
         final URL xmlUrl = PatternsParserTest.class.getResource("/patterns_observer.xml");
-        final List<DesignPattern> designPatterns = parser.parse(xmlUrl, xsdUrl);
+        final List<DesignPattern> designPatterns = parser.parse(xmlUrl.getFile());
         assertThat(designPatterns.size(), is(1));
 
         // Check name of pattern
         final DesignPattern designPattern = designPatterns.get(0);
         assertThat(designPattern.getName(), is("Observer"));
+        assertThat(designPattern.getFamily(), is("Observer"));
 
         // Check number of edges and vertices
         assertThat(designPattern.edgeSet().size(), is(4));

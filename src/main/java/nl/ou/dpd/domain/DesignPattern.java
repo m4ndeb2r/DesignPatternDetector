@@ -9,16 +9,23 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 public class DesignPattern extends DefaultDirectedGraph<Node, Relation> {
 
     final private String name;
+    final private String family;
+
     private CompoundComparator<Relation> relationComparator;
     private CompoundComparator<Node> nodeComparator;
 
-    public DesignPattern(String name) {
+    public DesignPattern(String name, String family) {
         super(new RelationFactory());
         this.name = name;
+        this.family = family;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getFamily() {
+        return family;
     }
 
     public CompoundComparator<Relation> getRelationComparator() {

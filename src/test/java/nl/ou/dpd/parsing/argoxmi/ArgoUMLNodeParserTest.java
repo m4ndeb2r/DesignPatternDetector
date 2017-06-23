@@ -89,10 +89,10 @@ public class ArgoUMLNodeParserTest {
         Node adapter = nodes.get("-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A68");
         Node adaptee = nodes.get("-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A69");
         //check node names
-        assertEquals("Client",client.getName());
-        assertEquals("Target",target.getName());
-        assertEquals("Adapter",adapter.getName());
-        assertEquals("Adaptee",adaptee.getName());        
+        assertEquals("MyClient",client.getName());
+        assertEquals("MyTarget",target.getName());
+        assertEquals("MyAdapter",adapter.getName());
+        assertEquals("MyAdaptee",adaptee.getName());
         //node types
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertTrue(containsType(client, NodeType.CONCRETE_CLASS));

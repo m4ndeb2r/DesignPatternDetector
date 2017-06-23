@@ -1,6 +1,5 @@
 package nl.ou.dpd.parsing.argoxmi;
 
-
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.SystemUnderConsideration;
@@ -81,10 +80,10 @@ public class SystemRelationsExtractorTest {
         assertEquals(4, suc.edgeSet().size());
         assertEquals(4, suc.vertexSet().size());        
         //get nodes
-        Node client = findVerticesByName(suc, "Client").get(0);
-        Node target = findVerticesByName(suc, "Target").get(0);
-        Node adapter = findVerticesByName(suc, "Adapter").get(0);
-        Node adaptee = findVerticesByName(suc, "Adaptee").get(0);
+        Node client = findVerticesByName(suc, "MyClient").get(0);
+        Node target = findVerticesByName(suc, "MyTarget").get(0);
+        Node adapter = findVerticesByName(suc, "MyAdapter").get(0);
+        Node adaptee = findVerticesByName(suc, "MyAdaptee").get(0);
         //node types
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertTrue(containsType(client, NodeType.CONCRETE_CLASS));
