@@ -77,7 +77,8 @@ public class AdapterMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
         //TODO
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
-        //TODO Looks like there are problems with the bidirected association - not all nodes are compared
+        //TODO Looks like there are problems with the bidirected association.
+        //feedback jGrapht: (node:MyTarget, node:Target) does not fit in the current matching: edge from node:Target to node:Client is missing in the 2nd graph
         assertFalse(patternInspector.isomorphismExists());
     }
 

@@ -292,4 +292,10 @@ public class Node {
 		result = prime * result + ((visibility == null) ? 0 : visibility.hashCode());
 		return result;
 	}
+	
+	//TODO: overriden as debug helper
+	@Override
+	public String toString() {
+		return "node:" + name;
+	}
 }

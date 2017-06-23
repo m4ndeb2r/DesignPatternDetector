@@ -55,7 +55,6 @@ public class ObserverMatchingTest {
        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
        //TODO
        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
-       //TODO Looks like not all nodes are compared
        assertTrue(patternInspector.isomorphismExists());
    }
    

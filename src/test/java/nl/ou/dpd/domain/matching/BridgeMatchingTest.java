@@ -34,7 +34,9 @@ public class BridgeMatchingTest {
         xmiParser = new ArgoUMLParser();
     }
    
-    //test a Bridge written conforming the pattern 
+    //test a Bridge written conforming the pattern,
+    //with two concreteAbstractions and three ConcreteImplementations, from which two have an overriden method of Implementor
+    //(pattern not found)
    @Test
     public void testMatchingBridge() {
 
@@ -54,7 +56,6 @@ public class BridgeMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
         //TODO
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
-        //TODO Seems some nodepairs are not analysed 
-        assertFalse(patternInspector.isomorphismExists());
+        assertTrue(patternInspector.isomorphismExists());
     }
 }
