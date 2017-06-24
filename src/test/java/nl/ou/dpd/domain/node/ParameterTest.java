@@ -127,7 +127,6 @@ public class ParameterTest {
 		assertTrue(param1.equalsSignature(param1));
 		assertTrue(param1.equalsSignature(param2));
 		assertFalse(param1.equalsSignature(null));
-		assertFalse(param1.equalsSignature(node));
 		assertTrue(param1.equalsSignature(param3));
 		assertTrue(param1.equalsSignature(param4));
 		assertTrue(param4.equalsSignature(param1));

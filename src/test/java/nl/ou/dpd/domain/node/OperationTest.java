@@ -131,10 +131,10 @@ public class OperationTest {
 		assertEquals(op2, op1);
 		assertEquals(op2.hashCode(), op1.hashCode());
 		
-		Parameter param = new Parameter("param", op2);
+		new Parameter("param", op2);
 		assertNotEquals(op1, op2);
 		assertNotEquals(op2, op1);
-		Parameter param2 = new Parameter("param", op1);
+		new Parameter("param", op1);
 		assertEquals(op1, op2);
 	}		
 
@@ -149,9 +149,6 @@ public class OperationTest {
 		Node type3 = new Node("type3");
 		type3.setName("anotherType");
 
-		Node node1 = new Node("node");
-		Node node2 = new Node("node");
-
 		Operation op1 = new Operation("op1", parent);
 		Operation op2 = new Operation("op1", parent);
 		Operation op3 = new Operation("op2", parent);
@@ -165,7 +162,6 @@ public class OperationTest {
 		assertTrue(op1.equalsSignature(op1));
 		assertTrue(op1.equalsSignature(op2));
 		assertFalse(op1.equalsSignature(null));
-		assertFalse(op1.equalsSignature(node1));
 		assertTrue(op1.equalsSignature(op3));
 		assertTrue(op1.equalsSignature(op4));
 		assertTrue(op4.equalsSignature(op1));

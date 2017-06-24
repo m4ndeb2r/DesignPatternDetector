@@ -138,7 +138,6 @@ public class AttributeTest {
 		assertTrue(attr1.equalsSignature(attr1));
 		assertTrue(attr1.equalsSignature(attr2));
 		assertFalse(attr1.equalsSignature(null));
-		assertFalse(attr1.equalsSignature(type));
 		assertTrue(attr1.equalsSignature(attr3));
 		assertTrue(attr1.equalsSignature(attr4));
 		assertTrue(attr4.equalsSignature(attr1));

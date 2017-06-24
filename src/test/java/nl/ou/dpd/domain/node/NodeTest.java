@@ -87,7 +87,6 @@ public class NodeTest {
 		
 		Attribute attr1 = new Attribute("attr1", node1);
 		attr1.setName("attribute");
-		assertFalse(node1.equalsSignature(attr1));
 		Attribute attr2 = new Attribute("attr2", node2);
 		attr2.setName("attribute");
 		assertTrue(attr1.equalsSignature(attr2));
@@ -114,7 +113,6 @@ public class NodeTest {
 		node2.getAttributes().clear();
 		Operation op1 = new Operation("op1", node1);
 		op1.setName("operation");
-		assertFalse(node1.equalsSignature(op1));
 		Operation op2 = new Operation("op2", node2);
 		op2.setName("operation");
 		assertTrue(node1.equalsSignature(node2));
