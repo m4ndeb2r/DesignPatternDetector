@@ -2,6 +2,7 @@ package nl.ou.dpd.domain.node;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -10,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests the {@link Attribute} class.
@@ -25,7 +27,17 @@ public class AttributeTest {
 
     @Test
     public void testConstructor() {
+        // Captor to check the addAttribute method's input parameter
+        ArgumentCaptor<Attribute> captor = ArgumentCaptor.forClass(Attribute.class);
+
+        // Create an attribute
         final Attribute attr = new Attribute("attr1", parent1);
+
+        // Verify that the parentNode had the new attribute added to it
+        verify(parent1).addAttribute(captor.capture());
+        assertEquals(attr, captor.getValue());
+
+        // Verify the newly created attibute
         assertEquals("attr1", attr.getId());
         assertEquals(parent1, attr.getParentNode());
         assertNull(attr.getName());
