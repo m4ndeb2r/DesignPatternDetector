@@ -85,8 +85,7 @@ public class ArgoUMLNodeParser {
         nodes = new HashMap<>();
         XMLInputFactory factory = XMLInputFactory.newInstance();
 
-        try {
-            InputStream input = new FileInputStream(new File(filename));
+        try (InputStream input = new FileInputStream(new File(filename))) {
             XMLEventReader eventReader = factory.createXMLEventReader(input);
             handleEvents(eventReader);
         } catch (ParseException pe) {
@@ -283,7 +282,6 @@ public class ArgoUMLNodeParser {
             setParameterReturnType(event, idref);
         }
     }
-
 
     /**
      * Set the type of the {@link Parameter} of kind 'in' as a {@link Node}.
@@ -526,10 +524,11 @@ public class ArgoUMLNodeParser {
     private Parameter findParameterById(String id) {
         for (Node n : nodes.values()) {
             for (Operation op : n.getOperations()) {
-                for (Parameter param : op.getParameters())
+                for (Parameter param : op.getParameters()) {
                     if (id.equals(param.getId())) {
                         return param;
                     }
+                }
             }
         }
         return null;

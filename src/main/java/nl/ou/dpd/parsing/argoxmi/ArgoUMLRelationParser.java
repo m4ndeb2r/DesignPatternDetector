@@ -61,7 +61,6 @@ public class ArgoUMLRelationParser {
     private static final String DEPENDENCY = "Dependency";
     private static final String GENERALIZATION = "Generalization";
 
-
     private static final List<String> eventTags = Arrays.asList(new String[]{
             MODEL, CLASS, INTERFACE, ASSOCIATION, ASSOCIATION_END,
             MULTIPLICITY_RANGE, ABSTRACTION, DEPENDENCY, GENERALIZATION
@@ -89,8 +88,7 @@ public class ArgoUMLRelationParser {
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
 
-        try {
-            InputStream input = new FileInputStream(new File(filename));
+        try (InputStream input = new FileInputStream(new File(filename))) {
             XMLEventReader eventReader = factory.createXMLEventReader(input);
             handleEvents(eventReader);
         } catch (ParseException pe) {

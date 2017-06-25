@@ -85,19 +85,25 @@ public class PatternsParser {
         return designPatterns;
     }
 
-    private void doParse(String xmlFilename) throws FileNotFoundException, XMLStreamException {
-        final InputStream input = new FileInputStream(new File(xmlFilename));
-        final XMLInputFactory factory = XMLInputFactory.newInstance();
-        final XMLEventReader eventReader = factory.createXMLEventReader(input);
-        handleEvents(eventReader);
+    private void doParse(String xmlFilename) throws IOException, XMLStreamException {
+        try (final InputStream input = new FileInputStream(new File(xmlFilename))) {
+            final XMLInputFactory factory = XMLInputFactory.newInstance();
+            final XMLEventReader eventReader = factory.createXMLEventReader(input);
+            handleEvents(eventReader);
+        } catch(Exception ex) {
+            throw ex;
+        }
     }
 
     private void validate(String xmlFilename, URL xsdUrl) throws IOException, SAXException {
         final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         final Schema schema = schemaFactory.newSchema(xsdUrl);
         final Validator validator = schema.newValidator();
-        final InputStream stream = new FileInputStream(new File(xmlFilename));
-        validator.validate(new StreamSource(stream));
+        try(final InputStream stream = new FileInputStream(new File(xmlFilename))) {
+            validator.validate(new StreamSource(stream));
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     private void handleEvents(XMLEventReader eventReader) throws XMLStreamException {
