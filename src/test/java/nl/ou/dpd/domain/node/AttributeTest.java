@@ -1,88 +1,72 @@
 package nl.ou.dpd.domain.node;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 /**
- * @author Peter Vansweevelt
+ * Tests the {@link Attribute} class.
  *
+ * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AttributeTest {
-	
-	@Test
-	public void testConstructor() {
-		Node parent = new Node("parent");
-		Node type = new Node("type");
-		
-		Attribute attr = new Attribute("attr1", parent);
-		assertEquals("attr1", attr.getId());
-		assertEquals(parent, attr.getParentNode());
-		assertNull(attr.getName());
-		assertNull(attr.getType());
-		attr.setName("param1");
-		assertEquals("param1", attr.getName());
-		attr.setType(type);
-		assertEquals(type, attr.getType());
-		assertEquals(Visibility.PUBLIC, attr.getVisibility());
-		attr.setVisibility(Visibility.PRIVATE);
-		assertEquals(Visibility.PRIVATE, attr.getVisibility());		
 
-	}
+    @Mock
+    private Node parent1, type1, parent2, type2;
 
+    @Test
+    public void testConstructor() {
+        final Attribute attr = new Attribute("attr1", parent1);
+        assertEquals("attr1", attr.getId());
+        assertEquals(parent1, attr.getParentNode());
+        assertNull(attr.getName());
+        assertNull(attr.getType());
+        assertEquals(Visibility.PUBLIC, attr.getVisibility());
+    }
 
-	@Test
-	public void testSignatureEquals() {
-		Node parent = new Node("parent");
-		Node parent2 = new Node("parent2");
-		Node type = new Node("type");
-		Node type2 = new Node("type2");
+    @Test
+    public void testSignatureEquals() {
+        final String[] ids = new String[]{"attr1", "attr2"};
+        final String[] names = new String[]{null, "name1", "name2"};
+        final Node[] parents = new Node[]{null, parent1, parent2};
+        final Node[] types = new Node[]{null, type1, type2};
+        final Visibility[] visibilities = new Visibility[]{Visibility.PUBLIC, Visibility.PRIVATE};
 
-		Attribute attr1 = new Attribute("attr1", parent);
-		Attribute attr2 = new Attribute("attr1", parent);
-		Attribute attr3 = new Attribute("attr2", parent);
-		Attribute attr4 = new Attribute(null, parent);
-		Attribute attr5 = new Attribute("attr1", null);
-		Attribute attr6 = new Attribute(null, parent);
-		Attribute attr7 = new Attribute(null, null);
-		Attribute attr8 = new Attribute(null, null);
-		Attribute attr9 = new Attribute("attr1", parent2);
+        final Attribute attr1 = new Attribute(ids[1], parents[1]);
+        attr1.setName(names[1]);
+        attr1.setType(types[1]);
+        attr1.setVisibility(visibilities[1]);
 
-		assertTrue(attr1.equalsSignature(attr1));
-		assertTrue(attr1.equalsSignature(attr2));
-		assertFalse(attr1.equalsSignature(null));
-		assertTrue(attr1.equalsSignature(attr3));
-		assertTrue(attr1.equalsSignature(attr4));
-		assertTrue(attr4.equalsSignature(attr1));
-		assertTrue(attr1.equalsSignature(attr4));
-		assertTrue(attr5.equalsSignature(attr1));
-		assertTrue(attr4.equalsSignature(attr6));
-		assertTrue(attr7.equalsSignature(attr8));
-		assertTrue(attr1.equalsSignature(attr9));
+        assertFalse(attr1.equalsSignature(null));
 
-		attr1.setName("attr1");
-		attr2.setName("attr1");
-		assertTrue(attr1.equalsSignature(attr2));
-		attr2.setName("attr2");
-		assertFalse(attr1.equalsSignature(attr2));
-		attr2.setName(null);
-		assertFalse(attr1.equalsSignature(attr2));
-		assertFalse(attr2.equalsSignature(attr1));
-		
-		attr2.setName("attr1");
-		attr2.setType(type);
-		assertFalse(attr1.equalsSignature(attr2));
-		assertFalse(attr2.equalsSignature(attr1));
-		attr1.setType(type2);
-		assertFalse(attr1.equalsSignature(attr2));
-		attr1.setType(type);
-		assertTrue(attr2.equalsSignature(attr1));
-		
-		attr2.setVisibility(Visibility.PROTECTED);
-		assertTrue(attr1.equalsSignature(attr2));
-		assertTrue(attr2.equalsSignature(attr1));
+        for (String id : ids) {
+            for (String name : names) {
+                for (Node parent : parents) {
+                    for (Node type : types) {
+                        for (Visibility visibility : visibilities) {
+                            final Attribute attr2 = new Attribute(id, parent);
+                            attr2.setName(name);
+                            attr2.setType(type);
+                            attr2.setVisibility(visibility);
 
-		assertTrue(attr5.equalsSignature(attr9));
-	}
+                            // The equality of a signature is exclusively based on name and type
+                            final boolean nameEquals = attr1.getName().equals(attr2.getName());
+                            final boolean typeEquals = attr1.getType().equals(attr2.getType());
+                            assertThat(attr1.equalsSignature(attr2), is(nameEquals && typeEquals));
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }
