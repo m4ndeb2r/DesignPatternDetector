@@ -16,6 +16,8 @@ import java.util.Map;
  */
 public class Feedback {
 
+    private static final String MSG_NOT_ANALYSED = "Not analysed.";
+
     private final String patternName;
     private final Map<Node, Map<FeedbackType, List<String>>> nodeRelatedFeedbackMessages = new HashMap<>();
     private final Map<Relation, Map<FeedbackType, List<String>>> relationRelatedFeedbackMessages = new HashMap<>();
@@ -31,14 +33,13 @@ public class Feedback {
     public Feedback(String patternName, SystemUnderConsideration systemUnderConsideration) {
         this.patternName = patternName;
         systemUnderConsideration.edgeSet().forEach(relation -> {
-            addFeedbackMessage(relation, FeedbackType.NOT_ANALYSED, "Not analysed.");
-            addFeedbackMessage(systemUnderConsideration.getEdgeSource(relation), FeedbackType.NOT_ANALYSED, "Not analysed");
-            addFeedbackMessage(systemUnderConsideration.getEdgeTarget(relation), FeedbackType.NOT_ANALYSED, "Not analysed");
+            addFeedbackMessage(relation, FeedbackType.NOT_ANALYSED, MSG_NOT_ANALYSED);
+            addFeedbackMessage(systemUnderConsideration.getEdgeSource(relation), FeedbackType.NOT_ANALYSED, MSG_NOT_ANALYSED);
+            addFeedbackMessage(systemUnderConsideration.getEdgeTarget(relation), FeedbackType.NOT_ANALYSED, MSG_NOT_ANALYSED);
         });
     }
 
-
-	public List<String> getFeedbackMessages(Node node, FeedbackType type) {
+    public List<String> getFeedbackMessages(Node node, FeedbackType type) {
         if (nodeRelatedFeedbackMessages.get(node) == null) {
             return new ArrayList<>();
         }
