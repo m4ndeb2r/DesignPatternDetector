@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents an operation.
+ * Represents an operation of a {@link Node}.
  *
  * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
 public class Operation implements SignatureComparable<Operation> {
 
@@ -19,7 +20,6 @@ public class Operation implements SignatureComparable<Operation> {
 
     /**
      * TODO: Write JavaDoc, or leave it out.
-     * TODO: Can we get rid of parentNode?
      *
      * @param id
      * @param parentNode
@@ -36,7 +36,6 @@ public class Operation implements SignatureComparable<Operation> {
         }
     }
 
-    // TODO: can we get rid of this method/attribute?
     public Node getParentNode() {
         return parentNode;
     }
@@ -82,7 +81,7 @@ public class Operation implements SignatureComparable<Operation> {
         if (this.equals(other)) return true;
         if (!nullSafeEquals(name, other.name)) return false;
         if (!nullSafeEqualsReturnType(returnType, other.returnType)) return false;
-        if (!equalsSignatures(parameters, other.parameters)) return false;
+        if (!equalsParametersSignatures(parameters, other.parameters)) return false;
         return true;
     }
 
@@ -100,76 +99,11 @@ public class Operation implements SignatureComparable<Operation> {
         return a.equalsSignature(b);
     }
 
-    private boolean equalsSignatures(Set<Parameter> sourceParameters, Set<Parameter> targetParameters) {
-        if (sourceParameters.size() == 0 && targetParameters.size() == 0) {
-            return true;
-        }
+    private boolean equalsParametersSignatures(Set<Parameter> sourceParameters, Set<Parameter> targetParameters) {
         if (sourceParameters.size() != targetParameters.size()) {
             return false;
         }
-        Boolean allTrue = true;
-        for (Parameter sourceParameter : sourceParameters) {
-            Boolean oneTrue = false;
-            for (Parameter targetParameter : targetParameters) {
-                if (sourceParameter.equalsSignature(targetParameter)) {
-                    oneTrue = true;
-                }
-            }
-            allTrue = allTrue && oneTrue;
-        }
-        return allTrue;
-    }
-
-    // TODO: Hashcode and equals are not in sync!!!!
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
-        result = prime * result + ((visibility == null) ? 0 : visibility.hashCode());
-        return result;
-    }
-
-    // TODO: Hashcode and equals are not in sync!!!!
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Operation other = (Operation) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (parameters == null) {
-            if (other.parameters != null)
-                return false;
-        } else if (!(parameters.hashCode() == other.parameters.hashCode()))
-            return false;
-        if (parentNode == null) {
-            if (other.parentNode != null)
-                return false;
-        } else if (!parentNode.equals(other.parentNode))
-            return false;
-        if (returnType == null) {
-            if (other.returnType != null)
-                return false;
-        } else if (!returnType.equals(other.returnType))
-            return false;
-        if (visibility != other.visibility)
-            return false;
-        return true;
+        return sourceParameters.stream().allMatch(par1 -> targetParameters.stream().anyMatch(par2 -> par1.equalsSignature(par2)));
     }
 
 }
