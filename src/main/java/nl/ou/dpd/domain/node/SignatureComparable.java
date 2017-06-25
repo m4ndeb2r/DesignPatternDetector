@@ -6,7 +6,7 @@ package nl.ou.dpd.domain.node;
  *
  * @author Peter Vansweevelt
  */
-public interface SignatureComparable <T extends SignatureComparable>{
+public interface SignatureComparable<T extends SignatureComparable> {
 
     /**
      * Compare the "signature" of an element with the "signature" of another element. This equals method is less strict

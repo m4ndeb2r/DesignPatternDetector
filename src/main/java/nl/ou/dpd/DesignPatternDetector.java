@@ -25,10 +25,9 @@ import java.io.InputStream;
  */
 public final class DesignPatternDetector extends Application {
 
-    private static final Logger LOGGER = LogManager.getLogger(DesignPatternDetector.class);
-
-    private static final String APP_TITLE = "Design Pattern Detector";
     public static final String ICON_NAME = "/img/cube.png";
+    private static final Logger LOGGER = LogManager.getLogger(DesignPatternDetector.class);
+    private static final String APP_TITLE = "Design Pattern Detector";
 
     /**
      * The main method of the application. Starts a GUI.

@@ -3,10 +3,9 @@ package nl.ou.dpd.parsing.template;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
+import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
 import nl.ou.dpd.parsing.pattern.PatternsParser;
-import nl.ou.dpd.domain.relation.RelationProperty;
-
 import org.junit.Before;
 import org.junit.Test;
 

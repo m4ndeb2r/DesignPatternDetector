@@ -3,10 +3,6 @@ package nl.ou.dpd.domain.matching;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.node.NodeType;
-import nl.ou.dpd.domain.relation.Cardinality;
-import nl.ou.dpd.domain.relation.RelationProperty;
-import nl.ou.dpd.domain.relation.RelationType;
 
 import java.util.HashSet;
 import java.util.List;

@@ -13,21 +13,7 @@ public class RelationProperty {
     private Cardinality cardinalityLeft;
     private Cardinality cardinalityRight;
 
-    /**
-	 * @param cardinalityLeft the cardinalityLeft to set
-	 */
-	public void setCardinalityLeft(Cardinality cardinalityLeft) {
-		this.cardinalityLeft = cardinalityLeft;
-	}
-
-	/**
-	 * @param cardinalityRight the cardinalityRight to set
-	 */
-	public void setCardinalityRight(Cardinality cardinalityRight) {
-		this.cardinalityRight = cardinalityRight;
-	}
-
-	public RelationProperty(RelationType relationType, Cardinality cardinalityLeft, Cardinality cardinalityRight) {
+    public RelationProperty(RelationType relationType, Cardinality cardinalityLeft, Cardinality cardinalityRight) {
         this.relationType = relationType;
         this.cardinalityLeft = cardinalityLeft;
         this.cardinalityRight = cardinalityRight;
@@ -47,8 +33,16 @@ public class RelationProperty {
         return cardinalityLeft;
     }
 
+    public void setCardinalityLeft(Cardinality cardinalityLeft) {
+        this.cardinalityLeft = cardinalityLeft;
+    }
+
     public Cardinality getCardinalityRight() {
         return cardinalityRight;
+    }
+
+    public void setCardinalityRight(Cardinality cardinalityRight) {
+        this.cardinalityRight = cardinalityRight;
     }
 
     @Override

@@ -1,16 +1,15 @@
 package nl.ou.dpd.parsing.argoxmi;
 
-import nl.ou.dpd.domain.node.Attribute;
-import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.node.Attribute;
+import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.node.NodeType;
+import nl.ou.dpd.domain.node.Operation;
+import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
-import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.node.NodeType;
-import nl.ou.dpd.domain.node.Visibility;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -19,7 +18,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link SystemRelationsExtractor} class.
@@ -51,18 +52,16 @@ public class SystemRelationsExtractorTest {
     private static final String OBSERVER = "/Observer.xmi";
     private static final String PROXY = "/Proxy.xmi";
     private static final String STRATEGY = "/Strategy.xmi";
-
-    Map<String, Node> nodes;
-    Relation relation;
-    Node source;
-    Node target;
-    Attribute attr;
-    
     /**
      * Exception rule.
      */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    Map<String, Node> nodes;
+    Relation relation;
+    Node source;
+    Node target;
+    Attribute attr;
 
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLRelationParser}.
@@ -73,12 +72,12 @@ public class SystemRelationsExtractorTest {
 
         final ArgoUMLParser parser = new ArgoUMLParser();
         final SystemUnderConsideration suc = parser.parse(url);
-        
+
         assertEquals("Adapters", suc.getName());
 
         //number of vertices and edges there is an undirected association, which has two edges (client-target, target-client)
         assertEquals(4, suc.edgeSet().size());
-        assertEquals(4, suc.vertexSet().size());        
+        assertEquals(4, suc.vertexSet().size());
         //get nodes
         Node client = findVerticesByName(suc, "MyClient").get(0);
         Node target = findVerticesByName(suc, "MyTarget").get(0);
@@ -118,9 +117,9 @@ public class SystemRelationsExtractorTest {
         assertTrue(containsType(adapterAdaptee, RelationType.HAS_ATTRIBUTE_OF));
         //check cardinalities
         assertEquals(0, getCardinalityLeft(adapterAdaptee, RelationType.ASSOCIATES_WITH).getLower());
-        assertEquals(-1, getCardinalityLeft(adapterAdaptee,RelationType.ASSOCIATES_WITH).getUpper());
+        assertEquals(-1, getCardinalityLeft(adapterAdaptee, RelationType.ASSOCIATES_WITH).getUpper());
         assertEquals(1, getCardinalityRight(adapterAdaptee, RelationType.ASSOCIATES_WITH).getLower());
-        assertEquals(1, getCardinalityRight(adapterAdaptee,RelationType.ASSOCIATES_WITH).getUpper());
+        assertEquals(1, getCardinalityRight(adapterAdaptee, RelationType.ASSOCIATES_WITH).getUpper());
 
         //check attribute types        
 /*        assertEquals("adaptee", adapter.getAttributes().get(0).getName());
@@ -136,9 +135,10 @@ public class SystemRelationsExtractorTest {
         assertNotNull(method);
 	    method = findOperationByName(adaptee, "specificRequest");
 	    assertNotNull(method);
-*/	}
+*/
+    }
 
- 	/**
+    /**
      * Test the happy flow of parsing a more complicated XMI input file by the {@link ArgoUMLRelationParser}.
      */
     @Test
@@ -146,12 +146,12 @@ public class SystemRelationsExtractorTest {
         final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser();
         final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser();
         final String path = getPath(VALID_ADAPTERS);
-        
+
         nodes = nodeParser.parse(path);
         final SystemUnderConsideration suc = relationParser.parse(path, nodes);
         final SystemRelationsExtractor relationExtractor = new SystemRelationsExtractor(suc);
         relationExtractor.execute();
-         assertEquals("Adapters", suc.getName());
+        assertEquals("Adapters", suc.getName());
 
 //34       assertEquals(35, suc.edgeSet().size());
 //40        assertEquals(38, suc.vertexSet().size());        
@@ -169,17 +169,17 @@ public class SystemRelationsExtractorTest {
         assertEquals(1, suc.outgoingEdgesOf(target).size()); //edge to Double
         relation = suc.getEdge(source, target);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
         assertNotNull(findAttributeByName(source, "sp"));
         assertEquals(target, findAttributeByName(source, "sp").getType());
-        assertEquals(Visibility.PRIVATE, findAttributeByName(source, "sp").getVisibility());       
+        assertEquals(Visibility.PRIVATE, findAttributeByName(source, "sp").getVisibility());
         assertNotNull(findAttributeByName(target, "width"));
         assertEquals("Double", findAttributeByName(target, "width").getType().getName());
         assertEquals(Visibility.PUBLIC, findAttributeByName(target, "width").getVisibility());
-        assertNotNull(findOperationByName(source,"makeFit"));
-        assertNotNull(findOperationByName(target,"getWidth"));
-        assertNotNull(findOperationByName(target,"setWidth"));
+        assertNotNull(findOperationByName(source, "makeFit"));
+        assertNotNull(findOperationByName(target, "getWidth"));
+        assertNotNull(findOperationByName(target, "setWidth"));
 
         source = findVerticesByName(suc, "AdapterDemoSquarePeg").get(0);
         target = findVerticesByName(suc, "SquarePegAdapter").get(0);
@@ -193,13 +193,13 @@ public class SystemRelationsExtractorTest {
         assertEquals(2, suc.outgoingEdgesOf(source).size());
         relation = suc.getEdge(source, target);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
         attr = findAttributeByName(source, "spa");
-		assertNotNull(attr);
+        assertNotNull(attr);
         assertEquals(target, attr.getType());
         assertEquals(Visibility.PUBLIC, attr.getVisibility());
-       
+
         source = findVerticesByName(suc, "AdapterDemoSquarePeg").get(0);
         target = findVerticesByName(suc, "RoundHole").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
@@ -212,13 +212,13 @@ public class SystemRelationsExtractorTest {
         assertEquals(1, suc.outgoingEdgesOf(target).size()); //to datatype Integer
         relation = suc.getEdge(source, target);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
         attr = findAttributeByName(source, "rh");
-		assertNotNull(attr);
+        assertNotNull(attr);
         assertEquals(target, attr.getType());
         assertEquals(Visibility.PUBLIC, attr.getVisibility());
-        assertNotNull(findOperationByName(target,"getRadius"));
+        assertNotNull(findOperationByName(target, "getRadius"));
 
         source = findVerticesByName(suc, "SquarePegAdapter").get(0);
         target = findVerticesByName(suc, "RoundHole").get(0);
@@ -229,9 +229,9 @@ public class SystemRelationsExtractorTest {
         assertEquals(2, suc.outgoingEdgesOf(source).size());
         relation = suc.getEdge(source, target);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
-       
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
+
         source = findVerticesByName(suc, "SquarePeg").get(0);
         target = findVerticesByName(suc, "Double").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
@@ -244,14 +244,14 @@ public class SystemRelationsExtractorTest {
         assertEquals(0, suc.outgoingEdgesOf(target).size());
         relation = suc.getEdge(source, target);
         assertEquals(3, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.HAS_METHOD_RETURNTYPE));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_RETURNTYPE));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
         attr = findAttributeByName(source, "width");
- 		assertNotNull(attr);
+        assertNotNull(attr);
         assertEquals(target, attr.getType());
         assertEquals(Visibility.PUBLIC, attr.getVisibility());
-        
+
         source = findVerticesByName(suc, "DrawingEditor").get(0);
         target = findVerticesByName(suc, "Shape").get(0); //there is an interface Shape and an abstract Class Shape
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
@@ -266,9 +266,9 @@ public class SystemRelationsExtractorTest {
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertNotNull(findOperationByName(target,"BoundingBox"));
-        assertNotNull(findOperationByName(target,"CreateManipulator"));
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertNotNull(findOperationByName(target, "BoundingBox"));
+        assertNotNull(findOperationByName(target, "CreateManipulator"));
 
         source = findVerticesByName(suc, "Line").get(0);
         target = findVerticesByName(suc, "Shape").get(1); //there is an interface Shape and an abstract Class Shape
@@ -284,15 +284,15 @@ public class SystemRelationsExtractorTest {
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
 //1        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(relation,RelationType.OVERRIDES_METHOD_OF));
-        assertNotNull(findOperationByName(source,"BoundingBox"));
-        assertNotNull(findOperationByName(source,"CreateManipulator"));
-        
+        assertTrue(relationTypeExists(relation, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
+        assertNotNull(findOperationByName(source, "BoundingBox"));
+        assertNotNull(findOperationByName(source, "CreateManipulator"));
+
         assertTrue(containsType(findVerticesByName(suc, "Shape").get(0), NodeType.ABSTRACT_CLASS));
         relation = suc.getEdge(source, findVerticesByName(suc, "Shape").get(0)); //hidden inheritance with abstract class Shape
-        assertTrue(relationTypeExists(relation,RelationType.INHERITS_FROM));
-        
+        assertTrue(relationTypeExists(relation, RelationType.INHERITS_FROM));
+
         source = findVerticesByName(suc, "TextShape").get(0);
         target = findVerticesByName(suc, "Shape").get(0); //there is an interface Shape and an abstract Class Shape
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
@@ -304,18 +304,18 @@ public class SystemRelationsExtractorTest {
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.INHERITS_FROM));
-        assertNotNull(findOperationByName(source,"BoundingBox"));
-        assertNotNull(findOperationByName(source,"CreateManipulator"));
-        
+        assertTrue(relationTypeExists(relation, RelationType.INHERITS_FROM));
+        assertNotNull(findOperationByName(source, "BoundingBox"));
+        assertNotNull(findOperationByName(source, "CreateManipulator"));
+
         assertTrue(containsType(findVerticesByName(suc, "Shape").get(1), NodeType.INTERFACE));
         relation = suc.getEdge(source, findVerticesByName(suc, "Shape").get(1)); //hidden dependency with interface Shape
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(relation,RelationType.OVERRIDES_METHOD_OF));
-  
+        assertTrue(relationTypeExists(relation, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
+
         source = findVerticesByName(suc, "TextShape").get(0);
-        target = findVerticesByName(suc, "TextView").get(0); 
+        target = findVerticesByName(suc, "TextView").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
         assertEquals(1, suc.edgesOf(target).size());
@@ -324,16 +324,16 @@ public class SystemRelationsExtractorTest {
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
         attr = findAttributeByName(source, "textview");
- 		assertNotNull(attr);
+        assertNotNull(attr);
         assertEquals(target, attr.getType());
         assertEquals(Visibility.PRIVATE, attr.getVisibility());
-        assertNotNull(findOperationByName(target,"getExtent"));
-         
+        assertNotNull(findOperationByName(target, "getExtent"));
+
         source = findVerticesByName(suc, "textShapeDemo").get(0);
-        target = findVerticesByName(suc, "TextShape").get(0); 
+        target = findVerticesByName(suc, "TextShape").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
         assertEquals(1, suc.edgesOf(source).size());
@@ -342,29 +342,29 @@ public class SystemRelationsExtractorTest {
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
         attr = findAttributeByName(source, "textShape");
- 		assertNotNull(attr);
+        assertNotNull(attr);
         assertEquals(target, attr.getType());
         assertEquals(Visibility.PUBLIC, attr.getVisibility());
 
         source = findVerticesByName(suc, "TextShape").get(0);
-        target = findVerticesByName(suc, "Point").get(1); 
+        target = findVerticesByName(suc, "Point").get(1);
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.HAS_METHOD_RETURNTYPE));
- 
+        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_RETURNTYPE));
+
         source = findVerticesByName(suc, "Shape").get(0);
-        target = findVerticesByName(suc, "Point").get(1); 
+        target = findVerticesByName(suc, "Point").get(1);
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
 
         source = findVerticesByName(suc, "MediaPlayerAdapterDemo").get(0);
-        target = findVerticesByName(suc, "AudioPlayer").get(0); 
+        target = findVerticesByName(suc, "AudioPlayer").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
         assertEquals(1, suc.edgesOf(source).size());
@@ -376,11 +376,11 @@ public class SystemRelationsExtractorTest {
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
-        
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
+
         source = findVerticesByName(suc, "AudioPlayer").get(0);
-        target = findVerticesByName(suc, "MediaPlayer").get(0); 
+        target = findVerticesByName(suc, "MediaPlayer").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertEquals(3, suc.edgesOf(target).size());
@@ -389,60 +389,60 @@ public class SystemRelationsExtractorTest {
         relation = suc.getEdge(source, target);
         assertNotNull(relation);
         assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.IMPLEMENTS));
- 
+        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
+
         source = findVerticesByName(suc, "MediaAdapter").get(0);
-        target = findVerticesByName(suc, "MediaPlayer").get(0); 
+        target = findVerticesByName(suc, "MediaPlayer").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertEquals(4, suc.edgesOf(source).size());
         assertEquals(1, suc.incomingEdgesOf(source).size());
         assertEquals(3, suc.outgoingEdgesOf(source).size());
         relation = suc.getEdge(source, target);
-        assertNotNull(relation);       
+        assertNotNull(relation);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(relation,RelationType.OVERRIDES_METHOD_OF));
+        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
 
         source = findVerticesByName(suc, "MediaAdapter").get(0);
-        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0); 
+        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertEquals(4, suc.edgesOf(target).size());
         assertEquals(3, suc.incomingEdgesOf(target).size());
         assertEquals(1, suc.outgoingEdgesOf(target).size());
         relation = suc.getEdge(source, target);
-        assertNotNull(relation);       
+        assertNotNull(relation);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation,RelationType.HAS_ATTRIBUTE_OF));
+        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
 
         source = findVerticesByName(suc, "Mp4Player").get(0);
-        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0); 
+        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertEquals(2, suc.edgesOf(source).size());
         assertEquals(0, suc.incomingEdgesOf(source).size());
         assertEquals(2, suc.outgoingEdgesOf(source).size());
         relation = suc.getEdge(source, target);
-        assertNotNull(relation);       
+        assertNotNull(relation);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(relation,RelationType.OVERRIDES_METHOD_OF));
-        
+        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
+
         source = findVerticesByName(suc, "VlcPlayer").get(0);
-        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0); 
+        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0);
         assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertEquals(2, suc.edgesOf(source).size());
         assertEquals(0, suc.incomingEdgesOf(source).size());
         assertEquals(2, suc.outgoingEdgesOf(source).size());
         relation = suc.getEdge(source, target);
-        assertNotNull(relation);       
+        assertNotNull(relation);
         assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(relation,RelationType.OVERRIDES_METHOD_OF));
-}
+        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
+    }
 
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLRelationParser}.
@@ -459,7 +459,7 @@ public class SystemRelationsExtractorTest {
 
         //number of vertices and edges there is an undirected association, which has two edges (client-target, target-client)
         assertEquals(18, suc.edgeSet().size());
-        assertEquals(13, suc.vertexSet().size());        
+        assertEquals(13, suc.vertexSet().size());
         //get nodes
         Node AbstrFact = findVerticesByName(suc, "AbstrFact").get(0);
         Node User = findVerticesByName(suc, "User").get(0);
@@ -475,19 +475,19 @@ public class SystemRelationsExtractorTest {
         Node Prod1C = findVerticesByName(suc, "Prod1C").get(0);
         Node Prod2C = findVerticesByName(suc, "Prod2C").get(0);
         //node types
-        assertTrue(containsType(AbstrFact,NodeType.INTERFACE));
-        assertTrue(containsType(User,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(ConcFact2,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(ConcFact1,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(AbstrProdA,NodeType.INTERFACE));
-        assertTrue(containsType(Prod2A,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(Prod1A,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(AbstrProdB,NodeType.INTERFACE));
-        assertTrue(containsType(AbstrProdC,NodeType.INTERFACE));
-        assertTrue(containsType(Prod1B,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(Prod2B,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(Prod1C,NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(Prod2C,NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(AbstrFact, NodeType.INTERFACE));
+        assertTrue(containsType(User, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(ConcFact2, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(ConcFact1, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(AbstrProdA, NodeType.INTERFACE));
+        assertTrue(containsType(Prod2A, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(Prod1A, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(AbstrProdB, NodeType.INTERFACE));
+        assertTrue(containsType(AbstrProdC, NodeType.INTERFACE));
+        assertTrue(containsType(Prod1B, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(Prod2B, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(Prod1C, NodeType.CONCRETE_CLASS));
+        assertTrue(containsType(Prod2C, NodeType.CONCRETE_CLASS));
         //number of edges per Node
         assertEquals(3, suc.edgesOf(AbstrFact).size());
         assertEquals(4, suc.edgesOf(User).size());
@@ -516,7 +516,7 @@ public class SystemRelationsExtractorTest {
         assertEquals(1, suc.incomingEdgesOf(Prod2B).size());
         assertEquals(1, suc.incomingEdgesOf(Prod1C).size());
         assertEquals(1, suc.incomingEdgesOf(Prod2C).size());
-       //number of outgoing edges per Node
+        //number of outgoing edges per Node
         assertEquals(0, suc.outgoingEdgesOf(AbstrFact).size());
         assertEquals(4, suc.outgoingEdgesOf(User).size());
         assertEquals(4, suc.outgoingEdgesOf(ConcFact2).size());
@@ -550,24 +550,24 @@ public class SystemRelationsExtractorTest {
         Relation prod2BAbstrProdB = suc.getEdge(Prod2B, AbstrProdB);
         Relation prod2CAbstrProdC = suc.getEdge(Prod2C, AbstrProdC);
         //check relationtypes
-        assertTrue(relationTypeExists(userAbstrFact,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(userAbstrProdA,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(userAbstrProdB,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(userAbstrProdC,RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(concFact1AbstrFact,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(concFact2AbstrFact,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(concFact1Prod1A,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(concFact1Prod1B,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(concFact1Prod1C,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(concFact2Prod2A,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(concFact2Prod2B,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(concFact2Prod2C,RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(prod1AAbstrProdA,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(prod1BAbstrProdB,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(prod1CAbstrProdC,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(prod2AAbstrProdA,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(prod2BAbstrProdB,RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(prod2CAbstrProdC,RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(userAbstrFact, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(userAbstrProdA, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(userAbstrProdB, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(userAbstrProdC, RelationType.ASSOCIATES_WITH));
+        assertTrue(relationTypeExists(concFact1AbstrFact, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(concFact2AbstrFact, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(concFact1Prod1A, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(concFact1Prod1B, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(concFact1Prod1C, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(concFact2Prod2A, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(concFact2Prod2B, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(concFact2Prod2C, RelationType.DEPENDS_ON));
+        assertTrue(relationTypeExists(prod1AAbstrProdA, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(prod1BAbstrProdB, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(prod1CAbstrProdC, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(prod2AAbstrProdA, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(prod2BAbstrProdB, RelationType.IMPLEMENTS));
+        assertTrue(relationTypeExists(prod2CAbstrProdC, RelationType.IMPLEMENTS));
     }
 
     /**
@@ -1455,6 +1455,7 @@ public class SystemRelationsExtractorTest {
         assertEquals(NodeType.INTERFACE, edge.getRightNode().getType());
     }
 */
+
     /**
      * @param adaptertemplatesXml
      * @return
@@ -1462,78 +1463,78 @@ public class SystemRelationsExtractorTest {
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
     }
-    
+
     private ArrayList<Node> findVerticesByName(SystemUnderConsideration suc, String name) {
-    	ArrayList<Node> vertices = new ArrayList<>();
-    	for (Node n : suc.vertexSet()) {
-    		if (n.getName().equals(name)) {
-    			vertices.add(n);
-    		}
-    	}
-    	return vertices;
+        ArrayList<Node> vertices = new ArrayList<>();
+        for (Node n : suc.vertexSet()) {
+            if (n.getName().equals(name)) {
+                vertices.add(n);
+            }
+        }
+        return vertices;
     }
 
     private Boolean relationTypeExists(Relation relation, RelationType relationType) {
-    	for (RelationProperty rp : relation.getRelationProperties()) {
-    		if (rp.getRelationType().equals(relationType)) {
-    			return true;
-    		}
-    	}
+        for (RelationProperty rp : relation.getRelationProperties()) {
+            if (rp.getRelationType().equals(relationType)) {
+                return true;
+            }
+        }
         return false;
     }
- 
+
     private Attribute findAttributeByName(Node node, String name) {
-    	for (Attribute attr : node.getAttributes()) {
-    		if (attr.getName().equals(name)) {
-    			return attr;
-    		}
-    	}
+        for (Attribute attr : node.getAttributes()) {
+            if (attr.getName().equals(name)) {
+                return attr;
+            }
+        }
         return null;
     }
- 
+
     private Operation findOperationByName(Node node, String name) {
-    	for (Operation op : node.getOperations()) {
-    		if (op.getName().equals(name)) {
-    			return op;
-    		}
-    	}
+        for (Operation op : node.getOperations()) {
+            if (op.getName().equals(name)) {
+                return op;
+            }
+        }
         return null;
     }
- 
+
     private Cardinality getCardinalityLeft(Relation relation, RelationType relationtype) {
-       	for (RelationProperty rp : relation.getRelationProperties()) {
-    		if (relationtype.equals(rp.getRelationType())) {
-    			return rp.getCardinalityLeft();
-    		}
-    	}
+        for (RelationProperty rp : relation.getRelationProperties()) {
+            if (relationtype.equals(rp.getRelationType())) {
+                return rp.getCardinalityLeft();
+            }
+        }
         return null;
     }
 
     private Cardinality getCardinalityRight(Relation relation, RelationType relationtype) {
-       	for (RelationProperty rp : relation.getRelationProperties()) {
-    		if (relationtype.equals(rp.getRelationType())) {
-    			return rp.getCardinalityRight();
-    		}
-    	}
+        for (RelationProperty rp : relation.getRelationProperties()) {
+            if (relationtype.equals(rp.getRelationType())) {
+                return rp.getCardinalityRight();
+            }
+        }
         return null;
     }
 
     private Boolean containsType(Node node, NodeType nodetype) {
-    	for (NodeType nt : node.getTypes()) {
-    		if (nodetype.equals(nt)) {
-    			return true;
-    		}
-    	}
-    	return false;
+        for (NodeType nt : node.getTypes()) {
+            if (nodetype.equals(nt)) {
+                return true;
+            }
+        }
+        return false;
     }
-    
+
     private Boolean containsType(Relation relation, RelationType relationtype) {
-    	for (RelationProperty rp : relation.getRelationProperties()) {
-    		if (relationtype.equals(rp.getRelationType())) {
-    			return true;
-    		}
-    	}
-    	return false;
+        for (RelationProperty rp : relation.getRelationProperties()) {
+            if (relationtype.equals(rp.getRelationType())) {
+                return true;
+            }
+        }
+        return false;
     }
 /* 
     private Attribute findAttributeByName(Node node, String name) {
@@ -1546,14 +1547,14 @@ public class SystemRelationsExtractorTest {
     }
 */    
 /*    private Method findOperationByName(Node node, String name) {
-    	for (Method m : node.getMethods()) {
+        for (Method m : node.getMethods()) {
     		if (m.getName().equals(name)) {
     			return m;
     		}
     	}
     	return null;
     }
-*/ 
+*/
 
 
 }

@@ -103,9 +103,9 @@ public class CardinalityTest {
     @Test
     public void testIsWithinLimitsOf() {
         assertIsWithinLimitsOf("1", "1", true);
-        assertIsWithinLimitsOf("1","1", true);
-        assertIsWithinLimitsOf("1","*", true);
-        assertIsWithinLimitsOf("1..9999","*", true);
+        assertIsWithinLimitsOf("1", "1", true);
+        assertIsWithinLimitsOf("1", "*", true);
+        assertIsWithinLimitsOf("1..9999", "*", true);
         assertIsWithinLimitsOf("1..*", "*", true);
         assertIsWithinLimitsOf("*", "*", true);
         assertIsWithinLimitsOf("*", "0..*", true);

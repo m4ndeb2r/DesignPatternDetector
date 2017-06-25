@@ -41,29 +41,6 @@ public class Cardinality {
         this.upper = upper;
     }
 
-    public int getLower() {
-        return lower;
-    }
-
-    public int getUpper() {
-        return upper;
-    }
-
-    /**
-     * Determines whether this {@link Cardinality} is within the limits of the specified {@code other}
-     * {@link Cardinality}.
-     *
-     * @param other the {@link Cardinality} that must have lower and upper values that lie outside the lower and upper
-     *              values of this {@link Cardinality} in order for this method to return {@code true}.
-     * @return {@code true} if the lower and upper values of this {@link Cardinality} lie inside the lower and upper
-     * values of the {@code other} {@link Cardinality}.
-     */
-    public boolean isWithinLimitsOf(Cardinality other) {
-        final boolean lowerOk = this.lower >= other.lower;
-        final boolean upperOk = (this.upper <= other.upper && !(this.upper == UNLIMITED)) || other.upper == UNLIMITED;
-        return lowerOk && upperOk;
-    }
-
     /**
      * Returns a {@link Cardinality} instance based on a string. The allowed values for {@code value} are "m..n",
      * "m, n" and "p" where m represents the lower and n the upper value of the cardinality, and where p represents
@@ -111,6 +88,29 @@ public class Cardinality {
             }
         }
         return values;
+    }
+
+    public int getLower() {
+        return lower;
+    }
+
+    public int getUpper() {
+        return upper;
+    }
+
+    /**
+     * Determines whether this {@link Cardinality} is within the limits of the specified {@code other}
+     * {@link Cardinality}.
+     *
+     * @param other the {@link Cardinality} that must have lower and upper values that lie outside the lower and upper
+     *              values of this {@link Cardinality} in order for this method to return {@code true}.
+     * @return {@code true} if the lower and upper values of this {@link Cardinality} lie inside the lower and upper
+     * values of the {@code other} {@link Cardinality}.
+     */
+    public boolean isWithinLimitsOf(Cardinality other) {
+        final boolean lowerOk = this.lower >= other.lower;
+        final boolean upperOk = (this.upper <= other.upper && !(this.upper == UNLIMITED)) || other.upper == UNLIMITED;
+        return lowerOk && upperOk;
     }
 
     @Override

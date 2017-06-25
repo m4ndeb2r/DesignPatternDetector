@@ -202,7 +202,7 @@ public class ProjectViewController extends Controller implements Observer {
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
 
         // Sort by patterns by name
-        treeRoot.getChildren().sort(Comparator.comparing(t->t.getValue()));
+        treeRoot.getChildren().sort(Comparator.comparing(t -> t.getValue()));
 
         // Enable clear button
         clearButton.setDisable(false);
