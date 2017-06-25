@@ -1,106 +1,135 @@
 package nl.ou.dpd.domain.node;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
- * @author Peter Vansweevelt
+ * Tests the {@link Operation} class.
  *
+ * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
+@RunWith(MockitoJUnitRunner.class)
 public class OperationTest {
-	
-	@Test
-	public void testConstructor() {
-		Node node = new Node("node");
-		Node type = new Node("type");
-		Operation op = new Operation("operation", node);
-		
-		assertEquals("operation", op.getId());
-		assertEquals(node, op.getParentNode());
-		assertNull(op.getName());
-		assertNull(op.getReturnType());
-		op.setName("op1");
-		assertEquals("op1", op.getName());
-		op.setReturnType(type);
-		assertEquals(type, op.getReturnType());	
-		assertEquals(Visibility.PUBLIC, op.getVisibility());	
-		op.setVisibility(Visibility.PRIVATE);
-		assertEquals(Visibility.PRIVATE, op.getVisibility());
-		
-		new Parameter("param1", op);
-		new Parameter("param2", op);
-		assertEquals(2,  op.getParameters().size());		
-	}
 
-	@Test
-	public void testSignatureEquals() {
-		Node parent = new Node("parent");
-		Node parent2 = new Node("parent2");
-		Node type = new Node("type");
-		type.setName("type");
-		Node type2 = new Node("type2");
-		type2.setName("type");
-		Node type3 = new Node("type3");
-		type3.setName("anotherType");
+    @Mock
+    private Node parent1, parent2;
+    @Mock
+    private Node returnType1, returnType2;
+    @Mock
+    private Parameter param1, param2, param3, param4;
 
-		Operation op1 = new Operation("op1", parent);
-		Operation op2 = new Operation("op1", parent);
-		Operation op3 = new Operation("op2", parent);
-		Operation op4 = new Operation(null, parent);
-		Operation op5 = new Operation("op1", null);
-		Operation op6 = new Operation(null, parent);
-		Operation op7 = new Operation(null, null);
-		Operation op8 = new Operation(null, null);
-		Operation op9 = new Operation("op1", parent2);
+    @Test
+    public void testConstructor() {
+        // A captor to check the parent's addOperation method's input parameter
+        ArgumentCaptor<Operation> captor = ArgumentCaptor.forClass(Operation.class);
 
-		assertTrue(op1.equalsSignature(op1));
-		assertTrue(op1.equalsSignature(op2));
-		assertFalse(op1.equalsSignature(null));
-		assertTrue(op1.equalsSignature(op3));
-		assertTrue(op1.equalsSignature(op4));
-		assertTrue(op4.equalsSignature(op1));
-		assertTrue(op1.equalsSignature(op4));
-		assertTrue(op5.equalsSignature(op1));
-		assertTrue(op4.equalsSignature(op6));
-		assertTrue(op7.equalsSignature(op8));
-		assertTrue(op1.equalsSignature(op9));
+        // Create an operation
+        final Operation operation = new Operation("operation", parent1);
 
-		op1.setName("op1");
-		op2.setName("op1");
-		assertTrue(op1.equalsSignature(op2));
-		op2.setName("op2");
-		assertFalse(op1.equalsSignature(op2));
-		op2.setName(null);
-		assertFalse(op1.equalsSignature(op2));
-		assertFalse(op2.equalsSignature(op1));
-		
-		op2.setName("op1");
-		op2.setReturnType(type);
-		assertFalse(op1.equalsSignature(op2));
-		assertFalse(op2.equalsSignature(op1));
-		op1.setReturnType(type2);
-		assertTrue(op1.equalsSignature(op2)); //returntype is evaluated on equalsSignature too!
-		op1.setReturnType(type3);
-		assertFalse(op2.equalsSignature(op1));
-		
-		op1.setReturnType(type);
-		Parameter param = new Parameter("param", op1);
-		param.setName("param");
-		assertFalse(op1.equalsSignature(op2));
-		assertFalse(op2.equalsSignature(op1));
-		Parameter param2 = new Parameter("param", op2);
-		param2.setName("param");
-		assertTrue(op1.equalsSignature(op2)); //parameters are evaluated on equalsSignature
-		Parameter param3 = new Parameter("param1", op2);
-		param3.setName("param3");
-		assertFalse(op1.equalsSignature(op2));
-		Parameter param4 = new Parameter("param4", op1);
-		param4.setName("param4");
-		assertFalse(op1.equalsSignature(op2));
-		param4.setName("param3");
-		assertTrue(op1.equalsSignature(op2));
-		
-	}
+        // Verify that the parentNode had the new attribute added to it
+        verify(parent1).addOperation(captor.capture());
+        assertEquals(operation, captor.getValue());
+
+        // Verify the newly created attibute
+        assertEquals("operation", operation.getId());
+        assertEquals(parent1, operation.getParentNode());
+        assertNull(operation.getName());
+        assertNull(operation.getReturnType());
+        assertEquals(Visibility.PUBLIC, operation.getVisibility());
+    }
+
+    @Test
+    public void testSignatureEqualsDefault() {
+        final Operation op1 = new Operation("id1", parent1);
+        final Operation op2 = new Operation("id2", parent2);
+
+        assertFalse(op1.equalsSignature(null));
+        assertTrue(op1.equalsSignature(op1));
+        assertTrue(op1.equalsSignature(op2));
+        assertTrue(op2.equalsSignature(op1));
+    }
+
+    @Test
+    public void testSignatureEqualsByName() {
+        final Operation op1 = new Operation("id1", parent1);
+        final Operation op2 = new Operation("id2", parent2);
+
+        op1.setName("name");
+        assertFalse(op1.equalsSignature(op2));
+        assertFalse(op2.equalsSignature(op1));
+
+        op2.setName("name");
+        assertTrue(op1.equalsSignature(op2));
+        assertTrue(op2.equalsSignature(op1));
+    }
+
+    @Test
+    public void testSignatureEqualsByReturnType() {
+        final Operation op1 = new Operation("id1", parent1);
+        final Operation op2 = new Operation("id2", parent2);
+        assertByReturnType(op1, op2, true);
+        assertByReturnType(op1, op2, false);
+    }
+
+    private void assertByReturnType(Operation op1, Operation op2, boolean expectation) {
+        when(returnType1.equalsSignature(returnType2)).thenReturn(expectation);
+        when(returnType2.equalsSignature(returnType1)).thenReturn(expectation);
+        op1.setReturnType(returnType1);
+        op2.setReturnType(returnType2);
+        assertThat(op1.equalsSignature(op2), is(expectation));
+        assertThat(op2.equalsSignature(op1), is(expectation));
+    }
+
+    @Test
+    public void testSignatureEqualsByParamType() {
+        final Operation op1 = new Operation("id1", parent1);
+        final Operation op2 = new Operation("id2", parent2);
+        assertByParamType(op1, op2, true);
+        assertByParamType(op1, op2, false);
+    }
+
+    private void assertByParamType(Operation op1, Operation op2, boolean expectation) {
+        when(param1.equalsSignature(param2)).thenReturn(expectation);
+        when(param2.equalsSignature(param1)).thenReturn(expectation);
+        when(param3.equalsSignature(param4)).thenReturn(expectation);
+        when(param4.equalsSignature(param3)).thenReturn(expectation);
+
+        op1.addParameter(param1);
+        op1.addParameter(param3);
+        op2.addParameter(param2);
+        op2.addParameter(param4);
+
+        assertThat(op1.equalsSignature(op2), is(expectation));
+        assertThat(op2.equalsSignature(op1), is(expectation));
+    }
+
+    @Test
+    public void testSignatureEqualsByParamCount() {
+        final Operation op1 = new Operation("id1", parent1);
+        final Operation op2 = new Operation("id2", parent2);
+
+        when(param1.equalsSignature(param2)).thenReturn(true);
+        when(param2.equalsSignature(param1)).thenReturn(true);
+
+        op1.addParameter(param1);
+        assertFalse(op1.equalsSignature(op2));
+        op2.addParameter(param2);
+        assertTrue(op1.equalsSignature(op2));
+        op1.addParameter(param2);
+        assertFalse(op1.equalsSignature(op2));
+    }
 
 }

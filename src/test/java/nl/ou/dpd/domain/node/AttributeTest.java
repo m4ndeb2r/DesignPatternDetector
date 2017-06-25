@@ -27,7 +27,7 @@ public class AttributeTest {
 
     @Test
     public void testConstructor() {
-        // Captor to check the addAttribute method's input parameter
+        // A captor to check the parentNode's addAttribute method's input parameter
         ArgumentCaptor<Attribute> captor = ArgumentCaptor.forClass(Attribute.class);
 
         // Create an attribute

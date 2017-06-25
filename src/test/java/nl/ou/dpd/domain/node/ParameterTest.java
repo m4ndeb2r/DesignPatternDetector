@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -30,7 +29,7 @@ public class ParameterTest {
 
     @Test
     public void testConstructor() {
-        // Captor to check the addParameter method's input parameter
+        // A captor to check the operation's addParameter method's input parameter
         ArgumentCaptor<Parameter> captor = ArgumentCaptor.forClass(Parameter.class);
 
         // Create a parameter
