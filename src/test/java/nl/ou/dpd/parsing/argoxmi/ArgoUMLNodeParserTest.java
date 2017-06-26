@@ -1,10 +1,10 @@
 package nl.ou.dpd.parsing.argoxmi;
 
 import nl.ou.dpd.domain.node.Attribute;
-import nl.ou.dpd.domain.node.Operation;
-import nl.ou.dpd.domain.node.Parameter;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
+import nl.ou.dpd.domain.node.Operation;
+import nl.ou.dpd.domain.node.Parameter;
 import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.parsing.ParseException;
 import org.junit.Rule;
@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link SystemRelationsExtractor} class.
@@ -33,7 +36,7 @@ public class ArgoUMLNodeParserTest {
     private static final String VALID_ADAPTERS = "/adapters.xmi";
     // A test file containing invalid XML.
     private static final String INVALID_XML = "/invalid.xml";
-    
+
     /**
      * Exception rule.
      */
@@ -80,7 +83,7 @@ public class ArgoUMLNodeParserTest {
         final String path = getPath(VALID_ADAPTER);
 
         final Map<String, Node> nodes = parser.parse(path);
- 
+
         //number of nodes
         assertEquals(4, nodes.size());
         //get nodes
@@ -89,30 +92,30 @@ public class ArgoUMLNodeParserTest {
         Node adapter = nodes.get("-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A68");
         Node adaptee = nodes.get("-84-26-0-54--4e0797b8:15aafaeadb5:-8000:0000000000000A69");
         //check node names
-        assertEquals("Client",client.getName());
-        assertEquals("Target",target.getName());
-        assertEquals("Adapter",adapter.getName());
-        assertEquals("Adaptee",adaptee.getName());        
+        assertEquals("MyClient", client.getName());
+        assertEquals("MyTarget", target.getName());
+        assertEquals("MyAdapter", adapter.getName());
+        assertEquals("MyAdaptee", adaptee.getName());
         //node types
         assertTrue(containsType(target, NodeType.INTERFACE));
         assertTrue(containsType(client, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(adapter, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(adaptee, NodeType.CONCRETE_CLASS));
         //check attribute size
-        assertEquals(1,client.getAttributes().size());
-        assertEquals(1,adapter.getAttributes().size());
+        assertEquals(1, client.getAttributes().size());
+        assertEquals(1, adapter.getAttributes().size());
         //check attribute type        
-        assertEquals(target,findAttributeByName(client, "adapter").getType());
-        assertEquals(adaptee,findAttributeByName(adapter, "adaptee").getType());
+        assertEquals(target, findAttributeByName(client, "adapter").getType());
+        assertEquals(adaptee, findAttributeByName(adapter, "adaptee").getType());
         //check attribute visibility
-        assertEquals(Visibility.PRIVATE,findAttributeByName(adapter, "adaptee").getVisibility());
+        assertEquals(Visibility.PRIVATE, findAttributeByName(adapter, "adaptee").getVisibility());
         //check method return type
         assertNull(findOperationByName(client, "adapter.request").getReturnType());
         assertNull(findOperationByName(adapter, "request").getReturnType());
         assertNull(findOperationByName(adaptee, "specificRequest").getReturnType());
-	}
+    }
 
- 	/**
+    /**
      * Test the happy flow of parsing a more complicated XMI input file by the {@link ArgoUMLToSystemGraphParser}.
      */
     @Test
@@ -122,10 +125,10 @@ public class ArgoUMLNodeParserTest {
 
         final Map<String, Node> nodes = parser.parse(path);
 
-        assertEquals(40, nodes.size()); 
+        assertEquals(40, nodes.size());
         //SquarePeg
         Node node = nodes.get("-84-26-0-54--1e9ba376:15aad4320f4:-8000:0000000000000866");
-        assertEquals("SquarePeg",node.getName());
+        assertEquals("SquarePeg", node.getName());
         assertTrue(containsType(node, NodeType.CONCRETE_CLASS));
         assertEquals(1, node.getAttributes().size());
         assertNotNull(findAttributeByName(node, "width"));
@@ -137,7 +140,7 @@ public class ArgoUMLNodeParserTest {
         assertEquals("Double", findParameterByName(node, "w").getType().getName());
         //SquarePegAdapter
         node = nodes.get("-84-26-0-54--1e9ba376:15aad4320f4:-8000:0000000000000878");
-        assertEquals("SquarePegAdapter",node.getName());
+        assertEquals("SquarePegAdapter", node.getName());
         assertTrue(containsType(node, NodeType.CONCRETE_CLASS));
         assertEquals(1, node.getAttributes().size());
         assertNotNull(findAttributeByName(node, "sp"));
@@ -148,7 +151,7 @@ public class ArgoUMLNodeParserTest {
         assertEquals("RoundHole", findParameterByName(node, "rh").getType().getName());
         //RoundHole
         node = nodes.get("-84-26-0-54--1e9ba376:15aad4320f4:-8000:0000000000000872");
-        assertEquals("RoundHole",node.getName());
+        assertEquals("RoundHole", node.getName());
         assertTrue(containsType(node, NodeType.CONCRETE_CLASS));
         assertEquals(1, node.getAttributes().size());
         assertNotNull(findAttributeByName(node, "radius"));
@@ -158,53 +161,52 @@ public class ArgoUMLNodeParserTest {
         assertEquals("Integer", findOperationByName(node, "getRadius").getReturnType().getName());
         assertEquals(0, findOperationByName(node, "getRadius").getParameters().size());
     }
-        
-   /**
+
+    /**
      * @param adaptertemplatesXml
      * @return
      */
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
     }
-        
+
     private Boolean containsType(Node node, NodeType nodetype) {
-    	for (NodeType nt : node.getTypes()) {
-    		if (nodetype.equals(nt)) {
-    			return true;
-    		}
-    	}
-    	return false;
+        for (NodeType nt : node.getTypes()) {
+            if (nodetype.equals(nt)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
     private Attribute findAttributeByName(Node node, String name) {
-    	for (Attribute a : node.getAttributes()) {
-    		if (a.getName().equals(name)) {
-    			return a;
-    		}
-    	}
-		return null;
+        for (Attribute a : node.getAttributes()) {
+            if (a.getName().equals(name)) {
+                return a;
+            }
+        }
+        return null;
     }
-    
+
     private Operation findOperationByName(Node node, String name) {
-    	for (Operation op : node.getOperations()) {
-    		if (op.getName().equals(name)) {
-    			return op;
-    		}
-    	}
-		return null;
+        for (Operation op : node.getOperations()) {
+            if (op.getName().equals(name)) {
+                return op;
+            }
+        }
+        return null;
     }
 
     private Parameter findParameterByName(Node node, String name) {
-    	for (Operation op : node.getOperations()) {
-    		for (Parameter p : op.getParameters()) 
-    			if (p.getName().equals(name)) {
-    				return p;
-    			}
-    	}
-		return null;
+        for (Operation op : node.getOperations()) {
+            for (Parameter p : op.getParameters())
+                if (p.getName().equals(name)) {
+                    return p;
+                }
+        }
+        return null;
     }
- 
 
 
 }

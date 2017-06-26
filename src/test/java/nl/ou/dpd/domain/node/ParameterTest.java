@@ -1,159 +1,79 @@
 package nl.ou.dpd.domain.node;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
 /**
- * @author Peter Vansweevelt
+ * Tests the {@link Parameter} class.
  *
+ * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ParameterTest {
-	
-	@Test
-	public void testConstructor() {
-		Node node = new Node("node");
-		Node type = new Node("type");
-		Operation op = new Operation("operation", node);
-		
-		Parameter param = new Parameter("param1", op);
-		assertEquals("param1", param.getId());
-		assertEquals(op, param.getParentOperation());
-		assertNull(param.getName());
-		assertNull(param.getType());
-		param.setName("param1");
-		assertEquals("param1", param.getName());
-		param.setType(type);
-		assertEquals(type, param.getType());		
-	}
 
-	@Test
-	public void testHashcode() {
-		Node node = new Node("node");
-		Node type = new Node("type");
-		Operation op = new Operation("operation", node);
-		
-		Parameter param1 = new Parameter("param1", op);
-		Parameter param2 = new Parameter("param1", op);
-		Parameter param3 = new Parameter("param2", op);
-		assertEquals(param1.hashCode(), param2.hashCode());
-		assertNotEquals(param1.hashCode(), param3.hashCode());
-		Parameter param4 = new Parameter("param1", op);
-		assertEquals(param1.hashCode(), param4.hashCode());
-		param4.setName("param4");
-		assertNotEquals(param1.hashCode(), param4.hashCode());
-		Parameter param5 = new Parameter("param1", op);
-		assertEquals(param1.hashCode(), param5.hashCode());
-		param5.setType(type);
-		assertNotEquals(param1.hashCode(), param5.hashCode());
-	}
-	
-	@Test
-	public void testEquals() {
-		Node node = new Node("node");
-		Node type = new Node("type");
-		Node type2 = new Node("type2");
-		Operation op = new Operation("operation", node);
-		Operation op2 = new Operation("operation", node);
+    @Mock
+    private Node type1, type2;
+    @Mock
+    private Operation operation1, operation2;
 
-		Parameter param1 = new Parameter("param1", op);
-		Parameter param2 = new Parameter("param1", op);
-		Parameter param3 = new Parameter("param2", op);
-		Parameter param4 = new Parameter(null, op);
-		Parameter param5 = new Parameter("param1", null);
-		Parameter param6 = new Parameter(null, op);
-		Parameter param7 = new Parameter(null, null);
-		Parameter param8 = new Parameter(null, null);
-		Parameter param9 = new Parameter("param1", op2);
+    @Test
+    public void testConstructor() {
+        // A captor to check the operation's addParameter method's input parameter
+        ArgumentCaptor<Parameter> captor = ArgumentCaptor.forClass(Parameter.class);
 
-		assertEquals(param1, param1);
-		assertEquals(param1.hashCode(), param1.hashCode());
-		assertEquals(param1, param2);
-		assertEquals(param1.hashCode(), param2.hashCode());
-		assertNotEquals(param1, null);
-		assertNotEquals(param1, node);
-		assertNotEquals(param1, param3);
-		assertNotEquals(param1, param4);
-		assertNotEquals(param4, param1);
-		assertNotEquals(param1, param5);
-		assertNotEquals(param5, param1);
-		assertEquals(param1.hashCode(), param5.hashCode()); //!
-		assertEquals(param4, param6);
-		assertEquals(param4.hashCode(), param6.hashCode());
-		assertEquals(param7, param8);
-		assertEquals(param7.hashCode(), param8.hashCode());
-		assertNotEquals(param1, param9);
-		assertEquals(param1.hashCode(), param9.hashCode()); //!
+        // Create a parameter
+        final Parameter param = new Parameter("param1", operation1);
 
-		param1.setName("param1");
-		param2.setName("param1");
-		assertEquals(param1, param2);
-		assertEquals(param1.hashCode(), param2.hashCode());
-		param2.setName("param2");
-		assertNotEquals(param1, param2);
-		param2.setName(null);
-		assertNotEquals(param1, param2);
-		assertNotEquals(param2, param1);
-		
-		param2.setName("param1");
-		param2.setType(type);
-		assertNotEquals(param1, param2);
-		assertNotEquals(param2, param1);
-		param1.setType(type2);
-		assertNotEquals(param1, param2);
-		param1.setType(type);
-		assertEquals(param2, param1);
-		assertEquals(param2.hashCode(), param1.hashCode());
-	}		
+        // Verify that the operation had the new parameter added to it
+        verify(operation1).addParameter(captor.capture());
+        assertEquals(param, captor.getValue());
 
-	@Test
-	public void testSignatureEquals() {
-		Node node = new Node("node");
-		Node type = new Node("type");
-		Node type2 = new Node("type2");
-		Operation op = new Operation("operation", node);
-		Operation op2 = new Operation("operation", node);
+        // Verify the newly created parameter
+        assertEquals("param1", param.getId());
+        assertEquals(operation1, param.getParentOperation());
+        assertNull(param.getName());
+        assertNull(param.getType());
+    }
 
-		Parameter param1 = new Parameter("param1", op);
-		Parameter param2 = new Parameter("param1", op);
-		Parameter param3 = new Parameter("param2", op);
-		Parameter param4 = new Parameter(null, op);
-		Parameter param5 = new Parameter("param1", null);
-		Parameter param6 = new Parameter(null, op);
-		Parameter param7 = new Parameter(null, null);
-		Parameter param8 = new Parameter(null, null);
-		Parameter param9 = new Parameter("param1", op2);
+    @Test
+    public void testSignatureEquals() {
+        final String[] ids = new String[]{"par1", "par2"};
+        final String[] names = new String[]{null, "name1", "name2"};
+        final Operation[] operations = new Operation[]{null, operation1, operation2};
+        final Node[] types = new Node[]{null, type1, type2};
 
-		assertTrue(param1.equalsSignature(param1));
-		assertTrue(param1.equalsSignature(param2));
-		assertFalse(param1.equalsSignature(null));
-		assertFalse(param1.equalsSignature(node));
-		assertTrue(param1.equalsSignature(param3));
-		assertTrue(param1.equalsSignature(param4));
-		assertTrue(param4.equalsSignature(param1));
-		assertTrue(param1.equalsSignature(param4));
-		assertTrue(param5.equalsSignature(param1));
-		assertTrue(param4.equalsSignature(param6));
-		assertTrue(param7.equalsSignature(param8));
-		assertTrue(param1.equalsSignature(param9));
+        final Parameter par1 = new Parameter(ids[1], operations[1]);
+        par1.setName(names[1]);
+        par1.setType(types[1]);
 
-		param1.setName("param1");
-		param2.setName("param1");
-		assertTrue(param1.equalsSignature(param2));
-		param2.setName("param2");
-		assertFalse(param1.equalsSignature(param2));
-		param2.setName(null);
-		assertFalse(param1.equalsSignature(param2));
-		assertFalse(param2.equalsSignature(param1));
-		
-		param2.setName("param1");
-		param2.setType(type);
-		assertFalse(param1.equalsSignature(param2));
-		assertFalse(param2.equalsSignature(param1));
-		param1.setType(type2);
-		assertFalse(param1.equalsSignature(param2));
-		param1.setType(type);
-		assertTrue(param2.equalsSignature(param1));
-	}
+        assertFalse(par1.equalsSignature(null));
 
+        for (String id : ids) {
+            for (String name : names) {
+                for (Operation operation : operations) {
+                    for (Node type : types) {
+                        final Parameter par2 = new Parameter(id, operation);
+                        par2.setName(name);
+                        par2.setType(type);
+
+                        // The equality of a signature is exclusively based on name and type
+                        final boolean nameEquals = par1.getName().equals(par2.getName());
+                        final boolean typeEquals = par1.getType().equals(par2.getType());
+                        assertThat(par1.equalsSignature(par2), is(nameEquals && typeEquals));
+                    }
+                }
+            }
+        }
+    }
 }

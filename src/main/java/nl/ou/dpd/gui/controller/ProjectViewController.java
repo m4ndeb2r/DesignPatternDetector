@@ -15,9 +15,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import nl.ou.dpd.domain.MatchedNodes;
-import nl.ou.dpd.domain.Solution;
-import nl.ou.dpd.domain.edge.Edge;
+import nl.ou.dpd.domain.matching.Solution;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +29,6 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 /**
  * A {@link Controller} for the project view of the application.
@@ -159,8 +156,7 @@ public class ProjectViewController extends Controller implements Observer {
     @FXML
     protected void analyse() {
         final int maxMissingEdges = Integer.parseInt(this.maxMissingEdgesComboBox.getValue());
-
-        Map<String, List<Solution>> result = null;
+        Map<String, List<Solution>> result;
         try {
             result = getModel().analyse(maxMissingEdges);
         } catch (Exception e) {
@@ -178,7 +174,6 @@ public class ProjectViewController extends Controller implements Observer {
 
         final TreeItem<String> treeRoot = new TreeItem<>("Design patterns");
         treeRoot.setExpanded(true);
-
         feedbackTreeView.setRoot(treeRoot);
 
         feedbackMap = new HashMap<>();
@@ -207,7 +202,7 @@ public class ProjectViewController extends Controller implements Observer {
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
 
         // Sort by patterns by name
-        treeRoot.getChildren().sort(Comparator.comparing(t->t.getValue()));
+        treeRoot.getChildren().sort(Comparator.comparing(t -> t.getValue()));
 
         // Enable clear button
         clearButton.setDisable(false);
@@ -254,54 +249,25 @@ public class ProjectViewController extends Controller implements Observer {
             feedbackPatternNameLabel.setText("Feedback information for " + key);
             feedbackPatternLabel.setText("Design pattern: " + solution.getDesignPatternName());
 
-            // Show matching classes
+            // Show matching nodes
             feedbackMatchedClassesLabel.setText("Matched classes");
             clearGridPane(feedbackMatchedClassesGridPane);
             int row = 0;
-            final MatchedNodes matchedNodes = solution.getMatchedNodes();
+            final List<String[]> matchingNodeNames = solution.getMatchingNodeNames();
             feedbackMatchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
             feedbackMatchedClassesGridPane.add(new Text("System class"), 2, row);
             feedbackMatchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: 600");
             feedbackMatchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: 600");
-            for (nl.ou.dpd.domain.node.Node node : matchedNodes.getBoundSystemNodesSorted()) {
+            for (String[] nodeNames : matchingNodeNames) {
                 int col = 0;
                 row++;
-                feedbackMatchedClassesGridPane.add(new Text(matchedNodes.get(node).getName()), col++, row);
+                feedbackMatchedClassesGridPane.add(new Text(nodeNames[0]), col++, row);
                 feedbackMatchedClassesGridPane.add(new Text("-->"), col++, row);
-                feedbackMatchedClassesGridPane.add(new Text(node.getName()), col, row);
+                feedbackMatchedClassesGridPane.add(new Text(nodeNames[1]), col, row);
             }
 
-            // Show superfluous edges
-            feedbackSuperfluousEdgesLabel.setText("Relations that do not belong to the design pattern");
-            clearGridPane(feedbackSuperfluousEdgesGridPane);
-            row = 0;
-            final Set<Edge> superfluousEdges = solution.getSuperfluousEdges();
-            if (superfluousEdges.size() == 0) {
-                feedbackSuperfluousEdgesGridPane.add(new Text("No superfluous relations found."), 0, row);
-            }
-            for (Edge edge : superfluousEdges) {
-                int col = 0;
-                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getLeftNode().getName()), col++, row);
-                feedbackSuperfluousEdgesGridPane.add(new Text("-->"), col++, row);
-                feedbackSuperfluousEdgesGridPane.add(new Text(edge.getRightNode().getName()), col, row);
-                row++;
-            }
+            // TODO: feedback here....
 
-            // Show missing edges
-            feedbackMissingEdgesLabel.setText("Missing relations");
-            clearGridPane(feedbackMissingEdgesGridPane);
-            row = 0;
-            final Set<Edge> missingEdges = solution.getMissingEdges();
-            if (missingEdges.size() == 0) {
-                feedbackMissingEdgesGridPane.add(new Text("No missing relations found."), 0, row);
-            }
-            for (Edge edge : missingEdges) {
-                int col = 0;
-                feedbackMissingEdgesGridPane.add(new Text(edge.getLeftNode().getName()), col++, row);
-                feedbackMissingEdgesGridPane.add(new Text("-->"), col++, row);
-                feedbackMissingEdgesGridPane.add(new Text(edge.getRightNode().getName()), col, row);
-                row++;
-            }
         }
     }
 

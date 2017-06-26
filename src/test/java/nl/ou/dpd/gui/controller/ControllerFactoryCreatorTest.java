@@ -23,17 +23,15 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class ControllerFactoryCreatorTest {
 
-    @Mock
-    private Model model;
-
-    @Mock
-    private Model otherModel;
-
     /**
      * Exception rule.
      */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    @Mock
+    private Model model;
+    @Mock
+    private Model otherModel;
 
     /**
      * Tests the {@link ControllerFactoryCreator#createControllerFactory(Model)} method for the
@@ -53,7 +51,7 @@ public class ControllerFactoryCreatorTest {
         // Any factory always returns the same controller instance when the same model is provided
         final Callback<Class<?>, Object> controllerFactory2 = ControllerFactoryCreator.createControllerFactory(model);
         final Controller controller3 = (ProjectViewController) controllerFactory2.call(ProjectViewController.class);
-        assertTrue(controller2== controller3);
+        assertTrue(controller2 == controller3);
 
         // A factory for another model always returns a new controller instance (because a different model is provided)
         final Callback<Class<?>, Object> controllerFactory3 = ControllerFactoryCreator.createControllerFactory(otherModel);
@@ -81,7 +79,7 @@ public class ControllerFactoryCreatorTest {
         // Any factory always returns the same controller instance when the same model is provided
         final Callback<Class<?>, Object> controllerFactory2 = ControllerFactoryCreator.createControllerFactory(model);
         final Controller controller3 = (MainViewController) controllerFactory2.call(MainViewController.class);
-        assertTrue(controller2== controller3);
+        assertTrue(controller2 == controller3);
 
         // A factory for another model always returns a new controller instance (because a different model is provided)
         final Callback<Class<?>, Object> controllerFactory3 = ControllerFactoryCreator.createControllerFactory(otherModel);
@@ -109,7 +107,7 @@ public class ControllerFactoryCreatorTest {
         // Any factory always returns the same controller instance when the same model is provided
         final Callback<Class<?>, Object> controllerFactory2 = ControllerFactoryCreator.createControllerFactory(model);
         final Controller controller3 = (MenuController) controllerFactory2.call(MenuController.class);
-        assertTrue(controller2== controller3);
+        assertTrue(controller2 == controller3);
 
         // A factory for another model always returns a new controller instance (because a different model is provided)
         final Callback<Class<?>, Object> controllerFactory3 = ControllerFactoryCreator.createControllerFactory(otherModel);

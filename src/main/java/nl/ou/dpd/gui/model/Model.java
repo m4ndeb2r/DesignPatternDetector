@@ -5,13 +5,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import nl.ou.dpd.parsing.argoxmi.ArgoXMIParser;
-import nl.ou.dpd.parsing.pattern.TemplatesParser;
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.domain.Matcher;
-import nl.ou.dpd.domain.Solution;
 import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.matching.PatternInspector;
+import nl.ou.dpd.domain.matching.Solution;
 import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
+import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
+import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,8 +35,7 @@ public class Model extends Observable {
 
     private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
     private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
-    private static final String _DPD__PROJ_MRU = "";
-    private final Matcher matcher;
+
     private final RetentionFileChooser fileChooser;
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
@@ -50,7 +49,6 @@ public class Model extends Observable {
     public Model(Scene scene) {
         this.scene = scene;
         this.controllerFactory = ControllerFactoryCreator.createControllerFactory(this);
-        this.matcher = new Matcher();
         this.fileChooser = new RetentionFileChooser(new FileChooser());
     }
 
@@ -193,7 +191,9 @@ public class Model extends Observable {
      */
     public void chooseSystemFile() {
         File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
-        if (chosenFile != null && !chosenFile.equals(openProject.getSystemUnderConsiderationPath())) {
+        if (chosenFile != null
+                && chosenFile.getPath() != null
+                && !chosenFile.getPath().equals(openProject.getSystemUnderConsiderationPath())) {
             openProject.setSystemUnderConsiderationPath(chosenFile.getPath());
             setChangedAndNotifyObservers();
         }
@@ -205,7 +205,9 @@ public class Model extends Observable {
      */
     public void chooseTemplateFile() {
         File chosenFile = this.chooseFile("XML template files (*.xml)", "*.xml");
-        if (chosenFile != null && !chosenFile.equals(openProject.getDesignPatternTemplatePath())) {
+        if (chosenFile != null
+                && chosenFile.getPath() != null
+                && !chosenFile.getPath().equals(openProject.getDesignPatternTemplatePath())) {
             openProject.setDesignPatternTemplatePath(chosenFile.getPath());
             setChangedAndNotifyObservers();
         }
@@ -221,12 +223,13 @@ public class Model extends Observable {
      */
     public Map<String, List<Solution>> analyse(int maxMissingEdges) {
         // Parse the input files
-        final SystemUnderConsideration system = new ArgoXMIParser().parse(openProject.getSystemUnderConsiderationPath());
-        final List<DesignPattern> designPatterns = new TemplatesParser().parse(openProject.getDesignPatternTemplatePath());
+        final SystemUnderConsideration system = new ArgoUMLParser().parse(openProject.getSystemUnderConsiderationPath());
+        final List<DesignPattern> designPatterns = new PatternsParser().parse(openProject.getDesignPatternTemplatePath());
 
         Map<String, List<Solution>> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {
-            List<Solution> solutions = matcher.match(pattern, system, maxMissingEdges).getSolutions();
+            final PatternInspector patternInspector = new PatternInspector(system, pattern);
+            List<Solution> solutions = patternInspector.getSolutions();
             if (solutions.size() > 0) {
                 assembledMatchResults.put(pattern.getName(), solutions);
             }

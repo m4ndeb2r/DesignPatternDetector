@@ -1,16 +1,15 @@
 package nl.ou.dpd.parsing.pattern;
 
+import nl.ou.dpd.domain.DesignPattern;
+import nl.ou.dpd.domain.matching.NodeComparatorFactory;
+import nl.ou.dpd.domain.matching.RelationComparatorFactory;
+import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.relation.Cardinality;
-import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.matching.NodeComparatorFactory;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
-import nl.ou.dpd.domain.matching.RelationComparatorFactory;
 import nl.ou.dpd.domain.relation.RelationType;
 import nl.ou.dpd.parsing.ParseException;
-
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -45,7 +44,7 @@ import java.util.Set;
 public class PatternsParser {
 
     private static final String NAME = "name";
-    private static final String TYPE = "type";
+    private static final String FAMILY = "family";
     private static final String ID = "id";
     private static final String NODE_1 = "node1";
     private static final String NODE_2 = "node2";
@@ -66,34 +65,45 @@ public class PatternsParser {
     private Node node;
     private Relation relation;
 
-    public List<DesignPattern> parse(URL xmlUrl, URL xsdUrl) {
+    public List<DesignPattern> parse(String xmlFilename) {
+        final URL xsdUrl = PatternsParser.class.getResource("/patterns.xsd");
+        return parse(xmlFilename, xsdUrl);
+    }
+
+    private List<DesignPattern> parse(String xmlFilename, URL xsdUrl) {
         try {
-            validate(xmlUrl.getFile(), xsdUrl);
-            parse(xmlUrl.getFile());
+            validate(xmlFilename, xsdUrl);
+            doParse(xmlFilename);
         } catch (ParseException pe) {
             // We don't need to repackage a ParseException in a ParseException.
             // Rethrow ParseExceptions directly
             throw pe;
         } catch (Exception e) {
-            final String message = String.format("The pattern template file '%s' could not be parsed.", xmlUrl);
+            final String message = String.format("The pattern template file '%s' could not be parsed.", xmlFilename);
             error(message, e);
         }
         return designPatterns;
     }
 
-    private void parse(String xmlFilename) throws FileNotFoundException, XMLStreamException {
-        final InputStream input = new FileInputStream(new File(xmlFilename));
-        final XMLInputFactory factory = XMLInputFactory.newInstance();
-        final XMLEventReader eventReader = factory.createXMLEventReader(input);
-        handleEvents(eventReader);
+    private void doParse(String xmlFilename) throws IOException, XMLStreamException {
+        try (final InputStream input = new FileInputStream(new File(xmlFilename))) {
+            final XMLInputFactory factory = XMLInputFactory.newInstance();
+            final XMLEventReader eventReader = factory.createXMLEventReader(input);
+            handleEvents(eventReader);
+        } catch(Exception ex) {
+            throw ex;
+        }
     }
 
     private void validate(String xmlFilename, URL xsdUrl) throws IOException, SAXException {
         final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         final Schema schema = schemaFactory.newSchema(xsdUrl);
         final Validator validator = schema.newValidator();
-        final InputStream stream = new FileInputStream(new File(xmlFilename));
-        validator.validate(new StreamSource(stream));
+        try(final InputStream stream = new FileInputStream(new File(xmlFilename))) {
+            validator.validate(new StreamSource(stream));
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     private void handleEvents(XMLEventReader eventReader) throws XMLStreamException {
@@ -132,7 +142,7 @@ public class PatternsParser {
 
     private void handlePatternStartElement(XMLEvent event) {
         this.nodes = new HashSet<>();
-        this.designPattern = new DesignPattern(getAttributeFromEvent(event, NAME));
+        this.designPattern = new DesignPattern(getAttributeFromEvent(event, NAME), getAttributeFromEvent(event, FAMILY));
         this.designPatterns.add(designPattern);
         this.designPattern.setNodeComparator(NodeComparatorFactory.createCompoundNodeComparator());
         this.designPattern.setRelationComparator(RelationComparatorFactory.createCompoundRelationComparator());

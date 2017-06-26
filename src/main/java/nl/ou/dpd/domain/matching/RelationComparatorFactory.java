@@ -2,8 +2,8 @@ package nl.ou.dpd.domain.matching;
 
 import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
-import nl.ou.dpd.domain.relation.RelationType;
 import nl.ou.dpd.domain.relation.RelationProperty;
+import nl.ou.dpd.domain.relation.RelationType;
 
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,13 +1,11 @@
 package nl.ou.dpd.gui.model;
 
 import nl.ou.dpd.exception.DesignPatternDetectorException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import javax.security.auth.DestroyFailedException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,15 +30,13 @@ public class ProjectTest {
     private static final String DPD_SYSTEM = "dpd.system";
     private static final String DPD_TEMPLATES = "dpd.tmplts";
     private static final String DPD_MAX_MISSING_EDGES = "dpd.maxedg";
-
-    private File testProjectFile;
-    private File saveProjectFile;
-
     /**
      * Exception rule.
      */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private File testProjectFile;
+    private File saveProjectFile;
 
     /**
      * Initialise a project files for each test.
