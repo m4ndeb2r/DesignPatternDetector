@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.net.URL;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the matching process for a Bridge pattern.
@@ -29,19 +30,9 @@ public class BridgeMatchingTest {
         patternsXmlFile = BridgeMatchingTest.class.getResource("/patterns_bridge.xml").getFile();
         patternsParser = new PatternsParser();
     }
-<<<<<<< HEAD
-   
-    //test a Bridge written conforming the pattern,
-    //with two concreteAbstractions and three ConcreteImplementations, from which two have an overriden method of Implementor
-    //(pattern not found)
-   @Test
-    public void testMatchingBridge() {
-=======
->>>>>>> origin/graphstructures
 
     @Test
     public void testMatchingBridge() {
-
         // Parse the bridge pattern xml ands create a DesignPattern
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
@@ -54,12 +45,8 @@ public class BridgeMatchingTest {
 
         //TODO: test the values instead of printing it to the console
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
-<<<<<<< HEAD
-        assertTrue(patternInspector.isomorphismExists());
-=======
 
         //TODO Seems some nodepairs are not analysed
-        assertFalse(patternInspector.isomorphismExists());
->>>>>>> origin/graphstructures
+        assertTrue(patternInspector.isomorphismExists());
     }
 }

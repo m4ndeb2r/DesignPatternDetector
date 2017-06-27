@@ -58,7 +58,6 @@ public class AdapterMatchingTest {
     //test with an undirected association between Client and Target
     @Test
     public void testMatchingAdapterWithAssociation() {
-
         patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns_adapter.xml");
         patternsParser = new PatternsParser();
         sucXmiUrl = AdapterMatchingTest.class.getResource("/adapters_structures_association.xmi");
@@ -75,14 +74,9 @@ public class AdapterMatchingTest {
 
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
-<<<<<<< HEAD
-        //TODO Looks like there are problems with the bidirected association.
-        //feedback jGrapht: (node:MyTarget, node:Target) does not fit in the current matching: edge from node:Target to node:Client is missing in the 2nd graph
-=======
 
         // TODO Test the getSolutions() in depth instead of the isomorphismExists()
         // TODO Looks like there are problems with the bidirected association - not all nodes are compared
->>>>>>> origin/graphstructures
         assertFalse(patternInspector.isomorphismExists());
     }
 
