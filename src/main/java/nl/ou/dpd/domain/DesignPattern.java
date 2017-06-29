@@ -6,6 +6,12 @@ import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationFactory;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
+/**
+ * A {@link DesignPattern} is a {@link DefaultDirectedGraph} representation of a design pattern. It contains a set of
+ * {@link CompoundComparator}s for matching purposes.
+ *
+ * @author Martin de Boer
+ */
 public class DesignPattern extends DefaultDirectedGraph<Node, Relation> {
 
     final private String name;

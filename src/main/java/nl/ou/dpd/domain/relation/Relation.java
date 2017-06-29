@@ -1,12 +1,17 @@
 package nl.ou.dpd.domain.relation;
 
-
 import org.jgrapht.graph.DefaultEdge;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * A {@link Relation} represents a relation between two nodes in a system under consideration or a design pattern. A
+ * {@link Relation} has a set of {@link RelationProperty}s that may be used during matching process.
+ *
+ * @author Martin de Boer
+ */
 public class Relation extends DefaultEdge {
 
     private String id;
