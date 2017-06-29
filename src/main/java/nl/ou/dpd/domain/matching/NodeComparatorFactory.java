@@ -1,6 +1,5 @@
 package nl.ou.dpd.domain.matching;
 
-
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
 
@@ -21,9 +20,7 @@ public class NodeComparatorFactory {
      * @return the created {@link CompoundNodeComparator}.
      */
     public static CompoundComparator<Node> createCompoundNodeComparator() {
-        final CompoundNodeComparator compoundNodeComparator = new CompoundNodeComparator();
-        compoundNodeComparator.addComparator(createNodeTypeComparator());
-        return compoundNodeComparator;
+        return createCompoundNodeComparator(createNodeTypeComparator());
     }
 
     /**

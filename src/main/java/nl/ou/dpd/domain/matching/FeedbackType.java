@@ -1,7 +1,7 @@
 package nl.ou.dpd.domain.matching;
 
 /**
- * The types of feedback that are possible during matching.
+ * The type of feedback that are possible during matching.
  *
  * @author Martin de Boer
  */

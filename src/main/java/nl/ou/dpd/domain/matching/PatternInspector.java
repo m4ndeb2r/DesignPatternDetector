@@ -15,12 +15,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Inspects a system under control for design patterns. Both objects must be implemented as
- * {@link org.jgrapht.DirectedGraph}s with {@link Node}s as vertices and {@link Relation}s as edges.
+ * Inspects a system under control for design patterns. Both objects (the system under control as well as the design
+ * pattern) must be implemented as {@link org.jgrapht.DirectedGraph}s with {@link Node}s as vertices and
+ * {@link Relation}s as edges.
  *
  * @author Martin de Boer
  */
-public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Relation> {
+public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Relation> implements FeedbackEnabled {
 
     private SystemUnderConsideration system;
     private DesignPattern designPattern;
@@ -49,27 +50,6 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
         return new Feedback(designPattern.getName(), this.system)
                 .merge(designPattern.getNodeComparator().getFeedback())
                 .merge(designPattern.getRelationComparator().getFeedback());
-    }
-
-    public Set<Node> getMatchedNodes() {
-        final Set<Node> result = new HashSet<>();
-        getSolutions().forEach(solution -> {
-            solution.getMatchingNodes().forEach(nodes -> {
-                result.add(nodes[0]);
-                result.add(nodes[1]);
-            });
-        });
-        return result;
-    }
-
-    public Set<Relation> getMatchedRelations() {
-        final Set<Relation> result = new HashSet();
-        getSolutions().forEach(solution -> {
-            solution.getMatchingNodes().forEach(nodes -> {
-                result.add(designPattern.getEdge(nodes[0], nodes[1]));
-            });
-        });
-        return result;
     }
 
     /**

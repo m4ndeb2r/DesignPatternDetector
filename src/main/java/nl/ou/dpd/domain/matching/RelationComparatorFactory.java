@@ -22,9 +22,7 @@ public class RelationComparatorFactory {
      * @return the created {@link CompoundRelationComparator}.
      */
     public static CompoundComparator<Relation> createCompoundRelationComparator() {
-        final CompoundRelationComparator compoundRelationComparator = new CompoundRelationComparator();
-        compoundRelationComparator.addComparator(createRelationComparator());
-        return compoundRelationComparator;
+        return createCompoundRelationComparator(createRelationComparator());
     }
 
     /**
