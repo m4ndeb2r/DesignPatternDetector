@@ -3,6 +3,8 @@ package nl.ou.dpd.domain.node;
 import java.util.HashSet;
 import java.util.Set;
 
+import static nl.ou.dpd.util.Util.nullSafeEquals;
+
 /**
  * A {@link Node} represents a class, abstract class or interface in a system design or design pattern.
  *
@@ -113,10 +115,6 @@ public class Node implements SignatureComparable<Node> {
         if (!equalsOperationsSignatures(operations, other.operations))
             return false;
         return true;
-    }
-
-    private boolean nullSafeEquals(Object a, Object b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
     private boolean equalsAttributesSignatures(Set<Attribute> sourceAttributes, Set<Attribute> targetAttributes) {

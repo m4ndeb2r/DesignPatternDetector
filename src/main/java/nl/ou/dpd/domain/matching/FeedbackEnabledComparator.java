@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * A {@link FeedbackEnabledComparator} is a {@link Comparator} that is {@link FeedbackEnabled}, meaning, it can provide
  * feedback after comparison. Feedback is provided by the {@link #getFeedback()} method.
- *
+ * <p>
  * {@link FeedbackEnabledComparator}s are the engines that drive the matching process of the application, and at the
  * same time gather and provide feedback information about the mathing process.
  *

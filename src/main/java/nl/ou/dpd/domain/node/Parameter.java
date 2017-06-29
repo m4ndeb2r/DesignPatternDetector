@@ -1,5 +1,7 @@
 package nl.ou.dpd.domain.node;
 
+import static nl.ou.dpd.util.Util.nullSafeEquals;
+
 /**
  * Represents an operation parameter. A {@link Parameter} is related to an {@link Operation}, and has a type,
  * represented by a {@link Node} instance.
@@ -64,10 +66,6 @@ public class Parameter implements SignatureComparable<Parameter> {
         if (!nullSafeEquals(name, other.name)) return false;
         if (!nullSafeEquals(type, other.type)) return false;
         return true;
-    }
-
-    private boolean nullSafeEquals(Object a, Object b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
 }

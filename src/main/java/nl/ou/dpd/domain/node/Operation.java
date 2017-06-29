@@ -3,6 +3,8 @@ package nl.ou.dpd.domain.node;
 import java.util.HashSet;
 import java.util.Set;
 
+import static nl.ou.dpd.util.Util.nullSafeEquals;
+
 /**
  * Represents an operation of a {@link Node}.
  *
@@ -85,15 +87,8 @@ public class Operation implements SignatureComparable<Operation> {
         return true;
     }
 
-    private boolean nullSafeEquals(Object a, Object b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
-    }
-
     private boolean nullSafeEqualsReturnType(SignatureComparable a, SignatureComparable b) {
-        if (a == null) {
-            return b == null;
-        }
-        return a.equalsSignature(b);
+        return (a == null && b == null) || (a != null && a.equalsSignature(b));
     }
 
     private boolean equalsParametersSignatures(Set<Parameter> sourceParameters, Set<Parameter> targetParameters) {

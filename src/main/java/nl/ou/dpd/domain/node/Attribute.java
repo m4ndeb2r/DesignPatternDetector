@@ -1,5 +1,7 @@
 package nl.ou.dpd.domain.node;
 
+import static nl.ou.dpd.util.Util.nullSafeEquals;
+
 /**
  * Represents an attribute of a {@link Node}.
  *
@@ -69,10 +71,6 @@ public class Attribute implements SignatureComparable<Attribute> {
         if (!nullSafeEquals(name, other.name)) return false;
         if (!nullSafeEquals(type, other.type)) return false;
         return true;
-    }
-
-    private boolean nullSafeEquals(Object a, Object b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
 }
