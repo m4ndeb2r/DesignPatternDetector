@@ -67,10 +67,7 @@ public class Parameter implements SignatureComparable<Parameter> {
     }
 
     private boolean nullSafeEquals(Object a, Object b) {
-        if (a == null) {
-            return b == null;
-        }
-        return a.equals(b);
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
 }

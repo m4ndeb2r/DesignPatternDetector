@@ -86,10 +86,7 @@ public class Operation implements SignatureComparable<Operation> {
     }
 
     private boolean nullSafeEquals(Object a, Object b) {
-        if (a == null) {
-            return b == null;
-        }
-        return a.equals(b);
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
     private boolean nullSafeEqualsReturnType(SignatureComparable a, SignatureComparable b) {

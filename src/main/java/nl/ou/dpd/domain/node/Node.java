@@ -116,10 +116,7 @@ public class Node implements SignatureComparable<Node> {
     }
 
     private boolean nullSafeEquals(Object a, Object b) {
-        if (a == null) {
-            return b == null;
-        }
-        return a.equals(b);
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
     private boolean equalsAttributesSignatures(Set<Attribute> sourceAttributes, Set<Attribute> targetAttributes) {
