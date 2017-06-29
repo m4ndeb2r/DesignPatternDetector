@@ -481,12 +481,6 @@ public class ArgoUMLNodeParser {
         return operation;
     }
 
-    /**
-     * Find an {@link Attribute} by ID.
-     *
-     * @param id
-     * @return an {@link Attribute}
-     */
     private nl.ou.dpd.domain.node.Attribute findAttributeById(String id) {
         for (Node n : nodes.values()) {
             for (nl.ou.dpd.domain.node.Attribute a : n.getAttributes()) {
@@ -498,12 +492,6 @@ public class ArgoUMLNodeParser {
         return null;
     }
 
-    /**
-     * Find an {@link Operation} by ID.
-     *
-     * @param id
-     * @return an {@link Operation}
-     */
     private Operation findOperationById(String id) {
         for (Node n : nodes.values()) {
             for (Operation op : n.getOperations()) {
@@ -515,12 +503,6 @@ public class ArgoUMLNodeParser {
         return null;
     }
 
-    /**
-     * Find an {@link Parameter} by ID.
-     *
-     * @param id
-     * @return an {@link Parameter}
-     */
     private Parameter findParameterById(String id) {
         for (Node n : nodes.values()) {
             for (Operation op : n.getOperations()) {
@@ -542,12 +524,9 @@ public class ArgoUMLNodeParser {
      * @return a Map containing attributes, extracted from the {@code event}.
      */
     private Map<String, String> readAttributes(XMLEvent event) {
-        Map<String, String> attributes = new HashMap<>();
-        Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
-        while (attrIterator.hasNext()) {
-            Attribute attr = attrIterator.next();
-            attributes.put(attr.getName().getLocalPart(), attr.getValue());
-        }
+        final Map<String, String> attributes = new HashMap<>();
+        ((Iterator<Attribute>) event.asStartElement().getAttributes())
+                .forEachRemaining(attr -> attributes.put(attr.getName().getLocalPart(), attr.getValue()));
         return attributes;
     }
 

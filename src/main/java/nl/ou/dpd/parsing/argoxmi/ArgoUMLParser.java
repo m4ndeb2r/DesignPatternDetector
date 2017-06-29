@@ -24,10 +24,22 @@ public class ArgoUMLParser {
         relationparser = new ArgoUMLRelationParser();
     }
 
+    /**
+     * Parses an xmi file with the specified {@code xmiUrl}.
+     *
+     * @param xmiUrl the url of the file to be parsed.
+     * @return a new {@link SystemUnderConsideration}.
+     */
     public SystemUnderConsideration parse(URL xmiUrl) {
         return this.parse(xmiUrl.getPath());
     }
 
+    /**
+     * Parses an xmi file with the specified {@code xmiFileName}.
+     *
+     * @param xmiFilename the name of the file to be parsed.
+     * @return a new {@link SystemUnderConsideration}.
+     */
     public SystemUnderConsideration parse(String xmiFilename) {
         final SystemUnderConsideration suc = relationparser.parse(xmiFilename, nodeparser.parse(xmiFilename));
         final SystemRelationsExtractor postparser = new SystemRelationsExtractor(suc);

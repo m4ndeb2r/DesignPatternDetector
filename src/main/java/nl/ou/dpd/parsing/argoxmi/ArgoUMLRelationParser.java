@@ -135,7 +135,7 @@ public class ArgoUMLRelationParser {
             case MODEL:
                 // Create the SystemUnderConsideration
                 system = createSystem(event);
-                addNodes();
+                nodes.values().forEach(node -> system.addVertex(node));
                 events.push(event);
                 break;
             case CLASS:
@@ -190,16 +190,6 @@ public class ArgoUMLRelationParser {
         String id = readAttributes(event).get(ID);
         String name = readAttributes(event).get(NAME);
         return new SystemUnderConsideration(id, name);
-    }
-
-    private int addNodes() {
-        int t = 0;
-        //add nodes to graph
-        for (Node n : this.nodes.values()) {
-            system.addVertex(n);
-            t++;
-        }
-        return t;
     }
 
     /**
@@ -322,7 +312,6 @@ public class ArgoUMLRelationParser {
         addReverseRelation(event, sourceNode, targetNode);
     }
 
-    //All kinds of help functions
     private Relation findSystemRelationById(String id) {
         return system.edgeSet().stream()
                 .filter(relation -> relation.getId().equals(id))
@@ -330,10 +319,6 @@ public class ArgoUMLRelationParser {
                 .orElse(null);
     }
 
-    /**
-     * @param String relationType
-     * @return
-     */
     private RelationType findRelationTypeByString(String relationType) {
         switch (relationType) {
             case ASSOCIATION:
@@ -350,6 +335,7 @@ public class ArgoUMLRelationParser {
     }
 
     /**
+     * TODO
      * Only processed if the association is undirected (= bidirected).
      *
      * @param sourceNode
@@ -365,9 +351,7 @@ public class ArgoUMLRelationParser {
             system.getEdge(targetNode, sourceNode).getRelationProperties().add(new RelationProperty(RelationType.ASSOCIATES_WITH));
         } else {
             if (isAssociation && navigabilities.size() == 2) {
-                Boolean bidirectional = navigabilities.pop();
-                bidirectional = bidirectional && navigabilities.pop();
-                if (bidirectional) {
+                if (navigabilities.pop() && navigabilities.pop()) {
                     lastRelation = createReverseAssociation(event, relation, sourceNode, targetNode);
                 }
             }
@@ -375,22 +359,23 @@ public class ArgoUMLRelationParser {
     }
 
     private Relation createReverseAssociation(XMLEvent event, Relation originalRelation, Node originalSourceNode, Node originalTargetNode) {
-        Relation relation = new Relation(originalRelation.getId() + "-reversed", null);
-        RelationProperty originalRelationProperty = findRelationPropertyByType(originalRelation, RelationType.ASSOCIATES_WITH);
-        RelationProperty relationProperty = new RelationProperty(RelationType.ASSOCIATES_WITH, originalRelationProperty.getCardinalityRight(), originalRelationProperty.getCardinalityLeft());
+        final Relation relation = new Relation(originalRelation.getId() + "-reversed", null);
+        final RelationProperty originalRelationProperty = findRelationPropertyByType(originalRelation, RelationType.ASSOCIATES_WITH);
+        final RelationProperty relationProperty = new RelationProperty(
+                RelationType.ASSOCIATES_WITH,
+                originalRelationProperty.getCardinalityRight(),
+                originalRelationProperty.getCardinalityLeft());
         relation.addRelationProperty(relationProperty);
         system.addEdge(originalTargetNode, originalSourceNode, relation);
         return relation;
     }
 
     private RelationProperty findRelationPropertyByType(Relation relation, RelationType relationType) {
-        RelationProperty relationProperty = null;
-        for (RelationProperty rp : relation.getRelationProperties()) {
-            if (relationType.equals(rp.getRelationType())) {
-                return rp;
-            }
-        }
-        return relationProperty;
+        return relation.getRelationProperties()
+                .stream()
+                .filter(rp -> relationType.equals(rp.getRelationType()))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -406,12 +391,9 @@ public class ArgoUMLRelationParser {
     }
 
     private boolean containsRelationType(Relation relation, RelationType relationtype) {
-        for (RelationProperty rt : relation.getRelationProperties()) {
-            if (relationtype.equals(rt.getRelationType())) {
-                return true;
-            }
-        }
-        return false;
+        return relation.getRelationProperties()
+                .stream()
+                .anyMatch(rp -> relationtype.equals(rp.getRelationType()));
     }
 
     /**
@@ -422,12 +404,9 @@ public class ArgoUMLRelationParser {
      * @return a Map containing attributes, extracted from the {@code event}.
      */
     private Map<String, String> readAttributes(XMLEvent event) {
-        Map<String, String> attributes = new HashMap<>();
-        Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
-        while (attrIterator.hasNext()) {
-            Attribute attr = attrIterator.next();
-            attributes.put(attr.getName().getLocalPart(), attr.getValue());
-        }
+        final Map<String, String> attributes = new HashMap<>();
+        ((Iterator<Attribute>) event.asStartElement().getAttributes())
+                .forEachRemaining(attr -> attributes.put(attr.getName().getLocalPart(), attr.getValue()));
         return attributes;
     }
 
