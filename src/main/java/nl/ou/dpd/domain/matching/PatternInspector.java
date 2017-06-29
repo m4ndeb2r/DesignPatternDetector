@@ -52,7 +52,7 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
     }
 
     public Set<Node> getMatchedNodes() {
-        Set<Node> result = new HashSet<>();
+        final Set<Node> result = new HashSet<>();
         getSolutions().forEach(solution -> {
             solution.getMatchingNodes().forEach(nodes -> {
                 result.add(nodes[0]);
@@ -63,7 +63,7 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
     }
 
     public Set<Relation> getMatchedRelations() {
-        Set<Relation> result = new HashSet();
+        final Set<Relation> result = new HashSet();
         getSolutions().forEach(solution -> {
             solution.getMatchingNodes().forEach(nodes -> {
                 result.add(designPattern.getEdge(nodes[0], nodes[1]));
@@ -91,9 +91,14 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
             final Node edgeTarget = system.getEdgeTarget(relation);
             addMatchingNodesToSolution(solution, edgeSource, mapping);
             addMatchingNodesToSolution(solution, edgeTarget, mapping);
-            solution.addMatchingRelation(relation);
+            addMatchingRelationsToSolution(solution, relation, mapping);
         }
         return solution;
+    }
+
+    private void addMatchingRelationsToSolution(Solution solution, Relation systemRelation, GraphMapping<Node, Relation> mapping) {
+        final Relation patternRelation = mapping.getEdgeCorrespondence(systemRelation, true);
+        solution.addMatchingRelation(systemRelation, patternRelation);
     }
 
     private void addMatchingNodesToSolution(Solution solution, Node systemNode, GraphMapping<Node, Relation> mapping) {

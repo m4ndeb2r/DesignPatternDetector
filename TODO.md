@@ -12,6 +12,10 @@
 * Show new feedback in GUI
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
+* What to do with matching relations in Solution (show it in feedback? remove it?)
+
+## TODO: patterns
+* Add integration tests for several patterns
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX

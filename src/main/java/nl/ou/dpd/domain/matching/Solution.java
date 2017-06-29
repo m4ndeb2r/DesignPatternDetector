@@ -14,9 +14,12 @@ import java.util.stream.Collectors;
  */
 public class Solution {
 
+    private final static int SYSTEM_IDX = 0;
+    private final static int PATTERN_IDX = 1;
+
     private final String designPatternName;
     private final List<Node[]> matchingNodes;
-    private final List<Relation> matchingRelations;
+    private final List<Relation[]> matchingRelations;
 
     public Solution(String designPatternName) {
         this.matchingNodes = new ArrayList<>();
@@ -34,7 +37,7 @@ public class Solution {
 
     public List<String[]> getMatchingNodeNames() {
         return getMatchingNodes().stream()
-                .map(nodes -> new String[]{nodes[0].getName(), nodes[1].getName()})
+                .map(nodes -> new String[]{nodes[SYSTEM_IDX].getName(), nodes[PATTERN_IDX].getName()})
                 .collect(Collectors.toList());
     }
 
@@ -47,19 +50,19 @@ public class Solution {
 
     private boolean previouslyAddedMatchingNodes(Node systemNode, Node patternNode) {
         for (Node[] nodes : getMatchingNodes()) {
-            if (systemNode.equals(nodes[0]) && patternNode.equals(nodes[1])) {
+            if (systemNode.equals(nodes[SYSTEM_IDX]) && patternNode.equals(nodes[PATTERN_IDX])) {
                 return true;
             }
         }
         return false;
     }
 
-    public Solution addMatchingRelation(Relation relation) {
-        this.matchingRelations.add(relation);
+    public Solution addMatchingRelation(Relation systemRelation, Relation patternRelation) {
+        this.matchingRelations.add(new Relation[]{systemRelation, patternRelation});
         return this;
     }
 
-    public List<Relation> getMatchingRelations() {
+    public List<Relation[]> getMatchingRelations() {
         return this.matchingRelations;
     }
 }
