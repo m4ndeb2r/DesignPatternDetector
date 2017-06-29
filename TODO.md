@@ -1,15 +1,17 @@
 # TODO's
 
 ## TODO's in the code
-* The main view should contain some info and/or basic options to click, or a logo or ... whatever. Something.
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-* Test-coverage went down when writing GUI. Test-coverage should be better (currently 62% of lines)
+* Test-coverage 
 * Styling in CSS instead of FXML
 * Scrollbars in project view are not working 100% okay
-* Remark Peter: Ik heb de xmi's die horen bij mijn onderzoek naar de adapter in een mapje geplaatst: 
-  scriptie/onderzoek Peter/Adapter. Zeker de mediaPlayer is interessant om te laten analyseren, ook met 
-  1 missing edge. In het laatste geval krijg je 5 adapters te zien, maar bij geen enkele wordt in de 
-  feedback een missing edge vermeld. Dat klopt dus ergens niet.
+* Separate intergration tests from unittests. Unittests should contain mocks. All tests using external files are integration tests.
+* Cleanup test files
+* Connect GUI to Graph matcher
+* Connect GUI to new parsers
+* Show new feedback in GUI
+* Cleanup code (dead code, comments)
+* JavaDoc (some of it is old, missing, or superfluous....)
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
