@@ -12,15 +12,11 @@ import org.apache.logging.log4j.Logger;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -38,7 +34,7 @@ import java.util.Stack;
  * @author Peter Vansweevelt
  * @author Martin de Boer
  */
-public class ArgoUMLRelationParser {
+public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLRelationParser.class);
 
     //attributes of the XMI used in the parser
@@ -67,12 +63,10 @@ public class ArgoUMLRelationParser {
     });
 
     private Relation lastRelation; //holds the information of the last Relation.
-    private SystemUnderConsideration system; //The system under consideration that will be returned.
-    private Map<String, Node> nodes;
-    private Stack<Node> sourceAndTarget; //used to keep track of source and target vertices. If size is 2, an edge can me made.
-    private Stack<Boolean> navigabilities; //used to keep track of the isNavigable attribute which determines directed or undirected associations.
-    private Stack<Cardinality> cardinalities; //used to keep track of the cardinalities.
-    private Stack<XMLEvent> events = new Stack<>(); //holds the passed events. Used to keep track of the hierarchical structure of the XMI-tags.
+    private SystemUnderConsideration system; // The system under consideration that will be returned.
+    private Stack<Node> sourceAndTarget; // Keeps track of source and target vertices. If size is 2, an edge can be made.
+    private Stack<Boolean> navigabilities; // Keeps track of the isNavigable attribute which determines directed or undirected associations.
+    private Stack<Cardinality> cardinalities; // Keeps track of the cardinalities.
 
     /**
      * Parses an xmi file with the specified {@code filename}.
@@ -102,35 +96,7 @@ public class ArgoUMLRelationParser {
         return system;
     }
 
-    /**
-     * General method to handle the events of the XMI.
-     *
-     * @param eventReader
-     * @throws XMLStreamException
-     */
-    private void handleEvents(XMLEventReader eventReader) throws XMLStreamException {
-        while (eventReader.hasNext()) {
-            XMLEvent event = eventReader.nextEvent();
-            handleEvent(event);
-        }
-    }
-
-    /**
-     * General method to handle events. Start and end elements are only handled if there is an action bound to the
-     * event.
-     *
-     * @param event the event to handle. This can be a start element as well as an end element.
-     */
-    private void handleEvent(XMLEvent event) {
-        if (event.isStartElement()) {
-            handleStartElement(event);
-        }
-        if (event.isEndElement()) {
-            handleEndElement(event);
-        }
-    }
-
-    private void handleStartElement(XMLEvent event) {
+    protected void handleStartElement(XMLEvent event) {
         switch (getStartElementNameLocalPart(event)) {
             case MODEL:
                 // Create the SystemUnderConsideration
@@ -174,7 +140,7 @@ public class ArgoUMLRelationParser {
      *
      * @param event
      */
-    private void handleEndElement(XMLEvent event) {
+    protected void handleEndElement(XMLEvent event) {
         if (eventTags.contains(event.asEndElement().getName().getLocalPart())) {
             events.pop();
         }
@@ -394,33 +360,6 @@ public class ArgoUMLRelationParser {
         return relation.getRelationProperties()
                 .stream()
                 .anyMatch(rp -> relationtype.equals(rp.getRelationType()));
-    }
-
-    /**
-     * Return an Attributes Map with the attribute name as key and the attribute value as value, retrieved from the
-     * specified {@link XMLEvent}.
-     *
-     * @param event the {@link XMLEvent} containing the attributes.
-     * @return a Map containing attributes, extracted from the {@code event}.
-     */
-    private Map<String, String> readAttributes(XMLEvent event) {
-        final Map<String, String> attributes = new HashMap<>();
-        ((Iterator<Attribute>) event.asStartElement().getAttributes())
-                .forEachRemaining(attr -> attributes.put(attr.getName().getLocalPart(), attr.getValue()));
-        return attributes;
-    }
-
-    private String getParentElementNameLocalPart() {
-        return getStartElementNameLocalPart(events.peek());
-    }
-
-    private String getStartElementNameLocalPart(XMLEvent event) {
-        return event.asStartElement().getName().getLocalPart();
-    }
-
-    private void error(String msg, Exception cause) {
-        LOGGER.error(msg, cause);
-        throw new ParseException(msg, cause);
     }
 
 }
