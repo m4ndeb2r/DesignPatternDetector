@@ -7,11 +7,10 @@ import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 import java.net.URL;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test the matching process for a Bridge pattern.
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
-public class BridgeMatchingTest {
+public class DecoratorMatchingTest {
 
     private String patternsXmlFile;
     private PatternsParser patternsParser;
@@ -28,17 +27,17 @@ public class BridgeMatchingTest {
     @Before
     public void initTests() {
         xmiParser = new ArgoUMLParser();
-        patternsXmlFile = BridgeMatchingTest.class.getResource("/patterns_bridge.xml").getFile();
+        patternsXmlFile = DecoratorMatchingTest.class.getResource("/patterns_decorator.xml").getFile();
         patternsParser = new PatternsParser();
     }
 
     @Test
-    public void testMatchingBridge() {
+    public void testMatchingDecorator() {
         // Parse the bridge pattern xml ands create a DesignPattern
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = BridgeMatchingTest.class.getResource("/MyBridge.xmi");
+        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource("/MyDecorator.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns
@@ -51,10 +50,10 @@ public class BridgeMatchingTest {
         //more detailed, but not exhaustive inspection
         List<Solution> solutions = patternInspector.getSolutions();
         assertEquals(2, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAbstraction", "Abstraction"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyImplementor", "Implementor"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr1", "RefinedAbstraction"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr2", "RefinedAbstraction"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcImpl1", "ConcreteImplementor"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyPart", "Component"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyDecorator", "Decorator"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrDecA", "ConcreteDecoratorA"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrDecB", "ConcreteDecoratorB"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcretePart", "ConcreteComponent"));
     }
 }

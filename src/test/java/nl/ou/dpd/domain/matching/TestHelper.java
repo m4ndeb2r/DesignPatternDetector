@@ -60,5 +60,22 @@ public class TestHelper {
         });
     }
 
+    /**
+     * Finds out if the specified SystemNode and and the specified PatternNode match at least once in these solutions.
+     *
+     * @param solutions
+     * @return {@code True} if this match exists.
+     */
+    public static boolean areMatchingNodes(List<Solution> solutions, String systemNodeName, String patternNodeName) {
+        for (Solution solution : solutions) {     	
+        	for (String[] names : solution.getMatchingNodeNames()) {
+        		if (names[0].equals(systemNodeName) && names[1].equals(patternNodeName)) {
+        			return true;
+        		}
+        	}
+
+        }
+    	return false;
+    }
 
 }

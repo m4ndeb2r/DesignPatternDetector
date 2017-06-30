@@ -10,8 +10,7 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * Test the matching process for a Adapter pattern.
@@ -32,11 +31,11 @@ public class AdapterMatchingTest {
     }
 
     @Test
-    public void testMatchingAdapter() {
+    public void testMatchingObjectAdapter() {
 
         patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/adapters_interface.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/MyObjectAdapter.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -51,16 +50,22 @@ public class AdapterMatchingTest {
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
 
-        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
         assertTrue(patternInspector.isomorphismExists());
+        //more detailed inspection
+        List<Solution> solutions = patternInspector.getSolutions();
+        assertEquals(1, solutions.size());
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdapter", "Adapter"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
     }
 
     //test with an undirected association between Client and Target
     @Test
-    public void testMatchingAdapterWithAssociation() {
+    public void testMatchingAdapterWithUndirectedAssociation() {
         patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/adapters_structures_association.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/MyAdapterWithUndirectedAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -82,11 +87,11 @@ public class AdapterMatchingTest {
 
     //test with an undirected association to a Dummy and an extra Attribute in Adapter
     @Test
-    public void testMatchingAdapterWithExtras() {
+    public void testMatchingAdapterWithExtraAssociation() {
 
         patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/adaptersWithExtras.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/MyAdapterWithExtraAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -102,8 +107,13 @@ public class AdapterMatchingTest {
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
 
-        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
         assertTrue(patternInspector.isomorphismExists());
+        List<Solution> solutions = patternInspector.getSolutions();
+        assertEquals(1, solutions.size());
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdapter", "Adapter"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
     }
 
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patterns>
+    <pattern name="Strategy" family="Strategy">
+        <nodes>
+            <node id="Context">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Strategy">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="ConcreteStrategyA">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteStrategyB">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+        	<relation node1="Context" node2="Strategy">
+        		<relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>        					   
+            </relation>
+        	<relation node1="ConcreteStrategyA" node2="Strategy">
+        		<relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>        					   
+            </relation>
+         	<relation node1="ConcreteStrategyB" node2="Strategy">
+        		<relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>        					   
+            </relation>
+         </relations>
+    </pattern>
+</patterns>
+

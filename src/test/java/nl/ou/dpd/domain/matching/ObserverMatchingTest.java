@@ -8,8 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -27,7 +29,7 @@ public class ObserverMatchingTest {
     @Before
     public void initTests() {
         xmiParser = new ArgoUMLParser();
-        patternsXmlFilename = ObserverMatchingTest.class.getResource("/patterns_observer_adapted.xml").getFile();
+        patternsXmlFilename = ObserverMatchingTest.class.getResource("/patterns_observer.xml").getFile();
         patternsParser = new PatternsParser();
     }
 
@@ -46,8 +48,14 @@ public class ObserverMatchingTest {
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
 
-        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
         assertTrue(patternInspector.isomorphismExists());
+        //more detailed, but not exhaustive inspection
+        List<Solution> solutions = patternInspector.getSolutions();
+        assertEquals(1, solutions.size());
+        assertTrue(TestHelper.areMatchingNodes(solutions, "ASubject", "Subject"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "AnObserver", "Observer"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "AConcreteSubject", "ConcreteSubject"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "AConcreteObserver", "ConcreteObserver"));
     }
 
     /**
@@ -69,8 +77,7 @@ public class ObserverMatchingTest {
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
 
-        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
-        // TODO extra relationproperty 'Overrides' prevents recognizing the pattern
+        //extra relationproperty 'Overrides' prevents recognizing the pattern
         assertFalse(patternInspector.isomorphismExists());
-    }
+     }
 }

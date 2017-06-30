@@ -1,0 +1,119 @@
+<?xml version = '1.0' encoding = 'UTF-8' ?>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Thu Jun 29 09:27:25 CEST 2017'>
+  <XMI.header>    <XMI.documentation>
+      <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
+      <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
+    </XMI.documentation>
+    <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
+  <XMI.content>
+    <UML:Model xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000976'
+      name = 'MyDecorator' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+      isAbstract = 'false'>
+      <UML:Namespace.ownedElement>
+        <UML:Interface xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000978'
+          name = 'MyPart' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'/>
+        <UML:Class xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000979'
+          name = 'MyConcretePart' visibility = 'public' isSpecification = 'false'
+          isRoot = 'false' isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097D'/>
+          </UML:ModelElement.clientDependency>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097A'
+          name = 'MyDecorator' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'true' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097F'/>
+          </UML:ModelElement.clientDependency>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097B'
+          name = 'MyConcrDecA' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000981'/>
+          </UML:GeneralizableElement.generalization>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097C'
+          name = 'MyConcrDecB' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000982'/>
+          </UML:GeneralizableElement.generalization>
+        </UML:Class>
+        <UML:Abstraction xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097D'
+          name = 'MyConcretePart-MyPart' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000979'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000978'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Abstraction xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097F'
+          name = 'MyDecorator-MyPart' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097A'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000978'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Generalization xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000981'
+          name = 'MyConcrDecA-MyDecorator' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097B'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097A'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Generalization xmi.id = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000982'
+          name = 'MyConcrDecB-MyDecorator' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097C'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097A'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Association xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:00000000000010A4'
+          name = 'MyDecorator-MyPart' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+          isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:00000000000010A5'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.multiplicity>
+                <UML:Multiplicity xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:00000000000010AC'>
+                  <UML:Multiplicity.range>
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:00000000000010AB'
+                      lower = '0' upper = '1'/>
+                  </UML:Multiplicity.range>
+                </UML:Multiplicity>
+              </UML:AssociationEnd.multiplicity>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:000000000000097A'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:00000000000010A6'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.multiplicity>
+                <UML:Multiplicity xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:00000000000010AA'>
+                  <UML:Multiplicity.range>
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:00000000000010A9'
+                      lower = '1' upper = '1'/>
+                  </UML:Multiplicity.range>
+                </UML:Multiplicity>
+              </UML:AssociationEnd.multiplicity>
+              <UML:AssociationEnd.participant>
+                <UML:Interface xmi.idref = '127-0-1-1--68c72591:1535ce7e977:-8000:0000000000000978'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+      </UML:Namespace.ownedElement>
+    </UML:Model>
+  </XMI.content>
+</XMI>

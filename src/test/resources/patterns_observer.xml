@@ -30,9 +30,6 @@
                                cardinalityRight="1"/>
             </relation>
             <relation node1="ConcreteObserver" node2="ConcreteSubject">
-                <relation.rule relationType="CALLS_METHOD_OF"
-                               cardinalityLeft="1"
-                               cardinalityRight="1"/>
                 <relation.rule relationType="HAS_ATTRIBUTE_OF"
                                cardinalityLeft="1"
                                cardinalityRight="1"/>

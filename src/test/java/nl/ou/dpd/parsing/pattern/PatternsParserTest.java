@@ -87,7 +87,7 @@ public class PatternsParserTest {
         // Check number of types
         final int[] count = {0};
         designPattern.edgeSet().forEach(relation -> count[0] += relation.getRelationProperties().size());
-        assertThat(count[0], is(6));
+        assertThat(count[0], is(5));
 
         // Get nodes
         final Node subject = getNodeById(designPattern, "Subject");
@@ -120,7 +120,7 @@ public class PatternsParserTest {
         // Check types of relations
         assertTypes(designPattern, subject, observer, new RelationType[]{RelationType.HAS_ATTRIBUTE_OF});
         assertTypes(designPattern, concreteSubject, subject, new RelationType[]{RelationType.INHERITS_FROM, RelationType.OVERRIDES_METHOD_OF});
-        assertTypes(designPattern, concreteObserver, concreteSubject, new RelationType[]{RelationType.CALLS_METHOD_OF, RelationType.HAS_ATTRIBUTE_OF});
+        assertTypes(designPattern, concreteObserver, concreteSubject, new RelationType[]{RelationType.HAS_ATTRIBUTE_OF});
         assertTypes(designPattern, concreteObserver, observer, new RelationType[]{RelationType.IMPLEMENTS});
     }
 
