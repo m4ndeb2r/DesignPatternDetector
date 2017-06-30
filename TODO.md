@@ -13,8 +13,8 @@
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
-* setters should return this to provide the possibility of chaining
-* Eliminate duplicate code in XMI-parsers
+* Setters should return this to provide the possibility of chaining
+* Refactor ArgoUMLParsers and Exstractor to a ChainOfResponsibility
 
 ## TODO: patterns
 * Add integration tests for several patterns

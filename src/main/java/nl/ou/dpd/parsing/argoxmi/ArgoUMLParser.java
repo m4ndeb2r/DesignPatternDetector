@@ -41,10 +41,7 @@ public class ArgoUMLParser {
      * @return a new {@link SystemUnderConsideration}.
      */
     public SystemUnderConsideration parse(String xmiFilename) {
-        final SystemUnderConsideration suc = relationparser.parse(xmiFilename, nodeparser.parse(xmiFilename));
-        final SystemRelationsExtractor postparser = new SystemRelationsExtractor(suc);
-        postparser.execute();
-        return suc;
+        return new SystemRelationsExtractor().execute(relationparser.parse(xmiFilename, nodeparser.parse(xmiFilename)));
     }
 
 }

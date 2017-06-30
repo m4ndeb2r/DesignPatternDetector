@@ -26,17 +26,15 @@ import java.util.Set;
  */
 public class SystemRelationsExtractor {
 
-    private final SystemUnderConsideration system;
+    private SystemUnderConsideration system;
 
-    public SystemRelationsExtractor(SystemUnderConsideration system) {
+    public SystemUnderConsideration execute(SystemUnderConsideration system) {
         this.system = system;
-    }
-
-    public void execute() {
         for (Node node : system.vertexSet()) {
             exploreAttributesRelations(node);
             exploreOperationsRelations(node);
         }
+        return this.system;
     }
 
     private void exploreAttributesRelations(Node node) {

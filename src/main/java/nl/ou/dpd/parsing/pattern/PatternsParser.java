@@ -10,6 +10,8 @@ import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
 import nl.ou.dpd.parsing.ParseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -24,7 +26,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -42,6 +43,8 @@ import java.util.Set;
  * @author Martin de Boer
  */
 public class PatternsParser {
+
+    private static final Logger LOGGER = LogManager.getLogger(PatternsParser.class);
 
     private static final String NAME = "name";
     private static final String FAMILY = "family";
@@ -223,6 +226,7 @@ public class PatternsParser {
     }
 
     private void error(String message, Exception cause) {
+        LOGGER.error(message);
         throw new ParseException(message, cause);
     }
 
