@@ -39,6 +39,11 @@ public class RelationComparatorFactory {
         return compoundRelationComparator;
     }
 
+    /**
+     * Creates a {@link FeedbackEnabledComparator} for {@link Relation}s.
+     *
+     * @return the created {@link FeedbackEnabledComparator}
+     */
     public static FeedbackEnabledComparator<Relation> createRelationComparator() {
         return new RelationComparator();
     }
