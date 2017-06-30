@@ -2,7 +2,6 @@ package nl.ou.dpd.domain.matching;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.relation.Relation;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +63,7 @@ public class FeedbackTest {
         fb2.addFeedbackMessage(node2, FeedbackType.INFO, "node2-msg");
         fb2.addFeedbackMessage(relation2, FeedbackType.MATCH, "relation2-msg");
 
-        final Feedback fb3 = fb1.merge(fb2).merge(new Feedback());
+        final Feedback fb3 = fb1.merge(fb2).merge(new Feedback()).merge(null);
 
         assertThat(fb3.getFeedbackMessages(node1, FeedbackType.NOT_ANALYSED).size(), is(0));
         assertThat(fb3.getFeedbackMessages(node1, FeedbackType.MATCH).size(), is(0));

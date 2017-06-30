@@ -76,14 +76,21 @@ public class Feedback {
     }
 
     public Feedback merge(Feedback other) {
-        other.nodeRelatedFeedbackMessages.keySet()
-                .forEach(node -> other.nodeRelatedFeedbackMessages.get(node)
-                        .forEach((type, message) -> other.nodeRelatedFeedbackMessages.get(node).get(type)
-                                .forEach(msg -> addFeedbackMessage(node, type, msg))));
-        other.relationRelatedFeedbackMessages.keySet()
-                .forEach(relation -> other.relationRelatedFeedbackMessages.get(relation)
-                        .forEach((type, message) -> other.relationRelatedFeedbackMessages.get(relation).get(type)
-                                .forEach(msg -> addFeedbackMessage(relation, type, msg))));
+        if (other == null) {
+            return this;
+        }
+        if (other.nodeRelatedFeedbackMessages != null) {
+            other.nodeRelatedFeedbackMessages.keySet()
+                    .forEach(node -> other.nodeRelatedFeedbackMessages.get(node)
+                            .forEach((type, message) -> other.nodeRelatedFeedbackMessages.get(node).get(type)
+                                    .forEach(msg -> addFeedbackMessage(node, type, msg))));
+        }
+        if (other.relationRelatedFeedbackMessages != null) {
+            other.relationRelatedFeedbackMessages.keySet()
+                    .forEach(relation -> other.relationRelatedFeedbackMessages.get(relation)
+                            .forEach((type, message) -> other.relationRelatedFeedbackMessages.get(relation).get(type)
+                                    .forEach(msg -> addFeedbackMessage(relation, type, msg))));
+        }
         return this;
     }
 
