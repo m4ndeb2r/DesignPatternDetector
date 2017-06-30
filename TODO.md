@@ -16,6 +16,14 @@
 * Setters should return this to provide the possibility of chaining
 * Refactor ArgoUMLParsers and Exstractor to a ChainOfResponsibility
 
+## TODO: testing
+* separate integration tests from unittests
+* unittests for: 
+  * Solution
+  * PatternInspector
+  * RelationPropertyAndCardinalityTest should be a RelationPropertyTest (remove duplicate code)
+  * Consider more tests for the GUI....
+
 ## TODO: patterns
 * Add integration tests for several patterns
 
