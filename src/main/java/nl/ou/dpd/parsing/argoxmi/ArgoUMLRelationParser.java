@@ -263,10 +263,11 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private void addEdgeToSystem(XMLEvent event) {
         Node targetNode = sourceAndTarget.pop();
         Node sourceNode = sourceAndTarget.pop();
-        system.getEdge(sourceNode, targetNode);
-        system.addEdge(sourceNode, targetNode, lastRelation);
-        system.getEdge(sourceNode, targetNode);
-        addReverseRelation(event, sourceNode, targetNode);
+        boolean added = system.addEdge(sourceNode, targetNode, lastRelation);
+        if (!added) {
+        	//add the new relationproperties to the existing relation
+        	addRelationProperties(lastRelation, system.getEdge(sourceNode, targetNode));
+        }        addReverseRelation(event, sourceNode, targetNode);
     }
 
     private Relation findSystemRelationById(String id) {
@@ -275,6 +276,17 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
                 .findFirst()
                 .orElse(null);
     }
+
+    /**
+     * Adds the {@link Relationproperty} (or properties)of the sourceRelation to the targetRelation.
+	 * @param sourceRelation
+	 * @param targetRelation
+	 */
+	private void addRelationProperties(Relation sourceRelation, Relation targetRelation) {
+		for (RelationProperty srcProperty : sourceRelation.getRelationProperties()) {
+			targetRelation.addRelationProperty(srcProperty);
+		}		
+	}
 
     private RelationType findRelationTypeByString(String relationType) {
         switch (relationType) {
