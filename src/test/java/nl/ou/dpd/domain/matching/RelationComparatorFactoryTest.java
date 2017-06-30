@@ -55,6 +55,9 @@ public class RelationComparatorFactoryTest {
         when(associationRelation.getName()).thenReturn("associationRelation");
     }
 
+    /**
+     * Test the behaviour of a compound comparator and its feedback when two relations match.
+     */
     @Test
     public void testGetFeedbackForMatch() {
         defaultCompoundComparator.compare(inheritanceRelation, inheritanceRelation);
@@ -69,7 +72,7 @@ public class RelationComparatorFactoryTest {
     }
 
     /**
-     * Test the feedback when matching the relation type fails.
+     * Test the behaviour of a compound comparator and its feedback when matching the relation type fails.
      */
     @Test
     public void testGetFeedbackForRelationTypeMismatch() {
