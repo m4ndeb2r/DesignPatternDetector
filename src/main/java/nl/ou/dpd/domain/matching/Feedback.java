@@ -18,20 +18,13 @@ public class Feedback {
 
     private static final String MSG_NOT_ANALYSED = "Not analysed.";
 
-    private final String patternName;
     private final Map<Node, Map<FeedbackType, List<String>>> nodeRelatedFeedbackMessages = new HashMap<>();
     private final Map<Relation, Map<FeedbackType, List<String>>> relationRelatedFeedbackMessages = new HashMap<>();
 
     public Feedback() {
-        this("Unknown");
     }
 
-    public Feedback(String patternName) {
-        this.patternName = patternName;
-    }
-
-    public Feedback(String patternName, SystemUnderConsideration systemUnderConsideration) {
-        this.patternName = patternName;
+    public Feedback(SystemUnderConsideration systemUnderConsideration) {
         systemUnderConsideration.edgeSet().forEach(relation -> {
             addFeedbackMessage(relation, FeedbackType.NOT_ANALYSED, MSG_NOT_ANALYSED);
             addFeedbackMessage(systemUnderConsideration.getEdgeSource(relation), FeedbackType.NOT_ANALYSED, MSG_NOT_ANALYSED);
@@ -93,4 +86,5 @@ public class Feedback {
                                 .forEach(msg -> addFeedbackMessage(relation, type, msg))));
         return this;
     }
+
 }
