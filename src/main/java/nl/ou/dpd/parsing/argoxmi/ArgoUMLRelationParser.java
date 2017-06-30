@@ -75,25 +75,16 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @return a new {@link SystemUnderConsideration}.
      */
     public SystemUnderConsideration parse(String filename, Map<String, Node> nodes) {
+        initParse(nodes);
+        doParse(filename);
+        return system;
+    }
+
+    protected void initParse(Map<String, Node> nodes) {
         this.nodes = nodes;
         navigabilities = new Stack<>();
         sourceAndTarget = new Stack<>();
         cardinalities = new Stack<>();
-
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-
-        try (InputStream input = new FileInputStream(new File(filename))) {
-            XMLEventReader eventReader = factory.createXMLEventReader(input);
-            handleEvents(eventReader);
-        } catch (ParseException pe) {
-            // We don't need to repackage a ParseException in a ParseException.
-            // Rethrow ParseExceptions directly
-            throw pe;
-        } catch (Exception e) {
-            final String msg = "The XMI file " + filename + " could not be parsed.";
-            error(msg, e);
-        }
-        return system;
     }
 
     protected void handleStartElement(XMLEvent event) {

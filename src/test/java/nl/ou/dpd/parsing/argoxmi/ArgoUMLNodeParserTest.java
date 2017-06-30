@@ -54,7 +54,7 @@ public class ArgoUMLNodeParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The XMI file " + path + " could not be parsed.");
+        thrown.expectMessage("The XMI file '" + path + "' could not be parsed.");
 
         parser.parse(path);
     }
@@ -69,7 +69,7 @@ public class ArgoUMLNodeParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The XMI file missing.xml could not be parsed.");
+        thrown.expectMessage("The XMI file 'missing.xml' could not be parsed.");
 
         parser.parse("missing.xml");
     }

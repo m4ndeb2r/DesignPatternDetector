@@ -80,7 +80,7 @@ public class ArgoUMLRelationParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The XMI file " + path + " could not be parsed.");
+        thrown.expectMessage("The XMI file '" + path + "' could not be parsed.");
 
         nodes = nodeParser.parse(path);
         relationParser.parse(path, nodes);
@@ -97,7 +97,7 @@ public class ArgoUMLRelationParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The XMI file missing.xml could not be parsed.");
+        thrown.expectMessage("The XMI file 'missing.xml' could not be parsed.");
 
         nodes = nodeParser.parse("missing.xml");
         relationParser.parse("missing.xml", nodes);

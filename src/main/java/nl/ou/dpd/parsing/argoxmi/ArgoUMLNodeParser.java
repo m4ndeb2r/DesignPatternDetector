@@ -77,21 +77,13 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * value is represented by the node itself.
      */
     public Map<String, Node> parse(String filename) {
-        nodes = new HashMap<>();
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-
-        try (InputStream input = new FileInputStream(new File(filename))) {
-            XMLEventReader eventReader = factory.createXMLEventReader(input);
-            handleEvents(eventReader);
-        } catch (ParseException pe) {
-            // We don't need to repackage a ParseException in a ParseException.
-            // Rethrow ParseExceptions directly
-            throw pe;
-        } catch (Exception e) {
-            final String msg = "The XMI file " + filename + " could not be parsed.";
-            error(msg, e);
-        }
+        initParse(new HashMap<>());
+        doParse(filename);
         return nodes;
+    }
+
+    protected void initParse(Map<String, Node> nodes) {
+        this.nodes = nodes;
     }
 
     protected void handleStartElement(XMLEvent event) {

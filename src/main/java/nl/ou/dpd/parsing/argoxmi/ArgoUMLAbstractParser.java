@@ -34,6 +34,23 @@ public abstract class ArgoUMLAbstractParser {
     protected Stack<XMLEvent> events = new Stack<>();
     protected Map<String, Node> nodes;
 
+    protected void doParse(String filename) {
+        try (InputStream input = new FileInputStream(new File(filename))) {
+            final XMLInputFactory factory = XMLInputFactory.newInstance();
+            final XMLEventReader eventReader = factory.createXMLEventReader(input);
+            handleEvents(eventReader);
+        } catch (ParseException pe) {
+            // We don't need to repackage a ParseException in a ParseException.
+            // Rethrow ParseExceptions directly
+            throw pe;
+        } catch (Exception e) {
+            String msg = String.format("The XMI file '%s' could not be parsed.", filename);
+            error(msg, e);
+        }
+    }
+
+    protected abstract void initParse(Map<String, Node> nodes);
+
     protected void handleEvents(XMLEventReader eventReader) throws XMLStreamException {
         while (eventReader.hasNext()) {
             XMLEvent event = eventReader.nextEvent();
