@@ -18,11 +18,7 @@
 
 ## TODO: testing
 * separate integration tests from unittests
-* unittests for: 
-  * Solution
-  * PatternInspector
-  * RelationPropertyAndCardinalityTest should be a RelationPropertyTest (remove duplicate code)
-  * Consider more tests for the GUI....
+* Consider more tests for the GUI....
 
 ## TODO: patterns
 * Add integration tests for several patterns
