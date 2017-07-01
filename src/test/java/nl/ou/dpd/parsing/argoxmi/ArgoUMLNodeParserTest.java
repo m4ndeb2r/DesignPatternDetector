@@ -50,13 +50,10 @@ public class ArgoUMLNodeParserTest {
     @Test
     public void testXMLStreamException() {
         final String path = getPath(INVALID_XML);
-        final ArgoUMLNodeParser parser = new ArgoUMLNodeParser();
-
         thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
         thrown.expectMessage("The XMI file '" + path + "' could not be parsed.");
-
-        parser.parse(path);
+        new ArgoUMLNodeParser().parse(path);
     }
 
     /**
@@ -65,13 +62,10 @@ public class ArgoUMLNodeParserTest {
      */
     @Test
     public void testFileNotFoundException() {
-        final ArgoUMLNodeParser parser = new ArgoUMLNodeParser();
-
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
         thrown.expectMessage("The XMI file 'missing.xml' could not be parsed.");
-
-        parser.parse("missing.xml");
+        new ArgoUMLNodeParser().parse("missing.xml");
     }
 
     /**
@@ -79,10 +73,8 @@ public class ArgoUMLNodeParserTest {
      */
     @Test
     public void testParse1() {
-        final ArgoUMLNodeParser parser = new ArgoUMLNodeParser();
         final String path = getPath(VALID_ADAPTER);
-
-        final Map<String, Node> nodes = parser.parse(path);
+        final Map<String, Node> nodes = new ArgoUMLNodeParser().parse(path);
 
         //number of nodes
         assertEquals(4, nodes.size());
@@ -120,12 +112,11 @@ public class ArgoUMLNodeParserTest {
      */
     @Test
     public void testParse2() {
-        final ArgoUMLNodeParser parser = new ArgoUMLNodeParser();
         final String path = getPath(VALID_ADAPTERS);
-
-        final Map<String, Node> nodes = parser.parse(path);
+        final Map<String, Node> nodes = new ArgoUMLNodeParser().parse(path);
 
         assertEquals(40, nodes.size());
+
         //SquarePeg
         Node node = nodes.get("-84-26-0-54--1e9ba376:15aad4320f4:-8000:0000000000000866");
         assertEquals("SquarePeg", node.getName());
@@ -162,51 +153,38 @@ public class ArgoUMLNodeParserTest {
         assertEquals(0, findOperationByName(node, "getRadius").getParameters().size());
     }
 
-    /**
-     * @param adaptertemplatesXml
-     * @return
-     */
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
     }
 
-    private Boolean containsType(Node node, NodeType nodetype) {
-        for (NodeType nt : node.getTypes()) {
-            if (nodetype.equals(nt)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean containsType(Node node, NodeType nodetype) {
+        return node.getTypes().stream()
+                .anyMatch(nt -> nt.equals(nodetype));
     }
 
-
     private Attribute findAttributeByName(Node node, String name) {
-        for (Attribute a : node.getAttributes()) {
-            if (a.getName().equals(name)) {
-                return a;
-            }
-        }
-        return null;
+        return node.getAttributes().stream()
+                .filter(attribute -> attribute.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     private Operation findOperationByName(Node node, String name) {
-        for (Operation op : node.getOperations()) {
-            if (op.getName().equals(name)) {
-                return op;
-            }
-        }
-        return null;
+        return node.getOperations().stream()
+                .filter(operation -> operation.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     private Parameter findParameterByName(Node node, String name) {
         for (Operation op : node.getOperations()) {
-            for (Parameter p : op.getParameters())
+            for (Parameter p : op.getParameters()) {
                 if (p.getName().equals(name)) {
                     return p;
                 }
+            }
         }
         return null;
     }
-
 
 }

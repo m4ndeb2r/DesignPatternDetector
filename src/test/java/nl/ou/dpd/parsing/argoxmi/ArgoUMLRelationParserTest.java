@@ -28,6 +28,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests the {@link SystemRelationsExtractor} class.
  *
+ * TODO: this class is quite messy. Can the commented-out code be removed? Why are the so may single commented-out lines of code? Is this test still heavily under construction?
+ *
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
@@ -57,16 +59,18 @@ public class ArgoUMLRelationParserTest {
     private static final String STRATEGY = "/Strategy.xmi";
     // A test file containing invalid XML.
     private static final String INVALID_XML = "/invalid.xml";
+
     /**
      * Exception rule.
      */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    Map<String, Node> nodes;
-    Relation relation;
-    Node source;
-    Node target;
-    Attribute attr;
+
+    private Map<String, Node> nodes;
+    private Relation relation;
+    private Node source;
+    private Node target;
+    private Attribute attr;
 
     /**
      * Tests the exception handling in case of document which could not be parsed, resulting in a {@link XMLStreamException} during
