@@ -5,17 +5,11 @@ import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.node.Parameter;
 import nl.ou.dpd.domain.node.Visibility;
-import nl.ou.dpd.parsing.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -447,8 +441,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
         final String name = attributes.get(NAME);
         final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
         final Operation operation = new Operation(id, parentNode);
-        operation.setName(name);
-        operation.setVisibility(visibility);
+        operation.setName(name).setVisibility(visibility);
         return operation;
     }
 

@@ -13,7 +13,6 @@
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
-* Setters should return this to provide the possibility of chaining
 * Refactor ArgoUMLParsers and Exstractor to a ChainOfResponsibility
 
 ## TODO: testing

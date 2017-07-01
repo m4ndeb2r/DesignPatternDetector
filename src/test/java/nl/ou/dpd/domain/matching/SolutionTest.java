@@ -1,6 +1,5 @@
 package nl.ou.dpd.domain.matching;
 
-import com.sun.org.apache.regexp.internal.RE;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.relation.Relation;
 import org.junit.Before;

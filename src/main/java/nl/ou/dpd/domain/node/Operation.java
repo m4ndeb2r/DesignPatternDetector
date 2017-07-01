@@ -54,16 +54,18 @@ public class Operation implements SignatureComparable<Operation> {
         return returnType;
     }
 
-    public void setReturnType(Node returnType) {
+    public Operation setReturnType(Node returnType) {
         this.returnType = returnType;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Operation setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getId() {
@@ -74,8 +76,9 @@ public class Operation implements SignatureComparable<Operation> {
         return visibility;
     }
 
-    public void setVisibility(Visibility visibility) {
+    public Operation setVisibility(Visibility visibility) {
         this.visibility = visibility;
+        return this;
     }
 
     public boolean equalsSignature(Operation other) {

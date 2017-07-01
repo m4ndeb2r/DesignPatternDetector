@@ -41,8 +41,9 @@ public class Attribute implements SignatureComparable<Attribute> {
         return name;
     }
 
-    public void setName(String name) {
+    public Attribute setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getId() {
@@ -53,16 +54,18 @@ public class Attribute implements SignatureComparable<Attribute> {
         return type;
     }
 
-    public void setType(Node type) {
+    public Attribute setType(Node type) {
         this.type = type;
+        return this;
     }
 
     public Visibility getVisibility() {
         return visibility;
     }
 
-    public void setVisibility(Visibility visibility) {
+    public Attribute setVisibility(Visibility visibility) {
         this.visibility = visibility;
+        return this;
     }
 
     public boolean equalsSignature(Attribute other) {

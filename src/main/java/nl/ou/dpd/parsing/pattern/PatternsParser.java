@@ -93,7 +93,7 @@ public class PatternsParser {
             final XMLInputFactory factory = XMLInputFactory.newInstance();
             final XMLEventReader eventReader = factory.createXMLEventReader(input);
             handleEvents(eventReader);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw ex;
         }
     }
@@ -102,7 +102,7 @@ public class PatternsParser {
         final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         final Schema schema = schemaFactory.newSchema(xsdUrl);
         final Validator validator = schema.newValidator();
-        try(final InputStream stream = new FileInputStream(new File(xmlFilename))) {
+        try (final InputStream stream = new FileInputStream(new File(xmlFilename))) {
             validator.validate(new StreamSource(stream));
         } catch (Exception ex) {
             throw ex;
@@ -147,8 +147,9 @@ public class PatternsParser {
         this.nodes = new HashSet<>();
         this.designPattern = new DesignPattern(getAttributeFromEvent(event, NAME), getAttributeFromEvent(event, FAMILY));
         this.designPatterns.add(designPattern);
-        this.designPattern.setNodeComparator(NodeComparatorFactory.createCompoundNodeComparator());
-        this.designPattern.setRelationComparator(RelationComparatorFactory.createCompoundRelationComparator());
+        this.designPattern
+                .setNodeComparator(NodeComparatorFactory.createCompoundNodeComparator())
+                .setRelationComparator(RelationComparatorFactory.createCompoundRelationComparator());
     }
 
     private void handleNodeStartElement(XMLEvent event) {

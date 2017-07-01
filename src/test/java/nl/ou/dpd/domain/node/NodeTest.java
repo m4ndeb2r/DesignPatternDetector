@@ -126,8 +126,7 @@ public class NodeTest {
         Operation op3 = new Operation("op3", node50);
         op3.setName("anotherOperation");
         assertFalse(node1.equalsSignature(node50));
-        op3.setName("operation");
-        op3.setVisibility(Visibility.PUBLIC);
+        op3.setName("operation").setVisibility(Visibility.PUBLIC);
         assertTrue(node1.equalsSignature(node50));
 
         Node node40 = new Node("004", "name", null);

@@ -39,16 +39,18 @@ public class DesignPattern extends DefaultDirectedGraph<Node, Relation> {
         return relationComparator;
     }
 
-    public void setRelationComparator(FeedbackEnabledComparator<Relation> relationComparator) {
+    public DesignPattern setRelationComparator(FeedbackEnabledComparator<Relation> relationComparator) {
         this.relationComparator = relationComparator;
+        return this;
     }
 
     public FeedbackEnabledComparator<Node> getNodeComparator() {
         return nodeComparator;
     }
 
-    public void setNodeComparator(FeedbackEnabledComparator<Node> nodeComparator) {
+    public DesignPattern setNodeComparator(FeedbackEnabledComparator<Node> nodeComparator) {
         this.nodeComparator = nodeComparator;
+        return this;
     }
 
 }

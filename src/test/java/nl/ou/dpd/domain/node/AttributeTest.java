@@ -54,9 +54,7 @@ public class AttributeTest {
         final Visibility[] visibilities = new Visibility[]{Visibility.PUBLIC, Visibility.PRIVATE};
 
         final Attribute attr1 = new Attribute(ids[1], parents[1]);
-        attr1.setName(names[1]);
-        attr1.setType(types[1]);
-        attr1.setVisibility(visibilities[1]);
+        attr1.setName(names[1]).setType(types[1]).setVisibility(visibilities[1]);
 
         assertFalse(attr1.equalsSignature(null));
 
@@ -66,9 +64,7 @@ public class AttributeTest {
                     for (Node type : types) {
                         for (Visibility visibility : visibilities) {
                             final Attribute attr2 = new Attribute(id, parent);
-                            attr2.setName(name);
-                            attr2.setType(type);
-                            attr2.setVisibility(visibility);
+                            attr2.setName(name).setType(type).setVisibility(visibility);
 
                             // The equality of a signature is exclusively based on name and type
                             final boolean nameEquals = attr1.getName().equals(attr2.getName());

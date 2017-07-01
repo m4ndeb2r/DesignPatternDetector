@@ -7,10 +7,11 @@ import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 import java.net.URL;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the matching process for a ChainOfResponsibility pattern.

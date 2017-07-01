@@ -106,8 +106,9 @@ public class PatternInspectorTest {
     @Test
     public void testMatch() {
         // These comparators accept any node and any relation.
-        designPattern.setNodeComparator(acceptingNodeComparator);
-        designPattern.setRelationComparator(acceptingRelationComparator);
+        designPattern
+                .setNodeComparator(acceptingNodeComparator)
+                .setRelationComparator(acceptingRelationComparator);
 
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
         assertTrue(patternInspector.isomorphismExists());
@@ -157,8 +158,9 @@ public class PatternInspectorTest {
     @Test
     public void testNoMatch() {
         // These comparators reject any node and any relation.
-        designPattern.setNodeComparator(rejectingNodeComparator);
-        designPattern.setRelationComparator(rejectingRelationComparator);
+        designPattern
+                .setNodeComparator(rejectingNodeComparator)
+                .setRelationComparator(rejectingRelationComparator);
 
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
         assertFalse(patternInspector.isomorphismExists());

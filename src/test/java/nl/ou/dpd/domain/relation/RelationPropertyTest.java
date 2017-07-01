@@ -10,10 +10,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -25,6 +23,11 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RelationPropertyTest {
 
+    /**
+     * Exception rule.
+     */
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     @Mock
     private Cardinality left_1, left_1_UNLIMITED, right_UNLIMITED, right_0_1;
 
@@ -35,13 +38,6 @@ public class RelationPropertyTest {
         when(right_0_1.toString()).thenReturn("0..1");
         when(right_UNLIMITED.toString()).thenReturn("*");
     }
-
-
-    /**
-     * Exception rule.
-     */
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testConstructor() {

@@ -6,16 +6,10 @@ import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
-import nl.ou.dpd.parsing.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -242,8 +236,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
             if (rp != null) {
                 cardinalities.push(new Cardinality(lower, upper));
                 if (cardinalities.size() == 2) {
-                    rp.setCardinalityRight(cardinalities.pop());
-                    rp.setCardinalityLeft(cardinalities.pop());
+                    rp.setCardinalityRight(cardinalities.pop()).setCardinalityLeft(cardinalities.pop());
                 }
             }
         }
@@ -265,9 +258,10 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         Node sourceNode = sourceAndTarget.pop();
         boolean added = system.addEdge(sourceNode, targetNode, lastRelation);
         if (!added) {
-        	//add the new relationproperties to the existing relation
-        	addRelationProperties(lastRelation, system.getEdge(sourceNode, targetNode));
-        }        addReverseRelation(event, sourceNode, targetNode);
+            //add the new relationproperties to the existing relation
+            addRelationProperties(lastRelation, system.getEdge(sourceNode, targetNode));
+        }
+        addReverseRelation(event, sourceNode, targetNode);
     }
 
     private Relation findSystemRelationById(String id) {
@@ -279,14 +273,15 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
 
     /**
      * Adds the {@link Relationproperty} (or properties)of the sourceRelation to the targetRelation.
-	 * @param sourceRelation
-	 * @param targetRelation
-	 */
-	private void addRelationProperties(Relation sourceRelation, Relation targetRelation) {
-		for (RelationProperty srcProperty : sourceRelation.getRelationProperties()) {
-			targetRelation.addRelationProperty(srcProperty);
-		}		
-	}
+     *
+     * @param sourceRelation
+     * @param targetRelation
+     */
+    private void addRelationProperties(Relation sourceRelation, Relation targetRelation) {
+        for (RelationProperty srcProperty : sourceRelation.getRelationProperties()) {
+            targetRelation.addRelationProperty(srcProperty);
+        }
+    }
 
     private RelationType findRelationTypeByString(String relationType) {
         switch (relationType) {

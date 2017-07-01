@@ -10,7 +10,9 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the matching process for a Adapter pattern.

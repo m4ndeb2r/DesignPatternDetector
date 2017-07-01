@@ -33,16 +33,18 @@ public class RelationProperty {
         return cardinalityLeft;
     }
 
-    public void setCardinalityLeft(Cardinality cardinalityLeft) {
+    public RelationProperty setCardinalityLeft(Cardinality cardinalityLeft) {
         this.cardinalityLeft = cardinalityLeft;
+        return this;
     }
 
     public Cardinality getCardinalityRight() {
         return cardinalityRight;
     }
 
-    public void setCardinalityRight(Cardinality cardinalityRight) {
+    public RelationProperty setCardinalityRight(Cardinality cardinalityRight) {
         this.cardinalityRight = cardinalityRight;
+        return this;
     }
 
     @Override
