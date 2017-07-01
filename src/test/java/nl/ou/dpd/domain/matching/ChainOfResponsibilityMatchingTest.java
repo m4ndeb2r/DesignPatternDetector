@@ -33,7 +33,7 @@ public class ChainOfResponsibilityMatchingTest {
 
     @Test
     public void testMatchingChainOfResponsibilityMatching() {
-        // Parse the bridge pattern xml ands create a DesignPattern
+        // Parse the chainofresponsibility pattern xml ands create a DesignPattern
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern

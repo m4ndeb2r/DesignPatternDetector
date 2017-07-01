@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Test the matching process for a Bridge pattern.
+ * Test the matching process for a Decorator pattern.
  *
  * @author Martin de Boer
  * @author Peter Vansweevelt
@@ -33,7 +33,7 @@ public class DecoratorMatchingTest {
 
     @Test
     public void testMatchingDecorator() {
-        // Parse the bridge pattern xml ands create a DesignPattern
+        // Parse the decorator pattern xml ands create a DesignPattern
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
