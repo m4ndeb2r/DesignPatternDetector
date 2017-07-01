@@ -43,7 +43,7 @@ public class CardinalityTest {
     }
 
     @Test
-    public void testFromValue() {
+    public void testValueOf() {
         Cardinality cardinality = Cardinality.valueOf("1");
         assertThat(cardinality.getLower(), is(1));
         assertThat(cardinality.getUpper(), is(1));
@@ -66,38 +66,45 @@ public class CardinalityTest {
     }
 
     @Test
-    public void testFromValueLowerValueUnlimited() {
+    public void testValueOfLowerValueUnlimited() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Unlimited value not allowed for lowerbound value.");
         Cardinality.valueOf("*..0");
     }
 
     @Test
-    public void testFromValueLowerTooLarge() {
+    public void testValueOfLowerTooLarge() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Upperbound value must be >= lowerbound value.");
         Cardinality.valueOf("1..0");
     }
 
     @Test
-    public void testFromValueTooManyArgs() {
+    public void testValueOfTooManyArgs() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Illegal cardinality value: '1..2..3'.");
         Cardinality.valueOf("1..2..3");
     }
 
     @Test
-    public void testFromValueCharacters() {
+    public void testValueOfCharacters() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Illegal cardinality value: 'a..*'.");
         Cardinality.valueOf("a..*");
     }
 
     @Test
-    public void testNegativeValues() {
+    public void testValueOfWithNegativeValues() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("No negative values allowed in cardinality.");
         Cardinality.valueOf("-2..-1");
+    }
+
+    @Test
+    public void testValueOfWithIllegalSeparator() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Illegal cardinality value: '1/5'.");
+        Cardinality.valueOf("1/5");
     }
 
     @Test
@@ -142,6 +149,14 @@ public class CardinalityTest {
         assertThat(Cardinality.valueOf("1,1").toString(), is("1"));
         assertThat(Cardinality.valueOf("3,5").toString(), is("3..5"));
         assertThat(Cardinality.valueOf("1,*").toString(), is("1..*"));
+    }
+
+    @Test
+    public void testEquals() {
+        Cardinality c = Cardinality.valueOf("*");
+        assertTrue(c.equals(c));
+        assertTrue(c.equals(Cardinality.valueOf("*")));
+        assertFalse(c.equals(null));
     }
 
 }
