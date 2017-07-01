@@ -13,12 +13,12 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Test the matching process for a Bridge pattern.
+ * Test the matching process for a ChainOfResponsibility pattern.
  *
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
-public class ChainOfResponsabilityMatchingTest {
+public class ChainOfResponsibilityMatchingTest {
 
     private String patternsXmlFile;
     private PatternsParser patternsParser;
@@ -27,17 +27,17 @@ public class ChainOfResponsabilityMatchingTest {
     @Before
     public void initTests() {
         xmiParser = new ArgoUMLParser();
-        patternsXmlFile = ChainOfResponsabilityMatchingTest.class.getResource("/patterns_chainofresponsability.xml").getFile();
+        patternsXmlFile = ChainOfResponsibilityMatchingTest.class.getResource("/patterns_chainofresponsibility.xml").getFile();
         patternsParser = new PatternsParser();
     }
 
     @Test
-    public void testMatchingChainOfResponsabilityMatching() {
+    public void testMatchingChainOfResponsibilityMatching() {
         // Parse the bridge pattern xml ands create a DesignPattern
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = ChainOfResponsabilityMatchingTest.class.getResource("/MyChainOfResponsability.xmi");
+        final URL sucXmiUrl = ChainOfResponsibilityMatchingTest.class.getResource("/MyChainOfResponsibility.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <patterns>
-    <pattern name="ChainOfResponsability" family="ChainOfResponsability">
+    <pattern name="ChainOfResponsibility" family="ChainOfResponsibility">
         <nodes>
             <node id="Client">
                 <node.rule nodeType="CONCRETE_CLASS"/>
