@@ -8,10 +8,8 @@ import org.jgrapht.GraphMapping;
 import org.jgrapht.alg.isomorphism.VF2SubgraphIsomorphismInspector;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -78,7 +76,7 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
 
     private void addMatchingRelationsToSolution(Solution solution, Relation systemRelation, GraphMapping<Node, Relation> mapping) {
         final Relation patternRelation = mapping.getEdgeCorrespondence(systemRelation, true);
-        solution.addMatchingRelation(systemRelation, patternRelation);
+        solution.addMatchingRelations(systemRelation, patternRelation);
     }
 
     private void addMatchingNodesToSolution(Solution solution, Node systemNode, GraphMapping<Node, Relation> mapping) {

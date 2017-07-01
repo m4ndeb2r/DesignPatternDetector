@@ -41,6 +41,10 @@ public class Solution {
                 .collect(Collectors.toList());
     }
 
+    public List<Relation[]> getMatchingRelations() {
+        return this.matchingRelations;
+    }
+
     public Solution addMatchingNodes(Node systemNode, Node patternNode) {
         if (!previouslyAddedMatchingNodes(systemNode, patternNode)) {
             matchingNodes.add(new Node[]{systemNode, patternNode});
@@ -57,12 +61,19 @@ public class Solution {
         return false;
     }
 
-    public Solution addMatchingRelation(Relation systemRelation, Relation patternRelation) {
-        this.matchingRelations.add(new Relation[]{systemRelation, patternRelation});
+    public Solution addMatchingRelations(Relation systemRelation, Relation patternRelation) {
+        if (!previouslyAddedMatchingRelations(systemRelation, patternRelation)) {
+            this.matchingRelations.add(new Relation[]{systemRelation, patternRelation});
+        }
         return this;
     }
 
-    public List<Relation[]> getMatchingRelations() {
-        return this.matchingRelations;
+    private boolean previouslyAddedMatchingRelations(Relation systemRelation, Relation patternRelation) {
+        for (Relation[] relations : getMatchingRelations()) {
+            if (systemRelation.equals(relations[SYSTEM_IDX]) && patternRelation.equals(relations[PATTERN_IDX])) {
+                return true;
+            }
+        }
+        return false;
     }
 }
