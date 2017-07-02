@@ -1,28 +1,23 @@
 # DesignPatternDetector
 
 ## Original version
-The original version was a command line application. It was developed
-as a prototype by E. van Doorn. it analyses exports from ArgoUML (\*.xmi) 
-and attempts to find design patterns, specied in templates file (\*.xml).
-The input files were provided to the application as command line arguments,
-along with a third argument, the maximum number of allowed missing edges 
-(-n flag).
+The original version was a command line application. It was developed as a prototype by E. van Doorn. it analyses 
+exports from ArgoUML (\*.xmi) and attempts to find design patterns, specied in templates file (\*.xml). The input files 
+were provided to the application as command line arguments, along with a third argument, the maximum number of allowed 
+missing edges (-n flag).
 
 **Example**
 
 `$ java -jar ./target/patterndetectionArgouml.jar -x input.xmi -t templates.xml -n 1
 `
 
-With -n 0 the application is very strict when detecting patterns. With higher values
-it is less strict, and accepts n missing edges in detected patterns. Typical values 
-for -n are 0 (strict) or 1 (not so strict).
+With -n 0 the application is very strict when detecting patterns. With higher values it is less strict, and accepts n 
+missing edges in detected patterns. Typical values for -n are 0 (strict) or 1 (not so strict).
 
 ## Current version
-The current version is a JavaFX application with a graphic userinterface. 
-Just like the original prototype, it analyses exports from ArgoUML (\*.xmi) 
-and attempts to find design patterns, specied in templates file (\*.xml).
-All arguments can be entered in the GUI. Pattern detection is currently no
-different from the original prototype, fundamentally.
+The current version is a JavaFX application with a graphic userinterface. Just like the original prototype, it analyses 
+exports from ArgoUML (\*.xmi) and attempts to find design patterns, specied in templates file (\*.xml). All arguments 
+can be entered in the GUI. Pattern detection is currently no different from the original prototype, fundamentally.
 
 **Example**
 
@@ -35,8 +30,9 @@ different from the original prototype, fundamentally.
 
 After starting the application choose *File* > *New project* from the menu. A new project opens with the default name 
 [New Project]. To run an analysis, two input parameters have to be provided: (1) select an input (an export from
-ArgoUML, an `*.xmi` file), and (2) select a desing pattern templates file (`*.xml`). After that, hit the analyse button, 
-and the application will attempt to detect design patterns defined in templates file (2) in the in input file (1).
+ArgoUML, an `*.xmi` file), and (2) select a design pattern (templates) file (`*.xml`). After that, hit the analyse 
+button, and the application will attempt to detect design patterns defined in patterns file (2) in the in input file 
+containing the specs of your system design (1).
 
 Save the project via *File > Save* or *File > Save as*. Saved projects can be re-opened via *File > Open*.
 

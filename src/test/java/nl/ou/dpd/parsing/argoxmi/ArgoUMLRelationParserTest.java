@@ -1,6 +1,5 @@
 package nl.ou.dpd.parsing.argoxmi;
 
-
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
@@ -26,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Tests the {@link SystemRelationsExtractor} class.
+ * Tests the {@link ArgoUMLRelationParser} class.
  *
  * TODO: this class is quite messy. Can the commented-out code be removed? Why are the so may single commented-out lines of code? Is this test still heavily under construction?
  *
@@ -72,10 +71,6 @@ public class ArgoUMLRelationParserTest {
     private Node target;
     private Attribute attr;
 
-    /**
-     * Tests the exception handling in case of document which could not be parsed, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
-     */
     @Test
     public void testXMLStreamException() {
         final String path = getPath(INVALID_XML);
@@ -91,8 +86,7 @@ public class ArgoUMLRelationParserTest {
     }
 
     /**
-     * Tests the exception handling in case of a {@link IOException} during parsing a template file by a
-     * {@link TemplatesParserWithConditions}.
+     * Tests the exception handling in case of a {@link IOException} during parsing a patterns file.
      */
     @Test
     public void testFileNotFoundException() {
@@ -555,7 +549,7 @@ public class ArgoUMLRelationParserTest {
     }
 
     /**
-     * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLSystemParser}.
+     * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLRelationParser}.
      */
 /*    @Test
     public void testParseBaBrahem() {
@@ -566,7 +560,7 @@ public class ArgoUMLRelationParserTest {
         assertEquals("untitledModel", suc.getName());
 
         assertEquals(6, suc.edgeSet().size());
-        assertEquals(5, suc.vertexSet().size());        
+        assertEquals(5, suc.vertexSet().size());
 
         source = findVerticesByName(suc, RelationType.HAS_ATTRIBUTE_OF).get(0);
         target = findVerticesByName(suc, "B").get(0);
@@ -581,7 +575,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.ASSOCIATES_WITH));
- 
+
         source = findVerticesByName(suc, RelationType.HAS_ATTRIBUTE_OF).get(0);
         target = findVerticesByName(suc, "C").get(0);
         assertEquals(NodeType.CLASS, target.getType());
@@ -631,7 +625,7 @@ public class ArgoUMLRelationParserTest {
         assertEquals("untitledModel", suc.getName());
 
         assertEquals(8, suc.edgeSet().size());
-        assertEquals(8, suc.vertexSet().size());        
+        assertEquals(8, suc.vertexSet().size());
 
         source = findVerticesByName(suc, "Client").get(0);
         target = findVerticesByName(suc, "Ab").get(0);
@@ -646,7 +640,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.ASSOCIATES_WITH));
- 
+
         source = findVerticesByName(suc, "ConcAbstr1").get(0);
         target = findVerticesByName(suc, "Ab").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -657,7 +651,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.IMPLEMENTS));
- 
+
         source = findVerticesByName(suc, "ConcAbstr2").get(0);
         target = findVerticesByName(suc, "Ab").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -668,7 +662,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.IMPLEMENTS));
- 
+
         source = findVerticesByName(suc, "ConcAbstr2").get(0);
         target = findVerticesByName(suc, "ConcImpl1").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -679,7 +673,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.ASSOCIATES_WITH));
- 
+
         source = findVerticesByName(suc, "ConcImpl1").get(0);
         target = findVerticesByName(suc, "Impl").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -690,7 +684,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.IMPLEMENTS));
- 
+
         source = findVerticesByName(suc, "ConcImpl2").get(0);
         target = findVerticesByName(suc, "Impl").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -698,7 +692,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.IMPLEMENTS));
- 
+
         source = findVerticesByName(suc, "ConcImpl3").get(0);
         target = findVerticesByName(suc, "Impl").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -706,7 +700,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.IMPLEMENTS));
- 
+
         source = findVerticesByName(suc, "Ab").get(0);
         target = findVerticesByName(suc, "Impl").get(0);
         assertEquals(NodeType.INTERFACE, source.getType());
@@ -714,7 +708,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.ASSOCIATES_WITH));
- 
+
     }
 */
     /**
@@ -730,7 +724,7 @@ public class ArgoUMLRelationParserTest {
         assertEquals("untitledModel", suc.getName());
 
         assertEquals(3, suc.edgeSet().size());
-        assertEquals(4, suc.vertexSet().size());        
+        assertEquals(4, suc.vertexSet().size());
 
         source = findVerticesByName(suc, "ConcrMaker").get(0);
         target = findVerticesByName(suc, "Prod").get(0);
@@ -745,7 +739,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.DEPENDS_ON));
- 
+
         source = findVerticesByName(suc, "ConcrMaker").get(0);
         target = findVerticesByName(suc, "Maker").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -756,7 +750,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.RelationType.IMPLEMENTS));
- 
+
         source = findVerticesByName(suc, "Direc").get(0);
         target = findVerticesByName(suc, "Maker").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -779,7 +773,7 @@ public class ArgoUMLRelationParserTest {
         assertEquals("untitledModel", suc.getName());
 
         assertEquals(4, suc.edgeSet().size());
-        assertEquals(4, suc.vertexSet().size());        
+        assertEquals(4, suc.vertexSet().size());
 
         source = findVerticesByName(suc, "User").get(0);
         target = findVerticesByName(suc, "Processor").get(0);
@@ -794,7 +788,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.ASSOCIATES_WITH));
- 
+
         source = findVerticesByName(suc, "Processor").get(0);
         target = findVerticesByName(suc, "Processor").get(0);
         assertEquals(NodeType.INTERFACE, source.getType());
@@ -802,7 +796,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.ASSOCIATES_WITH));
- 
+
         source = findVerticesByName(suc, "ConcProcess1").get(0);
         target = findVerticesByName(suc, "Processor").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -813,7 +807,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.IMPLEMENTS));
- 
+
         source = findVerticesByName(suc, "ConcProcess2").get(0);
         target = findVerticesByName(suc, "Processor").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -839,7 +833,7 @@ public class ArgoUMLRelationParserTest {
         assertEquals("untitledModel", suc.getName());
 
         assertEquals(5, suc.edgeSet().size());
-        assertEquals(5, suc.vertexSet().size());        
+        assertEquals(5, suc.vertexSet().size());
 
         source = findVerticesByName(suc, "User").get(0);
         target = findVerticesByName(suc, "Rec").get(0);
@@ -887,7 +881,7 @@ public class ArgoUMLRelationParserTest {
         relation = suc.getEdge(source, target);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relationTypeExists(relation.getRelationProperties(),RelationType.ASSOCIATES_WITH));
- 
+
         source = findVerticesByName(suc, "ConcTask").get(0);
         target = findVerticesByName(suc, "Rec").get(0);
         assertEquals(NodeType.CLASS, source.getType());
@@ -910,7 +904,7 @@ public class ArgoUMLRelationParserTest {
         assertEquals("Composite", suc.getName());
 
         assertEquals(3, suc.edgeSet().size());
-        assertEquals(4, suc.vertexSet().size());        
+        assertEquals(4, suc.vertexSet().size());
 
         source = findVerticesByName(suc, "User").get(0);
         target = findVerticesByName(suc, "Part").get(0);
@@ -963,7 +957,7 @@ public class ArgoUMLRelationParserTest {
         assertEquals("untitledProfile", suc.getName());
 
         assertEquals(4, suc.edgeSet().size());
-        assertEquals(5, suc.vertexSet().size());        
+        assertEquals(5, suc.vertexSet().size());
 
         source = findVerticesByName(suc, "Dec").get(0);
         target = findVerticesByName(suc, "Part").get(0);
@@ -1440,10 +1434,6 @@ public class ArgoUMLRelationParserTest {
     }
 */
 
-    /**
-     * @param adaptertemplatesXml
-     * @return
-     */
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
     }
@@ -1520,7 +1510,7 @@ public class ArgoUMLRelationParserTest {
         }
         return false;
     }
-/* 
+/*
     private Attribute findAttributeByName(Node node, String name) {
     	for (Attribute a : node.getAttributes()) {
     		if (a.getName().equals(name)) {
@@ -1529,7 +1519,7 @@ public class ArgoUMLRelationParserTest {
     	}
     	return null;
     }
-*/    
+*/
 /*    private Method findOperationByName(Node node, String name) {
         for (Method m : node.getMethods()) {
     		if (m.getName().equals(name)) {

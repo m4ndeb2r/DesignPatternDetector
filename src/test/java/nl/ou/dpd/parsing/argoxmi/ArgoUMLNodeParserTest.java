@@ -44,8 +44,8 @@ public class ArgoUMLNodeParserTest {
     public ExpectedException thrown = ExpectedException.none();
 
     /**
-     * Tests the exception handling in case of document which could not be parsed, resulting in a {@link XMLStreamException} during
-     * parsing a template file by a {@link TemplatesParserWithConditions}.
+     * Tests the exception handling in case of document which could not be parsed, resulting in a
+     * {@link XMLStreamException} during parsing a patterns file by a {@link ArgoUMLNodeParser}.
      */
     @Test
     public void testXMLStreamException() {
@@ -57,8 +57,7 @@ public class ArgoUMLNodeParserTest {
     }
 
     /**
-     * Tests the exception handling in case of a {@link IOException} during parsing a template file by a
-     * {@link TemplatesParserWithConditions}.
+     * Tests the exception handling in case of a {@link IOException} during parsing.
      */
     @Test
     public void testFileNotFoundException() {
@@ -69,7 +68,7 @@ public class ArgoUMLNodeParserTest {
     }
 
     /**
-     * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLToSystemGraphParser}.
+     * Test the happy flow of parsing an XMI input file.
      */
     @Test
     public void testParse1() {
@@ -108,7 +107,7 @@ public class ArgoUMLNodeParserTest {
     }
 
     /**
-     * Test the happy flow of parsing a more complicated XMI input file by the {@link ArgoUMLToSystemGraphParser}.
+     * Test the happy flow of parsing a more complicated XMI input file.
      */
     @Test
     public void testParse2() {

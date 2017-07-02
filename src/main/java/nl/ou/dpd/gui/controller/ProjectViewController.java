@@ -273,8 +273,8 @@ public class ProjectViewController extends Controller implements Observer {
             } else {
                 projectNameLabel.setText(project.getName() + " *");
             }
-            systemFileTextField.setText(project.getSystemUnderConsiderationPath());
-            templateFileTextField.setText(project.getDesignPatternTemplatePath());
+            systemFileTextField.setText(project.getSystemUnderConsiderationFilePath());
+            templateFileTextField.setText(project.getDesignPatternFilePath());
 
             // Enable/disable the analyse button
             final boolean templateFileEmpty = templateFileTextField == null

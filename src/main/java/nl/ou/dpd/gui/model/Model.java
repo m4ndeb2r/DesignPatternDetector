@@ -180,7 +180,7 @@ public class Model extends Observable {
         File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
         if (chosenFile != null
                 && chosenFile.getPath() != null
-                && !chosenFile.getPath().equals(openProject.getSystemUnderConsiderationPath())) {
+                && !chosenFile.getPath().equals(openProject.getSystemUnderConsiderationFilePath())) {
             openProject.setSystemUnderConsiderationPath(chosenFile.getPath());
             setChangedAndNotifyObservers();
         }
@@ -194,7 +194,7 @@ public class Model extends Observable {
         File chosenFile = this.chooseFile("XML template files (*.xml)", "*.xml");
         if (chosenFile != null
                 && chosenFile.getPath() != null
-                && !chosenFile.getPath().equals(openProject.getDesignPatternTemplatePath())) {
+                && !chosenFile.getPath().equals(openProject.getDesignPatternFilePath())) {
             openProject.setDesignPatternTemplatePath(chosenFile.getPath());
             setChangedAndNotifyObservers();
         }
@@ -209,8 +209,8 @@ public class Model extends Observable {
      */
     public Map<String, List<Solution>> analyse() {
         // Parse the input files
-        final SystemUnderConsideration system = new ArgoUMLParser().parse(openProject.getSystemUnderConsiderationPath());
-        final List<DesignPattern> designPatterns = new PatternsParser().parse(openProject.getDesignPatternTemplatePath());
+        final SystemUnderConsideration system = new ArgoUMLParser().parse(openProject.getSystemUnderConsiderationFilePath());
+        final List<DesignPattern> designPatterns = new PatternsParser().parse(openProject.getDesignPatternFilePath());
 
         Map<String, List<Solution>> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {

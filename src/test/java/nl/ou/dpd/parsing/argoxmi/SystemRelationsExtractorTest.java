@@ -25,6 +25,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests the {@link SystemRelationsExtractor} class.
  *
+ * TODO: this class is quite messy. Can the commented-out code be removed? Why are the so may single commented-out lines of code? Is this test still heavily under construction?
+ *
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
@@ -572,10 +574,6 @@ public class SystemRelationsExtractorTest {
         assertTrue(relationTypeExists(prod2CAbstrProdC, RelationType.IMPLEMENTS));
     }
 
-    /**
-     * @param adaptertemplatesXml
-     * @return
-     */
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
     }
@@ -652,25 +650,5 @@ public class SystemRelationsExtractorTest {
         }
         return false;
     }
-/* 
-    private Attribute findAttributeByName(Node node, String name) {
-    	for (Attribute a : node.getAttributes()) {
-    		if (a.getName().equals(name)) {
-    			return a;
-    		}
-    	}
-    	return null;
-    }
-*/    
-/*    private Method findOperationByName(Node node, String name) {
-        for (Method m : node.getMethods()) {
-    		if (m.getName().equals(name)) {
-    			return m;
-    		}
-    	}
-    	return null;
-    }
-*/
-
 
 }
