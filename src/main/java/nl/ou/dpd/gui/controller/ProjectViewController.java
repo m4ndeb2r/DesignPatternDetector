@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -53,9 +52,6 @@ public class ProjectViewController extends Controller implements Observer {
 
     @FXML
     private Button analyseButton;
-
-    @FXML
-    private ComboBox<String> maxMissingEdgesComboBox;
 
     @FXML
     private TreeView<String> feedbackTreeView;
@@ -109,16 +105,6 @@ public class ProjectViewController extends Controller implements Observer {
     }
 
     /**
-     * Notifies the model the value of the max missing edges is updated.
-     *
-     * @param event is ignored
-     */
-    @FXML
-    protected void maxMissingEdgesChanged(ActionEvent event) {
-        getModel().setMaxMissingEdges(Integer.parseInt(maxMissingEdgesComboBox.getValue()));
-    }
-
-    /**
      * Select a "system under consideration" file from disk, and store it in the currently open
      * {@link Project}. The {@link Model} will notify its {@link Observer}s (among which this
      * {@link ProjectViewController}).
@@ -155,10 +141,9 @@ public class ProjectViewController extends Controller implements Observer {
      */
     @FXML
     protected void analyse() {
-        final int maxMissingEdges = Integer.parseInt(this.maxMissingEdgesComboBox.getValue());
         Map<String, List<Solution>> result;
         try {
-            result = getModel().analyse(maxMissingEdges);
+            result = getModel().analyse();
         } catch (Exception e) {
             LOGGER.error("Error during analysis: ", e);
 
@@ -290,7 +275,6 @@ public class ProjectViewController extends Controller implements Observer {
             }
             systemFileTextField.setText(project.getSystemUnderConsiderationPath());
             templateFileTextField.setText(project.getDesignPatternTemplatePath());
-            this.maxMissingEdgesComboBox.setValue(Integer.toString(project.getMaxMissingEdges()));
 
             // Enable/disable the analyse button
             final boolean templateFileEmpty = templateFileTextField == null
@@ -305,7 +289,6 @@ public class ProjectViewController extends Controller implements Observer {
             projectNameLabel.setText(null);
             systemFileTextField.setText(null);
             templateFileTextField.setText(null);
-            this.maxMissingEdgesComboBox.setValue("0");
             analyseButton.setDisable(true);
         }
         clearFeedback();

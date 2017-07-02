@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
-
 /**
  * Manages control flow of views.
  *
@@ -174,18 +173,6 @@ public class Model extends Observable {
     }
 
     /**
-     * Sets the max numnber of allowed edges missing for the currently opened project.
-     *
-     * @param m the new number of max allowed missing edges
-     */
-    public void setMaxMissingEdges(int m) {
-        if (openProject != null) {
-            openProject.setMaxMissingEdges(m);
-            setChangedAndNotifyObservers();
-        }
-    }
-
-    /**
      * Opens a dialog to choose a file with extension {@code *.xmi}. Notifies {@link java.util.Observer}s when a
      * file was chosen.
      */
@@ -218,10 +205,9 @@ public class Model extends Observable {
      * "system under consideration" file. The results are gathered in a {@link Map} containing {@link List}s of
      * {@link Solution}s as values, and the name of the pattern as key.
      *
-     * @param maxMissingEdges the maximum allowed number of missing edges.
      * @return a {@link Map} containing the gathered results
      */
-    public Map<String, List<Solution>> analyse(int maxMissingEdges) {
+    public Map<String, List<Solution>> analyse() {
         // Parse the input files
         final SystemUnderConsideration system = new ArgoUMLParser().parse(openProject.getSystemUnderConsiderationPath());
         final List<DesignPattern> designPatterns = new PatternsParser().parse(openProject.getDesignPatternTemplatePath());

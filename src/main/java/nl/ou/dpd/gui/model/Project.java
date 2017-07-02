@@ -20,15 +20,12 @@ public class Project {
 
     private static final Logger LOGGER = LogManager.getLogger(Project.class);
 
-    private static final String DPD_PROJ_NAME = "dpd.prname";
     private static final String DPD_SYSTEM = "dpd.system";
     private static final String DPD_TEMPLATES = "dpd.tmplts";
-    private static final String DPD_MAX_MISSING_EDGES = "dpd.maxedg";
 
     private String name;
     private String systemUnderConsiderationPath;
     private String designPatternTemplatePath;
-    private int maxMissingEdges;
     private File projectFile;
     private boolean pristine;
 
@@ -40,7 +37,6 @@ public class Project {
         this.name = "[New project]";
         this.pristine = false;
         this.projectFile = null;
-        this.maxMissingEdges = 0;
         this.designPatternTemplatePath = null;
         this.systemUnderConsiderationPath = null;
     }
@@ -60,9 +56,6 @@ public class Project {
             }
             if (line.startsWith(DPD_TEMPLATES)) {
                 this.setDesignPatternTemplatePath(line.substring(line.indexOf(":") + 1).trim());
-            }
-            if (line.startsWith(DPD_MAX_MISSING_EDGES)) {
-                this.setMaxMissingEdges(Integer.parseInt(line.substring(line.indexOf(":") + 1).trim()));
             }
         }
         this.name = projectFile.getName();
@@ -86,7 +79,6 @@ public class Project {
      * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
     public boolean save(final File file) {
-        boolean success = false;
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(file));
@@ -98,15 +90,12 @@ public class Project {
                 out.write(DPD_TEMPLATES + ":" + this.designPatternTemplatePath);
                 out.newLine();
             }
-            out.write(DPD_MAX_MISSING_EDGES + ":" + this.maxMissingEdges);
             out.newLine();
 
             // Succesfully written to file. Change project name and file.
             this.setName(file.getName());
             this.projectFile = file;
             this.pristine = true;
-            success = true;
-
         } catch (Exception ex) {
             LOGGER.error("Saving project failed.", ex);
             throw new DesignPatternDetectorException("Saving project failed.", ex);
@@ -120,7 +109,7 @@ public class Project {
             }
         }
         LOGGER.info("Project " + file.getName() + " saved successfully to file " + file.getPath() + ".");
-        return success;
+        return true;
     }
 
     /**
@@ -181,28 +170,6 @@ public class Project {
     public void setDesignPatternTemplatePath(String designPatternTemplatePath) {
         if (different(this.designPatternTemplatePath, designPatternTemplatePath)) {
             this.designPatternTemplatePath = designPatternTemplatePath;
-            this.pristine = false;
-        }
-    }
-
-    /**
-     * Gets the max number of missing edges that are allowed when the input is analysed.
-     *
-     * @return the max allowed number of missing edges.
-     */
-    public int getMaxMissingEdges() {
-        return maxMissingEdges;
-    }
-
-    /**
-     * Sets the maximum allowed number of missing edges that are allowed when the input is analysed. When the new value
-     * differs form the original value, the pristine attribute of the {@link Project} is set to {@code false}.
-     *
-     * @param maxMissingEdges the new maximum
-     */
-    public void setMaxMissingEdges(int maxMissingEdges) {
-        if (this.maxMissingEdges != maxMissingEdges) {
-            this.maxMissingEdges = maxMissingEdges;
             this.pristine = false;
         }
     }
