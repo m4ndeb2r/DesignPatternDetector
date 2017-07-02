@@ -63,7 +63,7 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
     }
 
     private Solution getSolutionFromGraphMapping(GraphMapping<Node, Relation> mapping) {
-        final Solution solution = new Solution(designPattern.getName());
+        final Solution solution = new Solution(designPattern.getName(), designPattern.getFamily());
         for (Relation relation : system.edgeSet()) {
             final Node edgeSource = system.getEdgeSource(relation);
             final Node edgeTarget = system.getEdgeTarget(relation);

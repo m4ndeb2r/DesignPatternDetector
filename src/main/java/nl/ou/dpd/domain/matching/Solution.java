@@ -18,17 +18,23 @@ public class Solution {
     private final static int PATTERN_IDX = 1;
 
     private final String designPatternName;
+    private final String patternFamilyName;
     private final List<Node[]> matchingNodes;
     private final List<Relation[]> matchingRelations;
 
-    public Solution(String designPatternName) {
+    public Solution(String designPatternName, String patternFamilyName) {
         this.matchingNodes = new ArrayList<>();
         this.matchingRelations = new ArrayList<>();
         this.designPatternName = designPatternName;
+        this.patternFamilyName = patternFamilyName;
     }
 
     public String getDesignPatternName() {
         return designPatternName;
+    }
+
+    public String getPatternFamilyName() {
+        return this.patternFamilyName;
     }
 
     public List<Node[]> getMatchingNodes() {
@@ -76,4 +82,5 @@ public class Solution {
         }
         return false;
     }
+
 }

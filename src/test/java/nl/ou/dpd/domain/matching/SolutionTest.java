@@ -30,7 +30,7 @@ public class SolutionTest {
 
     @Before
     public void initSolution() {
-        solution = new Solution("myPattern");
+        solution = new Solution("myPattern", "patternFamily");
     }
 
     @Before
@@ -43,6 +43,7 @@ public class SolutionTest {
     @Test
     public void testConstructor() {
         assertThat(solution.getDesignPatternName(), is("myPattern"));
+        assertThat(solution.getPatternFamilyName(), is("patternFamily"));
         assertThat(solution.getMatchingNodes().size(), is(0));
         assertThat(solution.getMatchingRelations().size(), is(0));
         assertThat(solution.getMatchingNodeNames().size(), is(0));

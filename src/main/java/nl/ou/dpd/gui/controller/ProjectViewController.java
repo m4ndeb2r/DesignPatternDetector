@@ -74,7 +74,7 @@ public class ProjectViewController extends Controller implements Observer {
     @FXML
     private GridPane feedbackSuperfluousEdgesGridPane;
 
-    private Map<String, Solution> feedbackMap;
+    private Map<String, Solution> solutionMap;
 
     /**
      * Constructs a {@link ProjectViewController} with the specified {@link Model}.
@@ -155,7 +155,7 @@ public class ProjectViewController extends Controller implements Observer {
         treeRoot.setExpanded(true);
         feedbackTreeView.setRoot(treeRoot);
 
-        feedbackMap = new HashMap<>();
+        solutionMap = new HashMap<>();
         int patternCount = 0;
         for (String patternName : result.keySet()) {
             final List<Solution> solutions = result.get(patternName);
@@ -172,7 +172,7 @@ public class ProjectViewController extends Controller implements Observer {
                     final TreeItem<String> patternItem = new TreeItem<>(dpn);
                     patternRoot.getChildren().add(patternItem);
                 }
-                feedbackMap.put(dpn, solution);
+                solutionMap.put(dpn, solution);
             }
 
             patternCount += i;
@@ -216,17 +216,28 @@ public class ProjectViewController extends Controller implements Observer {
             public void handle(final MouseEvent event) {
                 final Node node = event.getPickResult().getIntersectedNode();
                 if (node instanceof Text) {
-                    showFeedbackDetails(((Text) node).getText());
+                    showSolutionDetails(((Text) node).getText());
                 }
             }
         };
     }
 
-    private void showFeedbackDetails(final String key) {
-        Solution solution = feedbackMap.get(key);
+    private void showSolutionDetails(final String key) {
+        Solution solution = solutionMap.get(key);
         if (solution != null) {
-            feedbackPatternNameLabel.setText("Feedback information for " + key);
-            feedbackPatternLabel.setText("Design pattern: " + solution.getDesignPatternName());
+            feedbackPatternNameLabel.setText(String.format("Feedback information for %s", key));
+            final String designPatternName = solution.getDesignPatternName();
+            final String patternFamilyName = solution.getPatternFamilyName();
+            if (designPatternName.equals(patternFamilyName)) {
+                feedbackPatternLabel.setText(String.format(
+                        "Design pattern: %s",
+                        designPatternName));
+            } else {
+                feedbackPatternLabel.setText(String.format(
+                        "Design pattern: %s (%s)",
+                        designPatternName,
+                        patternFamilyName));
+            }
 
             // Show matching nodes
             feedbackMatchedClassesLabel.setText("Matched classes");
@@ -290,7 +301,7 @@ public class ProjectViewController extends Controller implements Observer {
 
     private void clearFeedback() {
         // Clear data
-        feedbackMap = new HashMap<>();
+        solutionMap = new HashMap<>();
 
         // Clear treeview
         clearTreeView(feedbackTreeView);

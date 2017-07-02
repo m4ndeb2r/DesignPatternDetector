@@ -101,7 +101,6 @@ public class AdapterMatchingTest {
 
         // Create a system under consideration containing the observer pattern
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
-        final Solution solution = new Solution(designPattern.getName());
 
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
