@@ -34,10 +34,9 @@ different from the original prototype, fundamentally.
 **Using the application (the happy flow)**
 
 After starting the application choose *File* > *New project* from the menu. A new project opens with the default name 
-[New Project]. To run an analysis, three input parameters have to be provided: (1) select an input (an export from
-ArgoUML, an `*.xmi` file), (2) select a desing pattern templates file (`*.xml`) and (3) choose one of the two
-possible values from the max. allowed missing edges combobox (0 or 1). After that, hit the analyse button, and
-the application will attempt to detect design patterns defined in templates file (2) in the in input file (1).
+[New Project]. To run an analysis, two input parameters have to be provided: (1) select an input (an export from
+ArgoUML, an `*.xmi` file), and (2) select a desing pattern templates file (`*.xml`). After that, hit the analyse button, 
+and the application will attempt to detect design patterns defined in templates file (2) in the in input file (1).
 
 Save the project via *File > Save* or *File > Save as*. Saved projects can be re-opened via *File > Open*.
 
@@ -46,28 +45,13 @@ are stored as *.gz files in subdirectories named after the date of creation.
 
 ## Working on ...
 We are currently working on:
-* unittests (on-going)
+* implementing a new matching method
+* the new matching method requires a new parsing method
+* extension of recognized patterns (made possible by the new matching method)
+* unit- and integrationtests (on-going)
 * documentation
-* refactoring
+* updating the GUI to work with the new matcher/parsers
 * perfection of the user-friendly GUI
-* extension of recognized patterns
-
-## Some known problems
-During unittesting we tried to apply the examples given in the 
-Gang of Four book "Design Patterns, De Nederlands Editie - Elementen 
-van herbruikbare objectgeorienteerde software" in our unittests, but 
-discoverd some of the examples were not properly detected, or had some
-foreseeable problems, when applying larger system designs. These issues
-concern the following design patterns:
-* AbstractFactory
-* Builder
-* Prototype
-* Flyweight
-* Chain of responsibility
-* Interpreter
-* Mediator
-* Observer
-
 
 ## Other future work ...
 Besides detecting patterns in UML, we foresee:
