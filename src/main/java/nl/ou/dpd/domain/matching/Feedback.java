@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A container for feedback messages that are generated during the matching process.
@@ -30,6 +31,14 @@ public class Feedback {
             addFeedbackMessage(systemUnderConsideration.getEdgeSource(relation), FeedbackType.NOT_ANALYSED, MSG_NOT_ANALYSED);
             addFeedbackMessage(systemUnderConsideration.getEdgeTarget(relation), FeedbackType.NOT_ANALYSED, MSG_NOT_ANALYSED);
         });
+    }
+
+    public Set<Node> getNodeSet() {
+        return nodeRelatedFeedbackMessages.keySet();
+    }
+
+    public Set<Relation> getRelationSet() {
+        return relationRelatedFeedbackMessages.keySet();
     }
 
     public List<String> getFeedbackMessages(Node node, FeedbackType type) {

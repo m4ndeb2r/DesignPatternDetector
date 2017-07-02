@@ -95,8 +95,8 @@
                             <content>
                                 <VBox>
                                     <children>
-                                        <Label fx:id="solutionTitle" styleClass="feedback-title"/>
-                                        <Label fx:id="solutionSubtitle" styleClass="feedback-subsubtitle"/>
+                                        <Label fx:id="feedbackTitle" styleClass="feedback-title"/>
+                                        <Label fx:id="feedbackSubtitle" styleClass="feedback-subsubtitle"/>
 
                                         <Label fx:id="matchedClassesLabel" styleClass="feedback-subtitle"/>
                                         <GridPane fx:id="matchedClassesGridPane" styleClass="feedback-gridpane" />

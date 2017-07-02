@@ -14,6 +14,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import nl.ou.dpd.domain.matching.Feedback;
+import nl.ou.dpd.domain.matching.FeedbackType;
 import nl.ou.dpd.domain.matching.PatternInspector;
 import nl.ou.dpd.domain.matching.Solution;
 import nl.ou.dpd.gui.model.Model;
@@ -39,6 +41,8 @@ public class ProjectViewController extends Controller implements Observer {
 
     private static final Logger LOGGER = LogManager.getLogger(ProjectViewController.class);
 
+    private static final String FEEDBACK = "Feedback";
+
     @FXML
     private Label projectNameLabel;
 
@@ -58,10 +62,10 @@ public class ProjectViewController extends Controller implements Observer {
     private TreeView<String> feedbackTreeView;
 
     @FXML
-    private Label solutionTitle;
+    private Label feedbackTitle;
 
     @FXML
-    private Label solutionSubtitle;
+    private Label feedbackSubtitle;
 
     @FXML
     private Label matchedClassesLabel;
@@ -76,6 +80,7 @@ public class ProjectViewController extends Controller implements Observer {
     private GridPane feedbackSuperfluousEdgesGridPane;
 
     private Map<String, Solution> solutionMap;
+    private Map<String, Feedback> feedbackMap;
 
     /**
      * Constructs a {@link ProjectViewController} with the specified {@link Model}.
@@ -156,30 +161,17 @@ public class ProjectViewController extends Controller implements Observer {
         treeRoot.setExpanded(true);
         feedbackTreeView.setRoot(treeRoot);
 
-        solutionMap = new HashMap<>();
+        clearData();
+
         int patternCount = 0;
         for (String patternName : result.keySet()) {
             final List<Solution> solutions = result.get(patternName).getSolutions();
+            final Feedback feedback = result.get(patternName).getFeedback();
             final TreeItem<String> patternRoot = new TreeItem<>(makePatternRootName(patternName, solutions));
+
             treeRoot.getChildren().add(patternRoot);
-
-            int i = 0;
-            boolean multipleSolutions = solutions.size() > 1;
-            for (Solution solution : solutions) {
-                String dpn = solution.getDesignPatternName();
-                ++i;
-                if (multipleSolutions) {
-                    dpn += String.format("-%d", i);
-                    final TreeItem<String> patternItem = new TreeItem<>(dpn);
-                    patternRoot.getChildren().add(patternItem);
-                }
-                solutionMap.put(dpn, solution);
-            }
-            patternCount += i;
-
-//            final TreeItem<String> patternItem = new TreeItem<>("Feedback");
-//            patternRoot.getChildren().add(patternItem);
-//            feedbackMap.put(patternRoot.getValue(), );
+            patternCount += addSolutionsToTree(solutions, patternRoot);
+            addFeedbackToTree(feedback, patternRoot, patternName);
         }
 
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
@@ -189,6 +181,28 @@ public class ProjectViewController extends Controller implements Observer {
 
         // Enable clear button
         clearButton.setDisable(false);
+    }
+
+    private void addFeedbackToTree(Feedback feedback, TreeItem<String> patternRoot, String patternName) {
+        final TreeItem<String> feedbackItem = new TreeItem<>("Feedback " + patternName);
+        patternRoot.getChildren().add(feedbackItem);
+        feedbackMap.put(patternName, feedback);
+    }
+
+    private int addSolutionsToTree(List<Solution> solutions, TreeItem<String> patternRoot) {
+        int i = 0;
+        boolean multipleSolutions = solutions.size() > 1;
+        for (Solution solution : solutions) {
+            String dpn = solution.getDesignPatternName();
+            ++i;
+            if (multipleSolutions) {
+                dpn += String.format("-%d", i);
+                final TreeItem<String> patternItem = new TreeItem<>(dpn);
+                patternRoot.getChildren().add(patternItem);
+            }
+            solutionMap.put(dpn, solution);
+        }
+        return i;
     }
 
     /**
@@ -203,14 +217,15 @@ public class ProjectViewController extends Controller implements Observer {
      */
     private String makePatternRootName(String patternName, List<Solution> solutions) {
         if (solutions.size() > 1) {
-            return patternName + " (" + solutions.size() + ")";
+            return String.format("%s (%d)", patternName, solutions.size());
         }
         return patternName;
     }
 
     /**
      * Creates an {@link EventHandler} to handle mouse clicks in the {@link TreeView} containing the detected patterns.
-     * This handler shows solution details in the scroll pane, for any the pattern that is clicked in the tree view.
+     * This handler shows solution or feedback details in the scroll pane, depending on the item that is clicked in the
+     * tree view.
      *
      * @return a mouseclick handler
      */
@@ -220,17 +235,50 @@ public class ProjectViewController extends Controller implements Observer {
             public void handle(final MouseEvent event) {
                 final Node node = event.getPickResult().getIntersectedNode();
                 if (node instanceof Text) {
-                    showSolutionDetails(((Text) node).getText());
+                    final String key = ((Text) node).getText();
+                    if (key.startsWith(FEEDBACK)) {
+                        showFeedbackDetails(key.substring(FEEDBACK.length() + 1));
+                    } else {
+                        showSolutionDetails(key);
+                    }
                 }
             }
         };
     }
 
+    private void showFeedbackDetails(final String key) {
+        clearDetails();
+
+        feedbackTitle.setText("Analysis feedback");
+        feedbackSubtitle.setText(String.format("Design pattern: %s", key));
+
+        final Feedback feedback = feedbackMap.get(key);
+        feedback.getNodeSet().iterator().forEachRemaining(node -> {
+            System.out.println("\n\tNode: " + node.getName());
+            feedback.getFeedbackMessages(node, FeedbackType.INFO).forEach(s -> System.out.println("\t- " + s));
+            feedback.getFeedbackMessages(node, FeedbackType.MATCH).forEach(s -> System.out.println("\t- " + s));
+            feedback.getFeedbackMessages(node, FeedbackType.MISMATCH).forEach(s -> System.out.println("\t- " + s));
+            feedback.getFeedbackMessages(node, FeedbackType.NOT_ANALYSED).forEach(s -> System.out.println("\t- " + s));
+        });
+
+        System.out.println("\nRelation feedback:");
+        feedback.getRelationSet().iterator().forEachRemaining(r -> {
+            System.out.println("\n\tRelation: " + r.getName());
+            feedback.getFeedbackMessages(r, FeedbackType.INFO).forEach(s -> System.out.println("\t- " + s));
+            feedback.getFeedbackMessages(r, FeedbackType.MATCH).forEach(s -> System.out.println("\t- " + s));
+            feedback.getFeedbackMessages(r, FeedbackType.MISMATCH).forEach(s -> System.out.println("\t- " + s));
+            feedback.getFeedbackMessages(r, FeedbackType.NOT_ANALYSED).forEach(s -> System.out.println("\t- " + s));
+        });
+
+    }
+
     private void showSolutionDetails(final String key) {
-        Solution solution = solutionMap.get(key);
+        clearDetails();
+
+        final Solution solution = solutionMap.get(key);
         if (solution != null) {
-            solutionTitle.setText(String.format("Solution: %s", key));
-            solutionSubtitle.setText(getPatternLabelText(solution));
+            feedbackTitle.setText(String.format("Solution: %s", key));
+            feedbackSubtitle.setText(getPatternLabelText(solution));
 
             // Show matching nodes
             matchedClassesLabel.setText("Matched classes");
@@ -248,9 +296,6 @@ public class ProjectViewController extends Controller implements Observer {
                 matchedClassesGridPane.add(new Text("-->"), col++, row);
                 matchedClassesGridPane.add(new Text(nodeNames[1]), col, row);
             }
-
-            // TODO: feedback here....
-
         }
     }
 
@@ -303,24 +348,26 @@ public class ProjectViewController extends Controller implements Observer {
     }
 
     private void clearFeedback() {
-        // Clear data
-        solutionMap = new HashMap<>();
-
-        // Clear treeview
+        clearData();
         clearTreeView(feedbackTreeView);
+        clearDetails();
+        clearButton.setDisable(true);
+    }
 
-        // Clear details
-        solutionSubtitle.setText(null);
-        solutionTitle.setText(null);
+    private void clearDetails() {
+        feedbackSubtitle.setText(null);
+        feedbackTitle.setText(null);
 
         matchedClassesLabel.setText(null);
         clearGridPane(matchedClassesGridPane);
 
         feedbackSuperfluousEdgesLabel.setText(null);
         clearGridPane(feedbackSuperfluousEdgesGridPane);
+    }
 
-        // Disable clear button
-        clearButton.setDisable(true);
+    private void clearData() {
+        solutionMap = new HashMap<>();
+        feedbackMap = new HashMap<>();
     }
 
     private void clearTreeView(final TreeView<String> treeView) {

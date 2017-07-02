@@ -14,6 +14,7 @@ import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class FeedbackTest {
 
     @Mock
-    private Node node1, node2;
+    private Node node1, node2, node3;
 
     @Mock
     private Relation relation1, relation2;
@@ -48,6 +49,41 @@ public class FeedbackTest {
         assertThat(feedback.getFeedbackMessages(relation1, FeedbackType.NOT_ANALYSED).size(), is(1));
         assertThat(feedback.getFeedbackMessages(node1, FeedbackType.NOT_ANALYSED).size(), is(1));
         assertThat(feedback.getFeedbackMessages(node2, FeedbackType.NOT_ANALYSED).size(), is(1));
+    }
+
+    @Test
+    public void testGetNodeSet() {
+        final Feedback feedback = new Feedback(systemUnderConsideration);
+        assertThat(feedback.getNodeSet().size(), is(2));
+        assertTrue(feedback.getNodeSet().contains(node1));
+        assertTrue(feedback.getNodeSet().contains(node2));
+
+        feedback.addFeedbackMessage(node2, FeedbackType.INFO, "Testing...");
+        assertThat(feedback.getNodeSet().size(), is(2));
+        assertTrue(feedback.getNodeSet().contains(node1));
+        assertTrue(feedback.getNodeSet().contains(node2));
+
+        feedback.addFeedbackMessage(node3, FeedbackType.MISMATCH, "Testing...");
+        assertThat(feedback.getNodeSet().size(), is(3));
+        assertTrue(feedback.getNodeSet().contains(node1));
+        assertTrue(feedback.getNodeSet().contains(node2));
+        assertTrue(feedback.getNodeSet().contains(node3));
+    }
+
+    @Test
+    public void testGetRelationSet() {
+        final Feedback feedback = new Feedback(systemUnderConsideration);
+        assertThat(feedback.getRelationSet().size(), is(1));
+        assertTrue(feedback.getRelationSet().contains(relation1));
+
+        feedback.addFeedbackMessage(relation1, FeedbackType.INFO, "Testing...");
+        assertThat(feedback.getRelationSet().size(), is(1));
+        assertTrue(feedback.getRelationSet().contains(relation1));
+
+        feedback.addFeedbackMessage(relation2, FeedbackType.INFO, "Testing...");
+        assertThat(feedback.getRelationSet().size(), is(2));
+        assertTrue(feedback.getRelationSet().contains(relation1));
+        assertTrue(feedback.getRelationSet().contains(relation2));
     }
 
     /**
