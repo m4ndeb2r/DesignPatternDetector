@@ -107,7 +107,11 @@ public class Model extends Observable {
         if (openProject.getProjectFile() == null) {
             return saveProjectAs();
         }
-        return openProject.save();
+        if (openProject.save()) {
+            setChangedAndNotifyObservers();
+            return true;
+        }
+        return false;
     }
 
     /**
