@@ -306,6 +306,7 @@ public class ProjectViewController extends Controller implements Observer {
             }
         }
 
+        // TODO: this has to go.... (temporary)
         System.out.println("\nNode feedback:");
         feedback.getNodeSet().iterator().forEachRemaining(node -> {
             System.out.println("\n\tNode: " + node.getName());
