@@ -74,12 +74,6 @@ public class ProjectViewController extends Controller implements Observer {
     @FXML
     private GridPane feedbackSuperfluousEdgesGridPane;
 
-    @FXML
-    private Label feedbackMissingEdgesLabel;
-
-    @FXML
-    private GridPane feedbackMissingEdgesGridPane;
-
     private Map<String, Solution> feedbackMap;
 
     /**
@@ -310,9 +304,6 @@ public class ProjectViewController extends Controller implements Observer {
 
         feedbackSuperfluousEdgesLabel.setText(null);
         clearGridPane(feedbackSuperfluousEdgesGridPane);
-
-        feedbackMissingEdgesLabel.setText(null);
-        clearGridPane(feedbackMissingEdgesGridPane);
 
         // Disable clear button
         clearButton.setDisable(true);

@@ -103,9 +103,6 @@
 
                                         <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle"/>
                                         <GridPane fx:id="feedbackSuperfluousEdgesGridPane" styleClass="feedback-gridpane" />
-
-                                        <Label fx:id="feedbackMissingEdgesLabel" styleClass="feedback-subtitle"/>
-                                        <GridPane fx:id="feedbackMissingEdgesGridPane" styleClass="feedback-gridpane" />
                                     </children>
                                 </VBox>
                             </content>
