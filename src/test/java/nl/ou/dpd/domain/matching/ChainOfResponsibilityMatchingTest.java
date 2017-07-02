@@ -49,7 +49,7 @@ public class ChainOfResponsibilityMatchingTest {
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(2, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyUser", "Client"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyProcessor", "Handler"));
@@ -57,5 +57,7 @@ public class ChainOfResponsibilityMatchingTest {
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrProcess1", "ConcreteHandlerA"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrProcess2", "ConcreteHandlerB"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrProcess1", "ConcreteHandlerB"));
+
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
 }

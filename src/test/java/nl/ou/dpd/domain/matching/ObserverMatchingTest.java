@@ -50,7 +50,7 @@ public class ObserverMatchingTest {
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "ASubject", "Subject"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "AnObserver", "Observer"));
@@ -79,5 +79,8 @@ public class ObserverMatchingTest {
 
         //extra relationproperty 'Overrides' prevents recognizing the pattern
         assertFalse(patternInspector.isomorphismExists());
-     }
+
+        // TODO Test feedback (getMatchingResult().getFeedback())
+        // TODO Test solutions (getMatchingResult().getSolution())
+    }
 }

@@ -14,6 +14,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import nl.ou.dpd.domain.matching.PatternInspector;
 import nl.ou.dpd.domain.matching.Solution;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
@@ -57,16 +58,16 @@ public class ProjectViewController extends Controller implements Observer {
     private TreeView<String> feedbackTreeView;
 
     @FXML
-    private Label feedbackPatternNameLabel;
+    private Label solutionTitle;
 
     @FXML
-    private Label feedbackPatternLabel;
+    private Label solutionSubtitle;
 
     @FXML
-    private Label feedbackMatchedClassesLabel;
+    private Label matchedClassesLabel;
 
     @FXML
-    private GridPane feedbackMatchedClassesGridPane;
+    private GridPane matchedClassesGridPane;
 
     @FXML
     private Label feedbackSuperfluousEdgesLabel;
@@ -135,7 +136,7 @@ public class ProjectViewController extends Controller implements Observer {
      */
     @FXML
     protected void analyse() {
-        Map<String, List<Solution>> result;
+        Map<String, PatternInspector.MatchingResult> result;
         try {
             result = getModel().analyse();
         } catch (Exception e) {
@@ -158,7 +159,7 @@ public class ProjectViewController extends Controller implements Observer {
         solutionMap = new HashMap<>();
         int patternCount = 0;
         for (String patternName : result.keySet()) {
-            final List<Solution> solutions = result.get(patternName);
+            final List<Solution> solutions = result.get(patternName).getSolutions();
             final TreeItem<String> patternRoot = new TreeItem<>(makePatternRootName(patternName, solutions));
             treeRoot.getChildren().add(patternRoot);
 
@@ -168,14 +169,17 @@ public class ProjectViewController extends Controller implements Observer {
                 String dpn = solution.getDesignPatternName();
                 ++i;
                 if (multipleSolutions) {
-                    dpn += (i);
+                    dpn += String.format("-%d", i);
                     final TreeItem<String> patternItem = new TreeItem<>(dpn);
                     patternRoot.getChildren().add(patternItem);
                 }
                 solutionMap.put(dpn, solution);
             }
-
             patternCount += i;
+
+//            final TreeItem<String> patternItem = new TreeItem<>("Feedback");
+//            patternRoot.getChildren().add(patternItem);
+//            feedbackMap.put(patternRoot.getValue(), );
         }
 
         treeRoot.setValue(treeRoot.getValue() + " (" + patternCount + ")");
@@ -206,7 +210,7 @@ public class ProjectViewController extends Controller implements Observer {
 
     /**
      * Creates an {@link EventHandler} to handle mouse clicks in the {@link TreeView} containing the detected patterns.
-     * This handler shows feedback details in the scroll pane, for any the pattern that is clicked in the tree view.
+     * This handler shows solution details in the scroll pane, for any the pattern that is clicked in the tree view.
      *
      * @return a mouseclick handler
      */
@@ -225,39 +229,38 @@ public class ProjectViewController extends Controller implements Observer {
     private void showSolutionDetails(final String key) {
         Solution solution = solutionMap.get(key);
         if (solution != null) {
-            feedbackPatternNameLabel.setText(String.format("Feedback information for %s", key));
-            final String designPatternName = solution.getDesignPatternName();
-            final String patternFamilyName = solution.getPatternFamilyName();
-            if (designPatternName.equals(patternFamilyName)) {
-                feedbackPatternLabel.setText(String.format(
-                        "Design pattern: %s",
-                        designPatternName));
-            } else {
-                feedbackPatternLabel.setText(String.format(
-                        "Design pattern: %s (%s)",
-                        designPatternName,
-                        patternFamilyName));
-            }
+            solutionTitle.setText(String.format("Solution: %s", key));
+            solutionSubtitle.setText(getPatternLabelText(solution));
 
             // Show matching nodes
-            feedbackMatchedClassesLabel.setText("Matched classes");
-            clearGridPane(feedbackMatchedClassesGridPane);
+            matchedClassesLabel.setText("Matched classes");
+            clearGridPane(matchedClassesGridPane);
             int row = 0;
             final List<String[]> matchingNodeNames = solution.getMatchingNodeNames();
-            feedbackMatchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
-            feedbackMatchedClassesGridPane.add(new Text("System class"), 2, row);
-            feedbackMatchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: 600");
-            feedbackMatchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: 600");
+            matchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
+            matchedClassesGridPane.add(new Text("System class"), 2, row);
+            matchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: 600");
+            matchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: 600");
             for (String[] nodeNames : matchingNodeNames) {
                 int col = 0;
                 row++;
-                feedbackMatchedClassesGridPane.add(new Text(nodeNames[0]), col++, row);
-                feedbackMatchedClassesGridPane.add(new Text("-->"), col++, row);
-                feedbackMatchedClassesGridPane.add(new Text(nodeNames[1]), col, row);
+                matchedClassesGridPane.add(new Text(nodeNames[0]), col++, row);
+                matchedClassesGridPane.add(new Text("-->"), col++, row);
+                matchedClassesGridPane.add(new Text(nodeNames[1]), col, row);
             }
 
             // TODO: feedback here....
 
+        }
+    }
+
+    private String getPatternLabelText(Solution solution) {
+        final String designPatternName = solution.getDesignPatternName();
+        final String patternFamilyName = solution.getPatternFamilyName();
+        if (designPatternName.equals(patternFamilyName)) {
+            return String.format("Design pattern: %s", designPatternName);
+        } else {
+            return String.format("Design pattern: %s (%s)", designPatternName, patternFamilyName);
         }
     }
 
@@ -307,11 +310,11 @@ public class ProjectViewController extends Controller implements Observer {
         clearTreeView(feedbackTreeView);
 
         // Clear details
-        feedbackPatternLabel.setText(null);
-        feedbackPatternNameLabel.setText(null);
+        solutionSubtitle.setText(null);
+        solutionTitle.setText(null);
 
-        feedbackMatchedClassesLabel.setText(null);
-        clearGridPane(feedbackMatchedClassesGridPane);
+        matchedClassesLabel.setText(null);
+        clearGridPane(matchedClassesGridPane);
 
         feedbackSuperfluousEdgesLabel.setText(null);
         clearGridPane(feedbackSuperfluousEdgesGridPane);

@@ -53,7 +53,8 @@ public class AbstractFactoryMatchingTest {
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
-        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
+        // TODO Test feedback (getMatchingResult().getFeedback())
+        // TODO Test the getMatchingResult().getSolutions() in depth instead of the isomorphismExists()
         assertTrue(patternInspector.isomorphismExists());
     }
 

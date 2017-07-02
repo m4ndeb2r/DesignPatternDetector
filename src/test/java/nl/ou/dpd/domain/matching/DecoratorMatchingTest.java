@@ -49,12 +49,14 @@ public class DecoratorMatchingTest {
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(2, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyPart", "Component"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyDecorator", "Decorator"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrDecA", "ConcreteDecoratorA"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrDecB", "ConcreteDecoratorB"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcretePart", "ConcreteComponent"));
+
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
 }

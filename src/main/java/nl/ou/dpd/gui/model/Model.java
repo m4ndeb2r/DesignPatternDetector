@@ -203,22 +203,19 @@ public class Model extends Observable {
     /**
      * Parses the specified input files, and attempts to detect design patterns defined in the template file, in the
      * "system under consideration" file. The results are gathered in a {@link Map} containing {@link List}s of
-     * {@link Solution}s as values, and the name of the pattern as key.
+     * {@link PatternInspector.MatchingResult}s as values, and the name of the pattern as key.
      *
      * @return a {@link Map} containing the gathered results
      */
-    public Map<String, List<Solution>> analyse() {
+    public Map<String, PatternInspector.MatchingResult> analyse() {
         // Parse the input files
         final SystemUnderConsideration system = new ArgoUMLParser().parse(openProject.getSystemUnderConsiderationFilePath());
         final List<DesignPattern> designPatterns = new PatternsParser().parse(openProject.getDesignPatternFilePath());
 
-        Map<String, List<Solution>> assembledMatchResults = new HashMap<>();
+        final Map<String, PatternInspector.MatchingResult> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {
             final PatternInspector patternInspector = new PatternInspector(system, pattern);
-            List<Solution> solutions = patternInspector.getSolutions();
-            if (solutions.size() > 0) {
-                assembledMatchResults.put(pattern.getName(), solutions);
-            }
+            assembledMatchResults.put(pattern.getName(), patternInspector.getMatchingResult());
         });
 
         return assembledMatchResults;

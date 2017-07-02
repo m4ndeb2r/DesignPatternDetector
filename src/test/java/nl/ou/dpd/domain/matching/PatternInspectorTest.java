@@ -114,7 +114,7 @@ public class PatternInspectorTest {
         assertTrue(patternInspector.isomorphismExists());
 
         // Check solutions
-        final List<Solution> solutions = patternInspector.getSolutions();
+        final List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertThat(solutions.size(), is(1));
 
         final Solution solution = solutions.get(0);
@@ -131,7 +131,7 @@ public class PatternInspectorTest {
         assertThat(matchingRelations.get(0)[1], is(patternRelation));
 
         // Check feedback
-        final Feedback feedback = patternInspector.getFeedback();
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
         assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.NOT_ANALYSED).size(), is(0));
         assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.NOT_ANALYSED).size(), is(0));
         assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.NOT_ANALYSED).size(), is(0));
@@ -166,11 +166,11 @@ public class PatternInspectorTest {
         assertFalse(patternInspector.isomorphismExists());
 
         // Check solutions
-        final List<Solution> solutions = patternInspector.getSolutions();
+        final List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertThat(solutions.size(), is(0));
 
         // Check feedback
-        final Feedback feedback = patternInspector.getFeedback();
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
         assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.NOT_ANALYSED).size(), is(0));
         assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.NOT_ANALYSED).size(), is(0));
         assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.NOT_ANALYSED).size(), is(0));

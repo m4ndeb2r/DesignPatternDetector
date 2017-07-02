@@ -49,12 +49,14 @@ public class BridgeMatchingTest {
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(2, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyAbstraction", "Abstraction"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyImplementor", "Implementor"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr1", "RefinedAbstraction"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr2", "RefinedAbstraction"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcImpl1", "ConcreteImplementor"));
+
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
 }

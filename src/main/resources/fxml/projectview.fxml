@@ -95,11 +95,11 @@
                             <content>
                                 <VBox>
                                     <children>
-                                        <Label fx:id="feedbackPatternNameLabel" styleClass="feedback-title"/>
-                                        <Label fx:id="feedbackPatternLabel" styleClass="feedback-subsubtitle"/>
+                                        <Label fx:id="solutionTitle" styleClass="feedback-title"/>
+                                        <Label fx:id="solutionSubtitle" styleClass="feedback-subsubtitle"/>
 
-                                        <Label fx:id="feedbackMatchedClassesLabel" styleClass="feedback-subtitle"/>
-                                        <GridPane fx:id="feedbackMatchedClassesGridPane" styleClass="feedback-gridpane" />
+                                        <Label fx:id="matchedClassesLabel" styleClass="feedback-subtitle"/>
+                                        <GridPane fx:id="matchedClassesGridPane" styleClass="feedback-gridpane" />
 
                                         <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle"/>
                                         <GridPane fx:id="feedbackSuperfluousEdgesGridPane" styleClass="feedback-gridpane" />

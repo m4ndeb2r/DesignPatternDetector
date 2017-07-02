@@ -16,15 +16,16 @@ import java.util.Set;
 public class TestHelper {
 
     /**
-     * Temporary method to print feedback. TODO: should eventually be removed....
+     * Temporary method to print feedback.
      *
      * @param designPattern
      * @param system
      * @param patternInspector
-     * @param solutions
      */
     public static void printFeedback(DesignPattern designPattern, SystemUnderConsideration system, PatternInspector patternInspector) {
-        List<Solution> solutions = patternInspector.getSolutions();
+        final PatternInspector.MatchingResult matchingResult = patternInspector.getMatchingResult();
+
+        final List<Solution> solutions = matchingResult.getSolutions();
         solutions.forEach(solution -> {
             System.out.println("---------------------------------------");
             System.out.println(solution.getDesignPatternName());
@@ -35,7 +36,7 @@ public class TestHelper {
         System.out.println("\n---------------------------------------");
         System.out.println(designPattern.getName() + " feedback");
         System.out.println("---------------------------------------");
-        final Feedback feedback = patternInspector.getFeedback();
+        final Feedback feedback = matchingResult.getFeedback();
 
         System.out.println("Node feedback:");
         final Set<Node> nodes = new HashSet<>();

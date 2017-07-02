@@ -54,7 +54,7 @@ public class AdapterMatchingTest {
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed inspection
-        List<Solution> solutions = patternInspector.getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
@@ -109,12 +109,14 @@ public class AdapterMatchingTest {
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
-        List<Solution> solutions = patternInspector.getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdapter", "Adapter"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
+
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
 
 }
