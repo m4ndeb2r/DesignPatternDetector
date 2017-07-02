@@ -101,8 +101,11 @@
                                         <Label fx:id="matchedClassesLabel" styleClass="feedback-subtitle"/>
                                         <GridPane fx:id="matchedClassesGridPane" styleClass="feedback-gridpane" />
 
-                                        <Label fx:id="feedbackSuperfluousEdgesLabel" styleClass="feedback-subtitle"/>
-                                        <GridPane fx:id="feedbackSuperfluousEdgesGridPane" styleClass="feedback-gridpane" />
+                                        <Label fx:id="nodesFeedbackSubtitle" styleClass="feedback-subtitle"/>
+                                        <GridPane fx:id="nodesFeedbackGridPane" styleClass="feedback-gridpane" />
+
+                                        <Label fx:id="relationsFeedbackSubtitle" styleClass="feedback-subtitle"/>
+                                        <GridPane fx:id="relationsFeedbackGridPane" styleClass="feedback-gridpane" />
                                     </children>
                                 </VBox>
                             </content>

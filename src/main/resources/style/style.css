@@ -61,6 +61,10 @@
     -fx-text-fill: darkgreen;
 }
 
+.info {
+    -fx-text-fill: cornflowerblue;
+}
+
 /*
  * Buttons, drop downs etc.
  */

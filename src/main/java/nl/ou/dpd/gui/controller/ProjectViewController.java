@@ -74,10 +74,16 @@ public class ProjectViewController extends Controller implements Observer {
     private GridPane matchedClassesGridPane;
 
     @FXML
-    private Label feedbackSuperfluousEdgesLabel;
+    private Label nodesFeedbackSubtitle;
 
     @FXML
-    private GridPane feedbackSuperfluousEdgesGridPane;
+    private GridPane nodesFeedbackGridPane;
+
+    @FXML
+    private Label relationsFeedbackSubtitle;
+
+    @FXML
+    private GridPane relationsFeedbackGridPane;
 
     private Map<String, Solution> solutionMap;
     private Map<String, Feedback> feedbackMap;
@@ -249,10 +255,58 @@ public class ProjectViewController extends Controller implements Observer {
     private void showFeedbackDetails(final String key) {
         clearDetails();
 
+        // Hide/display components
+        matchedClassesGridPane.setManaged(false);
+        matchedClassesLabel.setManaged(false);
+        nodesFeedbackSubtitle.setManaged(true);
+        nodesFeedbackGridPane.setManaged(true);
+        relationsFeedbackSubtitle.setManaged(true);
+        relationsFeedbackGridPane.setManaged(true);
+
         feedbackTitle.setText("Analysis feedback");
         feedbackSubtitle.setText(String.format("Design pattern: %s", key));
 
         final Feedback feedback = feedbackMap.get(key);
+
+        nodesFeedbackSubtitle.setText("Class/interface feedback");
+        int row = 0;
+        for (nl.ou.dpd.domain.node.Node node : feedback.getNodeSet()) {
+            int col = 0;
+            nodesFeedbackGridPane.add(new Text(node.getName()), col, row++);
+            for(String s : feedback.getFeedbackMessages(node, FeedbackType.INFO)) {
+                nodesFeedbackGridPane.add(new Text(s), col, row++);
+            }
+            for(String s : feedback.getFeedbackMessages(node, FeedbackType.MATCH)) {
+                nodesFeedbackGridPane.add(new Text(s), col, row++);
+            }
+            for(String s : feedback.getFeedbackMessages(node, FeedbackType.MISMATCH)) {
+                nodesFeedbackGridPane.add(new Text(s), col, row++);
+            }
+            for(String s : feedback.getFeedbackMessages(node, FeedbackType.NOT_ANALYSED)) {
+                nodesFeedbackGridPane.add(new Text(s), col, row++);
+            }
+        }
+
+        relationsFeedbackSubtitle.setText("Relation feedback");
+        row = 0;
+        for (nl.ou.dpd.domain.relation.Relation relation : feedback.getRelationSet()) {
+            int col = 0;
+            relationsFeedbackGridPane.add(new Text(relation.getName()), col, row++);
+            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.INFO)) {
+                relationsFeedbackGridPane.add(new Text(s), col, row++);
+            }
+            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.MATCH)) {
+                relationsFeedbackGridPane.add(new Text(s), col, row++);
+            }
+            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.MISMATCH)) {
+                relationsFeedbackGridPane.add(new Text(s), col, row++);
+            }
+            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.NOT_ANALYSED)) {
+                relationsFeedbackGridPane.add(new Text(s), col, row++);
+            }
+        }
+
+        System.out.println("\nNode feedback:");
         feedback.getNodeSet().iterator().forEachRemaining(node -> {
             System.out.println("\n\tNode: " + node.getName());
             feedback.getFeedbackMessages(node, FeedbackType.INFO).forEach(s -> System.out.println("\t- " + s));
@@ -260,7 +314,6 @@ public class ProjectViewController extends Controller implements Observer {
             feedback.getFeedbackMessages(node, FeedbackType.MISMATCH).forEach(s -> System.out.println("\t- " + s));
             feedback.getFeedbackMessages(node, FeedbackType.NOT_ANALYSED).forEach(s -> System.out.println("\t- " + s));
         });
-
         System.out.println("\nRelation feedback:");
         feedback.getRelationSet().iterator().forEachRemaining(r -> {
             System.out.println("\n\tRelation: " + r.getName());
@@ -275,6 +328,14 @@ public class ProjectViewController extends Controller implements Observer {
     private void showSolutionDetails(final String key) {
         clearDetails();
 
+        // Hide/display components
+        nodesFeedbackSubtitle.setManaged(false);
+        nodesFeedbackGridPane.setManaged(false);
+        relationsFeedbackSubtitle.setManaged(false);
+        relationsFeedbackGridPane.setManaged(false);
+        matchedClassesLabel.setManaged(true);
+        matchedClassesGridPane.setManaged(true);
+
         final Solution solution = solutionMap.get(key);
         if (solution != null) {
             feedbackTitle.setText(String.format("Solution: %s", key));
@@ -282,7 +343,6 @@ public class ProjectViewController extends Controller implements Observer {
 
             // Show matching nodes
             matchedClassesLabel.setText("Matched classes");
-            clearGridPane(matchedClassesGridPane);
             int row = 0;
             final List<String[]> matchingNodeNames = solution.getMatchingNodeNames();
             matchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
@@ -292,9 +352,9 @@ public class ProjectViewController extends Controller implements Observer {
             for (String[] nodeNames : matchingNodeNames) {
                 int col = 0;
                 row++;
-                matchedClassesGridPane.add(new Text(nodeNames[0]), col++, row);
+                matchedClassesGridPane.add(new Text(nodeNames[1]), col++, row);
                 matchedClassesGridPane.add(new Text("-->"), col++, row);
-                matchedClassesGridPane.add(new Text(nodeNames[1]), col, row);
+                matchedClassesGridPane.add(new Text(nodeNames[0]), col, row);
             }
         }
     }
@@ -354,6 +414,11 @@ public class ProjectViewController extends Controller implements Observer {
         clearButton.setDisable(true);
     }
 
+    private void clearData() {
+        solutionMap = new HashMap<>();
+        feedbackMap = new HashMap<>();
+    }
+
     private void clearDetails() {
         feedbackSubtitle.setText(null);
         feedbackTitle.setText(null);
@@ -361,13 +426,11 @@ public class ProjectViewController extends Controller implements Observer {
         matchedClassesLabel.setText(null);
         clearGridPane(matchedClassesGridPane);
 
-        feedbackSuperfluousEdgesLabel.setText(null);
-        clearGridPane(feedbackSuperfluousEdgesGridPane);
-    }
+        nodesFeedbackSubtitle.setText(null);
+        clearGridPane(nodesFeedbackGridPane);
 
-    private void clearData() {
-        solutionMap = new HashMap<>();
-        feedbackMap = new HashMap<>();
+        relationsFeedbackSubtitle.setText(null);
+        clearGridPane(relationsFeedbackGridPane);
     }
 
     private void clearTreeView(final TreeView<String> treeView) {
