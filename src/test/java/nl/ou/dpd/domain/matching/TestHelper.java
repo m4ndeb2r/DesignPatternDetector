@@ -23,7 +23,8 @@ public class TestHelper {
      * @param patternInspector
      * @param solutions
      */
-    public static void printFeedback(DesignPattern designPattern, SystemUnderConsideration system, PatternInspector patternInspector, List<Solution> solutions) {
+    public static void printFeedback(DesignPattern designPattern, SystemUnderConsideration system, PatternInspector patternInspector) {
+        List<Solution> solutions = patternInspector.getSolutions();
         solutions.forEach(solution -> {
             System.out.println("---------------------------------------");
             System.out.println(solution.getDesignPatternName());

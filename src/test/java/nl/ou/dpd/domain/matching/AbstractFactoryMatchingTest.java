@@ -51,7 +51,7 @@ public class AbstractFactoryMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
         // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         // TODO Test the getSolutions() in depth instead of the isomorphismExists()
         assertTrue(patternInspector.isomorphismExists());

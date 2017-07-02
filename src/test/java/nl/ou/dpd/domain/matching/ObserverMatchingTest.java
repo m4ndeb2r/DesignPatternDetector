@@ -46,7 +46,7 @@ public class ObserverMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
         // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
@@ -75,7 +75,7 @@ public class ObserverMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
         // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         //extra relationproperty 'Overrides' prevents recognizing the pattern
         assertFalse(patternInspector.isomorphismExists());

@@ -45,7 +45,7 @@ public class DecoratorMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
         //TODO: test the values instead of printing it to the console
-        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection

@@ -50,7 +50,7 @@ public class AdapterMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
         // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed inspection
@@ -80,7 +80,7 @@ public class AdapterMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
         // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         // TODO Test the getSolutions() in depth instead of the isomorphismExists()
         // TODO Looks like there are problems with the bidirected association - not all nodes are compared
@@ -106,7 +106,7 @@ public class AdapterMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
         // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector, patternInspector.getSolutions());
+        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
         List<Solution> solutions = patternInspector.getSolutions();
