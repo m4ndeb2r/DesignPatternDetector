@@ -9,21 +9,25 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nl.ou.dpd.domain.matching.Feedback;
 import nl.ou.dpd.domain.matching.FeedbackType;
 import nl.ou.dpd.domain.matching.PatternInspector;
 import nl.ou.dpd.domain.matching.Solution;
+import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -43,50 +47,37 @@ public class ProjectViewController extends Controller implements Observer {
 
     private static final String FEEDBACK = "Feedback";
 
-    @FXML
-    private Label projectNameLabel;
-
-    @FXML
-    private TextField systemFileTextField;
-
-    @FXML
-    private TextField templateFileTextField;
-
-    @FXML
-    private Button clearButton;
-
-    @FXML
-    private Button analyseButton;
-
-    @FXML
-    private TreeView<String> feedbackTreeView;
-
-    @FXML
-    private Label feedbackTitle;
-
-    @FXML
-    private Label feedbackSubtitle;
-
-    @FXML
-    private Label matchedClassesLabel;
-
-    @FXML
-    private GridPane matchedClassesGridPane;
-
-    @FXML
-    private Label nodesFeedbackSubtitle;
-
-    @FXML
-    private GridPane nodesFeedbackGridPane;
-
-    @FXML
-    private Label relationsFeedbackSubtitle;
-
-    @FXML
-    private GridPane relationsFeedbackGridPane;
-
     private Map<String, Solution> solutionMap;
     private Map<String, Feedback> feedbackMap;
+
+    @FXML
+    private Label projectNameLabel;
+    @FXML
+    private TextField systemFileTextField;
+    @FXML
+    private TextField templateFileTextField;
+    @FXML
+    private Button clearButton;
+    @FXML
+    private Button analyseButton;
+    @FXML
+    private TreeView<String> feedbackTreeView;
+    @FXML
+    private Label feedbackTitle;
+    @FXML
+    private Label feedbackSubtitle;
+    @FXML
+    private Label matchedClassesLabel;
+    @FXML
+    private GridPane matchedClassesGridPane;
+    @FXML
+    private Label nodesFeedbackSubtitle;
+    @FXML
+    private Label relationsFeedbackSubtitle;
+    @FXML
+    private VBox nodesFeedbackVBox;
+    @FXML
+    private VBox relationsFeedbackVBox;
 
     /**
      * Constructs a {@link ProjectViewController} with the specified {@link Model}.
@@ -253,89 +244,61 @@ public class ProjectViewController extends Controller implements Observer {
     }
 
     private void showFeedbackDetails(final String key) {
+        final Feedback feedback = feedbackMap.get(key);
+
         clearDetails();
 
-        // Hide/display components
-        matchedClassesGridPane.setManaged(false);
-        matchedClassesLabel.setManaged(false);
-        nodesFeedbackSubtitle.setManaged(true);
-        nodesFeedbackGridPane.setManaged(true);
-        relationsFeedbackSubtitle.setManaged(true);
-        relationsFeedbackGridPane.setManaged(true);
+        show(nodesFeedbackSubtitle);
+        show(nodesFeedbackVBox);
+
+        show(relationsFeedbackSubtitle);
+        show(relationsFeedbackVBox);
 
         feedbackTitle.setText("Analysis feedback");
         feedbackSubtitle.setText(String.format("Design pattern: %s", key));
 
-        final Feedback feedback = feedbackMap.get(key);
-
         nodesFeedbackSubtitle.setText("Class/interface feedback");
-        int row = 0;
         for (nl.ou.dpd.domain.node.Node node : feedback.getNodeSet()) {
-            int col = 0;
-            nodesFeedbackGridPane.add(new Text(node.getName()), col, row++);
-            for(String s : feedback.getFeedbackMessages(node, FeedbackType.INFO)) {
-                nodesFeedbackGridPane.add(new Text(s), col, row++);
-            }
-            for(String s : feedback.getFeedbackMessages(node, FeedbackType.MATCH)) {
-                nodesFeedbackGridPane.add(new Text(s), col, row++);
-            }
-            for(String s : feedback.getFeedbackMessages(node, FeedbackType.MISMATCH)) {
-                nodesFeedbackGridPane.add(new Text(s), col, row++);
-            }
-            for(String s : feedback.getFeedbackMessages(node, FeedbackType.NOT_ANALYSED)) {
-                nodesFeedbackGridPane.add(new Text(s), col, row++);
-            }
+            populateNodesFeedbackVBox(feedback, node);
         }
 
         relationsFeedbackSubtitle.setText("Relation feedback");
-        row = 0;
         for (nl.ou.dpd.domain.relation.Relation relation : feedback.getRelationSet()) {
-            int col = 0;
-            relationsFeedbackGridPane.add(new Text(relation.getName()), col, row++);
-            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.INFO)) {
-                relationsFeedbackGridPane.add(new Text(s), col, row++);
-            }
-            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.MATCH)) {
-                relationsFeedbackGridPane.add(new Text(s), col, row++);
-            }
-            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.MISMATCH)) {
-                relationsFeedbackGridPane.add(new Text(s), col, row++);
-            }
-            for(String s : feedback.getFeedbackMessages(relation, FeedbackType.NOT_ANALYSED)) {
-                relationsFeedbackGridPane.add(new Text(s), col, row++);
+            populateRelationsFeedbackVBox(feedback, relation);
+        }
+    }
+
+    private void populateRelationsFeedbackVBox(Feedback feedback, Relation relation) {
+        final GridPane content = new GridPane();
+        final TitledPane titledPane = new TitledPane(relation.getName(), content);
+        titledPane.setExpanded(false);
+        relationsFeedbackVBox.getChildren().add(titledPane);
+        int row = 0;
+        for (FeedbackType type : FeedbackType.values()) {
+            for(String s : feedback.getFeedbackMessages(relation, type)) {
+                content.addRow(row++, new Text(s));
             }
         }
+    }
 
-        // TODO: this has to go.... (temporary)
-        System.out.println("\nNode feedback:");
-        feedback.getNodeSet().iterator().forEachRemaining(node -> {
-            System.out.println("\n\tNode: " + node.getName());
-            feedback.getFeedbackMessages(node, FeedbackType.INFO).forEach(s -> System.out.println("\t- " + s));
-            feedback.getFeedbackMessages(node, FeedbackType.MATCH).forEach(s -> System.out.println("\t- " + s));
-            feedback.getFeedbackMessages(node, FeedbackType.MISMATCH).forEach(s -> System.out.println("\t- " + s));
-            feedback.getFeedbackMessages(node, FeedbackType.NOT_ANALYSED).forEach(s -> System.out.println("\t- " + s));
-        });
-        System.out.println("\nRelation feedback:");
-        feedback.getRelationSet().iterator().forEachRemaining(r -> {
-            System.out.println("\n\tRelation: " + r.getName());
-            feedback.getFeedbackMessages(r, FeedbackType.INFO).forEach(s -> System.out.println("\t- " + s));
-            feedback.getFeedbackMessages(r, FeedbackType.MATCH).forEach(s -> System.out.println("\t- " + s));
-            feedback.getFeedbackMessages(r, FeedbackType.MISMATCH).forEach(s -> System.out.println("\t- " + s));
-            feedback.getFeedbackMessages(r, FeedbackType.NOT_ANALYSED).forEach(s -> System.out.println("\t- " + s));
-        });
-
+    private void populateNodesFeedbackVBox(Feedback feedback, nl.ou.dpd.domain.node.Node node) {
+        final GridPane content = new GridPane();
+        final TitledPane titledPane = new TitledPane(node.getName(), content);
+        titledPane.setExpanded(false);
+        nodesFeedbackVBox.getChildren().add(titledPane);
+        int row = 0;
+        for (FeedbackType type : FeedbackType.values()) {
+            for (String s : feedback.getFeedbackMessages(node, type)) {
+                content.addRow(row++, new Text(s));
+            }
+        }
     }
 
     private void showSolutionDetails(final String key) {
         clearDetails();
 
-        // Hide/display components
-        nodesFeedbackSubtitle.setManaged(false);
-        nodesFeedbackGridPane.setManaged(false);
-        relationsFeedbackSubtitle.setManaged(false);
-        relationsFeedbackGridPane.setManaged(false);
-        matchedClassesLabel.setManaged(true);
-        matchedClassesGridPane.setManaged(true);
+        show(matchedClassesLabel);
+        show(matchedClassesGridPane);
 
         final Solution solution = solutionMap.get(key);
         if (solution != null) {
@@ -343,7 +306,7 @@ public class ProjectViewController extends Controller implements Observer {
             feedbackSubtitle.setText(getPatternLabelText(solution));
 
             // Show matching nodes
-            matchedClassesLabel.setText("Matched classes");
+            matchedClassesLabel.setText("Matched classes/interfaces");
             int row = 0;
             final List<String[]> matchingNodeNames = solution.getMatchingNodeNames();
             matchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
@@ -420,20 +383,6 @@ public class ProjectViewController extends Controller implements Observer {
         feedbackMap = new HashMap<>();
     }
 
-    private void clearDetails() {
-        feedbackSubtitle.setText(null);
-        feedbackTitle.setText(null);
-
-        matchedClassesLabel.setText(null);
-        clearGridPane(matchedClassesGridPane);
-
-        nodesFeedbackSubtitle.setText(null);
-        clearGridPane(nodesFeedbackGridPane);
-
-        relationsFeedbackSubtitle.setText(null);
-        clearGridPane(relationsFeedbackGridPane);
-    }
-
     private void clearTreeView(final TreeView<String> treeView) {
         final TreeItem<String> root = treeView.getRoot();
         if (root != null) {
@@ -445,11 +394,47 @@ public class ProjectViewController extends Controller implements Observer {
         }
     }
 
+    private void clearDetails() {
+        feedbackSubtitle.setText(null);
+        feedbackTitle.setText(null);
+
+        matchedClassesLabel.setText(null);
+        hide(matchedClassesLabel);
+        clearGridPane(matchedClassesGridPane);
+        hide(matchedClassesGridPane);
+
+        nodesFeedbackSubtitle.setText(null);
+        hide(nodesFeedbackSubtitle);
+
+        relationsFeedbackSubtitle.setText(null);
+        hide(relationsFeedbackSubtitle);
+
+        clearVBox(nodesFeedbackVBox);
+        hide(nodesFeedbackVBox);
+
+        clearVBox(relationsFeedbackVBox);
+        hide(relationsFeedbackVBox);
+    }
+
+    private void hide(Node node) {
+        node.setVisible(false);
+        node.setManaged(false);
+    }
+
+    private void show(Node node) {
+        node.setVisible(true);
+        node.setManaged(true);
+    }
+
     private void clearGridPane(final GridPane gridPane) {
         final ObservableList<Node> children = gridPane.getChildren();
         if (children != null && children.size() != 0) {
             children.clear();
         }
+    }
+
+    private void clearVBox(final VBox vbox) {
+        vbox.getChildren().clear();
     }
 
 }
