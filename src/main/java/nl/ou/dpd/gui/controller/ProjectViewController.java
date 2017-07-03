@@ -27,7 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -250,7 +249,6 @@ public class ProjectViewController extends Controller implements Observer {
 
         show(nodesFeedbackSubtitle);
         show(nodesFeedbackVBox);
-
         show(relationsFeedbackSubtitle);
         show(relationsFeedbackVBox);
 
@@ -268,19 +266,6 @@ public class ProjectViewController extends Controller implements Observer {
         }
     }
 
-    private void populateRelationsFeedbackVBox(Feedback feedback, Relation relation) {
-        final GridPane content = new GridPane();
-        final TitledPane titledPane = new TitledPane(relation.getName(), content);
-        titledPane.setExpanded(false);
-        relationsFeedbackVBox.getChildren().add(titledPane);
-        int row = 0;
-        for (FeedbackType type : FeedbackType.values()) {
-            for(String s : feedback.getFeedbackMessages(relation, type)) {
-                content.addRow(row++, new Text(s));
-            }
-        }
-    }
-
     private void populateNodesFeedbackVBox(Feedback feedback, nl.ou.dpd.domain.node.Node node) {
         final GridPane content = new GridPane();
         final TitledPane titledPane = new TitledPane(node.getName(), content);
@@ -289,6 +274,19 @@ public class ProjectViewController extends Controller implements Observer {
         int row = 0;
         for (FeedbackType type : FeedbackType.values()) {
             for (String s : feedback.getFeedbackMessages(node, type)) {
+                content.addRow(row++, new Text(s));
+            }
+        }
+    }
+
+    private void populateRelationsFeedbackVBox(Feedback feedback, Relation relation) {
+        final GridPane content = new GridPane();
+        final TitledPane titledPane = new TitledPane(relation.getName(), content);
+        titledPane.setExpanded(false);
+        relationsFeedbackVBox.getChildren().add(titledPane);
+        int row = 0;
+        for (FeedbackType type : FeedbackType.values()) {
+            for (String s : feedback.getFeedbackMessages(relation, type)) {
                 content.addRow(row++, new Text(s));
             }
         }

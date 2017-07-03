@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -101,12 +99,10 @@
                                         <GridPane fx:id="matchedClassesGridPane" styleClass="feedback-gridpane" />
 
                                         <Label fx:id="nodesFeedbackSubtitle" styleClass="feedback-subtitle" />
-                                        <VBox fx:id="nodesFeedbackVBox" styleClass="feedback-vbox">
-                                        </VBox>
+                                        <VBox fx:id="nodesFeedbackVBox" styleClass="feedback-vbox" />
 
                                         <Label fx:id="relationsFeedbackSubtitle" styleClass="feedback-subtitle" />
-                                        <VBox fx:id="relationsFeedbackVBox" styleClass="feedback-vbox">
-                                        </VBox>
+                                        <VBox fx:id="relationsFeedbackVBox" styleClass="feedback-vbox" />
                                     </children>
                                 </VBox>
                             </content>
