@@ -1,11 +1,8 @@
 package nl.ou.dpd.parsing.argoxmi;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
-import nl.ou.dpd.domain.node.Operation;
-import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
@@ -19,13 +16,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link SystemRelationsExtractor} class.
- *
- * TODO: this class is quite messy. Can the commented-out code be removed? Why are the so may single commented-out lines of code? Is this test still heavily under construction?
  *
  * @author Martin de Boer
  * @author Peter Vansweevelt
@@ -34,26 +28,8 @@ public class SystemRelationsExtractorTest {
 
     // A test file containing valid XML.
     private static final String VALID_ADAPTER = "/adapters_structures_association.xmi";
-    // A  more complicated test file containing valid XML.
-    private static final String VALID_ADAPTERS = "/adapters.xmi";
-    //all 17 Patterns of van Doorn and Ba_brahem
+    //another pattern
     private static final String ABSTRACT_FACTORY = "/AbstractFactory.xmi";
-    private static final String BA_BRAHEM = "/Ba_Brahem.xmi";
-    private static final String BRIDGE = "/Bridge.xmi";
-    private static final String BUILDER = "/Builder.xmi";
-    private static final String CHAIN_OF_RESPONSIBILITY = "/ChainOfResponsibility.xmi";
-    private static final String COMMAND = "/Command.xmi";
-    private static final String COMPOSITE = "/Composite.xmi";
-    private static final String DECORATOR = "/Decorator.xmi";
-    private static final String FACTORY_METHOD = "/FactoryMethod.xmi";
-    private static final String FLYWEIGHT = "/Flyweight.xmi";
-    private static final String INTERPRETER = "/Interpreter.xmi";
-    private static final String ITERATOR = "/Iterator.xmi";
-    private static final String MEDIATOR = "/Mediator.xmi";
-    private static final String MEMENTO = "/Memento.xmi";
-    private static final String OBSERVER = "/Observer.xmi";
-    private static final String PROXY = "/Proxy.xmi";
-    private static final String STRATEGY = "/Strategy.xmi";
 
     /**
      * Exception rule.
@@ -62,10 +38,6 @@ public class SystemRelationsExtractorTest {
     public ExpectedException thrown = ExpectedException.none();
 
     private Map<String, Node> nodes;
-    private Relation relation;
-    private Node source;
-    private Node target;
-    private Attribute attr;
 
     /**
      * Test the happy flow of parsing an XMI input file by the {@link ArgoUMLRelationParser}.
@@ -124,328 +96,6 @@ public class SystemRelationsExtractorTest {
         assertEquals(-1, getCardinalityLeft(adapterAdaptee, RelationType.ASSOCIATES_WITH).getUpper());
         assertEquals(1, getCardinalityRight(adapterAdaptee, RelationType.ASSOCIATES_WITH).getLower());
         assertEquals(1, getCardinalityRight(adapterAdaptee, RelationType.ASSOCIATES_WITH).getUpper());
-
-        //check attribute types        
-/*        assertEquals("adaptee", adapter.getAttributes().get(0).getName());
-        assertEquals(adaptee, adapter.getAttributes().get(0).getType());
-        assertEquals(Visibility.PRIVATE, adapter.getAttributes().get(0).getVisibility());
-        assertEquals("adapter", client.getAttributes().get(0).getName());
-        assertEquals(target, client.getAttributes().get(0).getType());
-        assertEquals(Visibility.PUBLIC, client.getAttributes().get(0).getVisibility());
-*/        //check method existence
-/*        Method method = findOperationByName(client, "adapter.request");
-        assertNotNull(method);
-        method = findOperationByName(adapter, "request");
-        assertNotNull(method);
-	    method = findOperationByName(adaptee, "specificRequest");
-	    assertNotNull(method);
-*/
-    }
-
-    /**
-     * Test the happy flow of parsing a more complicated XMI input file by the {@link ArgoUMLRelationParser}.
-     */
-    @Test
-    public void testParse2() {
-        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser();
-        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser();
-        final String path = getPath(VALID_ADAPTERS);
-
-        nodes = nodeParser.parse(path);
-        final SystemUnderConsideration suc = relationParser.parse(path, nodes);
-        final SystemRelationsExtractor relationExtractor = new SystemRelationsExtractor();
-        relationExtractor.execute(suc);
-        assertEquals("Adapters", suc.getName());
-
-//34       assertEquals(35, suc.edgeSet().size());
-//40        assertEquals(38, suc.vertexSet().size());        
-
-        //Examine edges in order of appearing in the .xmi
-        source = findVerticesByName(suc, "SquarePegAdapter").get(0);
-        target = findVerticesByName(suc, "SquarePeg").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(3, suc.edgesOf(source).size());
-        assertEquals(1, suc.incomingEdgesOf(source).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size());
-        assertEquals(2, suc.edgesOf(target).size()); //edge to Double
-        assertEquals(1, suc.incomingEdgesOf(target).size());
-        assertEquals(1, suc.outgoingEdgesOf(target).size()); //edge to Double
-        relation = suc.getEdge(source, target);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-        assertNotNull(findAttributeByName(source, "sp"));
-        assertEquals(target, findAttributeByName(source, "sp").getType());
-        assertEquals(Visibility.PRIVATE, findAttributeByName(source, "sp").getVisibility());
-        assertNotNull(findAttributeByName(target, "width"));
-        assertEquals("Double", findAttributeByName(target, "width").getType().getName());
-        assertEquals(Visibility.PUBLIC, findAttributeByName(target, "width").getVisibility());
-        assertNotNull(findOperationByName(source, "makeFit"));
-        assertNotNull(findOperationByName(target, "getWidth"));
-        assertNotNull(findOperationByName(target, "setWidth"));
-
-        source = findVerticesByName(suc, "AdapterDemoSquarePeg").get(0);
-        target = findVerticesByName(suc, "SquarePegAdapter").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(2, suc.edgesOf(source).size());
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size());
-        assertEquals(3, suc.edgesOf(target).size());
-        assertEquals(1, suc.incomingEdgesOf(target).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size());
-        relation = suc.getEdge(source, target);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-        attr = findAttributeByName(source, "spa");
-        assertNotNull(attr);
-        assertEquals(target, attr.getType());
-        assertEquals(Visibility.PUBLIC, attr.getVisibility());
-
-        source = findVerticesByName(suc, "AdapterDemoSquarePeg").get(0);
-        target = findVerticesByName(suc, "RoundHole").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(2, suc.edgesOf(source).size());
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size());
-        assertEquals(3, suc.edgesOf(target).size());
-        assertEquals(2, suc.incomingEdgesOf(target).size());
-        assertEquals(1, suc.outgoingEdgesOf(target).size()); //to datatype Integer
-        relation = suc.getEdge(source, target);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-        attr = findAttributeByName(source, "rh");
-        assertNotNull(attr);
-        assertEquals(target, attr.getType());
-        assertEquals(Visibility.PUBLIC, attr.getVisibility());
-        assertNotNull(findOperationByName(target, "getRadius"));
-
-        source = findVerticesByName(suc, "SquarePegAdapter").get(0);
-        target = findVerticesByName(suc, "RoundHole").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(3, suc.edgesOf(source).size());
-        assertEquals(1, suc.incomingEdgesOf(source).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size());
-        relation = suc.getEdge(source, target);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
-
-        source = findVerticesByName(suc, "SquarePeg").get(0);
-        target = findVerticesByName(suc, "Double").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(2, suc.edgesOf(source).size());
-        assertEquals(1, suc.incomingEdgesOf(source).size());
-        assertEquals(1, suc.outgoingEdgesOf(source).size());
-        assertEquals(1, suc.edgesOf(target).size());
-        assertEquals(1, suc.incomingEdgesOf(target).size());
-        assertEquals(0, suc.outgoingEdgesOf(target).size());
-        relation = suc.getEdge(source, target);
-        assertEquals(3, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_RETURNTYPE));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
-        attr = findAttributeByName(source, "width");
-        assertNotNull(attr);
-        assertEquals(target, attr.getType());
-        assertEquals(Visibility.PUBLIC, attr.getVisibility());
-
-        source = findVerticesByName(suc, "DrawingEditor").get(0);
-        target = findVerticesByName(suc, "Shape").get(0); //there is an interface Shape and an abstract Class Shape
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.ABSTRACT_CLASS));
-//        assertFalse(target.isAbstract()); //interfaces has to be set abstract explicitly in ArgoUML
-        assertEquals(1, suc.edgesOf(source).size());
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(1, suc.outgoingEdgesOf(source).size());
-        assertEquals(5, suc.edgesOf(target).size()); //2 relations of parameters (Point, Manipulator)
-        assertEquals(3, suc.incomingEdgesOf(target).size());
-        assertEquals(2, suc.outgoingEdgesOf(target).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertNotNull(findOperationByName(target, "BoundingBox"));
-        assertNotNull(findOperationByName(target, "CreateManipulator"));
-
-        source = findVerticesByName(suc, "Line").get(0);
-        target = findVerticesByName(suc, "Shape").get(1); //there is an interface Shape and an abstract Class Shape
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.INTERFACE));
-//        assertFalse(target.isAbstract()); //interfaces has to be set abstract explicitly in ArgoUML
-        assertEquals(2, suc.edgesOf(source).size()); //hidden association with interface Shape
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size()); //hidden association with interface Shape
-        assertEquals(2, suc.edgesOf(target).size());
-        assertEquals(2, suc.incomingEdgesOf(target).size());
-        assertEquals(0, suc.outgoingEdgesOf(target).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-//1        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
-        assertNotNull(findOperationByName(source, "BoundingBox"));
-        assertNotNull(findOperationByName(source, "CreateManipulator"));
-
-        assertTrue(containsType(findVerticesByName(suc, "Shape").get(0), NodeType.ABSTRACT_CLASS));
-        relation = suc.getEdge(source, findVerticesByName(suc, "Shape").get(0)); //hidden inheritance with abstract class Shape
-        assertTrue(relationTypeExists(relation, RelationType.INHERITS_FROM));
-
-        source = findVerticesByName(suc, "TextShape").get(0);
-        target = findVerticesByName(suc, "Shape").get(0); //there is an interface Shape and an abstract Class Shape
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.ABSTRACT_CLASS));
-//        assertFalse(target.isAbstract());
-        assertEquals(5, suc.edgesOf(source).size()); //hidden dependency with interface Shape + return relation to Point
-        assertEquals(1, suc.incomingEdgesOf(source).size());
-        assertEquals(4, suc.outgoingEdgesOf(source).size()); //hidden dependency with interface Shape + return relation to Point
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.INHERITS_FROM));
-        assertNotNull(findOperationByName(source, "BoundingBox"));
-        assertNotNull(findOperationByName(source, "CreateManipulator"));
-
-        assertTrue(containsType(findVerticesByName(suc, "Shape").get(1), NodeType.INTERFACE));
-        relation = suc.getEdge(source, findVerticesByName(suc, "Shape").get(1)); //hidden dependency with interface Shape
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.DEPENDS_ON));
-        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
-
-        source = findVerticesByName(suc, "TextShape").get(0);
-        target = findVerticesByName(suc, "TextView").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(1, suc.edgesOf(target).size());
-        assertEquals(1, suc.incomingEdgesOf(target).size());
-        assertEquals(0, suc.outgoingEdgesOf(target).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-        attr = findAttributeByName(source, "textview");
-        assertNotNull(attr);
-        assertEquals(target, attr.getType());
-        assertEquals(Visibility.PRIVATE, attr.getVisibility());
-        assertNotNull(findOperationByName(target, "getExtent"));
-
-        source = findVerticesByName(suc, "textShapeDemo").get(0);
-        target = findVerticesByName(suc, "TextShape").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(1, suc.edgesOf(source).size());
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(1, suc.outgoingEdgesOf(source).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-        attr = findAttributeByName(source, "textShape");
-        assertNotNull(attr);
-        assertEquals(target, attr.getType());
-        assertEquals(Visibility.PUBLIC, attr.getVisibility());
-
-        source = findVerticesByName(suc, "TextShape").get(0);
-        target = findVerticesByName(suc, "Point").get(1);
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_RETURNTYPE));
-
-        source = findVerticesByName(suc, "Shape").get(0);
-        target = findVerticesByName(suc, "Point").get(1);
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
-
-        source = findVerticesByName(suc, "MediaPlayerAdapterDemo").get(0);
-        target = findVerticesByName(suc, "AudioPlayer").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.CONCRETE_CLASS));
-        assertEquals(1, suc.edgesOf(source).size());
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(1, suc.outgoingEdgesOf(source).size());
-        assertEquals(3, suc.edgesOf(target).size());
-        assertEquals(1, suc.incomingEdgesOf(target).size());
-        assertEquals(2, suc.outgoingEdgesOf(target).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-
-        source = findVerticesByName(suc, "AudioPlayer").get(0);
-        target = findVerticesByName(suc, "MediaPlayer").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.INTERFACE));
-        assertEquals(3, suc.edgesOf(target).size());
-        assertEquals(2, suc.incomingEdgesOf(target).size()); //extra Relation to String
-        assertEquals(1, suc.outgoingEdgesOf(target).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(1, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
-
-        source = findVerticesByName(suc, "MediaAdapter").get(0);
-        target = findVerticesByName(suc, "MediaPlayer").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.INTERFACE));
-        assertEquals(4, suc.edgesOf(source).size());
-        assertEquals(1, suc.incomingEdgesOf(source).size());
-        assertEquals(3, suc.outgoingEdgesOf(source).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
-
-        source = findVerticesByName(suc, "MediaAdapter").get(0);
-        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.INTERFACE));
-        assertEquals(4, suc.edgesOf(target).size());
-        assertEquals(3, suc.incomingEdgesOf(target).size());
-        assertEquals(1, suc.outgoingEdgesOf(target).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.ASSOCIATES_WITH));
-        assertTrue(relationTypeExists(relation, RelationType.HAS_ATTRIBUTE_OF));
-
-        source = findVerticesByName(suc, "Mp4Player").get(0);
-        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.INTERFACE));
-        assertEquals(2, suc.edgesOf(source).size());
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
-
-        source = findVerticesByName(suc, "VlcPlayer").get(0);
-        target = findVerticesByName(suc, "AdvancedMediaPlayer").get(0);
-        assertTrue(containsType(source, NodeType.CONCRETE_CLASS));
-        assertTrue(containsType(target, NodeType.INTERFACE));
-        assertEquals(2, suc.edgesOf(source).size());
-        assertEquals(0, suc.incomingEdgesOf(source).size());
-        assertEquals(2, suc.outgoingEdgesOf(source).size());
-        relation = suc.getEdge(source, target);
-        assertNotNull(relation);
-        assertEquals(2, relation.getRelationProperties().size());
-        assertTrue(relationTypeExists(relation, RelationType.IMPLEMENTS));
-        assertTrue(relationTypeExists(relation, RelationType.OVERRIDES_METHOD_OF));
     }
 
     /**
@@ -595,24 +245,6 @@ public class SystemRelationsExtractorTest {
             }
         }
         return false;
-    }
-
-    private Attribute findAttributeByName(Node node, String name) {
-        for (Attribute attr : node.getAttributes()) {
-            if (attr.getName().equals(name)) {
-                return attr;
-            }
-        }
-        return null;
-    }
-
-    private Operation findOperationByName(Node node, String name) {
-        for (Operation op : node.getOperations()) {
-            if (op.getName().equals(name)) {
-                return op;
-            }
-        }
-        return null;
     }
 
     private Cardinality getCardinalityLeft(Relation relation, RelationType relationtype) {
