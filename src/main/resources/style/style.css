@@ -50,19 +50,23 @@
 }
 
 .error {
-    -fx-text-fill: crimson;
+    -fx-text-fill: #c12e2A;
+    -fx-fill: #c12e2A;
 }
 
 .warning {
-    -fx-text-fill: darkorange;
+    -fx-text-fill: #e17100;
+    -fx-fill: #e17100;
 }
 
 .okay {
     -fx-text-fill: darkgreen;
+    -fx-fill: darkgreen;
 }
 
 .info {
-    -fx-text-fill: cornflowerblue;
+    -fx-text-fill: #2a71e9;
+    -fx-fill: #2a71e9;
 }
 
 /*
@@ -115,8 +119,6 @@
 .menu-item:focused > .label {
     -fx-text-fill: white;
 }
-
-
 
 /*
  * Project view

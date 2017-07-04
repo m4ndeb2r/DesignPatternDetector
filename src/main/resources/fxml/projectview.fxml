@@ -99,10 +99,10 @@
                                         <GridPane fx:id="matchedClassesGridPane" styleClass="feedback-gridpane" />
 
                                         <Label fx:id="nodesFeedbackSubtitle" styleClass="feedback-subtitle" />
-                                        <VBox fx:id="nodesFeedbackVBox" styleClass="feedback-vbox" />
+                                        <VBox fx:id="nodesFeedbackVBox" />
 
                                         <Label fx:id="relationsFeedbackSubtitle" styleClass="feedback-subtitle" />
-                                        <VBox fx:id="relationsFeedbackVBox" styleClass="feedback-vbox" />
+                                        <VBox fx:id="relationsFeedbackVBox" />
                                     </children>
                                 </VBox>
                             </content>

@@ -46,6 +46,14 @@ public class ProjectViewController extends Controller implements Observer {
 
     private static final String FEEDBACK = "Feedback";
 
+    private static final Map<FeedbackType, String> feedbackStyleClasses = new HashMap<>(4);
+    static {
+        feedbackStyleClasses.put(FeedbackType.INFO, "info");
+        feedbackStyleClasses.put(FeedbackType.MATCH, "okay");
+        feedbackStyleClasses.put(FeedbackType.MISMATCH, "error");
+        feedbackStyleClasses.put(FeedbackType.NOT_ANALYSED, "warning");
+    }
+
     private Map<String, Solution> solutionMap;
     private Map<String, Feedback> feedbackMap;
 
@@ -274,7 +282,9 @@ public class ProjectViewController extends Controller implements Observer {
         int row = 0;
         for (FeedbackType type : FeedbackType.values()) {
             for (String s : feedback.getFeedbackMessages(node, type)) {
-                content.addRow(row++, new Text(s));
+                final Text text = new Text(s);
+                text.getStyleClass().add(feedbackStyleClasses.get(type));
+                content.addRow(row++, text);
             }
         }
     }
@@ -287,7 +297,9 @@ public class ProjectViewController extends Controller implements Observer {
         int row = 0;
         for (FeedbackType type : FeedbackType.values()) {
             for (String s : feedback.getFeedbackMessages(relation, type)) {
-                content.addRow(row++, new Text(s));
+                final Text text = new Text(s);
+                text.getStyleClass().add(feedbackStyleClasses.get(type));
+                content.addRow(row++, text);
             }
         }
     }
