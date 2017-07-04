@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8' ?>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Mon Jun 19 09:12:40 CEST 2017'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Tue Jul 04 12:34:58 CEST 2017'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -107,7 +107,7 @@
           </UML:Classifier.feature>
         </UML:Class>
         <UML:Generalization xmi.id = '127-0-1-1-1c9ca7b7:15380ca712b:-8000:000000000000086F'
-          isSpecification = 'false'>
+          name = 'AConcreteSubject-ASubject' isSpecification = 'false'>
           <UML:Generalization.child>
             <UML:Class xmi.idref = '127-0-1-1-1c9ca7b7:15380ca712b:-8000:000000000000086C'/>
           </UML:Generalization.child>
@@ -116,7 +116,7 @@
           </UML:Generalization.parent>
         </UML:Generalization>
         <UML:Abstraction xmi.id = '127-0-1-1-1c9ca7b7:15380ca712b:-8000:0000000000000873'
-          isSpecification = 'false'>
+          name = 'AConcreteObserver-AnObserver' isSpecification = 'false'>
           <UML:Dependency.client>
             <UML:Class xmi.idref = '127-0-1-1-1c9ca7b7:15380ca712b:-8000:000000000000086B'/>
           </UML:Dependency.client>

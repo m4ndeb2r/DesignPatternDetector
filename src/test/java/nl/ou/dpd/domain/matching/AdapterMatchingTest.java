@@ -82,8 +82,7 @@ public class AdapterMatchingTest {
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
-        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
-        // TODO Looks like there are problems with the bidirected association - not all nodes are compared
+        // This pattern is not found because of the bidirected association.
         assertFalse(patternInspector.isomorphismExists());
     }
 
