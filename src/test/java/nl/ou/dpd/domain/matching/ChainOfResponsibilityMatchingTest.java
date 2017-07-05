@@ -5,9 +5,11 @@ import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
 import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -32,6 +34,7 @@ public class ChainOfResponsibilityMatchingTest {
     }
 
     @Test
+    @Ignore("Extra relationproperties obstruct pattern recognition. Peter is working on it....")
     public void testMatchingChainOfResponsibilityMatching() {
         // Parse the chainofresponsibility pattern xml ands create a DesignPattern
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
@@ -47,7 +50,7 @@ public class ChainOfResponsibilityMatchingTest {
         TestHelper.printFeedback(designPattern, system, patternInspector);
         
         //TODO extra relationproperties obstruct pattern recognition
-/*        assertTrue(patternInspector.isomorphismExists());
+        assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(2, solutions.size());
@@ -58,6 +61,6 @@ public class ChainOfResponsibilityMatchingTest {
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrProcess2", "ConcreteHandlerB"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrProcess1", "ConcreteHandlerB"));
 
-*/        // TODO Test feedback (getMatchingResult().getFeedback())
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
 }

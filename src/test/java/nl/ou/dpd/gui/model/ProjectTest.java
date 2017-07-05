@@ -24,8 +24,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class ProjectTest {
 
-    private static final String TEST_PROJ_FILE_NAME = "/testproject.dpd";
-    private static final String SAVE_PROJ_FILE_NAME = "/saveproject.dpd";
+    private static final String TEST_PROJ_FILE_NAME = "/projects/testproject.dpd";
+    private static final String SAVE_PROJ_FILE_NAME = "/projects/saveproject.dpd";
 
     private static final String DPD_SYSTEM_FILE = "dpd.system.file";
     private static final String DPD_PATTERNS_FILE = "dpd.patterns.file";
@@ -73,7 +73,7 @@ public class ProjectTest {
     @Test
     public void testConstructor() throws FileNotFoundException {
         Project project = new Project(testProjectFile);
-        assertThat(project.getName(), is("testproject.dpd"));
+        assertThat(project.getName(), is(TEST_PROJ_FILE_NAME.substring(TEST_PROJ_FILE_NAME.lastIndexOf('/') + 1)));
         assertThat(project.getDesignPatternFilePath(), is("/testpatterns.xml"));
         assertThat(project.getSystemUnderConsiderationFilePath(), is("/testinput.xmi"));
         assertTrue(project.isPristine());
@@ -117,7 +117,7 @@ public class ProjectTest {
         project.save(saveProjectFile);
 
         // Check the project's attributes
-        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(1)));
+        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(SAVE_PROJ_FILE_NAME.lastIndexOf('/') + 1)));
         assertThat(project.getSystemUnderConsiderationFilePath(), is("/sys.xmi"));
         assertThat(project.getDesignPatternFilePath(), is("/tpl.xml"));
         assertTrue(project.isPristine());
@@ -147,7 +147,7 @@ public class ProjectTest {
         project.save(saveProjectFile);
 
         // Check the project's attributes
-        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(1)));
+        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(SAVE_PROJ_FILE_NAME.lastIndexOf('/') + 1)));
         assertThat(project.getSystemUnderConsiderationFilePath(), isEmptyOrNullString());
         assertThat(project.getDesignPatternFilePath(), isEmptyOrNullString());
         assertTrue(project.isPristine());
