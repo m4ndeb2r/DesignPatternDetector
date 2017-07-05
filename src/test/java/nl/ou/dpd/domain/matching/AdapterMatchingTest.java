@@ -35,9 +35,9 @@ public class AdapterMatchingTest {
     @Test
     public void testMatchingObjectAdapter() {
 
-        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns_adapter.xml");
+        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/MyObjectAdapter.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/myPatterns/MyObjectAdapter.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -65,9 +65,9 @@ public class AdapterMatchingTest {
     //test with an undirected association between Client and Target
     @Test
     public void testMatchingAdapterWithUndirectedAssociation() {
-        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns_adapter.xml");
+        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/MyAdapterWithUndirectedAssociation.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/myPatterns/MyAdapterWithUndirectedAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -82,8 +82,7 @@ public class AdapterMatchingTest {
         // TODO Temporary method for visual feedback
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
-        // TODO Test the getSolutions() in depth instead of the isomorphismExists()
-        // TODO Looks like there are problems with the bidirected association - not all nodes are compared
+        // This pattern is not found because of the bidirected association.
         assertFalse(patternInspector.isomorphismExists());
     }
 
@@ -91,9 +90,9 @@ public class AdapterMatchingTest {
     @Test
     public void testMatchingAdapterWithExtraAssociation() {
 
-        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns_adapter.xml");
+        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/MyAdapterWithExtraAssociation.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/myPatterns/MyAdapterWithExtraAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());

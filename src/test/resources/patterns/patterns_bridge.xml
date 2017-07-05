@@ -18,7 +18,7 @@
         <relations>
         	<relation node1="Abstraction" node2="Implementor">
         		<relation.rule relationType="ASSOCIATES_WITH"
-                               cardinalityLeft="1"
+                               cardinalityLeft="0..*"
                                cardinalityRight="1"/>        					   
                 <relation.rule relationType="HAS_ATTRIBUTE_OF"
                                cardinalityLeft="1"

@@ -28,7 +28,7 @@ public class BridgeMatchingTest {
     @Before
     public void initTests() {
         xmiParser = new ArgoUMLParser();
-        patternsXmlFile = BridgeMatchingTest.class.getResource("/patterns_bridge.xml").getFile();
+        patternsXmlFile = BridgeMatchingTest.class.getResource("/patterns/patterns_bridge.xml").getFile();
         patternsParser = new PatternsParser();
     }
 
@@ -38,7 +38,7 @@ public class BridgeMatchingTest {
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = BridgeMatchingTest.class.getResource("/MyBridge.xmi");
+        final URL sucXmiUrl = BridgeMatchingTest.class.getResource("/myPatterns/MyBridge.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns

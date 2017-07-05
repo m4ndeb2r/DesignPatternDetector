@@ -28,7 +28,7 @@ public class DecoratorMatchingTest {
     @Before
     public void initTests() {
         xmiParser = new ArgoUMLParser();
-        patternsXmlFile = DecoratorMatchingTest.class.getResource("/patterns_decorator.xml").getFile();
+        patternsXmlFile = DecoratorMatchingTest.class.getResource("/patterns/patterns_decorator.xml").getFile();
         patternsParser = new PatternsParser();
     }
 
@@ -38,7 +38,7 @@ public class DecoratorMatchingTest {
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource("/MyDecorator.xmi");
+        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource("/myPatterns/MyDecorator.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns

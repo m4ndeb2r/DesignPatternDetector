@@ -130,5 +130,11 @@ public class Node implements SignatureComparable<Node> {
         }
         return sourceOperations.stream().allMatch(op1 -> targetOperations.stream().anyMatch(op2 -> op1.equalsSignature(op2)));
     }
+    
+    @Override
+    public String toString() {
+    	return "Node: " + name;
+    }
+    
 
 }

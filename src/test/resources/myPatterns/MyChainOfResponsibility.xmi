@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8' ?>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Wed Jun 28 11:52:54 CEST 2017'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Wed Jul 05 10:58:56 CEST 2017'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -7,12 +7,30 @@
     <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
   <XMI.content>
     <UML:Model xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000865'
-      name = 'untitledModel' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
-      isAbstract = 'false'>
+      name = 'My Cahin of Responsibility' isSpecification = 'false' isRoot = 'false'
+      isLeaf = 'false' isAbstract = 'false'>
       <UML:Namespace.ownedElement>
         <UML:Class xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000866'
           name = 'MyUser' visibility = 'public' isSpecification = 'false' isRoot = 'false'
-          isLeaf = 'false' isAbstract = 'false' isActive = 'false'/>
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id = '-84-26-0-54--148e7e8b:15d11ca3945:-8000:0000000000000E81'
+              name = 'aProcessor' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              changeability = 'changeable' targetScope = 'instance'>
+              <UML:StructuralFeature.multiplicity>
+                <UML:Multiplicity xmi.id = '-84-26-0-54--148e7e8b:15d11ca3945:-8000:0000000000000E82'>
+                  <UML:Multiplicity.range>
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54--148e7e8b:15d11ca3945:-8000:0000000000000E83'
+                      lower = '1' upper = '1'/>
+                  </UML:Multiplicity.range>
+                </UML:Multiplicity>
+              </UML:StructuralFeature.multiplicity>
+              <UML:StructuralFeature.type>
+                <UML:Interface xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000867'/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+          </UML:Classifier.feature>
+        </UML:Class>
         <UML:Interface xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000867'
           name = 'MyProcessor' visibility = 'public' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false'/>

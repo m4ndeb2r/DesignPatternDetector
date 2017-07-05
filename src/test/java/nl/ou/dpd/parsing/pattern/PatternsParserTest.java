@@ -33,7 +33,7 @@ public class PatternsParserTest {
 
     @Test
     public void testParsingSingletonXml() {
-        final URL xmlUrl = PatternsParserTest.class.getResource("/patterns_singleton.xml");
+        final URL xmlUrl = PatternsParserTest.class.getResource("/patterns/patterns_singleton.xml");
         final List<DesignPattern> designPatterns = parser.parse(xmlUrl.getFile());
         assertThat(designPatterns.size(), is(1));
 
@@ -71,7 +71,7 @@ public class PatternsParserTest {
 
     @Test
     public void testParsingObserverXml() {
-        final URL xmlUrl = PatternsParserTest.class.getResource("/patterns_observer.xml");
+        final URL xmlUrl = PatternsParserTest.class.getResource("/patterns/patterns_observer.xml");
         final List<DesignPattern> designPatterns = parser.parse(xmlUrl.getFile());
         assertThat(designPatterns.size(), is(1));
 
@@ -87,7 +87,7 @@ public class PatternsParserTest {
         // Check number of types
         final int[] count = {0};
         designPattern.edgeSet().forEach(relation -> count[0] += relation.getRelationProperties().size());
-        assertThat(count[0], is(5));
+        assertThat(count[0], is(7));
 
         // Get nodes
         final Node subject = getNodeById(designPattern, "Subject");
@@ -118,9 +118,9 @@ public class PatternsParserTest {
         assertThat(countConcreteObserver, is(1));
 
         // Check types of relations
-        assertTypes(designPattern, subject, observer, new RelationType[]{RelationType.HAS_ATTRIBUTE_OF});
-        assertTypes(designPattern, concreteSubject, subject, new RelationType[]{RelationType.INHERITS_FROM, RelationType.OVERRIDES_METHOD_OF});
-        assertTypes(designPattern, concreteObserver, concreteSubject, new RelationType[]{RelationType.HAS_ATTRIBUTE_OF});
+        assertTypes(designPattern, subject, observer, new RelationType[]{RelationType.HAS_ATTRIBUTE_OF, RelationType.ASSOCIATES_WITH, RelationType.HAS_METHOD_PARAMETER_OF_TYPE});
+        assertTypes(designPattern, concreteSubject, subject, new RelationType[]{RelationType.INHERITS_FROM});
+        assertTypes(designPattern, concreteObserver, concreteSubject, new RelationType[]{RelationType.HAS_ATTRIBUTE_OF, RelationType.ASSOCIATES_WITH});
         assertTypes(designPattern, concreteObserver, observer, new RelationType[]{RelationType.IMPLEMENTS});
     }
 

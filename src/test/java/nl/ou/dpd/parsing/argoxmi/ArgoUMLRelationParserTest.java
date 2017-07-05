@@ -35,12 +35,12 @@ import static org.junit.Assert.assertTrue;
 public class ArgoUMLRelationParserTest {
 
     // A test file containing valid XML.
-    private static final String VALID_ADAPTER = "/adapters_structures_association.xmi";
+    private static final String VALID_ADAPTER = "/argoUML/adapters_structures_association.xmi";
     //another pattern
-    private static final String ABSTRACT_FACTORY = "/AbstractFactory.xmi";
+    private static final String ABSTRACT_FACTORY = "/argoUML/AbstractFactory.xmi";
 
     // A test file containing invalid XML.
-    private static final String INVALID_XML = "/invalid.xml";
+    private static final String INVALID_XML = "/patterns/invalid.xml";
 
     /**
      * Exception rule.
