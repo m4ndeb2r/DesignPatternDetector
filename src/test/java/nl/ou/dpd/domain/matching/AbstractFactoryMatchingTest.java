@@ -34,9 +34,9 @@ public class AbstractFactoryMatchingTest {
     //test an AbstractFactory written conforming the pattern
     @Test
     public void testMatchingAbstractFactoryWithoutMethods() {
-        patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns_abstractfactory.xml");
+        patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/MyAbstractFactoryWithoutMethodsSimplified.xmi");
+        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/myPatterns/MyAbstractFactory.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -70,9 +70,9 @@ public class AbstractFactoryMatchingTest {
     //test an AbstractFactory with more abstract factories
     @Test
     public void testMatchingAbstractFactoryThreeFactories() {
-        patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns_abstractfactory.xml");
+        patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/MyAbstractFactoryWithoutMethods.xmi");
+        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/myPatterns/MyAbstractFactoryThreeFactories.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -95,9 +95,9 @@ public class AbstractFactoryMatchingTest {
     //test an AbstractFactory with more abstract factories and more concrete products
     @Test
     public void testMatchingAbstractFactoryFourFactories() {
-        patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns_abstractfactory.xml");
+        patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/MyAbstractFactoryMultiple.xmi");
+        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/myPatterns/MyAbstractFactoryMultiple.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());

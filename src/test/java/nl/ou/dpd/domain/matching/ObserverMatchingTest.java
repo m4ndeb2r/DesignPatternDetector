@@ -29,7 +29,7 @@ public class ObserverMatchingTest {
     @Before
     public void initTests() {
         xmiParser = new ArgoUMLParser();
-        patternsXmlFilename = ObserverMatchingTest.class.getResource("/patterns_observer.xml").getFile();
+        patternsXmlFilename = ObserverMatchingTest.class.getResource("/patterns/patterns_observer.xml").getFile();
         patternsParser = new PatternsParser();
     }
 
@@ -39,7 +39,7 @@ public class ObserverMatchingTest {
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFilename).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/ObserverExample.xmi");
+        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/myPatterns/MyObserver.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns
@@ -52,35 +52,10 @@ public class ObserverMatchingTest {
         //more detailed, but not exhaustive inspection
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "ASubject", "Subject"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "AnObserver", "Observer"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "AConcreteSubject", "ConcreteSubject"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "AConcreteObserver", "ConcreteObserver"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MySubject", "Subject"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyObserver", "Observer"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcreteSubject", "ConcreteSubject"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcreteObserver", "ConcreteObserver"));
     }
 
-    /**
-     * Test an observerpattern without explicit relations between subject-observer and concreteSubject-concreteObsrver
-     * and extra method override between concreteObserver and Observer.
-     */
-    @Test
-    public void testMatchingObserverExampleWithExtras() {
-        // Parse the observer pattern xml ands create a DesignPattern
-        final DesignPattern designPattern = patternsParser.parse(patternsXmlFilename).get(0);
-
-        // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/ObserverExampleWithExtras.xmi");
-        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
-
-        // Inspect the system for patterns
-        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
-        //extra relationproperty 'Overrides' prevents recognizing the pattern
-        assertFalse(patternInspector.isomorphismExists());
-
-        // TODO Test feedback (getMatchingResult().getFeedback())
-        // TODO Test solutions (getMatchingResult().getSolution())
-    }
 }
