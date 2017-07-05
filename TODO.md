@@ -2,10 +2,9 @@
 
 ## TODO's in the code
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-* Test-coverage 
+* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Styling in CSS instead of FXML
 * Scrollbars in project view are not working 100% okay
-* Separate intergration tests from unittests. Unittests should contain mocks. All tests using external files are integration tests.
 * Cleanup test files
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
@@ -14,9 +13,8 @@
 ## TODO: testing
 * separate integration tests from unittests
 * Consider more tests for the GUI....
-
-## TODO: patterns
-* Add integration tests for several patterns
+* Create an overall patterns file with all GOF patterns as a deliverable?
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
+
