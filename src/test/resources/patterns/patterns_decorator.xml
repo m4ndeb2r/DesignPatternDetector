@@ -11,10 +11,10 @@
             <node id="ConcreteComponent">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
-            <node id="ConcreteDecoratorB">
+            <node id="ConcreteDecoratorA">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
-            <node id="ConcreteDecoratorA">
+            <node id="ConcreteDecoratorB">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
 				</nodes>
@@ -26,7 +26,10 @@
 						<relation.rule relationType="IMPLEMENTS"
 									 cardinalityLeft="1"
 									 cardinalityRight="1"/>        					   
-            </relation> 
+						<relation.rule relationType="HAS_ATTRIBUTE_OF"
+									 cardinalityLeft="1"
+									 cardinalityRight="1"/>        					   
+          </relation> 
         	<relation node1="ConcreteComponent" node2="Component">
         		<relation.rule relationType="IMPLEMENTS"
                                cardinalityLeft="1"

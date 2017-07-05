@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <patterns>
-    <pattern name="Strategy" family="Strategy">
+    <pattern name="ChainOfResponsability" family="ChainOfResponsability">
         <nodes>
-            <node id="Context">
+            <node id="Client">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
-            <node id="Strategy">
+            <node id="Handler">
                 <node.rule nodeType="INTERFACE"/>
             </node>
-            <node id="ConcreteStrategyA">
+            <node id="ConcreteHandlerA">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
-            <node id="ConcreteStrategyB">
+            <node id="ConcreteHandlerB">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
         </nodes>
         <relations>
-        	<relation node1="Context" node2="Strategy">
+        	<relation node1="Client" node2="Handler">
+        		<relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>        					   
+            </relation>
+        	<relation node1="ConcreteHandlerA" node2="Handler">
+        		<relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>        					   
+            </relation>
+         	<relation node1="ConcreteHandlerB" node2="Handler">
+        		<relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>        					   
+            </relation>
+					<relation node1="Handler" node2="Handler">
         		<relation.rule relationType="ASSOCIATES_WITH"
                                cardinalityLeft="0..*"
-                               cardinalityRight="1"/>        					   
-            </relation>
-        	<relation node1="ConcreteStrategyA" node2="Strategy">
-        		<relation.rule relationType="IMPLEMENTS"
-                               cardinalityLeft="1"
-                               cardinalityRight="1"/>        					   
-            </relation>
-         	<relation node1="ConcreteStrategyB" node2="Strategy">
-        		<relation.rule relationType="IMPLEMENTS"
-                               cardinalityLeft="1"
                                cardinalityRight="1"/>        					   
             </relation>
          </relations>
