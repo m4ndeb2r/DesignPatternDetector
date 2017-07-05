@@ -37,7 +37,7 @@ public class AdapterMatchingTest {
 
         patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/myPatterns/MyObjectAdapter.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/systems/MyObjectAdapter.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -67,7 +67,7 @@ public class AdapterMatchingTest {
     public void testMatchingAdapterWithUndirectedAssociation() {
         patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/myPatterns/MyAdapterWithUndirectedAssociation.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/systems/MyAdapterWithUndirectedAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -92,7 +92,7 @@ public class AdapterMatchingTest {
 
         patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/myPatterns/MyAdapterWithExtraAssociation.xmi");
+        sucXmiUrl = AdapterMatchingTest.class.getResource("/systems/MyAdapterWithExtraAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());

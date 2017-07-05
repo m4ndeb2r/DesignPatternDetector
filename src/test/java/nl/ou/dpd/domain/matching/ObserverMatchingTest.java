@@ -39,7 +39,7 @@ public class ObserverMatchingTest {
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFilename).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/myPatterns/MyObserver.xmi");
+        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/systems/MyObserver.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns

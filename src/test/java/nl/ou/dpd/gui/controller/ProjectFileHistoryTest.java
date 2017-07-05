@@ -18,12 +18,12 @@ import static org.hamcrest.core.Is.is;
  */
 public class ProjectFileHistoryTest {
 
-    private static final String TEST_PROJ_FILE_NAME1 = "/projects/testprojecthistory1.dpd";
-    private static final String TEST_PROJ_FILE_NAME2 = "/projects/testprojecthistory2.dpd";
-    private static final String TEST_PROJ_FILE_NAME3 = "/projects/testprojecthistory3.dpd";
-    private static final String TEST_PROJ_FILE_NAME4 = "/projects/testprojecthistory4.dpd";
-    private static final String TEST_PROJ_FILE_NAME5 = "/projects/testprojecthistory5.dpd";
-    private static final String TEST_PROJ_FILE_NAME6 = "/projects/testprojecthistory6.dpd";
+    private static final String TEST_PROJ_FILE_NAME1 = "/testprojecthistory1.dpd";
+    private static final String TEST_PROJ_FILE_NAME2 = "/testprojecthistory2.dpd";
+    private static final String TEST_PROJ_FILE_NAME3 = "/testprojecthistory3.dpd";
+    private static final String TEST_PROJ_FILE_NAME4 = "/testprojecthistory4.dpd";
+    private static final String TEST_PROJ_FILE_NAME5 = "/testprojecthistory5.dpd";
+    private static final String TEST_PROJ_FILE_NAME6 = "/testprojecthistory6.dpd";
     private static final String NONEXISTANT_FILE = "/projects/nonexistant.dpd";
 
     private File testProjectHistoryFile1;

@@ -36,7 +36,7 @@ public class AbstractFactoryMatchingTest {
     public void testMatchingAbstractFactoryWithoutMethods() {
         patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/myPatterns/MyAbstractFactory.xmi");
+        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/systems/MyAbstractFactory.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -72,7 +72,7 @@ public class AbstractFactoryMatchingTest {
     public void testMatchingAbstractFactoryThreeFactories() {
         patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/myPatterns/MyAbstractFactoryThreeFactories.xmi");
+        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/systems/MyAbstractFactoryThreeFactories.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -97,7 +97,7 @@ public class AbstractFactoryMatchingTest {
     public void testMatchingAbstractFactoryFourFactories() {
         patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
         patternsParser = new PatternsParser();
-        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/myPatterns/MyAbstractFactoryMultiple.xmi");
+        sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/systems/MyAbstractFactoryMultiple.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());

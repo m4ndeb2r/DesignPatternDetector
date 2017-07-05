@@ -38,7 +38,7 @@ public class BridgeMatchingTest {
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = BridgeMatchingTest.class.getResource("/myPatterns/MyBridge.xmi");
+        final URL sucXmiUrl = BridgeMatchingTest.class.getResource("/systems/MyBridge.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns

@@ -38,7 +38,7 @@ public class DecoratorMatchingTest {
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource("/myPatterns/MyDecorator.xmi");
+        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource("/systems/MyDecorator.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns

@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -38,7 +37,7 @@ public class ChainOfResponsibilityMatchingTest {
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 
         // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = ChainOfResponsibilityMatchingTest.class.getResource("/myPatterns/MyChainOfResponsibility.xmi");
+        final URL sucXmiUrl = ChainOfResponsibilityMatchingTest.class.getResource("/systems/MyChainOfResponsibility.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Inspect the system for patterns
