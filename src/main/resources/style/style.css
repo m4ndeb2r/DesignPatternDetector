@@ -163,7 +163,7 @@
 
 #feedbackTreeView {
     -fx-fit-to-width: true;
-    -fx-vbar-policy: always;
+    -fx-vbar-policy: as-needed;
     -fx-hbar-policy: as-needed;
     -fx-alignment: baseline-left;
     -fx-orientation: vertical;
@@ -176,7 +176,7 @@
 
 #feedbackScrollPane {
     -fx-fit-to-width: true;
-    -fx-vbar-policy: always;
+    -fx-vbar-policy: as-needed;
     -fx-hbar-policy: as-needed;
     -fx-alignment: baseline-left;
     -fx-orientation: vertical;
