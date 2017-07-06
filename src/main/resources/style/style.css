@@ -171,7 +171,7 @@
     -fx-fill-height: true;
     -fx-min-width: 240px;
     -fx-min-height: 20px;
-    -fx-max-height: 590px;
+    -fx-pref-height: 100%;
 }
 
 #feedbackScrollPane {
@@ -183,7 +183,7 @@
     -fx-fill-height: true;
     -fx-fill-width: true;
     -fx-min-height: 20px;
-    -fx-max-height: 590px;
+    -fx-pref-height: 100%;
 }
 
 #feedbackScrollPane VBox {

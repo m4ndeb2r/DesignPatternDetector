@@ -64,7 +64,7 @@ public final class DesignPatternDetector extends Application {
 
         // Set the primary stage settings
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.setWidth(1280.0);
         primaryStage.setHeight(800.0);
         primaryStage.setTitle(APP_TITLE);
