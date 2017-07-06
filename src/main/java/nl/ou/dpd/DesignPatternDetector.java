@@ -2,6 +2,8 @@ package nl.ou.dpd;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -62,7 +64,7 @@ public final class DesignPatternDetector extends Application {
 
         // Set the primary stage settings
         primaryStage.setScene(scene);
-        primaryStage.setResizable(true);
+        primaryStage.setResizable(false);
         primaryStage.setWidth(1280.0);
         primaryStage.setHeight(800.0);
         primaryStage.setTitle(APP_TITLE);

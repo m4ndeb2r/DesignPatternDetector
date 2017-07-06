@@ -138,7 +138,7 @@
     -fx-font-family: fantasy;
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
-    -fx-font-size: 18px;
+    -fx-font-size: 19px;
 }
 
 .feedback-subsubtitle {
@@ -162,26 +162,28 @@
 }
 
 #feedbackTreeView {
-    -fx-fit-to-height: true;
     -fx-fit-to-width: true;
-    -fx-vbar-policy: as-needed;
+    -fx-vbar-policy: always;
+    -fx-hbar-policy: as-needed;
     -fx-alignment: baseline-left;
     -fx-orientation: vertical;
     -fx-fill-width: true;
     -fx-fill-height: true;
-    -fx-min-width: 220px;
+    -fx-min-width: 240px;
     -fx-min-height: 20px;
+    -fx-max-height: 590px;
 }
 
 #feedbackScrollPane {
-    -fx-orientation: vertical;
-    -fx-fit-to-height: true;
     -fx-fit-to-width: true;
+    -fx-vbar-policy: always;
     -fx-hbar-policy: as-needed;
-    -fx-vbar-policy: as-needed;
+    -fx-alignment: baseline-left;
+    -fx-orientation: vertical;
     -fx-fill-height: true;
     -fx-fill-width: true;
     -fx-min-height: 20px;
+    -fx-max-height: 590px;
 }
 
 #feedbackScrollPane VBox {

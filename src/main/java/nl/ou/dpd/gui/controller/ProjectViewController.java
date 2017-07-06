@@ -319,10 +319,15 @@ public class ProjectViewController extends Controller implements Observer {
             matchedClassesLabel.setText("Matched classes/interfaces");
             int row = 0;
             final List<String[]> matchingNodeNames = solution.getMatchingNodeNames();
-            matchedClassesGridPane.add(new Text("Design pattern class"), 0, row);
-            matchedClassesGridPane.add(new Text("System class"), 2, row);
-            matchedClassesGridPane.getChildren().get(0).setStyle("-fx-font-weight: 600");
-            matchedClassesGridPane.getChildren().get(1).setStyle("-fx-font-weight: 600");
+
+            final Text hdr1 = new Text("Design pattern class");
+            hdr1.getStyleClass().add("feedback-subsubtitle");
+            matchedClassesGridPane.add(hdr1, 0, row);
+
+            final Text hdr2 = new Text("System class");
+            hdr2.getStyleClass().add("feedback-subsubtitle");
+            matchedClassesGridPane.add(hdr2, 2, row);
+
             for (String[] nodeNames : matchingNodeNames) {
                 int col = 0;
                 row++;
