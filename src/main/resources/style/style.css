@@ -162,7 +162,7 @@
 }
 
 #feedbackTreeView {
-    -fx-fit-to-width: true;
+    /*-fx-fit-to-width: true;*/
     -fx-vbar-policy: as-needed;
     -fx-hbar-policy: as-needed;
     -fx-alignment: baseline-left;
@@ -172,6 +172,7 @@
     -fx-min-width: 240px;
     -fx-min-height: 20px;
     -fx-pref-height: 100%;
+    -fx-pref-width: 100%;
 }
 
 #feedbackScrollPane {
@@ -184,6 +185,7 @@
     -fx-fill-width: true;
     -fx-min-height: 20px;
     -fx-pref-height: 100%;
+    -fx-pref-width: 100%;
 }
 
 #feedbackScrollPane VBox {
