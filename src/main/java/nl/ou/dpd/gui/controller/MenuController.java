@@ -221,28 +221,6 @@ public class MenuController extends Controller implements Observer {
         showNotImplementedAlert("Help");
     }
 
-    /**
-     * Sets the active language to Dutch.
-     *
-     * @param actionEvent
-     */
-    @FXML
-    protected void dutchLanguageAction(ActionEvent actionEvent) {
-        // TODO: implement this
-        showNotImplementedAlert("Language");
-    }
-
-    /**
-     * Sets the active language to English.
-     *
-     * @param actionEvent
-     */
-    @FXML
-    protected void englishLanguageAction(ActionEvent actionEvent) {
-        // TODOL implement this
-        showNotImplementedAlert("Language");
-    }
-
     private void showNotImplementedAlert(String function) {
         Alert alert = new CustomAlert(Alert.AlertType.WARNING);
         alert.setTitle("Warning");

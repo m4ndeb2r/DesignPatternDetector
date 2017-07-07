@@ -12,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -45,6 +47,7 @@ public class ProjectViewController extends Controller implements Observer {
     private static final Logger LOGGER = LogManager.getLogger(ProjectViewController.class);
 
     private static final String FEEDBACK = "Feedback";
+    private static final String IMG_ICON_ARROW_RIGHT = "/img/icon-arrow-right-16x16.png";
 
     private static final Map<FeedbackType, String> feedbackStyleClasses = new HashMap<>(4);
     static {
@@ -328,11 +331,13 @@ public class ProjectViewController extends Controller implements Observer {
             hdr2.getStyleClass().add("feedback-subsubtitle");
             matchedClassesGridPane.add(hdr2, 2, row);
 
+            final Image image = new Image(this.getClass().getResourceAsStream(IMG_ICON_ARROW_RIGHT));
+
             for (String[] nodeNames : matchingNodeNames) {
                 int col = 0;
                 row++;
                 matchedClassesGridPane.add(new Text(nodeNames[1]), col++, row);
-                matchedClassesGridPane.add(new Text("-->"), col++, row);
+                matchedClassesGridPane.add(new ImageView(image), col++, row);
                 matchedClassesGridPane.add(new Text(nodeNames[0]), col, row);
             }
         }

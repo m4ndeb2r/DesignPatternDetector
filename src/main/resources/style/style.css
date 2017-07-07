@@ -2,6 +2,8 @@
  * General settings
  */
 .root {
+    -fx-font-family: sans-serif;
+
     /* A bright blue for highlighting/accenting objects.  For example: selected
      * text; selected items in menus, lists, trees, and tables; progress bars;
      * default buttons.
@@ -20,7 +22,6 @@
     -fx-default-button: derive(-fx-focus-color, 60%);
 }
 
-
 /*
  * Headers and titles
  */
@@ -31,7 +32,6 @@
 
 .app-title {
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: -fx-focus-color;
     -fx-stroke: black;
@@ -41,7 +41,6 @@
 
 .page-title {
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: -fx-focus-color;
     -fx-stroke: black;
@@ -126,7 +125,6 @@
 .feedback-title {
     -fx-padding: 0 0 5px 0;
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: -fx-focus-color;
     -fx-font-size: 22px;
@@ -135,7 +133,6 @@
 .feedback-subtitle {
     -fx-padding: 20px 0 5px 0;
     -fx-font-weight: 600;
-    -fx-font-family: fantasy;
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 19px;
@@ -144,7 +141,6 @@
 .feedback-subsubtitle {
     -fx-padding: 2px 0 2px 0;
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 16px;
