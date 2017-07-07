@@ -48,6 +48,7 @@ public class ProjectViewController extends Controller implements Observer {
 
     private static final String FEEDBACK = "Feedback";
     private static final String IMG_ICON_ARROW_RIGHT = "/img/icon-arrow-right-16x16.png";
+    private static final String ID_FORMAT = "ID [%s]";
 
     private static final Map<FeedbackType, String> feedbackStyleClasses = new HashMap<>(4);
     static {
@@ -279,7 +280,7 @@ public class ProjectViewController extends Controller implements Observer {
 
     private void populateNodesFeedbackVBox(Feedback feedback, nl.ou.dpd.domain.node.Node node) {
         final GridPane content = new GridPane();
-        final TitledPane titledPane = new TitledPane(node.getName(), content);
+        final TitledPane titledPane = new TitledPane(getTitle(node), content);
         titledPane.setExpanded(false);
         nodesFeedbackVBox.getChildren().add(titledPane);
         int row = 0;
@@ -292,9 +293,16 @@ public class ProjectViewController extends Controller implements Observer {
         }
     }
 
+    private String getTitle(nl.ou.dpd.domain.node.Node node) {
+        if (node.getName() == null || node.getName().isEmpty()) {
+            return String.format(ID_FORMAT, node.getId());
+        }
+        return node.getName();
+    }
+
     private void populateRelationsFeedbackVBox(Feedback feedback, Relation relation) {
         final GridPane content = new GridPane();
-        final TitledPane titledPane = new TitledPane(relation.getName(), content);
+        final TitledPane titledPane = new TitledPane(getTitle(relation), content);
         titledPane.setExpanded(false);
         relationsFeedbackVBox.getChildren().add(titledPane);
         int row = 0;
@@ -305,6 +313,13 @@ public class ProjectViewController extends Controller implements Observer {
                 content.addRow(row++, text);
             }
         }
+    }
+
+    private String getTitle(Relation relation) {
+        if (relation.getName() == null || relation.getName().isEmpty()) {
+            return String.format(ID_FORMAT, relation.getId());
+        }
+        return relation.getName();
     }
 
     private void showSolutionDetails(final String key) {
