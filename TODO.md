@@ -9,12 +9,14 @@
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
+* Implement or remove unimplemented menu items in GUI.
+* Merge graphstructure branch to develop branch; merge develop to master; remove graphstructure branch; remove feature-matching bramch
 
 ## TODO: testing
 * separate integration tests from unittests
 * Consider more tests for the GUI....
-* Create an overall patterns file with all GOF patterns as a deliverable?
+* Create an overall patterns file with all GOF patterns as a deliverable
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
-
+* Remove PDF's from codebase (add TEX files to ABI Scriptie codebase)

@@ -3,7 +3,8 @@ package nl.ou.dpd.domain.relation;
 import java.util.Objects;
 
 /**
- * TODO
+ * A {@link RelationProperty} is an object containing properties of a relation between two nodes. Currently, it contains
+ * the {@link RelationType} and {@link Cardinality}s (left and right) of a relation.
  *
  * @author Martin de Boer
  */

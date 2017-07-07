@@ -6,7 +6,7 @@ import java.util.Set;
 import static nl.ou.dpd.util.Util.nullSafeEquals;
 
 /**
- * Represents an operation of a {@link Node}.
+ * Represents an operation of a {@link Node}, which is the {@link Operation}'s {@code parentNode}.
  *
  * @author Peter Vansweevelt
  * @author Martin de Boer
@@ -20,12 +20,6 @@ public class Operation implements SignatureComparable<Operation> {
     private Set<Parameter> parameters;
     private Node returnType; // null if returnType is 'void'
 
-    /**
-     * TODO: Write JavaDoc, or leave it out.
-     *
-     * @param id
-     * @param parentNode
-     */
     public Operation(String id, Node parentNode) {
         this.id = id;
         this.parentNode = parentNode;
