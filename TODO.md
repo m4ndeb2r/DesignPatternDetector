@@ -10,7 +10,7 @@
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
 * Implement or remove unimplemented menu items in GUI.
-* Merge graphstructure branch to develop branch; merge develop to master; remove graphstructure branch; remove feature-matching bramch
+* Refine matching process (including parsing enhancements)
 
 ## TODO: testing
 * separate integration tests from unittests
