@@ -1,0 +1,124 @@
+<?xml version = '1.0' encoding = 'UTF-8' ?>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Wed Jul 05 14:31:21 CEST 2017'>
+  <XMI.header>    <XMI.documentation>
+      <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
+      <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
+    </XMI.documentation>
+    <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
+  <XMI.content>
+    <UML:Model xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000865'
+      name = 'Strategy' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+      isAbstract = 'false'>
+      <UML:Namespace.ownedElement>
+        <UML:Class xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000866'
+          name = 'MyCont' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id = '-84-26-0-54--148e7e8b:15d11ca3945:-8000:0000000000001DE9'
+              name = 'aStrategy' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              changeability = 'changeable' targetScope = 'instance'>
+              <UML:StructuralFeature.multiplicity>
+                <UML:Multiplicity xmi.id = '-84-26-0-54--148e7e8b:15d11ca3945:-8000:0000000000001DEA'>
+                  <UML:Multiplicity.range>
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54--148e7e8b:15d11ca3945:-8000:0000000000001DEB'
+                      lower = '1' upper = '1'/>
+                  </UML:Multiplicity.range>
+                </UML:Multiplicity>
+              </UML:StructuralFeature.multiplicity>
+              <UML:StructuralFeature.type>
+                <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Interface xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'
+          name = 'MyStrat' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'/>
+        <UML:Class xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000868'
+          name = 'MyConcrStratA' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000874'/>
+          </UML:ModelElement.clientDependency>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000869'
+          name = 'MyConcrStratB' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000870'/>
+          </UML:ModelElement.clientDependency>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:000000000000086A'
+          name = 'MyConcrStratC' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000872'/>
+          </UML:ModelElement.clientDependency>
+        </UML:Class>
+        <UML:Abstraction xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000870'
+          name = 'MyConrStratB-MyStrat' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000869'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Abstraction xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000872'
+          name = 'MyConrStratC-MyStrat' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:000000000000086A'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Abstraction xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000874'
+          name = 'MyConrStratA-MyStrat' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000868'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Association xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C87'
+          name = 'MyCont-MyStrat' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+          isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C88'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.multiplicity>
+                <UML:Multiplicity xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8F'>
+                  <UML:Multiplicity.range>
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8E'
+                      lower = '0' upper = '-1'/>
+                  </UML:Multiplicity.range>
+                </UML:Multiplicity>
+              </UML:AssociationEnd.multiplicity>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000866'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C89'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.multiplicity>
+                <UML:Multiplicity xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8D'>
+                  <UML:Multiplicity.range>
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8C'
+                      lower = '1' upper = '1'/>
+                  </UML:Multiplicity.range>
+                </UML:Multiplicity>
+              </UML:AssociationEnd.multiplicity>
+              <UML:AssociationEnd.participant>
+                <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+      </UML:Namespace.ownedElement>
+    </UML:Model>
+  </XMI.content>
+</XMI>

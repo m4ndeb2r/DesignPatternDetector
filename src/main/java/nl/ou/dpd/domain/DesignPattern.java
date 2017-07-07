@@ -1,83 +1,56 @@
 package nl.ou.dpd.domain;
 
-import nl.ou.dpd.domain.edge.Edge;
-import nl.ou.dpd.domain.edge.Edges;
+import nl.ou.dpd.domain.matching.CompoundComparator;
+import nl.ou.dpd.domain.matching.FeedbackEnabledComparator;
 import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.rule.Condition;
-import nl.ou.dpd.domain.rule.Conditions;
-
-import java.util.List;
+import nl.ou.dpd.domain.relation.Relation;
+import nl.ou.dpd.domain.relation.RelationFactory;
+import org.jgrapht.graph.DefaultDirectedGraph;
 
 /**
- * Represents an design pattern. The structur of a design pattern is defined by its {@link Edges}. Apart form structure
- * a design pattern has a set of {@link Condition}s defining its character.
+ * A {@link DesignPattern} is a {@link DefaultDirectedGraph} representation of a design pattern. It contains a set of
+ * {@link CompoundComparator}s for matching purposes.
  *
  * @author Martin de Boer
  */
-public class DesignPattern extends Edges {
+public class DesignPattern extends DefaultDirectedGraph<Node, Relation> {
 
-    private final String name;
-    private final Conditions conditions;
+    final private String name;
+    final private String family;
 
-    public DesignPattern(String name) {
-        super();
+    private FeedbackEnabledComparator<Relation> relationComparator;
+    private FeedbackEnabledComparator<Node> nodeComparator;
+
+    public DesignPattern(String name, String family) {
+        super(new RelationFactory());
         this.name = name;
-        this.conditions = new Conditions();
+        this.family = family;
     }
 
     public String getName() {
         return name;
     }
 
-    public Conditions getConditions() {
-        return conditions;
+    public String getFamily() {
+        return family;
     }
 
-    /**
-     * This method orders the array of {@link Edge}'s. It guarantees that every edge in the graph has at least one
-     * vertex that is also present in one or more preceding edges. One exception to this rule is the first edge in the
-     * graph, obviously because it has no preceding edge. In other words: for every edge E(v1 -> v2) in the graph
-     * (except the first one), a previous edge E(v1 -> x2), E(x1 -> v1), E(x1 -> v2) or E(v2 -> x2) is present. This way
-     * every edge is connected to a vertex of a preceding edge.
-     * <p/>
-     * Example: A->B, C->D, A->C becomes A->B, A->C, C->D.
-     */
-    void order() {
-        order(getEdges(), 0, 1, 2);
+    public FeedbackEnabledComparator<Relation> getRelationComparator() {
+        return relationComparator;
     }
 
-    private void order(List<Edge> graph, int base, int switchable, int start) {
-        for (int i = start; i < graph.size(); i++) {
-            final boolean switchableConnected = isConnectedToPrecedingEdge(graph, switchable, base);
-            final boolean currentConnected = isConnectedToPrecedingEdge(graph, i, base);
-            if (currentConnected && !switchableConnected) {
-                switchEdges(graph, i, switchable);
-                order(graph, ++base, ++switchable, ++start);
-            }
-        }
+    public DesignPattern setRelationComparator(FeedbackEnabledComparator<Relation> relationComparator) {
+        this.relationComparator = relationComparator;
+        return this;
     }
 
-    private boolean isConnectedToPrecedingEdge(List<Edge> graph, int test, int base) {
-        for (int i = 0; i <= base; i++) {
-            if (areEdgesConnected(graph.get(test), graph.get(i))) {
-                return true;
-            }
-        }
-        return false;
+    public FeedbackEnabledComparator<Node> getNodeComparator() {
+        return nodeComparator;
     }
 
-    private void switchEdges(List<Edge> graph, int i, int j) {
-        final Edge temp = graph.get(j);
-        graph.set(j, graph.get(i));
-        graph.set(i, temp);
-    }
-
-    private boolean areEdgesConnected(Edge edge1, Edge edge2) {
-        final Node v1 = edge1.getLeftNode();
-        final Node v2 = edge1.getRightNode();
-        final Node v3 = edge2.getLeftNode();
-        final Node v4 = edge2.getRightNode();
-        return v1.equals(v3) || v1.equals(v4) || v2.equals(v3) || v2.equals(v4);
+    public DesignPattern setNodeComparator(FeedbackEnabledComparator<Node> nodeComparator) {
+        this.nodeComparator = nodeComparator;
+        return this;
     }
 
 }

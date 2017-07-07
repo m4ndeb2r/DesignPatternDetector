@@ -1,0 +1,215 @@
+<?xml version = '1.0' encoding = 'UTF-8' ?>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Tue Jul 04 17:44:10 CEST 2017'>
+  <XMI.header>    <XMI.documentation>
+      <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
+      <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
+    </XMI.documentation>
+    <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
+  <XMI.content>
+    <UML:Model xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000961'
+      name = 'untitledModel' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+      isAbstract = 'false'>
+      <UML:Namespace.ownedElement>
+        <UML:Class xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000962'
+          name = 'MyClient' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'/>
+        <UML:Class xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000965'
+          name = 'MyConcImpl1' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000097B'/>
+          </UML:ModelElement.clientDependency>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000966'
+          name = 'MyConcImpl2' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000097D'/>
+          </UML:ModelElement.clientDependency>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000150B'
+              name = 'OperationImp' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000150C'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000968'
+          name = 'MyConcAbstr1' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151C'/>
+          </UML:GeneralizableElement.generalization>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000096C'
+          name = 'MyConcAbstr2' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151D'/>
+          </UML:GeneralizableElement.generalization>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000970'
+          name = 'MyConcImpl3' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000097F'/>
+          </UML:ModelElement.clientDependency>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000150D'
+              name = 'OperationImp' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000150E'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Interface xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000974'
+          name = 'MyImplementor' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001507'
+              name = 'OperationImp' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001508'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Interface>
+        <UML:Abstraction xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000097B'
+          name = 'MyConcImpl1-MyImplementor' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000965'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000974'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Abstraction xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000097D'
+          name = 'MyConcImpl2-MyImplementor' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000966'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000974'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Abstraction xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000097F'
+          name = 'MyConcImpl3-MyImplementor' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000970'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000974'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Comment xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000150F'
+          isSpecification = 'false' body = 'imp -&gt; OperationImp()'>
+          <UML:Comment.annotatedElement>
+            <UML:Class xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001510'/>
+          </UML:Comment.annotatedElement>
+        </UML:Comment>
+        <UML:Class xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001510'
+          name = 'MyAbstraction' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'true' isActive = 'false'>
+          <UML:ModelElement.comment>
+            <UML:Comment xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000150F'/>
+          </UML:ModelElement.comment>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001511'
+              name = 'Operation' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001512'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Attribute xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151E'
+              name = 'implementorAttr' visibility = 'private' isSpecification = 'false'
+              ownerScope = 'instance' changeability = 'changeable' targetScope = 'instance'>
+              <UML:StructuralFeature.multiplicity>
+                <UML:Multiplicity xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151F'>
+                  <UML:Multiplicity.range>
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001520'
+                      lower = '1' upper = '1'/>
+                  </UML:Multiplicity.range>
+                </UML:Multiplicity>
+              </UML:StructuralFeature.multiplicity>
+              <UML:StructuralFeature.type>
+                <UML:Interface xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000974'/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Association xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001513'
+          name = 'MyClient-MyAbstraction' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001514'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000962'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001515'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001510'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+        <UML:Association xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001519'
+          name = 'MyAbstraction-MyImplementor' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151A'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'aggregate' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001510'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151B'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Interface xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000974'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+        <UML:Generalization xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151C'
+          name = 'MyConcAbstr1-MyAbstraction' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000968'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001510'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Generalization xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151D'
+          name = 'MyConcAbstr1-MyAbstraction' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000096C'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:0000000000001510'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+      </UML:Namespace.ownedElement>
+    </UML:Model>
+  </XMI.content>
+</XMI>

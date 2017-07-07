@@ -2,6 +2,8 @@
  * General settings
  */
 .root {
+    -fx-font-family: sans-serif;
+
     /* A bright blue for highlighting/accenting objects.  For example: selected
      * text; selected items in menus, lists, trees, and tables; progress bars;
      * default buttons.
@@ -20,7 +22,6 @@
     -fx-default-button: derive(-fx-focus-color, 60%);
 }
 
-
 /*
  * Headers and titles
  */
@@ -31,7 +32,6 @@
 
 .app-title {
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: -fx-focus-color;
     -fx-stroke: black;
@@ -41,7 +41,6 @@
 
 .page-title {
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: -fx-focus-color;
     -fx-stroke: black;
@@ -50,15 +49,23 @@
 }
 
 .error {
-    -fx-text-fill: crimson;
+    -fx-text-fill: #c12e2A;
+    -fx-fill: #c12e2A;
 }
 
 .warning {
-    -fx-text-fill: darkorange;
+    -fx-text-fill: #e17100;
+    -fx-fill: #e17100;
 }
 
 .okay {
     -fx-text-fill: darkgreen;
+    -fx-fill: darkgreen;
+}
+
+.info {
+    -fx-text-fill: #2a71e9;
+    -fx-fill: #2a71e9;
 }
 
 /*
@@ -112,15 +119,12 @@
     -fx-text-fill: white;
 }
 
-
-
 /*
  * Project view
  */
 .feedback-title {
     -fx-padding: 0 0 5px 0;
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: -fx-focus-color;
     -fx-font-size: 22px;
@@ -129,16 +133,14 @@
 .feedback-subtitle {
     -fx-padding: 20px 0 5px 0;
     -fx-font-weight: 600;
-    -fx-font-family: fantasy;
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
-    -fx-font-size: 18px;
+    -fx-font-size: 19px;
 }
 
 .feedback-subsubtitle {
     -fx-padding: 2px 0 2px 0;
     -fx-font-weight: 600;
-    -fx-font-family: sans-serif;
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 16px;
@@ -156,26 +158,30 @@
 }
 
 #feedbackTreeView {
-    -fx-fit-to-height: true;
-    -fx-fit-to-width: true;
+    /*-fx-fit-to-width: true;*/
     -fx-vbar-policy: as-needed;
+    -fx-hbar-policy: as-needed;
     -fx-alignment: baseline-left;
     -fx-orientation: vertical;
     -fx-fill-width: true;
     -fx-fill-height: true;
-    -fx-min-width: 220px;
+    -fx-min-width: 240px;
     -fx-min-height: 20px;
+    -fx-pref-height: 100%;
+    -fx-pref-width: 100%;
 }
 
 #feedbackScrollPane {
-    -fx-orientation: vertical;
-    -fx-fit-to-height: true;
     -fx-fit-to-width: true;
-    -fx-hbar-policy: as-needed;
     -fx-vbar-policy: as-needed;
+    -fx-hbar-policy: as-needed;
+    -fx-alignment: baseline-left;
+    -fx-orientation: vertical;
     -fx-fill-height: true;
     -fx-fill-width: true;
     -fx-min-height: 20px;
+    -fx-pref-height: 100%;
+    -fx-pref-width: 100%;
 }
 
 #feedbackScrollPane VBox {

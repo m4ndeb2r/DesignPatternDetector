@@ -5,13 +5,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import nl.ou.dpd.parsing.argoxmi.ArgoXMIParser;
-import nl.ou.dpd.parsing.template.TemplatesParser;
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.domain.Matcher;
-import nl.ou.dpd.domain.Solution;
 import nl.ou.dpd.domain.SystemUnderConsideration;
+import nl.ou.dpd.domain.matching.PatternInspector;
+import nl.ou.dpd.domain.matching.Solution;
 import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
+import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
+import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
-
 
 /**
  * Manages control flow of views.
@@ -35,8 +34,7 @@ public class Model extends Observable {
 
     private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
     private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
-    private static final String _DPD__PROJ_MRU = "";
-    private final Matcher matcher;
+
     private final RetentionFileChooser fileChooser;
     private Scene scene;
     private Callback<Class<?>, Object> controllerFactory;
@@ -50,7 +48,6 @@ public class Model extends Observable {
     public Model(Scene scene) {
         this.scene = scene;
         this.controllerFactory = ControllerFactoryCreator.createControllerFactory(this);
-        this.matcher = new Matcher();
         this.fileChooser = new RetentionFileChooser(new FileChooser());
     }
 
@@ -110,7 +107,11 @@ public class Model extends Observable {
         if (openProject.getProjectFile() == null) {
             return saveProjectAs();
         }
-        return openProject.save();
+        if (openProject.save()) {
+            setChangedAndNotifyObservers();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -176,24 +177,14 @@ public class Model extends Observable {
     }
 
     /**
-     * Sets the max numnber of allowed edges missing for the currently opened project.
-     *
-     * @param m the new number of max allowed missing edges
-     */
-    public void setMaxMissingEdges(int m) {
-        if (openProject != null) {
-            openProject.setMaxMissingEdges(m);
-            setChangedAndNotifyObservers();
-        }
-    }
-
-    /**
      * Opens a dialog to choose a file with extension {@code *.xmi}. Notifies {@link java.util.Observer}s when a
      * file was chosen.
      */
     public void chooseSystemFile() {
         File chosenFile = this.chooseFile("ArgoUML export files (*.xmi)", "*.xmi");
-        if (chosenFile != null && !chosenFile.equals(openProject.getSystemUnderConsiderationPath())) {
+        if (chosenFile != null
+                && chosenFile.getPath() != null
+                && !chosenFile.getPath().equals(openProject.getSystemUnderConsiderationFilePath())) {
             openProject.setSystemUnderConsiderationPath(chosenFile.getPath());
             setChangedAndNotifyObservers();
         }
@@ -205,7 +196,9 @@ public class Model extends Observable {
      */
     public void chooseTemplateFile() {
         File chosenFile = this.chooseFile("XML template files (*.xml)", "*.xml");
-        if (chosenFile != null && !chosenFile.equals(openProject.getDesignPatternTemplatePath())) {
+        if (chosenFile != null
+                && chosenFile.getPath() != null
+                && !chosenFile.getPath().equals(openProject.getDesignPatternFilePath())) {
             openProject.setDesignPatternTemplatePath(chosenFile.getPath());
             setChangedAndNotifyObservers();
         }
@@ -214,22 +207,19 @@ public class Model extends Observable {
     /**
      * Parses the specified input files, and attempts to detect design patterns defined in the template file, in the
      * "system under consideration" file. The results are gathered in a {@link Map} containing {@link List}s of
-     * {@link Solution}s as values, and the name of the pattern as key.
+     * {@link PatternInspector.MatchingResult}s as values, and the name of the pattern as key.
      *
-     * @param maxMissingEdges the maximum allowed number of missing edges.
      * @return a {@link Map} containing the gathered results
      */
-    public Map<String, List<Solution>> analyse(int maxMissingEdges) {
+    public Map<String, PatternInspector.MatchingResult> analyse() {
         // Parse the input files
-        final SystemUnderConsideration system = new ArgoXMIParser().parse(openProject.getSystemUnderConsiderationPath());
-        final List<DesignPattern> designPatterns = new TemplatesParser().parse(openProject.getDesignPatternTemplatePath());
+        final SystemUnderConsideration system = new ArgoUMLParser().parse(openProject.getSystemUnderConsiderationFilePath());
+        final List<DesignPattern> designPatterns = new PatternsParser().parse(openProject.getDesignPatternFilePath());
 
-        Map<String, List<Solution>> assembledMatchResults = new HashMap<>();
+        final Map<String, PatternInspector.MatchingResult> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {
-            List<Solution> solutions = matcher.match(pattern, system, maxMissingEdges).getSolutions();
-            if (solutions.size() > 0) {
-                assembledMatchResults.put(pattern.getName(), solutions);
-            }
+            final PatternInspector patternInspector = new PatternInspector(system, pattern);
+            assembledMatchResults.put(pattern.getName(), patternInspector.getMatchingResult());
         });
 
         return assembledMatchResults;

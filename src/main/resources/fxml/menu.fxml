@@ -9,7 +9,7 @@
          stylesheets="@../style/style.css"
          fx:controller="nl.ou.dpd.gui.controller.MenuController">
     <menus>
-        <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+        <Menu fx:id="fileMenu" mnemonicParsing="false" text="File" styleClass="menu">
             <items>
                 <MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProjectAction" text="New project"/>
                 <MenuItem fx:id="openProject" mnemonicParsing="false" onAction="#openProjectAction" text="Open project"/>
@@ -22,12 +22,6 @@
                 <MenuItem fx:id="closeProject" mnemonicParsing="false" onAction="#closeProjectAction" text="Close project"/>
                 <SeparatorMenuItem />
                 <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#exitAction" text="Exit"/>
-            </items>
-        </Menu>
-        <Menu fx:id="languageMenu" mnemonicParsing="false" text="Language">
-            <items>
-                <MenuItem fx:id="dutchLanguage" mnemonicParsing="false" onAction="#dutchLanguageAction" text="Dutch"/>
-                <MenuItem fx:id="englishLanguage" mnemonicParsing="false" onAction="#englishLanguageAction" text="English"/>
             </items>
         </Menu>
         <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">

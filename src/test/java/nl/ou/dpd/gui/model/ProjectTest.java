@@ -1,13 +1,11 @@
 package nl.ou.dpd.gui.model;
 
 import nl.ou.dpd.exception.DesignPatternDetectorException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import javax.security.auth.DestroyFailedException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,21 +24,18 @@ import static org.junit.Assert.assertTrue;
  */
 public class ProjectTest {
 
-    private static final String TEST_PROJ_FILE_NAME = "/testproject.dpd";
-    private static final String SAVE_PROJ_FILE_NAME = "/saveproject.dpd";
+    private static final String TEST_PROJ_FILE_NAME = "/projects/testproject.dpd";
+    private static final String SAVE_PROJ_FILE_NAME = "/projects/saveproject.dpd";
 
-    private static final String DPD_SYSTEM = "dpd.system";
-    private static final String DPD_TEMPLATES = "dpd.tmplts";
-    private static final String DPD_MAX_MISSING_EDGES = "dpd.maxedg";
-
-    private File testProjectFile;
-    private File saveProjectFile;
-
+    private static final String DPD_SYSTEM_FILE = "dpd.system.file";
+    private static final String DPD_PATTERNS_FILE = "dpd.patterns.file";
     /**
      * Exception rule.
      */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private File testProjectFile;
+    private File saveProjectFile;
 
     /**
      * Initialise a project files for each test.
@@ -58,9 +53,8 @@ public class ProjectTest {
     public void testDefaultConstructor() {
         Project project = new Project();
         assertThat(project.getName(), is("[New project]"));
-        assertThat(project.getSystemUnderConsiderationPath(), isEmptyOrNullString());
-        assertThat(project.getDesignPatternTemplatePath(), isEmptyOrNullString());
-        assertThat(project.getMaxMissingEdges(), is(0));
+        assertThat(project.getSystemUnderConsiderationFilePath(), isEmptyOrNullString());
+        assertThat(project.getDesignPatternFilePath(), isEmptyOrNullString());
 
         // A new project is not pristine
         assertFalse(project.isPristine());
@@ -79,10 +73,9 @@ public class ProjectTest {
     @Test
     public void testConstructor() throws FileNotFoundException {
         Project project = new Project(testProjectFile);
-        assertThat(project.getName(), is("testproject.dpd"));
-        assertThat(project.getDesignPatternTemplatePath(), is("/testtemplates.xml"));
-        assertThat(project.getSystemUnderConsiderationPath(), is("/testinput.xmi"));
-        assertThat(project.getMaxMissingEdges(), is(1));
+        assertThat(project.getName(), is(TEST_PROJ_FILE_NAME.substring(TEST_PROJ_FILE_NAME.lastIndexOf('/') + 1)));
+        assertThat(project.getDesignPatternFilePath(), is("/testpatterns.xml"));
+        assertThat(project.getSystemUnderConsiderationFilePath(), is("/testinput.xmi"));
         assertTrue(project.isPristine());
     }
 
@@ -100,11 +93,6 @@ public class ProjectTest {
         assertTrue(project2.isPristine());
         project2.setDesignPatternTemplatePath("newPath");
         assertFalse(project2.isPristine());
-
-        Project project3 = new Project(testProjectFile);
-        assertTrue(project3.isPristine());
-        project3.setMaxMissingEdges(0);
-        assertFalse(project3.isPristine());
     }
 
     /**
@@ -124,24 +112,21 @@ public class ProjectTest {
         // Set some attributes to save the file
         project.setSystemUnderConsiderationPath("/sys.xmi");
         project.setDesignPatternTemplatePath("/tpl.xml");
-        project.setMaxMissingEdges(1);
 
         // Save it
         project.save(saveProjectFile);
 
         // Check the project's attributes
-        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(1)));
-        assertThat(project.getSystemUnderConsiderationPath(), is("/sys.xmi"));
-        assertThat(project.getDesignPatternTemplatePath(), is("/tpl.xml"));
-        assertThat(project.getMaxMissingEdges(), is(1));
+        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(SAVE_PROJ_FILE_NAME.lastIndexOf('/') + 1)));
+        assertThat(project.getSystemUnderConsiderationFilePath(), is("/sys.xmi"));
+        assertThat(project.getDesignPatternFilePath(), is("/tpl.xml"));
         assertTrue(project.isPristine());
         assertThat(project.getProjectFile(), is(saveProjectFile));
 
         // Check the project file's content
         Scanner sc = new Scanner(saveProjectFile);
-        assertThat(sc.nextLine(), is(DPD_SYSTEM + ":/sys.xmi"));
-        assertThat(sc.nextLine(), is(DPD_TEMPLATES + ":/tpl.xml"));
-        assertThat(sc.nextLine(), is(DPD_MAX_MISSING_EDGES + ":1"));
+        assertThat(sc.nextLine(), is(DPD_SYSTEM_FILE + ":/sys.xmi"));
+        assertThat(sc.nextLine(), is(DPD_PATTERNS_FILE + ":/tpl.xml"));
         assertFalse(sc.hasNext());
     }
 
@@ -162,16 +147,14 @@ public class ProjectTest {
         project.save(saveProjectFile);
 
         // Check the project's attributes
-        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(1)));
-        assertThat(project.getSystemUnderConsiderationPath(), isEmptyOrNullString());
-        assertThat(project.getDesignPatternTemplatePath(), isEmptyOrNullString());
-        assertThat(project.getMaxMissingEdges(), is(0));
+        assertThat(project.getName(), is(SAVE_PROJ_FILE_NAME.substring(SAVE_PROJ_FILE_NAME.lastIndexOf('/') + 1)));
+        assertThat(project.getSystemUnderConsiderationFilePath(), isEmptyOrNullString());
+        assertThat(project.getDesignPatternFilePath(), isEmptyOrNullString());
         assertTrue(project.isPristine());
         assertThat(project.getProjectFile(), is(saveProjectFile));
 
         // Check the project file's content
         Scanner sc = new Scanner(saveProjectFile);
-        assertThat(sc.nextLine(), is(DPD_MAX_MISSING_EDGES + ":0"));
         assertFalse(sc.hasNext());
     }
 

@@ -54,6 +54,13 @@
     </build>
 
     <dependencies>
+        <!-- Matching -->
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

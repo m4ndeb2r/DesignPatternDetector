@@ -1,15 +1,22 @@
 # TODO's
 
 ## TODO's in the code
-* The main view should contain some info and/or basic options to click, or a logo or ... whatever. Something.
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-* Test-coverage went down when writing GUI. Test-coverage should be better (currently 62% of lines)
+* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Styling in CSS instead of FXML
 * Scrollbars in project view are not working 100% okay
-* Remark Peter: Ik heb de xmi's die horen bij mijn onderzoek naar de adapter in een mapje geplaatst: 
-  scriptie/onderzoek Peter/Adapter. Zeker de mediaPlayer is interessant om te laten analyseren, ook met 
-  1 missing edge. In het laatste geval krijg je 5 adapters te zien, maar bij geen enkele wordt in de 
-  feedback een missing edge vermeld. Dat klopt dus ergens niet.
+* Cleanup test files
+* Cleanup code (dead code, comments)
+* JavaDoc (some of it is old, missing, or superfluous....)
+* What to do with matching relations in Solution (show it in feedback? remove it?)
+* Implement or remove unimplemented menu items in GUI.
+* Merge graphstructure branch to develop branch; merge develop to master; remove graphstructure branch; remove feature-matching bramch
+
+## TODO: testing
+* separate integration tests from unittests
+* Consider more tests for the GUI....
+* Create an overall patterns file with all GOF patterns as a deliverable
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
+* Remove PDF's from codebase (add TEX files to ABI Scriptie codebase)

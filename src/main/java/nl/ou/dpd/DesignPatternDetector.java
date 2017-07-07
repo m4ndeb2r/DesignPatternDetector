@@ -2,6 +2,8 @@ package nl.ou.dpd;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -25,10 +27,10 @@ import java.io.InputStream;
  */
 public final class DesignPatternDetector extends Application {
 
-    private static final Logger LOGGER = LogManager.getLogger(DesignPatternDetector.class);
-
-    private static final String APP_TITLE = "Design Pattern Detector";
+    public static final String STYLE_SHEET = "/style/style.css";
     public static final String ICON_NAME = "/img/cube.png";
+    private static final Logger LOGGER = LogManager.getLogger(DesignPatternDetector.class);
+    private static final String APP_TITLE = "Design Pattern Detector";
 
     /**
      * The main method of the application. Starts a GUI.
@@ -54,9 +56,10 @@ public final class DesignPatternDetector extends Application {
         Platform.setImplicitExit(false);
 
         final Scene scene = new Scene(new StackPane());
-        final Model model = new Model(scene);
+        scene.getStylesheets().add(DesignPatternDetector.class.getResource(STYLE_SHEET).toExternalForm());
 
         // Set the scene to the main view of the application
+        final Model model = new Model(scene);
         model.showMainView();
 
         // Set the primary stage settings

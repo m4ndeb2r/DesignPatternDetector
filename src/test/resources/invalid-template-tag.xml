@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Adge elements instead of edge elements: should generate a parse error -->
-<templates>
-    <tAmplate name ="pattern">
-        <edge node1="P"                   node2="Q"           type="ASSOCIATION_DIRECTED"/>
-        <edge node1="R"                   node2="Q"           type="INHERITANCE"/>
-    </tAmplate>
-</templates>

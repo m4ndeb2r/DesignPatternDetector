@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patterns>
+    <pattern name="Object Adapter" family="Adapter">
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Target">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="Adapter">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Adaptee">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+        	<relation node1="Client" node2="Target">
+        		<relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>        					   
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Adapter" node2="Target">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Adapter" node2="Adaptee">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+		<pattern name="Class Adapter" family="Adapter">
+		<nodes>
+			<node id="Client">
+				<node.rule nodeType="CONCRETE_CLASS"/>
+			</node>
+			<node id="Target">
+				<node.rule nodeType="INTERFACE"/>
+			</node>
+			<node id="Adapter">
+				<node.rule nodeType="CONCRETE_CLASS"/>
+			</node>
+			<node id="Adaptee">
+				<node.rule nodeType="CONCRETE_CLASS"/>
+			</node>
+		</nodes>
+		<relations>
+			<relation node1="Client" node2="Target">
+				<relation.rule relationType="ASSOCIATES_WITH" cardinalityLeft="1" cardinalityRight="1"/>
+				<relation.rule relationType="HAS_ATTRIBUTE_OF" cardinalityLeft="1" cardinalityRight="1"/>
+			</relation>
+			<relation node1="Adapter" node2="Target">
+				<relation.rule relationType="IMPLEMENTS" cardinalityLeft="1" cardinalityRight="1"/>
+			</relation>
+			<relation node1="Adapter" node2="Adaptee">
+				<relation.rule relationType="INHERITS_FROM" cardinalityLeft="1" cardinalityRight="1"/>
+			</relation>
+		</relations>
+		</pattern>
+</patterns>
+

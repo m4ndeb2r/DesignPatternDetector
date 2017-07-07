@@ -1,0 +1,97 @@
+<?xml version='1.0'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+
+    <xs:simpleType name='nodeType'>
+        <xs:restriction base='xs:normalizedString'>
+            <xs:enumeration value='ABSTRACT_CLASS'/>
+            <xs:enumeration value='CONCRETE_CLASS'/>
+            <xs:enumeration value='INTERFACE'/>
+            <xs:enumeration value='CLASS_WITH_PRIVATE_CONSTRUCTOR'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name='node.rule'>
+        <xs:complexType>
+            <xs:attribute name='nodeType' type='nodeType' use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='node'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='node.rule' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+            <xs:attribute name='id' type='xs:string' use="required"/>
+            <xs:attribute name='name' type='xs:string'/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='nodes'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='node' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name='relationType'>
+        <xs:restriction base='xs:normalizedString'>
+            <xs:enumeration value='ASSOCIATES_WITH'/>
+            <xs:enumeration value='DEPENDS_ON'/>
+            <xs:enumeration value='INHERITS_FROM'/>
+            <xs:enumeration value='IMPLEMENTS'/>
+            <xs:enumeration value='HAS_ATTRIBUTE_OF'/>
+            <xs:enumeration value='CREATES_INSTANCE_OF'/>
+            <xs:enumeration value='HAS_METHOD_PARAMETER_OF_TYPE'/>
+            <xs:enumeration value='HAS_METHOD_RETURNTYPE'/>
+            <xs:enumeration value='CALLS_METHOD_OF'/>
+            <xs:enumeration value='OVERRIDES_METHOD_OF'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name='relation.rule'>
+        <xs:complexType>
+            <xs:attribute name='relationType' type='relationType' use="required"/>
+            <xs:attribute name='cardinalityLeft' type='xs:string'/>
+            <xs:attribute name='cardinalityRight' type='xs:string'/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='relation'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='relation.rule' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+            <xs:attribute name='node1' type='xs:string' use="required"/>
+            <xs:attribute name='node2' type='xs:string' use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='relations'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='relation' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='pattern'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='nodes' minOccurs='1' maxOccurs='1'/>
+                <xs:element ref='relations' minOccurs='1' maxOccurs='1'/>
+            </xs:sequence>
+            <xs:attribute name='name' type='xs:string' use="required"/>
+            <xs:attribute name='family' type='xs:string' use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='patterns'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref='pattern' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

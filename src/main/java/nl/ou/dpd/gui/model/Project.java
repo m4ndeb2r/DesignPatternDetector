@@ -20,15 +20,12 @@ public class Project {
 
     private static final Logger LOGGER = LogManager.getLogger(Project.class);
 
-    private static final String DPD_PROJ_NAME = "dpd.prname";
-    private static final String DPD_SYSTEM = "dpd.system";
-    private static final String DPD_TEMPLATES = "dpd.tmplts";
-    private static final String DPD_MAX_MISSING_EDGES = "dpd.maxedg";
+    private static final String DPD_SYSTEM_FILE = "dpd.system.file";
+    private static final String DPD_PATTERNS_FILE = "dpd.patterns.file";
 
     private String name;
     private String systemUnderConsiderationPath;
-    private String designPatternTemplatePath;
-    private int maxMissingEdges;
+    private String designPatternFilePath;
     private File projectFile;
     private boolean pristine;
 
@@ -40,8 +37,7 @@ public class Project {
         this.name = "[New project]";
         this.pristine = false;
         this.projectFile = null;
-        this.maxMissingEdges = 0;
-        this.designPatternTemplatePath = null;
+        this.designPatternFilePath = null;
         this.systemUnderConsiderationPath = null;
     }
 
@@ -55,14 +51,11 @@ public class Project {
         Scanner sc = new Scanner(projectFile);
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
-            if (line.startsWith(DPD_SYSTEM)) {
+            if (line.startsWith(DPD_SYSTEM_FILE)) {
                 this.setSystemUnderConsiderationPath(line.substring(line.indexOf(":") + 1).trim());
             }
-            if (line.startsWith(DPD_TEMPLATES)) {
+            if (line.startsWith(DPD_PATTERNS_FILE)) {
                 this.setDesignPatternTemplatePath(line.substring(line.indexOf(":") + 1).trim());
-            }
-            if (line.startsWith(DPD_MAX_MISSING_EDGES)) {
-                this.setMaxMissingEdges(Integer.parseInt(line.substring(line.indexOf(":") + 1).trim()));
             }
         }
         this.name = projectFile.getName();
@@ -86,27 +79,23 @@ public class Project {
      * @return {@code true} if the project was successfully saved, or {@code false} otherwise.
      */
     public boolean save(final File file) {
-        boolean success = false;
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(file));
             if (this.systemUnderConsiderationPath != null) {
-                out.write(DPD_SYSTEM + ":" + this.systemUnderConsiderationPath);
+                out.write(DPD_SYSTEM_FILE + ":" + this.systemUnderConsiderationPath);
                 out.newLine();
             }
-            if (this.designPatternTemplatePath != null) {
-                out.write(DPD_TEMPLATES + ":" + this.designPatternTemplatePath);
+            if (this.designPatternFilePath != null) {
+                out.write(DPD_PATTERNS_FILE + ":" + this.designPatternFilePath);
                 out.newLine();
             }
-            out.write(DPD_MAX_MISSING_EDGES + ":" + this.maxMissingEdges);
             out.newLine();
 
             // Succesfully written to file. Change project name and file.
             this.setName(file.getName());
             this.projectFile = file;
             this.pristine = true;
-            success = true;
-
         } catch (Exception ex) {
             LOGGER.error("Saving project failed.", ex);
             throw new DesignPatternDetectorException("Saving project failed.", ex);
@@ -120,7 +109,7 @@ public class Project {
             }
         }
         LOGGER.info("Project " + file.getName() + " saved successfully to file " + file.getPath() + ".");
-        return success;
+        return true;
     }
 
     /**
@@ -146,7 +135,7 @@ public class Project {
      *
      * @return the complete filename
      */
-    public String getSystemUnderConsiderationPath() {
+    public String getSystemUnderConsiderationFilePath() {
         return systemUnderConsiderationPath;
     }
 
@@ -164,45 +153,23 @@ public class Project {
     }
 
     /**
-     * Gets the filename of the XML-imput file containing the design pattern templates.
+     * Gets the filename of the XML-imput file containing the design patterns.
      *
      * @return the complete filename
      */
-    public String getDesignPatternTemplatePath() {
-        return designPatternTemplatePath;
+    public String getDesignPatternFilePath() {
+        return designPatternFilePath;
     }
 
     /**
-     * Sets the filename of the XML-imput file containing the design pattern templates. When the new value
-     * differs form the original value, the pristine attribute of the {@link Project} is set to {@code false}.
+     * Sets the filename of the XML-imput file containing the design pattern. When the new value differs from the
+     * original value, the pristine attribute of the {@link Project} is set to {@code false}.
      *
-     * @param designPatternTemplatePath the new complete filename
+     * @param designPatternFilePath the new complete filename
      */
-    public void setDesignPatternTemplatePath(String designPatternTemplatePath) {
-        if (different(this.designPatternTemplatePath, designPatternTemplatePath)) {
-            this.designPatternTemplatePath = designPatternTemplatePath;
-            this.pristine = false;
-        }
-    }
-
-    /**
-     * Gets the max number of missing edges that are allowed when the input is analysed.
-     *
-     * @return the max allowed number of missing edges.
-     */
-    public int getMaxMissingEdges() {
-        return maxMissingEdges;
-    }
-
-    /**
-     * Sets the maximum allowed number of missing edges that are allowed when the input is analysed. When the new value
-     * differs form the original value, the pristine attribute of the {@link Project} is set to {@code false}.
-     *
-     * @param maxMissingEdges the new maximum
-     */
-    public void setMaxMissingEdges(int maxMissingEdges) {
-        if (this.maxMissingEdges != maxMissingEdges) {
-            this.maxMissingEdges = maxMissingEdges;
+    public void setDesignPatternTemplatePath(String designPatternFilePath) {
+        if (different(this.designPatternFilePath, designPatternFilePath)) {
+            this.designPatternFilePath = designPatternFilePath;
             this.pristine = false;
         }
     }

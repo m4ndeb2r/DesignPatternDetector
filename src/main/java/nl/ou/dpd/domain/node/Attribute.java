@@ -1,96 +1,79 @@
 package nl.ou.dpd.domain.node;
 
+import static nl.ou.dpd.util.Util.nullSafeEquals;
+
 /**
- * Represents an attribute of type {@link Node}.
+ * Represents an attribute of a {@link Node}.
  *
  * @author Peter Vansweevelt
+ * @author Martin de Boer
  */
-public class Attribute {
+public class Attribute implements SignatureComparable<Attribute> {
 
-    private final String id;
-    private final String name;
+    final private String id;
+    final private Node parentNode;
+    private String name;
     private Node type;
     private Visibility visibility;
 
     /**
-     * Creates an attribute with the given name and {@link Node} type.
+     * Constructs an attribute with the specified {@code id} and for the specified {@code parentNode}.
      *
-     * @param name the name of the attribute
-     * @param type the type of the attribute
+     * @param id         identifies the attrbute
+     * @param parentNode the node containing the attribute
      */
-    public Attribute(String name, Node type) {
-        this.id = name;
-        this.name = name;
-        this.type = type;
-        this.visibility = null;
-    }
-
-    /**
-     * Creates an attribute with the given name and {@link Node} type.
-     *
-     * @param name the name of the attribute
-     * @param type the type of the attribute
-     */
-    public Attribute(String id, String name, Node type) {
+    public Attribute(String id, Node parentNode) {
         this.id = id;
-        this.name = name;
-        this.type = type;
-        this.visibility = null;
+        this.parentNode = parentNode;
+        this.name = null;
+        this.type = null;
+        this.visibility = Visibility.PUBLIC;
+        if (this.parentNode != null) {
+            this.parentNode.addAttribute(this);
+        }
     }
 
-    /**
-     * Get the name of the attribute.
-     *
-     * @return the name of the attribute
-     */
+    public Node getParentNode() {
+        return parentNode;
+    }
+
     public String getName() {
         return name;
     }
 
-    /**
-     * Get the name of the attribute.
-     *
-     * @return the name of the attribute
-     */
+    public Attribute setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public String getId() {
         return id;
     }
 
-    /**
-     * Get the type of the attribute.
-     *
-     * @return the type of the attribute as {@link Node}
-     */
     public Node getType() {
         return type;
     }
 
-    /**
-     * Set the type of the attribute.
-     *
-     * @param the type of the attribute as {@link Node}
-     */
-    public void setType(Node type) {
+    public Attribute setType(Node type) {
         this.type = type;
+        return this;
     }
 
-    /**
-     * Get the name of the attribute.
-     *
-     * @return the name of the attribute
-     */
     public Visibility getVisibility() {
         return visibility;
     }
 
-    /**
-     * Get the type of the attribute.
-     *
-     * @return the type of the attribute as {@link Node}
-     */
-    public void setVisibility(Visibility visibility) {
+    public Attribute setVisibility(Visibility visibility) {
         this.visibility = visibility;
+        return this;
     }
 
+    public boolean equalsSignature(Attribute other) {
+        if (other == null) return false;
+        if (this.equals(other)) return true;
+        if (!nullSafeEquals(name, other.name)) return false;
+        if (!nullSafeEquals(type, other.type)) return false;
+        return true;
+    }
 
 }
