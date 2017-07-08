@@ -57,6 +57,7 @@ public class PatternsParser {
     private static final String CARDINALITY_RIGHT = "cardinalityRight";
     private static final String DEFAULT_CARDINALITY = "1";
     private static final String PATTERN = "pattern";
+    private static final String NOTE = "note";
     private static final String NODE = "node";
     private static final String RELATION = "relation";
     private static final String RELATION_RULE = "relation.rule";
@@ -111,20 +112,23 @@ public class PatternsParser {
 
     private void handleEvents(XMLEventReader eventReader) throws XMLStreamException {
         while (eventReader.hasNext()) {
-            handleEvent(eventReader.nextEvent());
+            handleEvent(eventReader.nextEvent(), eventReader);
         }
     }
 
-    private void handleEvent(XMLEvent event) {
+    private void handleEvent(XMLEvent event, XMLEventReader eventReader) throws XMLStreamException {
         if (event.isStartElement()) {
-            handleStartElement(event);
+            handleStartElement(event, eventReader);
         }
     }
 
-    private void handleStartElement(XMLEvent event) {
+    private void handleStartElement(XMLEvent event, XMLEventReader eventReader) throws XMLStreamException {
         switch (event.asStartElement().getName().getLocalPart()) {
             case PATTERN:
                 handlePatternStartElement(event);
+                break;
+            case NOTE:
+                designPattern.addNote(eventReader.getElementText());
                 break;
             case NODE:
                 handleNodeStartElement(event);

@@ -10,6 +10,8 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,6 +45,10 @@ public class BridgeMatchingTest {
 
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
+
+        // Check for a general note regarding the pattern, available from the xml-file
+        assertThat(designPattern.getNotes().size(), is(1));
+        assertTrue(designPattern.getNotes().iterator().next().startsWith("Note: "));
 
         //TODO: test the values instead of printing it to the console
         TestHelper.printFeedback(designPattern, system, patternInspector);

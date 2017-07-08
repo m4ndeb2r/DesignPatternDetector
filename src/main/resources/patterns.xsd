@@ -1,11 +1,20 @@
 <?xml version='1.0'?>
 <xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
 
+    <xs:element name='notes'>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name='note' type='xs:string' minOccurs='1' maxOccurs='unbounded'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:simpleType name='nodeType'>
         <xs:restriction base='xs:normalizedString'>
+            <xs:enumeration value='ABSTRACT_CLASS_OR_INTERFACE'/>
             <xs:enumeration value='ABSTRACT_CLASS'/>
-            <xs:enumeration value='CONCRETE_CLASS'/>
             <xs:enumeration value='INTERFACE'/>
+            <xs:enumeration value='CONCRETE_CLASS'/>
             <xs:enumeration value='CLASS_WITH_PRIVATE_CONSTRUCTOR'/>
         </xs:restriction>
     </xs:simpleType>
@@ -78,6 +87,7 @@
     <xs:element name='pattern'>
         <xs:complexType>
             <xs:sequence>
+                <xs:element ref='notes' minOccurs='0' maxOccurs='1'/>
                 <xs:element ref='nodes' minOccurs='1' maxOccurs='1'/>
                 <xs:element ref='relations' minOccurs='1' maxOccurs='1'/>
             </xs:sequence>

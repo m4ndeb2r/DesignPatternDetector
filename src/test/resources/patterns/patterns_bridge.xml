@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <patterns>
     <pattern name="Bridge" family="Bridge">
+        <notes>
+            <note>Note: AgroUML diagrams lack information regarding 'X' (TODO) and which can lead to false positives.</note>
+        </notes>
         <nodes>
             <node id="Abstraction">
                 <node.rule nodeType="ABSTRACT_CLASS"/>
