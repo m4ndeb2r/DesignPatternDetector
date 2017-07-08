@@ -4,7 +4,6 @@
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
 * Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Styling in CSS instead of FXML
-* Scrollbars in project view are not working 100% okay
 * Cleanup test files
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
@@ -19,4 +18,6 @@
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
-* Remove PDF's from codebase (add TEX files to ABI Scriptie codebase)
+
+## TODO Logging
+* Check the log files. Is there too much, enough, not enough relevant logging?
