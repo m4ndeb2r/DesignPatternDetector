@@ -185,7 +185,7 @@ public class MenuController extends Controller implements Observer {
     }
 
     private void showSaveFileAlert(boolean success, String detailMsg) {
-        Alert alert = null;
+        Alert alert;
         if (success) {
             alert = new CustomAlert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");

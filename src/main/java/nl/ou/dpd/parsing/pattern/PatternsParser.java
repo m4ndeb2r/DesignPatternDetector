@@ -222,7 +222,7 @@ public class PatternsParser {
     private String getAttributeFromEvent(XMLEvent event, String attributeName) {
         final Iterator<Attribute> attrIterator = event.asStartElement().getAttributes();
         while (attrIterator.hasNext()) {
-            Attribute a = attrIterator.next();
+            final Attribute a = attrIterator.next();
             if (a.getName().getLocalPart().equals(attributeName)) {
                 return a.getValue();
             }

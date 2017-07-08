@@ -74,7 +74,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         return system;
     }
 
-    protected void initParse(Map<String, Node> nodes) {
+    private void initParse(Map<String, Node> nodes) {
         this.nodes = nodes;
         navigabilities = new Stack<>();
         sourceAndTarget = new Stack<>();
@@ -261,7 +261,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
             //add the new relationproperties to the existing relation
             addRelationProperties(lastRelation, system.getEdge(sourceNode, targetNode));
         }
-        addReverseRelation(event, sourceNode, targetNode);
+        addReverseRelation(sourceNode, targetNode);
     }
 
     private Relation findSystemRelationById(String id) {
@@ -305,7 +305,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @param sourceNode
      * @param targetNode
      */
-    private void addReverseRelation(XMLEvent event, Node sourceNode, Node targetNode) {
+    private void addReverseRelation(Node sourceNode, Node targetNode) {
         //if the type is association and navigabilities are true
         //add a reverse edge with the same relationtype
         Relation relation = system.getEdge(sourceNode, targetNode);
@@ -316,13 +316,13 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         } else {
             if (isAssociation && navigabilities.size() == 2) {
                 if (navigabilities.pop() && navigabilities.pop()) {
-                    lastRelation = createReverseAssociation(event, relation, sourceNode, targetNode);
+                    lastRelation = createReverseAssociation(relation, sourceNode, targetNode);
                 }
             }
         }
     }
 
-    private Relation createReverseAssociation(XMLEvent event, Relation originalRelation, Node originalSourceNode, Node originalTargetNode) {
+    private Relation createReverseAssociation(Relation originalRelation, Node originalSourceNode, Node originalTargetNode) {
         final Relation relation = new Relation(originalRelation.getId() + "-reversed", null);
         final RelationProperty originalRelationProperty = findRelationPropertyByType(originalRelation, RelationType.ASSOCIATES_WITH);
         final RelationProperty relationProperty = new RelationProperty(

@@ -49,8 +49,6 @@ public abstract class ArgoUMLAbstractParser {
         }
     }
 
-    protected abstract void initParse(Map<String, Node> nodes);
-
     protected void handleEvents(XMLEventReader eventReader) throws XMLStreamException {
         while (eventReader.hasNext()) {
             XMLEvent event = eventReader.nextEvent();

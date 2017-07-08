@@ -71,13 +71,9 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * value is represented by the node itself.
      */
     public Map<String, Node> parse(String filename) {
-        initParse(new HashMap<>());
+        this.nodes = new HashMap<>();
         doParse(filename);
         return nodes;
-    }
-
-    protected void initParse(Map<String, Node> nodes) {
-        this.nodes = nodes;
     }
 
     protected void handleStartElement(XMLEvent event) {
@@ -125,7 +121,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
                 handleModelEvent(event);
                 break;
             case ATTRIBUTE:
-                setAttributeType(event, readAttributes(event).get(IDREF));
+                setAttributeType(readAttributes(event).get(IDREF));
                 break;
             case PARAMETER:
                 setParameterType(event, readAttributes(event).get(IDREF));
@@ -190,7 +186,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
         //look for the event one level higher
         switch (getParentElementNameLocalPart()) {
             case ATTRIBUTE:
-                setAttributeType(event, readAttributes(event).get(HREF));
+                setAttributeType(readAttributes(event).get(HREF));
                 break;
             case PARAMETER:
                 setParameterType(event, readAttributes(event).get(HREF));
@@ -222,7 +218,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * @param event
      * @param idref
      */
-    private void setAttributeType(XMLEvent event, String idref) {
+    private void setAttributeType(String idref) {
         String attrId = readAttributes(events.peek()).get(ID);
         final nl.ou.dpd.domain.node.Attribute attr = findAttributeById(attrId);
         Node node = nodes.get(idref);

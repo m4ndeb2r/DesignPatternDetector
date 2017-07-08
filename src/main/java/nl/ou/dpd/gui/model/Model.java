@@ -8,7 +8,6 @@ import javafx.util.Callback;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.matching.PatternInspector;
-import nl.ou.dpd.domain.matching.Solution;
 import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
 import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
 import nl.ou.dpd.parsing.pattern.PatternsParser;
