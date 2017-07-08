@@ -22,7 +22,6 @@ import java.io.InputStream;
 /**
  * The main class of the Design Pattern Detector application.
  *
- * @author E.M. van Doorn
  * @author Martin de Boer
  */
 public final class DesignPatternDetector extends Application {
