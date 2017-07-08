@@ -4,6 +4,8 @@ import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.relation.Relation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jgrapht.GraphMapping;
 import org.jgrapht.alg.isomorphism.VF2SubgraphIsomorphismInspector;
 
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
  */
 public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Relation> {
 
+    private static final Logger LOGGER = LogManager.getLogger(PatternInspector.class);
+
     private SystemUnderConsideration system;
     private DesignPattern designPattern;
 
@@ -32,6 +36,9 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
      */
     public PatternInspector(SystemUnderConsideration system, DesignPattern designPattern) {
         super(system, designPattern, designPattern.getNodeComparator(), designPattern.getRelationComparator());
+        LOGGER.info(String.format("Analysing system design '%s' for design pattern '%s'.",
+                system.getName(),
+                designPattern.getName()));
         this.system = system;
         this.designPattern = designPattern;
     }
@@ -61,6 +68,9 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
      * @return a {@link List} of {@link Solution} objects, one for every design pattern instance that was detected.
      */
     private List<Solution> getSolutions() {
+        LOGGER.info(String.format("Found %d solutions for pattern '%s'.",
+                asList(getMappings()).size(),
+                designPattern.getName()));
         return asList(getMappings())
                 .stream()
                 .map(graphMapping -> getSolutionFromGraphMapping(graphMapping))
