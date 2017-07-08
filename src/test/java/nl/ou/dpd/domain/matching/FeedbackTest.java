@@ -9,9 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
@@ -96,10 +99,17 @@ public class FeedbackTest {
 
         fb1.addFeedbackMessage(node1, FeedbackType.INFO, "node1-msg");
         fb1.addFeedbackMessage(relation1, FeedbackType.INFO, "relation1-msg");
+
+        Set<String> notes = new HashSet<>();
+        notes.addAll(Arrays.asList("note"));
+        fb2.addNotes(notes);
         fb2.addFeedbackMessage(node2, FeedbackType.INFO, "node2-msg");
         fb2.addFeedbackMessage(relation2, FeedbackType.MATCH, "relation2-msg");
 
         final Feedback fb3 = fb1.merge(fb2).merge(new Feedback()).merge(null);
+
+        assertThat(fb3.getNotes().size(), is(1));
+        assertThat(fb3.getNotes().iterator().next(), is("note"));
 
         assertThat(fb3.getFeedbackMessages(node1, FeedbackType.NOT_ANALYSED).size(), is(0));
         assertThat(fb3.getFeedbackMessages(node1, FeedbackType.MATCH).size(), is(0));
