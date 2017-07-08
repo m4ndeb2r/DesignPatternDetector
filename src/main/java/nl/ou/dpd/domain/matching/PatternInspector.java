@@ -109,7 +109,26 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
         }
 
         public List<Solution> getSolutions() {
-            return solutions;
+            return getSolutions(true);
+        }
+
+        // TODO: similarity checks are not yet used. Are we going to?
+        public List<Solution> getSolutions(boolean allowSimilarSolutions) {
+            if (allowSimilarSolutions) {
+                return solutions;
+            }
+            // Filter out duplicate-ish solutions
+            List<Solution> result = new ArrayList<>();
+            solutions.forEach(solution -> {
+                if (!containsSimilarSolution(result, solution)) {
+                    result.add(solution);
+                }
+            });
+            return result;
+        }
+
+        private boolean containsSimilarSolution(List<Solution> result, Solution solution) {
+            return result.stream().anyMatch(sol -> sol.isSimilar(solution));
         }
 
         public Feedback getFeedback() {

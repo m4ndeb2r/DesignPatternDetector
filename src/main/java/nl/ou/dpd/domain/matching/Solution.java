@@ -29,6 +29,40 @@ public class Solution {
         this.patternFamilyName = patternFamilyName;
     }
 
+    /**
+     * Returns whether another {@link Solution} is similar. Solutions are similar when they contain the samen number of
+     * matching system nodes, and those system nodes have the same id. Futhermore the should have the same
+     * designPatternName, patternFamilyName and an equal number of matchingRelations.
+     * <p>
+     * TODO: similarity checks are not yet used. Are we going to?
+     *
+     * @param other the {@link Solution} to compare to this {@link Solution}
+     * @return {@code true} of this {@link Solution} is similar to the {@code other}, or {@link false} otherwise.
+     */
+    public boolean isSimilar(Solution other) {
+        if (!this.designPatternName.equals(other.designPatternName)) {
+            return false;
+        }
+        if (!this.patternFamilyName.equals(other.patternFamilyName)) {
+            return false;
+        }
+        if (this.matchingRelations.size() != other.matchingRelations.size()) {
+            return false;
+        }
+        if (this.matchingNodes.size() != other.matchingNodes.size()) {
+            return false;
+        }
+        final List<String> systemNodeIds = matchingNodes
+                .stream()
+                .map(nodes -> nodes[SYSTEM_IDX].getId())
+                .collect(Collectors.toList());
+        final List<String> otherSystemNodeIds = other.matchingNodes
+                .stream()
+                .map(nodes -> nodes[SYSTEM_IDX].getId())
+                .collect(Collectors.toList());
+        return systemNodeIds.containsAll(otherSystemNodeIds);
+    }
+
     public String getDesignPatternName() {
         return designPatternName;
     }

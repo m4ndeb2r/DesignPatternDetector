@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -23,7 +25,7 @@ public class SolutionTest {
     private Solution solution;
 
     @Mock
-    private Node systemNode, patternNode, patternNode2;
+    private Node systemNode, systemNode2, patternNode, patternNode2;
 
     @Mock
     private Relation systemRelation, patternRelation, patternRelation2;
@@ -36,8 +38,16 @@ public class SolutionTest {
     @Before
     public void initNodeMocks() {
         when(systemNode.getName()).thenReturn("systemNode");
+        when(systemNode.getId()).thenReturn("systemNode");
+
+        when(systemNode2.getName()).thenReturn("systemNode2");
+        when(systemNode2.getId()).thenReturn("systemNode2");
+
         when(patternNode.getName()).thenReturn("patternNode");
+        when(patternNode.getId()).thenReturn("patternNode");
+
         when(patternNode2.getName()).thenReturn("patternNode2");
+        when(patternNode2.getId()).thenReturn("patternNode2");
     }
 
     @Test
@@ -108,6 +118,26 @@ public class SolutionTest {
         assertThat(relations.length, is(2));
         assertThat(relations[0], is(systemRelation));
         assertThat(relations[1], is(patternRelation2));
+    }
+
+    @Test
+    public void testIsSimilar() {
+        solution.addMatchingNodes(systemNode, patternNode);
+        solution.addMatchingRelations(systemRelation, patternRelation);
+        final Solution other = new Solution(solution.getDesignPatternName(), solution.getPatternFamilyName());
+        assertFalse(solution.isSimilar(other));
+
+        other.addMatchingNodes(systemNode, patternNode2);
+        assertFalse(solution.isSimilar(other));
+
+        other.addMatchingRelations(systemRelation, patternRelation2);
+        assertTrue(solution.isSimilar(other));
+
+        other.addMatchingNodes(systemNode2, patternNode2);
+        assertFalse(solution.isSimilar(other));
+
+        solution.addMatchingNodes(systemNode2, patternNode2);
+        assertTrue(solution.isSimilar(other));
     }
 
 }
