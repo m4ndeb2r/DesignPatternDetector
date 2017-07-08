@@ -50,6 +50,7 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
      */
     private Feedback getFeedback() {
         return new Feedback(this.system)
+                .addNotes(designPattern.getNotes())
                 .merge(designPattern.getNodeComparator().getFeedback())
                 .merge(designPattern.getRelationComparator().getFeedback());
     }

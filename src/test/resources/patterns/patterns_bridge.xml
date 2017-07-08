@@ -2,7 +2,7 @@
 <patterns>
     <pattern name="Bridge" family="Bridge">
         <notes>
-            <note>Note: AgroUML diagrams lack information regarding 'X' (TODO) and which can lead to false positives.</note>
+            <note>ArgoUML diagrams lack information regarding 'X' (TODO) which can lead to false positives.</note>
         </notes>
         <nodes>
             <node id="Abstraction">

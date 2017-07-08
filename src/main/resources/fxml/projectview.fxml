@@ -98,6 +98,9 @@
                                         <Label fx:id="matchedClassesLabel" styleClass="feedback-subtitle" />
                                         <GridPane fx:id="matchedClassesGridPane" styleClass="feedback-gridpane" />
 
+                                        <Label fx:id="notesFeedbackSubtitle" styleClass="feedback-subtitle" />
+                                        <VBox fx:id="notesVBox" />
+
                                         <Label fx:id="nodesFeedbackSubtitle" styleClass="feedback-subtitle" />
                                         <VBox fx:id="nodesFeedbackVBox" />
 

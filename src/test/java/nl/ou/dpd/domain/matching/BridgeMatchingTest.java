@@ -43,25 +43,30 @@ public class BridgeMatchingTest {
         final URL sucXmiUrl = BridgeMatchingTest.class.getResource("/systems/MyBridge.xmi");
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
-        // Inspect the system for patterns
-        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-
         // Check for a general note regarding the pattern, available from the xml-file
         assertThat(designPattern.getNotes().size(), is(1));
-        assertTrue(designPattern.getNotes().iterator().next().startsWith("Note: "));
+        assertTrue(designPattern.getNotes().iterator().next().startsWith("ArgoUML diagrams"));
+
+        // Inspect the system for patterns
+        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
+        final PatternInspector.MatchingResult matchingResult = patternInspector.getMatchingResult();
+        final Feedback feedback = matchingResult.getFeedback();
+        final List<Solution> solutions = matchingResult.getSolutions();
 
         //TODO: test the values instead of printing it to the console
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
-        //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+
+        // More detailed, but not exhaustive inspection
         assertEquals(2, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyAbstraction", "Abstraction"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyImplementor", "Implementor"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr1", "RefinedAbstraction"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr2", "RefinedAbstraction"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcImpl1", "ConcreteImplementor"));
+
+        assertThat(feedback.getNotes(), is(designPattern.getNotes()));
 
         // TODO Test feedback (getMatchingResult().getFeedback())
     }

@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * A {@link Controller} for the project view of the application.
@@ -51,6 +52,7 @@ public class ProjectViewController extends Controller implements Observer {
     private static final String ID_FORMAT = "ID [%s]";
 
     private static final Map<FeedbackType, String> feedbackStyleClasses = new HashMap<>(4);
+
     static {
         feedbackStyleClasses.put(FeedbackType.INFO, "info");
         feedbackStyleClasses.put(FeedbackType.MATCH, "okay");
@@ -63,28 +65,39 @@ public class ProjectViewController extends Controller implements Observer {
 
     @FXML
     private Label projectNameLabel;
+
     @FXML
     private TextField systemFileTextField;
     @FXML
     private TextField templateFileTextField;
+
     @FXML
     private Button clearButton;
     @FXML
     private Button analyseButton;
+
     @FXML
     private TreeView<String> feedbackTreeView;
+
     @FXML
     private Label feedbackTitle;
+
     @FXML
     private Label feedbackSubtitle;
     @FXML
     private Label matchedClassesLabel;
     @FXML
     private GridPane matchedClassesGridPane;
+
+    @FXML
+    private Label notesFeedbackSubtitle;
     @FXML
     private Label nodesFeedbackSubtitle;
     @FXML
     private Label relationsFeedbackSubtitle;
+
+    @FXML
+    private VBox notesVBox;
     @FXML
     private VBox nodesFeedbackVBox;
     @FXML
@@ -259,21 +272,33 @@ public class ProjectViewController extends Controller implements Observer {
 
         clearDetails();
 
-        show(nodesFeedbackSubtitle);
-        show(nodesFeedbackVBox);
-        show(relationsFeedbackSubtitle);
-        show(relationsFeedbackVBox);
-
         feedbackTitle.setText("Analysis feedback");
         feedbackSubtitle.setText(String.format("Design pattern: %s", key));
 
-        nodesFeedbackSubtitle.setText("Class/interface feedback");
-        for (nl.ou.dpd.domain.node.Node node : feedback.getNodeSet()) {
-            populateNodesFeedbackVBox(feedback, node);
-        }
+        showGeneralNote(feedback);
+        showNodeFeedbackDetails(feedback);
+        showRelationFeedbackDetails(feedback);
+    }
 
+    private void showGeneralNote(Feedback feedback) {
+        final Set<String> notes = feedback.getNotes();
+        if (notes.size() > 0) {
+            show(notesFeedbackSubtitle);
+            show(notesVBox);
+            if (notes.size() > 1) {
+                notesFeedbackSubtitle.setText("General notes");
+            } else {
+                notesFeedbackSubtitle.setText("General note");
+            }
+            notes.iterator().forEachRemaining(s -> notesVBox.getChildren().add(new Text(s)));
+        }
+    }
+
+    private void showRelationFeedbackDetails(Feedback feedback) {
+        show(relationsFeedbackSubtitle);
+        show(relationsFeedbackVBox);
         relationsFeedbackSubtitle.setText("Relation feedback");
-        for (nl.ou.dpd.domain.relation.Relation relation : feedback.getRelationSet()) {
+        for (Relation relation : feedback.getRelationSet()) {
             populateRelationsFeedbackVBox(feedback, relation);
         }
     }
@@ -298,6 +323,15 @@ public class ProjectViewController extends Controller implements Observer {
             return String.format(ID_FORMAT, node.getId());
         }
         return node.getName();
+    }
+
+    private void showNodeFeedbackDetails(Feedback feedback) {
+        show(nodesFeedbackSubtitle);
+        show(nodesFeedbackVBox);
+        nodesFeedbackSubtitle.setText("Class/interface feedback");
+        for (nl.ou.dpd.domain.node.Node node : feedback.getNodeSet()) {
+            populateNodesFeedbackVBox(feedback, node);
+        }
     }
 
     private void populateRelationsFeedbackVBox(Feedback feedback, Relation relation) {
@@ -438,11 +472,17 @@ public class ProjectViewController extends Controller implements Observer {
         clearGridPane(matchedClassesGridPane);
         hide(matchedClassesGridPane);
 
+        notesFeedbackSubtitle.setText(null);
+        hide(notesFeedbackSubtitle);
+
         nodesFeedbackSubtitle.setText(null);
         hide(nodesFeedbackSubtitle);
 
         relationsFeedbackSubtitle.setText(null);
         hide(relationsFeedbackSubtitle);
+
+        clearVBox(notesVBox);
+        hide(notesVBox);
 
         clearVBox(nodesFeedbackVBox);
         hide(nodesFeedbackVBox);

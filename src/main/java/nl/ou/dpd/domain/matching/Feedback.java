@@ -6,6 +6,7 @@ import nl.ou.dpd.domain.relation.Relation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,7 @@ public class Feedback {
 
     private static final String MSG_NOT_ANALYSED = "Not analysed.";
 
+    private final Set<String> patternRelatedNotes = new HashSet<>();
     private final Map<Node, Map<FeedbackType, List<String>>> nodeRelatedFeedbackMessages = new HashMap<>();
     private final Map<Relation, Map<FeedbackType, List<String>>> relationRelatedFeedbackMessages = new HashMap<>();
 
@@ -39,6 +41,15 @@ public class Feedback {
 
     public Set<Relation> getRelationSet() {
         return relationRelatedFeedbackMessages.keySet();
+    }
+
+    public Feedback addNotes(Set<String> notes) {
+        patternRelatedNotes.addAll(notes);
+        return this;
+    }
+
+    public Set<String> getNotes() {
+        return patternRelatedNotes;
     }
 
     public List<String> getFeedbackMessages(Node node, FeedbackType type) {
@@ -88,13 +99,16 @@ public class Feedback {
         if (other == null) {
             return this;
         }
-        if (other.nodeRelatedFeedbackMessages != null) {
+        if (other.patternRelatedNotes != null && other.patternRelatedNotes.size() > 0) {
+            patternRelatedNotes.addAll(other.patternRelatedNotes);
+        }
+        if (other.nodeRelatedFeedbackMessages != null && other.nodeRelatedFeedbackMessages.size() > 0) {
             other.nodeRelatedFeedbackMessages.keySet()
                     .forEach(node -> other.nodeRelatedFeedbackMessages.get(node)
                             .forEach((type, message) -> other.nodeRelatedFeedbackMessages.get(node).get(type)
                                     .forEach(msg -> addFeedbackMessage(node, type, msg))));
         }
-        if (other.relationRelatedFeedbackMessages != null) {
+        if (other.relationRelatedFeedbackMessages != null && other.relationRelatedFeedbackMessages.size() > 0) {
             other.relationRelatedFeedbackMessages.keySet()
                     .forEach(relation -> other.relationRelatedFeedbackMessages.get(relation)
                             .forEach((type, message) -> other.relationRelatedFeedbackMessages.get(relation).get(type)
