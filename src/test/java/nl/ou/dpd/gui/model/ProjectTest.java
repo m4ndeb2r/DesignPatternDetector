@@ -29,6 +29,7 @@ public class ProjectTest {
 
     private static final String DPD_SYSTEM_FILE = "dpd.system.file";
     private static final String DPD_PATTERNS_FILE = "dpd.patterns.file";
+
     /**
      * Exception rule.
      */
@@ -39,6 +40,8 @@ public class ProjectTest {
 
     /**
      * Initialise a project files for each test.
+     *
+     * @throws IOException when a file error occurs.
      */
     @Before
     public void initProjectFiles() throws IOException {
@@ -69,6 +72,8 @@ public class ProjectTest {
 
     /**
      * Tests the {@link Project#Project(File)} constructor.
+     *
+     * @throws FileNotFoundException when a file error occurs.
      */
     @Test
     public void testConstructor() throws FileNotFoundException {
@@ -81,15 +86,17 @@ public class ProjectTest {
 
     /**
      * Tests the {@link Project#isPristine()} method.
+     *
+     * @throws FileNotFoundException when a file error occurs.
      */
     @Test
     public void testIsPristine() throws FileNotFoundException {
-        Project project1 = new Project(testProjectFile);
+        final Project project1 = new Project(testProjectFile);
         assertTrue(project1.isPristine());
         project1.setSystemUnderConsiderationPath("newPath");
         assertFalse(project1.isPristine());
 
-        Project project2 = new Project(testProjectFile);
+        final Project project2 = new Project(testProjectFile);
         assertTrue(project2.isPristine());
         project2.setDesignPatternTemplatePath("newPath");
         assertFalse(project2.isPristine());

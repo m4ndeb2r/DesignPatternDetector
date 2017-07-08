@@ -17,10 +17,10 @@ public class Parameter implements SignatureComparable<Parameter> {
     private Node type;
 
     /**
-     * Creates an attribute with the given name and {@link Node} type.
+     * Creates a {@link Parameter} instance with the given id and parent operation.
      *
-     * @param name the name of the attribute
-     * @param type the type of the attribute
+     * @param id              the id of the {@link Parameter}
+     * @param parentOperation the operation containing this {@link Parameter}
      */
     public Parameter(String id, Operation parentOperation) {
         this.id = id;

@@ -230,7 +230,7 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * Handles the file > exit action in the menu.
+     * Handles the file exit action in the menu.
      *
      * @param event is ignored
      */

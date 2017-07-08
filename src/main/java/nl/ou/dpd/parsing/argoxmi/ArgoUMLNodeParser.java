@@ -124,7 +124,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
                 setAttributeType(readAttributes(event).get(IDREF));
                 break;
             case PARAMETER:
-                setParameterType(event, readAttributes(event).get(IDREF));
+                setParameterType(readAttributes(event).get(IDREF));
                 break;
             default:
                 break;
@@ -134,7 +134,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     /**
      * Create a node (a class or interface) and add it to the {@link Node}s map.
      *
-     * @param event
+     * @param event the XML event
      */
     private void handleModelEvent(XMLEvent event) {
         Node node = findOrcreateNode(event);
@@ -172,10 +172,9 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
 
     /**
      * Create or find the node of this particular Datatype and set this type to the corresponding {@link Attribute} or
-     * {@link Parameter}.
+     * {@link Parameter}. See <a href="http://argouml.tigris.org//profiles/uml14/default-uml14.xmi"></a>.
      *
      * @param event the datatype event
-     * @see http://argouml.tigris.org//profiles/uml14/default-uml14.xmi
      */
     private void handleDatatypeEvent(XMLEvent event) {
         //make a node if necessary
@@ -189,7 +188,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
                 setAttributeType(readAttributes(event).get(HREF));
                 break;
             case PARAMETER:
-                setParameterType(event, readAttributes(event).get(HREF));
+                setParameterType(readAttributes(event).get(HREF));
                 break;
         }
     }
@@ -215,8 +214,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     /**
      * Set the type of the {@link Attribute} as a {@link Node}.
      *
-     * @param event
-     * @param idref
+     * @param idref the reference id of the {@link Node}, that is used to look it up in the map of previously parsed
+     *              nodes.
      */
     private void setAttributeType(String idref) {
         String attrId = readAttributes(events.peek()).get(ID);
@@ -232,25 +231,25 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     /**
      * Set the type of the {@link Parameter} as a {@link Node}.
      *
-     * @param event
-     * @param idref
+     * @param idref the reference id of the {@link Node}, that is used to look it up in the map of previously parsed
+     *              nodes.
      */
-    private void setParameterType(XMLEvent event, String idref) {
+    private void setParameterType(String idref) {
         String kind = readAttributes(events.peek()).get(KIND);
         if ("in".equals(kind)) {
-            setParameterInType(event, idref);
+            setParameterInType(idref);
         } else {
-            setParameterReturnType(event, idref);
+            setParameterReturnType(idref);
         }
     }
 
     /**
      * Set the type of the {@link Parameter} of kind 'in' as a {@link Node}.
      *
-     * @param event
-     * @param idref
+     * @param idref the reference id of the {@link Node}, that is used to look it up in the map of previously parsed
+     *              nodes.
      */
-    private void setParameterInType(XMLEvent event, String idref) {
+    private void setParameterInType(String idref) {
         String paramId = readAttributes(events.peek()).get(ID);
         Parameter parameter = findParameterById(paramId);
         Node node = nodes.get(idref);
@@ -264,10 +263,10 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     /**
      * Set the type of the {@link Parameter} of kind 'return' as a {@link Node}.
      *
-     * @param event
-     * @param idref
+     * @param idref the reference id of the {@link Node}, that is used to look it up in the map of previously parsed
+     *              nodes.
      */
-    private void setParameterReturnType(XMLEvent event, String idref) {
+    private void setParameterReturnType(String idref) {
         Node node = nodes.get(idref);
         if (node == null) {
             node = new Node(idref);
@@ -279,18 +278,19 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     /**
      * Add a node to the {@link Node}s map with key the id and value the {@link Node}.
      *
-     * @param node
+     * @param node the node to add
      */
     private void addNode(Node node) {
         nodes.put(node.getId(), node);
     }
 
     /**
-     * Find a {@link Node} with the ID specified in the attributes of the given event.
-     * If a node with this ID does not exist, create it.
-     * Finally, set the appropriate properties of the (found or newly created) node.
+     * Find a {@link Node} with the ID specified in the attributes of the given event. If a node with this ID does not
+     * exist, create it. Finally, set the appropriate properties of the (found or newly created) node.
      *
-     * @param event the {@link XMLEvent} currently handled. Contains the attributes necessary for the creation of a node.
+     * @param event the {@link XMLEvent} currently handled. Contains the attributes necessary for the creation of a
+     *              node.
+     * @return the created/found {@link Node}.
      */
     private Node findOrcreateNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
@@ -348,6 +348,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * Finally, set the appropriate properties of the (found or newly created) node.
      *
      * @param event the {@link XMLEvent} currently handled. Contains the attributes necessary for the creation of a node.
+     * @return the created of found {@link Node}
      */
     private Node findOrCreateDatatypeNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
@@ -392,10 +393,11 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
 
     /**
      * Create a new node attribute with the name and visibility specified in the event's attributes.
-     * The type is not set.
+     * The type is not set. The attribute is added to the {@code parentNode}.
      *
-     * @param event the {@link XMLEvent} containing the name and type in its attributes.
-     * @return the newly created attribute (found in the list of Nodes).
+     * @param event      the {@link XMLEvent} containing the name and type in its attributes.
+     * @param parentNode the node to add the attribute to
+     * @return the newly created attribute.
      */
     private nl.ou.dpd.domain.node.Attribute createIncompleteAttribute(XMLEvent event, Node parentNode) {
         final Map<String, String> attributes = readAttributes(event);
@@ -410,10 +412,11 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
 
     /**
      * Create a new method 'in'-parameter with the name asspecified in the event's attributes.
-     * The type is not set.
+     * The type is not set. The parameter is added to the specified operation.
      *
-     * @param event the {@link XMLEvent} containing the name and type in its attributes.
-     * @return the newly created attribute (found in the list of Nodes).
+     * @param event     the {@link XMLEvent} containing the name and type in its attributes.
+     * @param operation the {@link Operation} to add the parameter to.
+     * @return the newly created {@link Parameter}.
      */
     private Parameter createIncompleteParameter(XMLEvent event, Operation operation) {
         final Map<String, String> attributes = readAttributes(event);
@@ -426,10 +429,11 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
 
     /**
      * Create a new node operation with the name, type and visibility specified in the event's attributes.
-     * ReturnType and Parameters are not set.
+     * ReturnType and parameters are not set.
      *
-     * @param event the {@link XMLEvent} containing the name and type in its attributes.
-     * @return the newly created attribute (found in the list of Nodes).
+     * @param event      the {@link XMLEvent} containing the name and type in its attributes.
+     * @param parentNode the {@link Node} to add the {@link Operation} to
+     * @return the newly created {@link Operation}.
      */
     private Operation createIncompleteOperation(XMLEvent event, Node parentNode) {
         final Map<String, String> attributes = readAttributes(event);

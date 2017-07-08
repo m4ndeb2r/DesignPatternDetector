@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests the {@link NodeComparatorFactory} and its inner {@link FeedbackEnabledComparator<Node>} classes.
+ * Tests the {@link NodeComparatorFactory} and its inner {@link FeedbackEnabledComparator} classes.
  *
  * @author Martin de Boer
  */

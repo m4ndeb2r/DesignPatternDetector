@@ -37,7 +37,7 @@ public class Solution {
      * TODO: similarity checks are not yet used. Are we going to?
      *
      * @param other the {@link Solution} to compare to this {@link Solution}
-     * @return {@code true} of this {@link Solution} is similar to the {@code other}, or {@link false} otherwise.
+     * @return {@code true} of this {@link Solution} is similar to the {@code other}, or {@code false} otherwise.
      */
     public boolean isSimilar(Solution other) {
         if (!this.designPatternName.equals(other.designPatternName)) {

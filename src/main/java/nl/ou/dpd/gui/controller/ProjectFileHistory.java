@@ -40,7 +40,7 @@ public enum ProjectFileHistory {
     /**
      * Returns the most recently stored {@link Project} {@link File}s.
      *
-     * @return a {@link List} of {@link Files}s.
+     * @return a {@link List} of {@link File}s.
      */
     public List<File> getProjectFiles() {
         return projectFiles;

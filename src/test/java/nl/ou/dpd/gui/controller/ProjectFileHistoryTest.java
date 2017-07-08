@@ -36,6 +36,8 @@ public class ProjectFileHistoryTest {
 
     /**
      * Initialise a project files for each test.
+     *
+     * @throws IOException when a file error occurs
      */
     @Before
     public void initProjectFiles() throws IOException {

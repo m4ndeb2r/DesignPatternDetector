@@ -228,7 +228,7 @@ public class ProjectViewController extends Controller implements Observer {
 
     /**
      * Generates the name of a pattern root string, based on the {@code patternName} and the size of the
-     * {@link solutions}. If there is only one solution, the {@code patternName} is returned; if there are several
+     * {@code solutions}. If there is only one solution, the {@code patternName} is returned; if there are several
      * solutions, the {@code patternName} is suffixed with the number of solutions between parenthesis.
      *
      * @param patternName the pattern name

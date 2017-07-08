@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests the {@link RelationComparatorFactory} and its inner {@link FeedbackEnabledComparator<Relation>} classes.
+ * Tests the {@link RelationComparatorFactory} and its inner {@link FeedbackEnabledComparator} classes.
  *
  * @author Martin de Boer
  */

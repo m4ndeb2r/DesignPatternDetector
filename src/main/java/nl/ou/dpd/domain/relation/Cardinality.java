@@ -46,6 +46,7 @@ public class Cardinality {
      * "m, n" and "p" where m represents the lower and n the upper value of the cardinality, and where p represents
      * a combination of both. The value for n and p may also be "*" for unlimited values.
      *
+     * @param value a String value to convert to a {@link Cardinality}
      * @return a cardinality [m,n]
      */
     public static Cardinality valueOf(String value) {
