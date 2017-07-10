@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8' ?>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Tue Jul 04 17:44:10 CEST 2017'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Mon Jul 10 09:18:33 CEST 2017'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -7,7 +7,7 @@
     <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
   <XMI.content>
     <UML:Model xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000961'
-      name = 'untitledModel' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+      name = 'MyBridge' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
       isAbstract = 'false'>
       <UML:Namespace.ownedElement>
         <UML:Class xmi.id = '127-0-1-1--2f0fe22d:153527de2ea:-8000:0000000000000962'
@@ -201,7 +201,7 @@
           </UML:Generalization.parent>
         </UML:Generalization>
         <UML:Generalization xmi.id = '-84-26-0-54--29368c6f:15cba6d33b3:-8000:000000000000151D'
-          name = 'MyConcAbstr1-MyAbstraction' isSpecification = 'false'>
+          name = 'MyConcAbstr2-MyAbstraction' isSpecification = 'false'>
           <UML:Generalization.child>
             <UML:Class xmi.idref = '127-0-1-1--2f0fe22d:153527de2ea:-8000:000000000000096C'/>
           </UML:Generalization.child>

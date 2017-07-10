@@ -89,6 +89,7 @@ public class ArgoUMLNodeParserTest {
         assertEquals("MyAdaptee", adaptee.getName());
         //node types
         assertTrue(containsType(target, NodeType.INTERFACE));
+        assertTrue(containsType(target, NodeType.ABSTRACT_CLASS_OR_INTERFACE));
         assertTrue(containsType(client, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(adapter, NodeType.CONCRETE_CLASS));
         assertTrue(containsType(adaptee, NodeType.CONCRETE_CLASS));

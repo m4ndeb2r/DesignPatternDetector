@@ -6,7 +6,7 @@
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
             <node id="Target">
-                <node.rule nodeType="INTERFACE"/>
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
             </node>
             <node id="Adapter">
                 <node.rule nodeType="CONCRETE_CLASS"/>

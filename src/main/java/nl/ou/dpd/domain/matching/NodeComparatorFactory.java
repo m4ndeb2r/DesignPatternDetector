@@ -80,7 +80,7 @@ public class NodeComparatorFactory {
 
             feedback.addFeedbackMessage(systemNode, FeedbackType.INFO, "Node type(s) analysed.");
 
-            final int result = sysDisjunction.size() + dpDisjunction.size();
+            final int result = dpDisjunction.size();
             if (result != 0) {
                 createFeedback(systemNode, patternNode, sysDisjunction, dpDisjunction);
             }

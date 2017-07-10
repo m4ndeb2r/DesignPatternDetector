@@ -100,7 +100,7 @@ public class RelationComparatorFactory {
 
             feedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, "Relation type(s) analysed.");
 
-            final int result = sysDisjunction.size() + dpDisjunction.size();
+            final int result = dpDisjunction.size();
             if (result != 0) {
                 createMismatchFeedback(systemRelation, patternRelation, sysDisjunction, dpDisjunction);
             }

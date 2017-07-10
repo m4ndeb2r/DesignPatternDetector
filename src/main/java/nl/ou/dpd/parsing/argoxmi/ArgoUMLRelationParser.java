@@ -324,6 +324,9 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
 
     private Relation createReverseAssociation(Relation originalRelation, Node originalSourceNode, Node originalTargetNode) {
         final Relation relation = new Relation(originalRelation.getId() + "-reversed", null);
+        if (originalRelation.getName() != null) {
+        	relation.setName(originalRelation.getName() + "-reversed");
+        }
         final RelationProperty originalRelationProperty = findRelationPropertyByType(originalRelation, RelationType.ASSOCIATES_WITH);
         final RelationProperty relationProperty = new RelationProperty(
                 RelationType.ASSOCIATES_WITH,
