@@ -320,7 +320,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private Node addNodeProperties(Node node, XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
         final String name = attributes.get(NAME);
-        final Set<NodeType> types = findNodeType(event);
+        final Set<NodeType> types = determineNodeTypes(event);
         final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
         node.setName(name);
         node.setVisibility(visibility);
@@ -328,8 +328,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
         return node;
     }
 
-    private Set<NodeType> findNodeType(XMLEvent event) {
-    	Set<NodeType> types = new HashSet<NodeType>();
+    private Set<NodeType> determineNodeTypes(XMLEvent event) {
+    	final Set<NodeType> types = new HashSet<>();
         final String typeString = getStartElementNameLocalPart(event).toUpperCase();
         final boolean isAbstract = Boolean.parseBoolean(readAttributes(event).get(IS_ABSTRACT));
         if (typeString.equals("CLASS")) {

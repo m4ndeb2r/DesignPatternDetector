@@ -95,28 +95,18 @@ public class RelationComparatorFactory {
             final Set<RelationType> dpTypes = patternRelation.getRelationProperties().stream()
                     .map(relationProperties -> relationProperties.getRelationType())
                     .collect(Collectors.toSet());
-            final Set<RelationType> sysDisjunction = getLeftDisjunction(sysTypes, dpTypes);
             final Set<RelationType> dpDisjunction = getLeftDisjunction(dpTypes, sysTypes);
 
             feedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, "Relation type(s) analysed.");
 
             final int result = dpDisjunction.size();
             if (result != 0) {
-                createMismatchFeedback(systemRelation, patternRelation, sysDisjunction, dpDisjunction);
+                createMismatchFeedback(systemRelation, patternRelation, dpDisjunction);
             }
             return result;
         }
 
-        private void createMismatchFeedback(Relation systemRelation, Relation patternRelation, Set<RelationType> sysDisjunction, Set<RelationType> dpDisjunction) {
-            sysDisjunction.forEach(relationType -> {
-                final String feedbackMsg = String.format(
-                        "Mismatch with '%s': unexpected relation type '%s' in relation '%s'.",
-                        patternRelation.getName(),
-                        relationType,
-                        systemRelation.getName());
-                feedback.addFeedbackMessage(systemRelation, FeedbackType.MISMATCH, feedbackMsg);
-            });
-
+        private void createMismatchFeedback(Relation systemRelation, Relation patternRelation, Set<RelationType> dpDisjunction) {
             dpDisjunction.forEach(relationType -> {
                 final String feedbackMsg = String.format(
                         "Mismatch with '%s': missing relation type '%s' in relation '%s'.",

@@ -53,7 +53,7 @@ public class AbstractFactoryMatchingTest {
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
         assertEquals(4, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyUser", "Client"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "ResFactory", "AbstractFactory"));
@@ -64,7 +64,10 @@ public class AbstractFactoryMatchingTest {
         assertTrue(TestHelper.areMatchingNodes(solutions, "HRDD", "ProductB1"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "HRPD", "ProductB2"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "LowResFact", "ConcreteFactory1"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "HighResFact", "ConcreteFactory2"));        
+        assertTrue(TestHelper.areMatchingNodes(solutions, "HighResFact", "ConcreteFactory2"));
+
+        // TODO: Test with getSolutions() instead of getSolutions(true)
+
     }
 
     //test an AbstractFactory with more abstract factories
@@ -88,8 +91,11 @@ public class AbstractFactoryMatchingTest {
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
-        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
         assertEquals(12, solutions.size());
+
+        // TODO: Test with getSolutions() instead of getSolutions(true)
+
     }
     
     //test an AbstractFactory with more abstract factories and more concrete products
@@ -113,7 +119,9 @@ public class AbstractFactoryMatchingTest {
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
-        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
         assertEquals(72, solutions.size());
+
+        // TODO: Test with getSolutions() instead of getSolutions(true)
     }
 }

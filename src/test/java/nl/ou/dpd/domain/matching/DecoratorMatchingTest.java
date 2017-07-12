@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -49,14 +50,42 @@ public class DecoratorMatchingTest {
 
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
         assertEquals(2, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyPart", "Component"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyDecorator", "Decorator"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrDecA", "ConcreteDecoratorA"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcrDecB", "ConcreteDecoratorB"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcretePart", "ConcreteComponent"));
+        assertMatch(solutions, "MyPart", "Component");
+        assertMatch(solutions, "MyPart", "Component");
+        assertMatch(solutions, "MyDecorator", "Decorator");
+        assertMatch(solutions, "MyConcrDecA", "ConcreteDecoratorA");
+        assertMatch(solutions, "MyConcrDecB", "ConcreteDecoratorB");
+        assertMatch(solutions, "MyConcretePart", "ConcreteComponent");
+
+        assertMatch(solutions, "MyPart", "Component");
+        assertMatch(solutions, "MyDecorator", "Decorator");
+        assertMatch(solutions, "MyConcrDecB", "ConcreteDecoratorA");
+        assertMatch(solutions, "MyConcrDecA", "ConcreteDecoratorB");
+        assertMatch(solutions, "MyConcretePart", "ConcreteComponent");
+
+        solutions = patternInspector.getMatchingResult().getSolutions(false);
+        assertEquals(1, solutions.size());
+        assertMatch(solutions, "MyPart", "Component");
+        assertMatch(solutions, "MyDecorator", "Decorator");
+        assertAnyMatch(solutions, Arrays.asList(new String[]{"MyConcrDecB", "MyConcrDecB"}), Arrays.asList(new String[]{"ConcreteDecoratorA", "ConcreteDecoratorB"}));
+        assertMatch(solutions, "MyConcretePart", "ConcreteComponent");
 
         // TODO Test feedback (getMatchingResult().getFeedback())
+    }
+
+    private void assertMatch(List<Solution> solutions, String sysNodeName, String patternNodeName) {
+        assertTrue(TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName));
+    }
+
+    private void assertAnyMatch(List<Solution> solutions, List<String> sysNodeNames, List<String> patternNodeNames) {
+        boolean match = false;
+        for (String sysNodeName : sysNodeNames) {
+            for (String patternNodeName : patternNodeNames) {
+                match |= TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName);
+            }
+        }
+        assertTrue(match);
     }
 }

@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,7 +52,6 @@ public class BridgeMatchingTest {
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
         final PatternInspector.MatchingResult matchingResult = patternInspector.getMatchingResult();
         final Feedback feedback = matchingResult.getFeedback();
-        final List<Solution> solutions = matchingResult.getSolutions();
 
         //TODO: test the values instead of printing it to the console
         TestHelper.printFeedback(designPattern, system, patternInspector);
@@ -59,16 +59,35 @@ public class BridgeMatchingTest {
         assertTrue(patternInspector.isomorphismExists());
 
         // More detailed, but not exhaustive inspection
+        List<Solution> solutions = matchingResult.getSolutions(true);
         assertEquals(12, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAbstraction", "Abstraction"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyImplementor", "Implementor"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr1", "RefinedAbstraction"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcAbstr2", "RefinedAbstraction"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcImpl1", "ConcreteImplementorA"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcImpl2", "ConcreteImplementorB"));
+
+        solutions = matchingResult.getSolutions();
+        assertEquals(6, solutions.size());
+        assertMatch(solutions, "MyAbstraction", "Abstraction");
+        assertMatch(solutions, "MyImplementor", "Implementor");
+        assertMatch(solutions, "MyConcAbstr1", "RefinedAbstraction");
+        assertMatch(solutions, "MyConcAbstr2", "RefinedAbstraction");
+        assertAnyMatch(solutions, Arrays.asList(new String[]{"MyConcImpl1", "MyConcImpl2", "MyConcImpl3"}), Arrays.asList(new String[]{"ConcreteImplementorA", "ConcreteImplementorB"}));
+        assertMatch(solutions, "MyConcImpl1", "ConcreteImplementorB");
 
         assertThat(feedback.getNotes(), is(designPattern.getNotes()));
 
         // TODO Test feedback (getMatchingResult().getFeedback())
     }
+
+    private void assertMatch(List<Solution> solutions, String sysNodeName, String patternNodeName) {
+        assertTrue(TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName));
+    }
+
+    private void assertAnyMatch(List<Solution> solutions, List<String> sysNodeNames, List<String> patternNodeNames) {
+        boolean match = false;
+        for (String sysNodeName : sysNodeNames) {
+            for (String patternNodeName : patternNodeNames) {
+                match |= TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName);
+            }
+        }
+        assertTrue(match);
+    }
+
 }

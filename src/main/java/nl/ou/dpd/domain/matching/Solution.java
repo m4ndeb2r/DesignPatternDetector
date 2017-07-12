@@ -33,8 +33,6 @@ public class Solution {
      * Returns whether another {@link Solution} is similar. Solutions are similar when they contain the samen number of
      * matching system nodes, and those system nodes have the same id. Futhermore the should have the same
      * designPatternName, patternFamilyName and an equal number of matchingRelations.
-     * <p>
-     * TODO: similarity checks are not yet used. Are we going to?
      *
      * @param other the {@link Solution} to compare to this {@link Solution}
      * @return {@code true} of this {@link Solution} is similar to the {@code other}, or {@code false} otherwise.

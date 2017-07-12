@@ -140,8 +140,8 @@ public class RelationComparatorFactoryTest {
         defaultCompoundComparator.compare(inheritanceRelation, associationRelation);
         Feedback feedback = defaultCompoundComparator.getFeedback();
         assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).size(), is(3));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).get(2), is("Match failed with 'associationRelation'."));
+        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).size(), is(2));
+        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).get(1), is("Match failed with 'associationRelation'."));
 
         // Because there is a mismatch in relation type, we do not expect cardinalities to be analysed (matching prematurely failed)
         assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).size(), is(1));

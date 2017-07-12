@@ -75,28 +75,18 @@ public class NodeComparatorFactory {
         public int compare(Node systemNode, Node patternNode) {
             final Set<NodeType> sysTypes = systemNode.getTypes();
             final Set<NodeType> dpTypes = patternNode.getTypes();
-            final Set<NodeType> sysDisjunction = getLeftDisjunction(sysTypes, dpTypes);
             final Set<NodeType> dpDisjunction = getLeftDisjunction(dpTypes, sysTypes);
 
             feedback.addFeedbackMessage(systemNode, FeedbackType.INFO, "Node type(s) analysed.");
 
             final int result = dpDisjunction.size();
             if (result != 0) {
-                createFeedback(systemNode, patternNode, sysDisjunction, dpDisjunction);
+                createFeedback(systemNode, patternNode, dpDisjunction);
             }
             return result;
         }
 
-        private void createFeedback(Node systemNode, Node patternNode, Set<NodeType> sysDisjunction, Set<NodeType> dpDisjunction) {
-            sysDisjunction.forEach(nodeType -> {
-                final String feedbackMsg = String.format(
-                        "Mismatch with '%s': unexpected node type '%s' in '%s'.",
-                        patternNode.getName(),
-                        nodeType,
-                        systemNode.getName());
-                feedback.addFeedbackMessage(systemNode, FeedbackType.MISMATCH, feedbackMsg);
-            });
-
+        private void createFeedback(Node systemNode, Node patternNode, Set<NodeType> dpDisjunction) {
             dpDisjunction.forEach(nodeType -> {
                 final String feedbackMsg = String.format(
                         "Mismatch with '%s': missing node type '%s' in '%s'.",

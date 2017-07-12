@@ -73,8 +73,8 @@ public class NodeComparatorFactoryTest {
         defaultCompoundComparator.compare(concreteClassNode, abstractClassNode);
         Feedback feedback = defaultCompoundComparator.getFeedback();
         assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MISMATCH).size(), is(3));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MISMATCH).get(2), is("Match failed with 'abstractClassNode'."));
+        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MISMATCH).size(), is(2));
+        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MISMATCH).get(1), is("Match failed with 'abstractClassNode'."));
         assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.INFO).size(), is(1));
         assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.INFO).get(0), is("Node type(s) analysed."));
     }
