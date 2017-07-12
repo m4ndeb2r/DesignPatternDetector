@@ -9,11 +9,10 @@
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
 * Implement or remove unimplemented menu items in GUI.
-* Refine matching process (including parsing enhancements)
 
 ## TODO: testing
 * separate integration tests from unittests
-* Consider more tests for the GUI....
+* Consider more tests for the GUI.... See TODO's in PatternTests!!
 * Create an overall patterns file with all GOF patterns as a deliverable
 
 ## TODO's in documentation 
