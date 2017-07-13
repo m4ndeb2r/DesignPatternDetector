@@ -49,8 +49,8 @@ public class ChainOfResponsibilityMatchingTest {
         //TODO: test the values instead of printing it to the console
         TestHelper.printFeedback(designPattern, system, patternInspector);
         
-        //TODO extra relationproperties obstruct pattern recognition
         assertTrue(patternInspector.isomorphismExists());
+
         //more detailed, but not exhaustive inspection
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(2, solutions.size());

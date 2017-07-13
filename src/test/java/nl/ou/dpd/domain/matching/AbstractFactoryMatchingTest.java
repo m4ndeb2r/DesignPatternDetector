@@ -66,8 +66,10 @@ public class AbstractFactoryMatchingTest {
         assertTrue(TestHelper.areMatchingNodes(solutions, "LowResFact", "ConcreteFactory1"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "HighResFact", "ConcreteFactory2"));
 
-        // TODO: Test with getSolutions() instead of getSolutions(true)
+        solutions = patternInspector.getMatchingResult().getSolutions();
+        assertEquals(1, solutions.size()); // TODO: Check this in depth
 
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
 
     //test an AbstractFactory with more abstract factories
@@ -94,8 +96,10 @@ public class AbstractFactoryMatchingTest {
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
         assertEquals(12, solutions.size());
 
-        // TODO: Test with getSolutions() instead of getSolutions(true)
+        solutions = patternInspector.getMatchingResult().getSolutions();
+        assertEquals(3, solutions.size()); // TODO: Check this in depth
 
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
     
     //test an AbstractFactory with more abstract factories and more concrete products
@@ -122,6 +126,9 @@ public class AbstractFactoryMatchingTest {
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
         assertEquals(72, solutions.size());
 
-        // TODO: Test with getSolutions() instead of getSolutions(true)
+        solutions = patternInspector.getMatchingResult().getSolutions();
+        assertEquals(18, solutions.size()); // TODO: Check this in depth
+
+        // TODO Test feedback (getMatchingResult().getFeedback())
     }
 }

@@ -65,7 +65,7 @@ public class DecoratorMatchingTest {
         assertMatch(solutions, "MyConcrDecA", "ConcreteDecoratorB");
         assertMatch(solutions, "MyConcretePart", "ConcreteComponent");
 
-        solutions = patternInspector.getMatchingResult().getSolutions(false);
+        solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
         assertMatch(solutions, "MyPart", "Component");
         assertMatch(solutions, "MyDecorator", "Decorator");

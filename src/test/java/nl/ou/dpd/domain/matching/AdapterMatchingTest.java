@@ -84,6 +84,8 @@ public class AdapterMatchingTest {
 
         // This pattern is not found because of the bidirected association.
         assertFalse(patternInspector.isomorphismExists());
+
+        // TODO: test the solutions in depth here
     }
 
     //test with an undirected association to a Dummy and an extra Attribute in Adapter
@@ -108,7 +110,15 @@ public class AdapterMatchingTest {
         TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
+
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+        assertEquals(1, solutions.size());
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdapter", "Adapter"));
+        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
+
+        solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
         assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
