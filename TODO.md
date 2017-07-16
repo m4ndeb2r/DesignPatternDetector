@@ -2,18 +2,19 @@
 
 ## TODO's in the code
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Styling in CSS instead of FXML
-* Cleanup test files
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
 * Implement or remove unimplemented menu items in GUI.
+* GUI: Treeview contents: when only one pattern is found, add a branch for it
+* GUI: when a project is saved, don't clear the feedback on the screen
 
 ## TODO: testing
-* separate integration tests from unittests
-* Consider more tests for the GUI.... See TODO's in PatternTests!!
+* Get better coverage with unittests (integration tests are separate, and should not be included in coverage metrics)
+* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Create an overall patterns file with all GOF patterns as a deliverable
+* more extensive testing in integration tests (solutions/feedback)
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
