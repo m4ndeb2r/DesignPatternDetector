@@ -42,4 +42,12 @@
         </plugins>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>nl.ou.dpd</groupId>
+            <artifactId>DesignPatternDetector</artifactId>
+            <version>${dpd.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
