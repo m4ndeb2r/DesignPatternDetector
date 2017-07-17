@@ -169,6 +169,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
                 Node node = nodes.get(readAttributes(events.peek()).get(ID));
                 createIncompleteOperation(event, node);
                 break;
+            default:
+                break;
         }
     }
 
@@ -191,6 +193,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
                 break;
             case PARAMETER:
                 setParameterType(readAttributes(event).get(HREF));
+                break;
+            default:
                 break;
         }
     }
@@ -392,6 +396,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
                 break;
             case BOOLEAN:
                 node.setName("Boolean");
+                break;
+            default:
                 break;
         }
         node.setVisibility(Visibility.PUBLIC);
