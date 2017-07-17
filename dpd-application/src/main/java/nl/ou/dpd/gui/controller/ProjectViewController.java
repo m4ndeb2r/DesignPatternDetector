@@ -212,15 +212,10 @@ public class ProjectViewController extends Controller implements Observer {
 
     private int addSolutionsToTree(List<Solution> solutions, TreeItem<String> patternRoot) {
         int i = 0;
-        boolean multipleSolutions = solutions.size() > 1;
         for (Solution solution : solutions) {
-            String dpn = solution.getDesignPatternName();
-            ++i;
-            if (multipleSolutions) {
-                dpn += String.format("-%d", i);
-                final TreeItem<String> patternItem = new TreeItem<>(dpn);
-                patternRoot.getChildren().add(patternItem);
-            }
+            final String dpn = String.format("%s-%d", solution.getDesignPatternName(), ++i);
+            final TreeItem<String> patternItem = new TreeItem<>(dpn);
+            patternRoot.getChildren().add(patternItem);
             solutionMap.put(dpn, solution);
         }
         return i;
@@ -228,19 +223,14 @@ public class ProjectViewController extends Controller implements Observer {
 
     /**
      * Generates the name of a pattern root string, based on the {@code patternName} and the size of the
-     * {@code solutions}. If there is only one solution, the {@code patternName} is returned; if there are several
-     * solutions, the {@code patternName} is suffixed with the number of solutions between parenthesis.
+     * {@code solutions}.
      *
      * @param patternName the pattern name
      * @param solutions   the solutions found for a pattern
-     * @return the name of the pattern followed by the number of solutions between parenthesis, or just the name of the
-     * pattern (when there is just 1 solution).
+     * @return the name of the pattern followed by the number of solutions between parenthesis.
      */
     private String makePatternRootName(String patternName, List<Solution> solutions) {
-        if (solutions.size() > 1) {
-            return String.format("%s (%d)", patternName, solutions.size());
-        }
-        return patternName;
+        return String.format("%s (%d)", patternName, solutions.size());
     }
 
     /**
