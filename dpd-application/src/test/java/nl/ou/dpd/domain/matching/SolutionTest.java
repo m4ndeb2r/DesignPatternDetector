@@ -138,6 +138,12 @@ public class SolutionTest {
 
         solution.addMatchingNodes(systemNode2, patternNode2);
         assertTrue(solution.isSimilar(other));
+
+        final Solution solutionWithDifferentName = new Solution("different", solution.getPatternFamilyName());
+        assertFalse(solution.isSimilar(solutionWithDifferentName));
+
+        final Solution solutionWithDifferentFamilyName = new Solution(solution.getDesignPatternName(), "different");
+        assertFalse(solution.isSimilar(solutionWithDifferentFamilyName));
     }
 
 }

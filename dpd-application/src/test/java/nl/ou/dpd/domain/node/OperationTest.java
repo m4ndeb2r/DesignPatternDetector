@@ -128,6 +128,7 @@ public class OperationTest {
         assertFalse(op1.equalsSignature(op2));
         op2.addParameter(param2);
         assertTrue(op1.equalsSignature(op2));
+        assertThat(op1.getParameters().size(), is(op2.getParameters().size()));
         op1.addParameter(param2);
         assertFalse(op1.equalsSignature(op2));
     }

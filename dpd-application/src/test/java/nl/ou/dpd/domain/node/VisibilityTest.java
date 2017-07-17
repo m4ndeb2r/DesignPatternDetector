@@ -24,6 +24,7 @@ public class VisibilityTest {
             final String upper = visibility.name();
             assertThat(Visibility.valueOfIgnoreCase(lower), is(visibility));
             assertThat(Visibility.valueOfIgnoreCase(upper), is(visibility));
+            assertThat(Visibility.valueOfIgnoreCase(null), is((Visibility)null));
         }
     }
 

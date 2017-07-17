@@ -114,7 +114,9 @@ public class PatternInspectorTest {
         assertTrue(patternInspector.isomorphismExists());
 
         // Check solutions
-        final List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
+        assertThat(solutions.size(), is(1));
+        solutions = patternInspector.getMatchingResult().getSolutions();
         assertThat(solutions.size(), is(1));
 
         final Solution solution = solutions.get(0);
