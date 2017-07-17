@@ -426,8 +426,8 @@ public class ProjectViewController extends Controller implements Observer {
             systemFileTextField.setText(null);
             templateFileTextField.setText(null);
             analyseButton.setDisable(true);
+            clearFeedback();
         }
-        clearFeedback();
     }
 
     private void clearFeedback() {
