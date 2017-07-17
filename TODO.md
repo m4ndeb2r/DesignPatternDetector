@@ -7,8 +7,6 @@
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
 * Implement or remove unimplemented menu items in GUI.
-* GUI: Treeview contents: when only one pattern is found, add a branch for it
-* GUI: when a project is saved, don't clear the feedback on the screen
 
 ## TODO: testing
 * Get better coverage with unittests (integration tests are separate, and should not be included in coverage metrics)
