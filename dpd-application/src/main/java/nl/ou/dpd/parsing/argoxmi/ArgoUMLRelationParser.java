@@ -9,6 +9,8 @@ import nl.ou.dpd.domain.relation.RelationType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +66,15 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private Stack<Cardinality> cardinalities; // Keeps track of the cardinalities.
 
     /**
+     * A constructor expecting an {@link XMLInputFactory}.
+     *
+     * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
+     */
+    public ArgoUMLRelationParser(XMLInputFactory xmlInputFactory) {
+        super(xmlInputFactory);
+    }
+
+    /**
      * Parses an xmi file with the specified {@code filename}.
      *
      * @param filename the name of the file to be parsed.
@@ -86,7 +97,6 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     protected void handleStartElement(XMLEvent event) {
         switch (getStartElementNameLocalPart(event)) {
             case MODEL:
-                // Create the SystemUnderConsideration
                 system = createSystem(event);
                 nodes.values().forEach(node -> system.addVertex(node));
                 events.push(event);
@@ -140,8 +150,8 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @return a new {@link SystemUnderConsideration} with the id and name specified in the event.
      */
     private SystemUnderConsideration createSystem(XMLEvent event) {
-        String id = readAttributes(event).get(ID);
-        String name = readAttributes(event).get(NAME);
+        final String id = readAttributes(event).get(ID);
+        final String name = readAttributes(event).get(NAME);
         return new SystemUnderConsideration(id, name);
     }
 
