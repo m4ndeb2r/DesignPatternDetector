@@ -68,7 +68,7 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
      * @return a {@link List} of {@link Solution} objects, one for every design pattern instance that was detected.
      */
     private List<Solution> getSolutions() {
-        LOGGER.info(String.format("Found %d solutions for pattern '%s'.",
+        LOGGER.info(String.format("Found %d solutions for pattern '%s' (before filtering out duplicates).",
                 asList(getMappings()).size(),
                 designPattern.getName()));
         return asList(getMappings())
@@ -134,6 +134,9 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
                     result.add(solution);
                 }
             });
+            LOGGER.info(String.format("Found %d solutions for pattern '%s' (after filtering out duplicates).",
+                    result.size(),
+                    designPattern.getName()));
             return result;
         }
 
