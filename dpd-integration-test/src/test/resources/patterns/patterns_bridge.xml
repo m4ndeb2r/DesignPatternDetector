@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <patterns>
     <pattern name="Bridge" family="Bridge">
-         <notes>
+        <notes>
             <note>ArgoUML diagrams lack information regarding 'X' (TODO) which can lead to false positives.</note>
         </notes>
-       <nodes>
+        <nodes>
             <node id="Abstraction">
                 <node.rule nodeType="ABSTRACT_CLASS"/>
             </node>
@@ -22,10 +22,10 @@
             </node>
         </nodes>
         <relations>
-        	<relation node1="Abstraction" node2="Implementor">
-        		<relation.rule relationType="ASSOCIATES_WITH"
+            <relation node1="Abstraction" node2="Implementor">
+                <relation.rule relationType="ASSOCIATES_WITH"
                                cardinalityLeft="0..*"
-                               cardinalityRight="1"/>        					   
+                               cardinalityRight="1"/>
                 <relation.rule relationType="HAS_ATTRIBUTE_OF"
                                cardinalityLeft="1"
                                cardinalityRight="1"/>

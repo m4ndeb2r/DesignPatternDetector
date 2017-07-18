@@ -1,5 +1,6 @@
 package nl.ou.dpd.parsing.argoxmi;
 
+import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
@@ -7,10 +8,13 @@ import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.node.Parameter;
 import nl.ou.dpd.domain.node.Visibility;
 import nl.ou.dpd.parsing.ParseException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,6 +32,7 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
+@Category(IntegrationTest.class)
 public class ArgoUMLNodeParserTest {
 
     // A test file containing valid XML.
@@ -36,6 +41,14 @@ public class ArgoUMLNodeParserTest {
     private static final String VALID_ADAPTERS = "/argoUML/adapters.xmi";
     // A test file containing invalid XML.
     private static final String INVALID_XML = "/patterns/invalid.xml";
+
+    private ArgoUMLNodeParser argoUMLNodeParser;
+
+    @Before
+    public void initArgoUMLNodeParser() {
+        argoUMLNodeParser = new ArgoUMLNodeParser(XMLInputFactory.newInstance());
+    }
+
 
     /**
      * Exception rule.
@@ -53,7 +66,7 @@ public class ArgoUMLNodeParserTest {
         thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
         thrown.expectMessage("The XMI file '" + path + "' could not be parsed.");
-        new ArgoUMLNodeParser().parse(path);
+        argoUMLNodeParser.parse(path);
     }
 
     /**
@@ -64,7 +77,7 @@ public class ArgoUMLNodeParserTest {
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
         thrown.expectMessage("The XMI file 'missing.xml' could not be parsed.");
-        new ArgoUMLNodeParser().parse("missing.xml");
+        argoUMLNodeParser.parse("missing.xml");
     }
 
     /**
@@ -73,7 +86,7 @@ public class ArgoUMLNodeParserTest {
     @Test
     public void testParse1() {
         final String path = getPath(VALID_ADAPTER);
-        final Map<String, Node> nodes = new ArgoUMLNodeParser().parse(path);
+        final Map<String, Node> nodes = argoUMLNodeParser.parse(path);
 
         //number of nodes
         assertEquals(4, nodes.size());
@@ -113,7 +126,7 @@ public class ArgoUMLNodeParserTest {
     @Test
     public void testParse2() {
         final String path = getPath(VALID_ADAPTERS);
-        final Map<String, Node> nodes = new ArgoUMLNodeParser().parse(path);
+        final Map<String, Node> nodes = argoUMLNodeParser.parse(path);
 
         assertEquals(40, nodes.size());
 

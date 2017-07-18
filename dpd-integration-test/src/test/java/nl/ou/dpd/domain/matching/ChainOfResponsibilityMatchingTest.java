@@ -1,5 +1,6 @@
 package nl.ou.dpd.domain.matching;
 
+import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
@@ -7,7 +8,11 @@ import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.validation.SchemaFactory;
 import java.net.URL;
 import java.util.List;
 
@@ -20,6 +25,7 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
+@Category(IntegrationTest.class)
 public class ChainOfResponsibilityMatchingTest {
 
     private String patternsXmlFile;
@@ -28,14 +34,17 @@ public class ChainOfResponsibilityMatchingTest {
 
     @Before
     public void initTests() {
-        xmiParser = new ArgoUMLParser();
-        patternsXmlFile = ChainOfResponsibilityMatchingTest.class.getResource("/patterns/patterns_chainofresponsibility.xml").getFile();
-        patternsParser = new PatternsParser();
+        final SchemaFactory xsdSchemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        patternsParser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
+        xmiParser = new ArgoUMLParser(XMLInputFactory.newInstance());
     }
 
     @Test
-    @Ignore("Extra relationproperties obstruct pattern recognition. Peter is working on it....")
+    @Ignore("Extra relationproperties obstruct pattern recognition. Peter is working on it....") // TODO
     public void testMatchingChainOfResponsibilityMatching() {
+        patternsXmlFile = ChainOfResponsibilityMatchingTest.class.getResource("/patterns/patterns_chainofresponsibility.xml").getFile();
+
         // Parse the chainofresponsibility pattern xml ands create a DesignPattern
         final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
 

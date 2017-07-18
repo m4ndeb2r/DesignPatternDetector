@@ -1,5 +1,6 @@
 package nl.ou.dpd.parsing.argoxmi;
 
+import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
@@ -9,8 +10,10 @@ import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
+import javax.xml.stream.XMLInputFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,6 +27,7 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
+@Category(IntegrationTest.class)
 public class SystemRelationsExtractorTest {
 
     // A test file containing valid XML.
@@ -46,7 +50,7 @@ public class SystemRelationsExtractorTest {
     public void testParse1() {
         final URL url = SystemRelationsExtractorTest.class.getResource(VALID_ADAPTER);
 
-        final ArgoUMLParser parser = new ArgoUMLParser();
+        final ArgoUMLParser parser = new ArgoUMLParser(XMLInputFactory.newInstance());
         final SystemUnderConsideration suc = parser.parse(url);
 
         assertEquals("Adapters", suc.getName());
@@ -103,8 +107,8 @@ public class SystemRelationsExtractorTest {
      */
     @Test
     public void testAbstractFactory() {
-        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser();
-        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser();
+        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser(XMLInputFactory.newInstance());
+        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser(XMLInputFactory.newInstance());
         final String path = getPath(ABSTRACT_FACTORY);
 
         nodes = nodeParser.parse(path);

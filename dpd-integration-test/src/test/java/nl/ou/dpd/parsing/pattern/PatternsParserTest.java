@@ -1,5 +1,6 @@
 package nl.ou.dpd.parsing.pattern;
 
+import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
@@ -7,7 +8,11 @@ import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.validation.SchemaFactory;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
@@ -22,15 +27,19 @@ import static org.hamcrest.core.Is.is;
  *
  * @author Martin de Boer
  */
+@Category(IntegrationTest.class)
 public class PatternsParserTest {
 
     private PatternsParser parser;
 
     @Before
     public void initParser() {
-        parser = new PatternsParser();
+        final SchemaFactory xsdSchemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        parser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
     }
 
+    // TODO: Is this test still relevant, considering it is unsing the CLASS_WITH_PRIVATE_CONSTRUCTOR NodeType???
     @Test
     public void testParsingSingletonXml() {
         final URL xmlUrl = PatternsParserTest.class.getResource("/patterns/patterns_singleton.xml");

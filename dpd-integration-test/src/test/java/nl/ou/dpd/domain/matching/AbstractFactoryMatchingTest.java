@@ -1,12 +1,17 @@
 package nl.ou.dpd.domain.matching;
 
+import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
 import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.validation.SchemaFactory;
 import java.net.URL;
 import java.util.List;
 
@@ -19,6 +24,7 @@ import static org.junit.Assert.assertEquals;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
+@Category(IntegrationTest.class)
 public class AbstractFactoryMatchingTest {
 
     private URL patternsXmlUrl;
@@ -28,14 +34,16 @@ public class AbstractFactoryMatchingTest {
 
     @Before
     public void initTests() {
-        xmiParser = new ArgoUMLParser();
+        final SchemaFactory xsdSchemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        patternsParser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
+        xmiParser = new ArgoUMLParser(XMLInputFactory.newInstance());
     }
 
     //test an AbstractFactory written conforming the pattern
     @Test
     public void testMatchingAbstractFactoryWithoutMethods() {
         patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
-        patternsParser = new PatternsParser();
         sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/systems/MyAbstractFactory.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
@@ -76,7 +84,6 @@ public class AbstractFactoryMatchingTest {
     @Test
     public void testMatchingAbstractFactoryThreeFactories() {
         patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
-        patternsParser = new PatternsParser();
         sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/systems/MyAbstractFactoryThreeFactories.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
@@ -106,7 +113,6 @@ public class AbstractFactoryMatchingTest {
     @Test
     public void testMatchingAbstractFactoryFourFactories() {
         patternsXmlUrl = AbstractFactoryMatchingTest.class.getResource("/patterns/patterns_abstractfactory.xml");
-        patternsParser = new PatternsParser();
         sucXmiUrl = AbstractFactoryMatchingTest.class.getResource("/systems/MyAbstractFactoryMultiple.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern

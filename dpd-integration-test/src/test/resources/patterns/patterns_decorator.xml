@@ -17,35 +17,35 @@
             <node id="ConcreteDecoratorB">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
-				</nodes>
+        </nodes>
         <relations>
-        	<relation node1="Decorator" node2="Component">
-        		<relation.rule relationType="ASSOCIATES_WITH"
+            <relation node1="Decorator" node2="Component">
+                <relation.rule relationType="ASSOCIATES_WITH"
                                cardinalityLeft="0..1"
-                               cardinalityRight="1"/>        					   
-						<relation.rule relationType="IMPLEMENTS"
-									 cardinalityLeft="1"
-									 cardinalityRight="1"/>        					   
-						<relation.rule relationType="HAS_ATTRIBUTE_OF"
-									 cardinalityLeft="1"
-									 cardinalityRight="1"/>        					   
-          </relation> 
-        	<relation node1="ConcreteComponent" node2="Component">
-        		<relation.rule relationType="IMPLEMENTS"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="IMPLEMENTS"
                                cardinalityLeft="1"
-                               cardinalityRight="1"/>        					   
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
             </relation>
-         	<relation node1="ConcreteDecoratorA" node2="Decorator">
-        		<relation.rule relationType="INHERITS_FROM"
+            <relation node1="ConcreteComponent" node2="Component">
+                <relation.rule relationType="IMPLEMENTS"
                                cardinalityLeft="1"
-                               cardinalityRight="1"/>        					   
+                               cardinalityRight="1"/>
             </relation>
-         	<relation node1="ConcreteDecoratorB" node2="Decorator">
-        		<relation.rule relationType="INHERITS_FROM"
+            <relation node1="ConcreteDecoratorA" node2="Decorator">
+                <relation.rule relationType="INHERITS_FROM"
                                cardinalityLeft="1"
-                               cardinalityRight="1"/>        					   
-            </relation> 
-         </relations>
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteDecoratorB" node2="Decorator">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
     </pattern>
 </patterns>
 

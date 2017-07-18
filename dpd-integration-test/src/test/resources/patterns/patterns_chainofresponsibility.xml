@@ -16,27 +16,27 @@
             </node>
         </nodes>
         <relations>
-        	<relation node1="Client" node2="Handler">
-        		<relation.rule relationType="HAS_ATTRIBUTE_OF"
+            <relation node1="Client" node2="Handler">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
                                cardinalityLeft="1"
-                               cardinalityRight="1"/>        					   
+                               cardinalityRight="1"/>
             </relation>
-        	<relation node1="ConcreteHandlerA" node2="Handler">
-        		<relation.rule relationType="IMPLEMENTS"
+            <relation node1="ConcreteHandlerA" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
                                cardinalityLeft="1"
-                               cardinalityRight="1"/>        					   
+                               cardinalityRight="1"/>
             </relation>
-         	<relation node1="ConcreteHandlerB" node2="Handler">
-        		<relation.rule relationType="IMPLEMENTS"
+            <relation node1="ConcreteHandlerB" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
                                cardinalityLeft="1"
-                               cardinalityRight="1"/>        					   
+                               cardinalityRight="1"/>
             </relation>
-					<relation node1="Handler" node2="Handler">
-        		<relation.rule relationType="ASSOCIATES_WITH"
+            <relation node1="Handler" node2="Handler">
+                <relation.rule relationType="ASSOCIATES_WITH"
                                cardinalityLeft="0..*"
-                               cardinalityRight="1"/>        					   
+                               cardinalityRight="1"/>
             </relation>
-         </relations>
+        </relations>
     </pattern>
 </patterns>
 

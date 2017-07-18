@@ -8,6 +8,8 @@ import nl.ou.dpd.domain.node.Visibility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 import java.util.Arrays;
@@ -64,6 +66,15 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     });
 
     private Operation parentOperation;
+
+    /**
+     * A constructor expecting an {@link XMLInputFactory}.
+     *
+     * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
+     */
+    public ArgoUMLNodeParser(XMLInputFactory xmlInputFactory) {
+        super(xmlInputFactory);
+    }
 
     /**
      * Parses an xmi file with the specified {@code filename}.

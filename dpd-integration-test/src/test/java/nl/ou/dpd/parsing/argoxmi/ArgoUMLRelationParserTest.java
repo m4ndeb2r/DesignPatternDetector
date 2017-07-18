@@ -1,5 +1,6 @@
 package nl.ou.dpd.parsing.argoxmi;
 
+import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
@@ -11,10 +12,13 @@ import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
 import nl.ou.dpd.parsing.ParseException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,6 +36,7 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
+@Category(IntegrationTest.class)
 public class ArgoUMLRelationParserTest {
 
     // A test file containing valid XML.
@@ -41,6 +46,15 @@ public class ArgoUMLRelationParserTest {
 
     // A test file containing invalid XML.
     private static final String INVALID_XML = "/patterns/invalid.xml";
+
+    private ArgoUMLNodeParser argoUMLNodeParser;
+    private ArgoUMLRelationParser argoUMLRelationParser;
+
+    @Before
+    public void initArgoUMLRelationParser() {
+        argoUMLNodeParser = new ArgoUMLNodeParser(XMLInputFactory.newInstance());
+        argoUMLRelationParser = new ArgoUMLRelationParser(XMLInputFactory.newInstance());
+    }
 
     /**
      * Exception rule.
@@ -53,15 +67,13 @@ public class ArgoUMLRelationParserTest {
     @Test
     public void testXMLStreamException() {
         final String path = getPath(INVALID_XML);
-        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser();
-        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser();
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
         thrown.expectMessage("The XMI file '" + path + "' could not be parsed.");
 
-        nodes = nodeParser.parse(path);
-        relationParser.parse(path, nodes);
+        nodes = argoUMLNodeParser.parse(path);
+        argoUMLRelationParser.parse(path, nodes);
     }
 
     /**
@@ -69,15 +81,12 @@ public class ArgoUMLRelationParserTest {
      */
     @Test
     public void testFileNotFoundException() {
-        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser();
-        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser();
-
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
         thrown.expectMessage("The XMI file 'missing.xml' could not be parsed.");
 
-        nodes = nodeParser.parse("missing.xml");
-        relationParser.parse("missing.xml", nodes);
+        nodes = argoUMLNodeParser.parse("missing.xml");
+        argoUMLRelationParser.parse("missing.xml", nodes);
     }
 
     /**
@@ -85,12 +94,10 @@ public class ArgoUMLRelationParserTest {
      */
     @Test
     public void testParse1() {
-        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser();
-        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser();
         final String path = getPath(VALID_ADAPTER);
 
-        nodes = nodeParser.parse(path);
-        final SystemUnderConsideration suc = relationParser.parse(path, nodes);
+        nodes = argoUMLNodeParser.parse(path);
+        final SystemUnderConsideration suc = argoUMLRelationParser.parse(path, nodes);
         assertEquals("Adapters", suc.getName());
 
         //number of vertices and edges there is an undirected association, which has two edges (client-target, target-client)
@@ -161,12 +168,10 @@ public class ArgoUMLRelationParserTest {
      */
     @Test
     public void testAbstractFactory() {
-        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser();
-        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser();
         final String path = getPath(ABSTRACT_FACTORY);
 
-        nodes = nodeParser.parse(path);
-        final SystemUnderConsideration suc = relationParser.parse(path, nodes);
+        nodes = argoUMLNodeParser.parse(path);
+        final SystemUnderConsideration suc = argoUMLRelationParser.parse(path, nodes);
         assertEquals("untitledModel", suc.getName());
 
         //number of vertices and edges there is an undirected association, which has two edges (client-target, target-client)

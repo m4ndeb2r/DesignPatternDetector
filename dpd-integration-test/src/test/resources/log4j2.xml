@@ -54,7 +54,6 @@
 
     <Loggers>
         <Root level="trace">
-            <AppenderRef ref="Console" level="error"/>
             <AppenderRef ref="RollingFile" level="debug"/>
         </Root>
     </Loggers>

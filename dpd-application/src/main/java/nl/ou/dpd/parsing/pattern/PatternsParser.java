@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -69,6 +68,20 @@ public class PatternsParser {
     private Node node;
     private Relation relation;
 
+    private final SchemaFactory xsdSchemaFactory;
+    private final XMLInputFactory xmlInputFactory;
+
+    /**
+     * A constructor expecting a {@link SchemaFactory} and an {@link XMLInputFactory} a parameter.
+     *
+     * @param xsdSchemaFactory used for instantiating an XSD validator for validation of XML files.
+     * @param xmlInputFactory used for instantiating an {@link XMLEventReader} for processing XML files.
+     */
+    public PatternsParser(SchemaFactory xsdSchemaFactory, XMLInputFactory xmlInputFactory) {
+        this.xsdSchemaFactory = xsdSchemaFactory;
+        this.xmlInputFactory = xmlInputFactory;
+    }
+
     public List<DesignPattern> parse(String xmlFilename) {
         final URL xsdUrl = PatternsParser.class.getResource("/patterns.xsd");
         return parse(xmlFilename, xsdUrl);
@@ -91,8 +104,7 @@ public class PatternsParser {
 
     private void doParse(String xmlFilename) throws IOException, XMLStreamException {
         try (final InputStream input = new FileInputStream(new File(xmlFilename))) {
-            final XMLInputFactory factory = XMLInputFactory.newInstance();
-            final XMLEventReader eventReader = factory.createXMLEventReader(input);
+            final XMLEventReader eventReader = xmlInputFactory.createXMLEventReader(input);
             handleEvents(eventReader);
         } catch (Exception ex) {
             throw ex;
@@ -100,8 +112,7 @@ public class PatternsParser {
     }
 
     private void validate(String xmlFilename, URL xsdUrl) throws IOException, SAXException {
-        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        final Schema schema = schemaFactory.newSchema(xsdUrl);
+        final Schema schema = xsdSchemaFactory.newSchema(xsdUrl);
         final Validator validator = schema.newValidator();
         try (final InputStream stream = new FileInputStream(new File(xmlFilename))) {
             validator.validate(new StreamSource(stream));

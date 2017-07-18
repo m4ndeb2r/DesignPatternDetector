@@ -14,6 +14,9 @@ import nl.ou.dpd.parsing.pattern.PatternsParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -211,10 +214,18 @@ public class Model extends Observable {
      * @return a {@link Map} containing the gathered results
      */
     public Map<String, PatternInspector.MatchingResult> analyse() {
-        // Parse the input files
-        final SystemUnderConsideration system = new ArgoUMLParser().parse(openProject.getSystemUnderConsiderationFilePath());
-        final List<DesignPattern> designPatterns = new PatternsParser().parse(openProject.getDesignPatternFilePath());
+        // Parse the xmi input file
+        final XMLInputFactory xmiInputFactory1 = XMLInputFactory.newInstance();
+        final ArgoUMLParser argoUMLParser = new ArgoUMLParser(xmiInputFactory1);
+        final SystemUnderConsideration system = argoUMLParser.parse(openProject.getSystemUnderConsiderationFilePath());
 
+        // Parse the xml input file
+        final SchemaFactory xsdSchemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        final PatternsParser patternsParser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
+        final List<DesignPattern> designPatterns = patternsParser.parse(openProject.getDesignPatternFilePath());
+
+        // Analyse the system under consideration
         final Map<String, PatternInspector.MatchingResult> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {
             final PatternInspector patternInspector = new PatternInspector(system, pattern);
@@ -225,7 +236,7 @@ public class Model extends Observable {
     }
 
     private File chooseFile(String filterDescription, String... filterExtension) {
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filterDescription, filterExtension);
+        final FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filterDescription, filterExtension);
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(extFilter);
         return fileChooser.showOpenDialog(scene.getWindow());

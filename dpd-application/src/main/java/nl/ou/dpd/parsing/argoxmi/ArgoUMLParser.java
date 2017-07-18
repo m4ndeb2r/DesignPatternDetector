@@ -2,6 +2,8 @@ package nl.ou.dpd.parsing.argoxmi;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
 
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
 import java.net.URL;
 
 /**
@@ -18,10 +20,17 @@ public class ArgoUMLParser {
 
     private final ArgoUMLNodeParser nodeparser;
     private final ArgoUMLRelationParser relationparser;
+    private final SystemRelationsExtractor systemRelationsExtractor;
 
-    public ArgoUMLParser() {
-        nodeparser = new ArgoUMLNodeParser();
-        relationparser = new ArgoUMLRelationParser();
+    /**
+     * A constructor expecting an {@link XMLInputFactory}.
+     *
+     * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
+     */
+    public ArgoUMLParser(XMLInputFactory xmlInputFactory) {
+        nodeparser = new ArgoUMLNodeParser(xmlInputFactory);
+        relationparser = new ArgoUMLRelationParser(xmlInputFactory);
+        systemRelationsExtractor = new SystemRelationsExtractor();
     }
 
     /**
@@ -41,7 +50,7 @@ public class ArgoUMLParser {
      * @return a new {@link SystemUnderConsideration}.
      */
     public SystemUnderConsideration parse(String xmiFilename) {
-        return new SystemRelationsExtractor().execute(relationparser.parse(xmiFilename, nodeparser.parse(xmiFilename)));
+        return systemRelationsExtractor.execute(relationparser.parse(xmiFilename, nodeparser.parse(xmiFilename)));
     }
 
 }

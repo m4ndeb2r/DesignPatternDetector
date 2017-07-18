@@ -28,6 +28,17 @@ public abstract class ArgoUMLAbstractParser {
 
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLAbstractParser.class);
 
+    private XMLInputFactory xmlInputFactory;
+
+    /**
+     * A constructor expecting an {@link XMLInputFactory}.
+     *
+     * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
+     */
+    public ArgoUMLAbstractParser(XMLInputFactory xmlInputFactory) {
+        this.xmlInputFactory = xmlInputFactory;
+    }
+
     /**
      * Contains the passed events. Keeps track of the hierarchical structure of the XMI-tags.
      */
@@ -36,8 +47,7 @@ public abstract class ArgoUMLAbstractParser {
 
     protected void doParse(String filename) {
         try (InputStream input = new FileInputStream(new File(filename))) {
-            final XMLInputFactory factory = XMLInputFactory.newInstance();
-            final XMLEventReader eventReader = factory.createXMLEventReader(input);
+            final XMLEventReader eventReader = xmlInputFactory.createXMLEventReader(input);
             handleEvents(eventReader);
         } catch (ParseException pe) {
             // We don't need to repackage a ParseException in a ParseException.

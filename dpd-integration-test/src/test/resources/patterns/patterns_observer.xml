@@ -20,11 +20,11 @@
                 <relation.rule relationType="HAS_ATTRIBUTE_OF"
                                cardinalityLeft="1"
                                cardinalityRight="1"/>
-						<relation.rule relationType="ASSOCIATES_WITH"
+                <relation.rule relationType="ASSOCIATES_WITH"
                                cardinalityLeft="0..*"
                                cardinalityRight="1"/>
-						<relation.rule relationType="HAS_METHOD_PARAMETER_OF_TYPE" 							 cardinalityLeft="1" 
-													 cardinalityRight="1"/>
+                <relation.rule relationType="HAS_METHOD_PARAMETER_OF_TYPE" cardinalityLeft="1"
+                               cardinalityRight="1"/>
             </relation>
             <relation node1="ConcreteSubject" node2="Subject">
                 <relation.rule relationType="INHERITS_FROM"
@@ -35,7 +35,7 @@
                 <relation.rule relationType="HAS_ATTRIBUTE_OF"
                                cardinalityLeft="1"
                                cardinalityRight="1"/>
-								<relation.rule relationType="ASSOCIATES_WITH"
+                <relation.rule relationType="ASSOCIATES_WITH"
                                cardinalityLeft="1"
                                cardinalityRight="1"/>
             </relation>
