@@ -20,4 +20,3 @@
 
 ## TODO Logging
 * Check the log files. Is there too much, enough, not enough relevant logging?
-* Check the location of the log files. Something changed since the multimodule approach?
