@@ -13,7 +13,9 @@
 * Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Create an overall patterns file with all GOF patterns as a deliverable
 * more extensive testing in integration tests (solutions/feedback)
-* Finish PatternsParserTest (unit test)...
+* Finish PatternsParserTest (unit test)
+* Finish SystemRelationsExtractorTest
+* Write unit tests for ArgoUML parsers
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
