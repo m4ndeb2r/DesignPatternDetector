@@ -1,4 +1,4 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.SystemUnderConsideration;
@@ -50,7 +50,7 @@ public class SystemRelationsExtractorTest {
     public void testParse1() {
         final URL url = SystemRelationsExtractorTest.class.getResource(VALID_ADAPTER);
 
-        final ArgoUMLParser parser = new ArgoUMLParser(XMLInputFactory.newInstance());
+        final ArgoUMLParser parser = ParserFactory.createArgoUMLParser();
         final SystemUnderConsideration suc = parser.parse(url);
 
         assertEquals("Adapters", suc.getName());

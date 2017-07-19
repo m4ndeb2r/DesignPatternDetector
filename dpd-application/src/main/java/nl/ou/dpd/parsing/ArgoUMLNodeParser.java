@@ -1,4 +1,4 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
@@ -69,10 +69,13 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
 
     /**
      * A constructor expecting an {@link XMLInputFactory}.
+     * <p>
+     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * ParserFactory or in a unit test in the same package).
      *
      * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
      */
-    public ArgoUMLNodeParser(XMLInputFactory xmlInputFactory) {
+    protected ArgoUMLNodeParser(XMLInputFactory xmlInputFactory) {
         super(xmlInputFactory);
     }
 

@@ -1,4 +1,4 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Attribute;
@@ -27,6 +27,13 @@ import java.util.Set;
 public class SystemRelationsExtractor {
 
     private SystemUnderConsideration system;
+
+    /**
+     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * ParserFactory or in a unit test in the same package).
+     */
+    protected SystemRelationsExtractor() {
+    }
 
     public SystemUnderConsideration execute(SystemUnderConsideration system) {
         this.system = system;

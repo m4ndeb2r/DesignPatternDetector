@@ -3,15 +3,13 @@ package nl.ou.dpd.domain.matching;
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
-import nl.ou.dpd.parsing.pattern.PatternsParser;
+import nl.ou.dpd.parsing.ParserFactory;
+import nl.ou.dpd.parsing.ArgoUMLParser;
+import nl.ou.dpd.parsing.PatternsParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import javax.xml.XMLConstants;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.validation.SchemaFactory;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -34,10 +32,8 @@ public class DecoratorMatchingTest {
 
     @Before
     public void initTests() {
-        final SchemaFactory xsdSchemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        patternsParser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
-        xmiParser = new ArgoUMLParser(XMLInputFactory.newInstance());
+        patternsParser = ParserFactory.createPatternParser();
+        xmiParser = ParserFactory.createArgoUMLParser();
     }
 
     @Test

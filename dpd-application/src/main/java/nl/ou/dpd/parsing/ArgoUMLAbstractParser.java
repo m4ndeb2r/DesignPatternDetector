@@ -1,7 +1,6 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.parsing.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,10 +31,13 @@ public abstract class ArgoUMLAbstractParser {
 
     /**
      * A constructor expecting an {@link XMLInputFactory}.
+     * <p>
+     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * ParserFactory or in a unit test in the same package).
      *
      * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
      */
-    public ArgoUMLAbstractParser(XMLInputFactory xmlInputFactory) {
+    protected ArgoUMLAbstractParser(XMLInputFactory xmlInputFactory) {
         this.xmlInputFactory = xmlInputFactory;
     }
 

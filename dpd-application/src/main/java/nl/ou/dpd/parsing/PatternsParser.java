@@ -1,4 +1,4 @@
-package nl.ou.dpd.parsing.pattern;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.matching.NodeComparatorFactory;
@@ -9,7 +9,6 @@ import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
-import nl.ou.dpd.parsing.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -73,11 +72,14 @@ public class PatternsParser {
 
     /**
      * A constructor expecting a {@link SchemaFactory} and an {@link XMLInputFactory} a parameter.
+     * <p>
+     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * ParserFactory or in a unit test in the same package).
      *
      * @param xsdSchemaFactory used for instantiating an XSD validator for validation of XML files.
-     * @param xmlInputFactory used for instantiating an {@link XMLEventReader} for processing XML files.
+     * @param xmlInputFactory  used for instantiating an {@link XMLEventReader} for processing XML files.
      */
-    public PatternsParser(SchemaFactory xsdSchemaFactory, XMLInputFactory xmlInputFactory) {
+    protected PatternsParser(SchemaFactory xsdSchemaFactory, XMLInputFactory xmlInputFactory) {
         this.xsdSchemaFactory = xsdSchemaFactory;
         this.xmlInputFactory = xmlInputFactory;
     }

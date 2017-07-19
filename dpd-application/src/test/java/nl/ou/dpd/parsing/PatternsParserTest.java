@@ -1,8 +1,9 @@
-package nl.ou.dpd.parsing.pattern;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.parsing.ParseException;
+import nl.ou.dpd.parsing.PatternsParser;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

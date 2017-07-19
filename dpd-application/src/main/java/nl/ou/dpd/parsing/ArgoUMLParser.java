@@ -1,9 +1,7 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import java.net.URL;
 
 /**
@@ -23,14 +21,23 @@ public class ArgoUMLParser {
     private final SystemRelationsExtractor systemRelationsExtractor;
 
     /**
-     * A constructor expecting an {@link XMLInputFactory}.
+     * Creates a (compound) parser, consisting of the specified {@link ArgoUMLNodeParser}, {@link ArgoUMLRelationParser}
+     * and {@link SystemRelationsExtractor}.
+     * <p>
+     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * ParserFactory or in a unit test in the same package).
      *
-     * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
+     * @param nodeparser               a parser for the nodes in the ArgoUML input xmi
+     * @param relationparser           a parser for the relations in the ArgoUML input xmi
+     * @param systemRelationsExtractor the system relation extractor performing a kind of post-parsing
      */
-    public ArgoUMLParser(XMLInputFactory xmlInputFactory) {
-        nodeparser = new ArgoUMLNodeParser(xmlInputFactory);
-        relationparser = new ArgoUMLRelationParser(xmlInputFactory);
-        systemRelationsExtractor = new SystemRelationsExtractor();
+    protected ArgoUMLParser(
+            ArgoUMLNodeParser nodeparser,
+            ArgoUMLRelationParser relationparser,
+            SystemRelationsExtractor systemRelationsExtractor) {
+        this.nodeparser = nodeparser;
+        this.relationparser = relationparser;
+        this.systemRelationsExtractor = systemRelationsExtractor;
     }
 
     /**

@@ -1,4 +1,4 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.node.Attribute;
@@ -7,7 +7,9 @@ import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.node.Parameter;
 import nl.ou.dpd.domain.node.Visibility;
+import nl.ou.dpd.parsing.ArgoUMLNodeParser;
 import nl.ou.dpd.parsing.ParseException;
+import nl.ou.dpd.parsing.SystemRelationsExtractor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

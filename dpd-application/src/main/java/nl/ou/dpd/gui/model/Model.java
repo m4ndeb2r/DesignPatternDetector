@@ -9,14 +9,12 @@ import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.matching.PatternInspector;
 import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
-import nl.ou.dpd.parsing.argoxmi.ArgoUMLParser;
-import nl.ou.dpd.parsing.pattern.PatternsParser;
+import nl.ou.dpd.parsing.ParserFactory;
+import nl.ou.dpd.parsing.ArgoUMLParser;
+import nl.ou.dpd.parsing.PatternsParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.xml.XMLConstants;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -215,14 +213,11 @@ public class Model extends Observable {
      */
     public Map<String, PatternInspector.MatchingResult> analyse() {
         // Parse the xmi input file
-        final XMLInputFactory xmiInputFactory1 = XMLInputFactory.newInstance();
-        final ArgoUMLParser argoUMLParser = new ArgoUMLParser(xmiInputFactory1);
+        final ArgoUMLParser argoUMLParser = ParserFactory.createArgoUMLParser();
         final SystemUnderConsideration system = argoUMLParser.parse(openProject.getSystemUnderConsiderationFilePath());
 
         // Parse the xml input file
-        final SchemaFactory xsdSchemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        final PatternsParser patternsParser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
+        final PatternsParser patternsParser =ParserFactory.createPatternParser();
         final List<DesignPattern> designPatterns = patternsParser.parse(openProject.getDesignPatternFilePath());
 
         // Analyse the system under consideration

@@ -1,4 +1,4 @@
-package nl.ou.dpd.parsing.pattern;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
@@ -34,9 +34,7 @@ public class PatternsParserTest {
 
     @Before
     public void initParser() {
-        final SchemaFactory xsdSchemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        parser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
+        parser = ParserFactory.createPatternParser();
     }
 
     // TODO: Is this test still relevant, considering it is unsing the CLASS_WITH_PRIVATE_CONSTRUCTOR NodeType???

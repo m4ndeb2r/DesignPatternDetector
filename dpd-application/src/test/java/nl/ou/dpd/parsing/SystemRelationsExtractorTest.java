@@ -1,9 +1,10 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.relation.Relation;
+import nl.ou.dpd.parsing.SystemRelationsExtractor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.when;
  * @author Martin de Boer
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SystemRelationExtractorTest {
+public class SystemRelationsExtractorTest {
 
     @Mock
     private SystemUnderConsideration system;

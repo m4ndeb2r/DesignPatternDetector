@@ -1,4 +1,4 @@
-package nl.ou.dpd.parsing.argoxmi;
+package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.SystemUnderConsideration;
@@ -11,6 +11,8 @@ import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
+import nl.ou.dpd.parsing.ArgoUMLNodeParser;
+import nl.ou.dpd.parsing.ArgoUMLRelationParser;
 import nl.ou.dpd.parsing.ParseException;
 import org.junit.Before;
 import org.junit.Rule;
