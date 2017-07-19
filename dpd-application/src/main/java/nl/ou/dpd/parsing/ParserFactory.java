@@ -24,6 +24,12 @@ public class ParserFactory {
         return new ArgoUMLParser(nodeParser, relationParser, systemRelationsExtractor);
     }
 
+    /**
+     * Creates a {@link PatternsParser} having a {@link SchemaFactory} (for XSD validation) and an
+     * {@link XMLInputFactory} for creating an XML input stream.
+     *
+     * @return the created {@link PatternsParser}
+     */
     public static PatternsParser createPatternParser() {
         final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
