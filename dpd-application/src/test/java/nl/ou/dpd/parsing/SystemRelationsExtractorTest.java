@@ -3,8 +3,12 @@ package nl.ou.dpd.parsing;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Attribute;
 import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.node.Operation;
+import nl.ou.dpd.domain.node.Parameter;
+import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
-import nl.ou.dpd.parsing.SystemRelationsExtractor;
+import nl.ou.dpd.domain.relation.RelationProperty;
+import nl.ou.dpd.domain.relation.RelationType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,7 +79,7 @@ public class SystemRelationsExtractorTest {
      * Tests that a relation is added when node1 has an attribute of type node2.
      */
     @Test
-    public void testNodesWithAttributes() {
+    public void testNodeWithAttributes() {
         final Set<Attribute> node1Attributes = new HashSet<>();
         final Attribute node1Attribute = mock(Attribute.class);
         when(node1Attribute.getParentNode()).thenReturn(node1);
@@ -85,24 +89,45 @@ public class SystemRelationsExtractorTest {
         node1Attributes.add(node1Attribute);
         when(node1.getAttributes()).thenReturn(node1Attributes);
 
-        final Set<Attribute> node2Attributes = new HashSet<>();
-        final Attribute node2Attribute = mock(Attribute.class);
-        when(node2Attribute.getParentNode()).thenReturn(node2);
-        node2Attributes.add(node2Attribute);
-        when(node2.getAttributes()).thenReturn(node2Attributes);
+        final SystemUnderConsideration result = systemRelationsExtractor.execute(system);
+
+        final ArgumentCaptor<Relation> relationCaptor = ArgumentCaptor.forClass(Relation.class);
+        verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
+
+        final Relation relation = relationCaptor.getValue();
+        assertThat(relation.getId(), is("SystemRelation-node1-attr1"));
+        assertThat(relation.getName(), is("Node1-Attr1"));
+
+        assertThat(result, is(system));
+    }
+
+    @Test
+    public void testNodeWithOperationWithReturnValue() {
+        final Set<Operation> node1Operations = new HashSet<>();
+        final Operation node1Operation = mock(Operation.class);
+        final Set<Parameter> parameterSet = new HashSet<>();
+        when(node1Operation.getParentNode()).thenReturn(node1);
+        when(node1Operation.getId()).thenReturn("operationId");
+        when(node1Operation.getName()).thenReturn("operationName");
+        when(node1Operation.getParameters()).thenReturn(parameterSet);
+        when(node1Operation.getReturnType()).thenReturn(node2);
+        node1Operations.add(node1Operation);
+        when(node1.getOperations()).thenReturn(node1Operations);
 
         final SystemUnderConsideration result = systemRelationsExtractor.execute(system);
 
         final ArgumentCaptor<Relation> relationCaptor = ArgumentCaptor.forClass(Relation.class);
         verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
 
-        assertThat(relationCaptor.getValue().getId(), is("SystemRelation-node1-attr1"));
-        assertThat(relationCaptor.getValue().getName(), is("Node1-Attr1"));
-        assertThat(result, is(system));
-    }
+        final Relation relation = relationCaptor.getValue();
+        assertThat(relation.getId(), is("SystemRelation-node1-operationId"));
+        assertThat(relation.getName(), is("Node1-operationName"));
 
-    @Test
-    public void testNodesWithOperations() {
-        // TODO
+        final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
+        assertThat(relationProperty.getRelationType(), is(RelationType.HAS_METHOD_RETURNTYPE));
+        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
+        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+
+        assertThat(result, is(system));
     }
 }

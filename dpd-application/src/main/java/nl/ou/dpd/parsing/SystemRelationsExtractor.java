@@ -53,13 +53,18 @@ public class SystemRelationsExtractor {
     private void updateOrCreateAttributeRelation(Attribute attribute) {
         Relation relation = system.getEdge(attribute.getParentNode(), attribute.getType());
         if (relation == null) {
-            relation = new Relation(
-                    "SystemRelation-" + attribute.getParentNode().getId() + "-" + attribute.getId(),
-                    attribute.getParentNode().getName() + "-" + attribute.getName()
-            );
+            relation = createSystemAttributeRelation(attribute);
         }
         relation.addRelationProperty(new RelationProperty(RelationType.HAS_ATTRIBUTE_OF));
         addEdge(attribute, relation);
+    }
+
+    private Relation createSystemAttributeRelation(Attribute attribute) {
+        final Node parentNode = attribute.getParentNode();
+        return new Relation(
+                String.format("SystemRelation-%s-%s", parentNode.getId(), attribute.getId()),
+                String.format("%s-%s", parentNode.getName(), attribute.getName())
+        );
     }
 
     private void exploreOperationsRelations(Node node) {
@@ -95,10 +100,7 @@ public class SystemRelationsExtractor {
         for (Parameter param : operation.getParameters()) {
             Relation relation = system.getEdge(operation.getParentNode(), param.getType());
             if (relation == null) {
-                relation = new Relation(
-                        "SystemRelation-" + operation.getParentNode().getId() + "-" + operation.getId(),
-                        operation.getParentNode().getName() + "-" + operation.getName()
-                );
+                relation = createSystemOperationRelation(operation);
             }
             relation.addRelationProperty(new RelationProperty(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
             addEdge(operation, param, relation);
@@ -109,14 +111,19 @@ public class SystemRelationsExtractor {
         if (operation.getReturnType() != null) {
             Relation relation = system.getEdge(operation.getParentNode(), operation.getReturnType());
             if (relation == null) {
-                relation = new Relation(
-                        "SystemRelation-" + operation.getParentNode().getId() + "-" + operation.getId(),
-                        operation.getParentNode().getName() + "-" + operation.getName()
-                );
+                relation = createSystemOperationRelation(operation);
             }
             relation.addRelationProperty(new RelationProperty(RelationType.HAS_METHOD_RETURNTYPE));
             addEdge(operation, relation);
         }
+    }
+
+    private Relation createSystemOperationRelation(Operation operation) {
+        final Node parentNode = operation.getParentNode();
+        return new Relation(
+                String.format("SystemRelation-%s-%s", parentNode.getId(), operation.getId()),
+                String.format("%s-%s", parentNode.getName(), operation.getName())
+        );
     }
 
     private void addEdge(Attribute attr, Relation relation) {
@@ -125,15 +132,15 @@ public class SystemRelationsExtractor {
         system.addEdge(source, target, relation);
     }
 
-    private void addEdge(Operation operation, Parameter p, Relation relation) {
+    private void addEdge(Operation operation, Parameter parameter, Relation relation) {
         Node source = operation.getParentNode();
-        Node target = p.getType();
+        Node target = parameter.getType();
         system.addEdge(source, target, relation);
     }
 
-    private void addEdge(Operation op, Relation relation) {
-        Node source = op.getParentNode();
-        Node target = op.getReturnType();
+    private void addEdge(Operation operation, Relation relation) {
+        Node source = operation.getParentNode();
+        Node target = operation.getReturnType();
         system.addEdge(source, target, relation);
     }
 
