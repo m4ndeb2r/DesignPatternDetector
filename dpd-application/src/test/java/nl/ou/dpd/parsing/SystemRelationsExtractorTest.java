@@ -156,6 +156,10 @@ public class SystemRelationsExtractorTest {
         assertThat(result, is(system));
     }
 
+    /**
+     * Test that a relation is added when node1 has an operation with one parameter of type node2. The operation does
+     * not override any existing opveration.
+     */
     @Test
     public void testNodeWithOperationWithParameter() {
         final Set<Operation> node1Operations = new HashSet<>();
