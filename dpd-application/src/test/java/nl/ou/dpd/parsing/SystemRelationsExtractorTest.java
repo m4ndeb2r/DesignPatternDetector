@@ -82,11 +82,12 @@ public class SystemRelationsExtractorTest {
     public void testNodeWithAttributes() {
         final Set<Attribute> node1Attributes = new HashSet<>();
         final Attribute node1Attribute = mock(Attribute.class);
+        node1Attributes.add(node1Attribute);
+
         when(node1Attribute.getParentNode()).thenReturn(node1);
         when(node1Attribute.getId()).thenReturn("attr1");
         when(node1Attribute.getName()).thenReturn("Attr1");
         when(node1Attribute.getType()).thenReturn(node2);
-        node1Attributes.add(node1Attribute);
         when(node1.getAttributes()).thenReturn(node1Attributes);
 
         final SystemUnderConsideration result = systemRelationsExtractor.execute(system);
@@ -105,13 +106,15 @@ public class SystemRelationsExtractorTest {
     public void testNodeWithOperationWithReturnValue() {
         final Set<Operation> node1Operations = new HashSet<>();
         final Operation node1Operation = mock(Operation.class);
+        node1Operations.add(node1Operation);
+
         final Set<Parameter> parameterSet = new HashSet<>();
+
         when(node1Operation.getParentNode()).thenReturn(node1);
         when(node1Operation.getId()).thenReturn("operationId");
         when(node1Operation.getName()).thenReturn("operationName");
         when(node1Operation.getParameters()).thenReturn(parameterSet);
         when(node1Operation.getReturnType()).thenReturn(node2);
-        node1Operations.add(node1Operation);
         when(node1.getOperations()).thenReturn(node1Operations);
 
         final SystemUnderConsideration result = systemRelationsExtractor.execute(system);
@@ -125,6 +128,40 @@ public class SystemRelationsExtractorTest {
 
         final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
         assertThat(relationProperty.getRelationType(), is(RelationType.HAS_METHOD_RETURNTYPE));
+        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
+        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+
+        assertThat(result, is(system));
+    }
+
+    @Test
+    public void testNodeWithOperationWithParameter() {
+        final Set<Operation> node1Operations = new HashSet<>();
+        final Operation node1Operation = mock(Operation.class);
+        node1Operations.add(node1Operation);
+
+        final Set<Parameter> parameterSet = new HashSet<>();
+        final Parameter parameter = mock(Parameter.class);
+        parameterSet.add(parameter);
+
+        when(node1Operation.getParentNode()).thenReturn(node1);
+        when(node1Operation.getId()).thenReturn("operationId");
+        when(node1Operation.getName()).thenReturn("operationName");
+        when(node1Operation.getParameters()).thenReturn(parameterSet);
+        when(parameter.getType()).thenReturn(node2);
+        when(node1.getOperations()).thenReturn(node1Operations);
+
+        final SystemUnderConsideration result = systemRelationsExtractor.execute(system);
+
+        final ArgumentCaptor<Relation> relationCaptor = ArgumentCaptor.forClass(Relation.class);
+        verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
+
+        final Relation relation = relationCaptor.getValue();
+        assertThat(relation.getId(), is("SystemRelation-node1-operationId"));
+        assertThat(relation.getName(), is("Node1-operationName"));
+
+        final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
+        assertThat(relationProperty.getRelationType(), is(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
         assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
         assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
 

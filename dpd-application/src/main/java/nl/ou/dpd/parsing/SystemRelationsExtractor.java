@@ -9,8 +9,6 @@ import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
 
-import java.util.Set;
-
 /**
  * This class extracts extra {@link Relation}s out of a {@link SystemUnderConsideration}, which are not explicitly in
  * the Class diagram. This step is the final part of the parsing process of an ArgoUML export file. Previous steps are
@@ -70,7 +68,7 @@ public class SystemRelationsExtractor {
     private void exploreOperationsRelations(Node node) {
         for (Operation operation : node.getOperations()) {
             updateOrCreateInParameterRelation(operation);
-            updateOrCreateReturnParameterRelation(operation);
+            updateOrCreateReturnValueRelation(operation);
             updateOverrideRelation(node, operation);
         }
     }
@@ -83,17 +81,11 @@ public class SystemRelationsExtractor {
                 relation.addRelationProperty(new RelationProperty(RelationType.OVERRIDES_METHOD_OF));
             }
         }
-
     }
 
     private boolean containsSameSignatureOperation(Relation relation, Operation operation) {
-        Set<Operation> targetOperations = system.getEdgeTarget(relation).getOperations();
-        for (Operation targetOperation : targetOperations) {
-            if (targetOperation.equalsSignature(operation)) {
-                return true;
-            }
-        }
-        return false;
+        return system.getEdgeTarget(relation).getOperations().stream()
+                .anyMatch(targetOperation -> targetOperation.equalsSignature(operation));
     }
 
     private void updateOrCreateInParameterRelation(Operation operation) {
@@ -107,7 +99,7 @@ public class SystemRelationsExtractor {
         }
     }
 
-    private void updateOrCreateReturnParameterRelation(Operation operation) {
+    private void updateOrCreateReturnValueRelation(Operation operation) {
         if (operation.getReturnType() != null) {
             Relation relation = system.getEdge(operation.getParentNode(), operation.getReturnType());
             if (relation == null) {
