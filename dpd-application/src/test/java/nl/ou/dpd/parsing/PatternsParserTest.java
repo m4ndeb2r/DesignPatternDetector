@@ -63,14 +63,14 @@ public class PatternsParserTest {
 
     @Mock
     private XMLEvent
-            patternEvent, notesEvent, noteEvent, nodesEvent,
+            patternsEvent, patternEvent, notesEvent, noteEvent, nodesEvent,
             nodeEvent1, nodeEvent2, relationsEvent, relationEvent;
 
     @Mock
     private StartElement
-            patternStartElement, notesStartElement, noteStartElement,
-            nodesStartElement, nodeStartElement1, nodeStartElement2,
-            relationsStartElement, relationStartElement;
+            patternsStartElement, patternStartElement, notesStartElement,
+            noteStartElement, nodesStartElement, nodeStartElement1,
+            nodeStartElement2, relationsStartElement, relationStartElement;
 
     @Mock
     private Iterator
@@ -106,13 +106,18 @@ public class PatternsParserTest {
      * @throws XMLStreamException not expected
      */
     @Before
-    public void initPatternStartEvent() throws XMLStreamException {
-        // Set up the attributes of the patterns start element
+    public void initPatternStartElement() throws XMLStreamException {
+        // Set up the patterns start element
+        when(patternsEvent.isStartElement()).thenReturn(true, false);
+        when(patternsEvent.asStartElement()).thenReturn(patternsStartElement);
+        when(patternsStartElement.getName()).thenReturn(QName.valueOf("patterns"));
+
+        // Set up the attributes of the pattern start element
         final Attribute nameAttribute = makeAttributeMock("name", "patternName");
         final Attribute familyAttribute = makeAttributeMock("family", "patternFamily");
 
-        // Set up the patterns start element
-        when(patternEvent.isStartElement()).thenReturn(true);
+        // Set up the pattern start element
+        when(patternEvent.isStartElement()).thenReturn(true, false);
         when(patternEvent.asStartElement()).thenReturn(patternStartElement);
         when(patternStartElement.getName()).thenReturn(QName.valueOf("pattern"));
         when(patternStartElement.getAttributes()).thenReturn(patternAttributeIterator);
@@ -127,13 +132,13 @@ public class PatternsParserTest {
     @Before
     public void initNodeStartElements() {
         // Set up the nodes start element
-        when(nodesEvent.isStartElement()).thenReturn(true);
+        when(nodesEvent.isStartElement()).thenReturn(true, false);
         when(nodesEvent.asStartElement()).thenReturn(nodesStartElement);
         when(nodesStartElement.getName()).thenReturn(QName.valueOf("nodes"));
 
         // Set up the first node start element
         final Attribute idAttribute1 = makeAttributeMock("id", "nodeId1");
-        when(nodeEvent1.isStartElement()).thenReturn(true);
+        when(nodeEvent1.isStartElement()).thenReturn(true, false);
         when(nodeEvent1.asStartElement()).thenReturn(nodeStartElement1);
         when(nodeStartElement1.getName()).thenReturn(QName.valueOf("node"));
         when(nodeStartElement1.getAttributes()).thenReturn(nodeAttributeIterator1);
@@ -142,7 +147,7 @@ public class PatternsParserTest {
 
         // Set up the second node start element
         final Attribute idAttribute2 = makeAttributeMock("id", "nodeId2");
-        when(nodeEvent2.isStartElement()).thenReturn(true);
+        when(nodeEvent2.isStartElement()).thenReturn(true, false);
         when(nodeEvent2.asStartElement()).thenReturn(nodeStartElement2);
         when(nodeStartElement2.getName()).thenReturn(QName.valueOf("node"));
         when(nodeStartElement2.getAttributes()).thenReturn(nodeAttributeIterator2);
@@ -157,14 +162,14 @@ public class PatternsParserTest {
     @Before
     public void initRelationStartElement() {
         // Set up the relations start element
-        when(relationsEvent.isStartElement()).thenReturn(true);
+        when(relationsEvent.isStartElement()).thenReturn(true, false);
         when(relationsEvent.asStartElement()).thenReturn(relationsStartElement);
         when(relationsStartElement.getName()).thenReturn(QName.valueOf("relations"));
 
         // Set up the relation start element
         final Attribute nodeAttribute1 = makeAttributeMock("node1", "nodeId1");
         final Attribute nodeAttribute2 = makeAttributeMock("node2", "nodeId2");
-        when(relationEvent.isStartElement()).thenReturn(true);
+        when(relationEvent.isStartElement()).thenReturn(true, false);
         when(relationEvent.asStartElement()).thenReturn(relationStartElement);
         when(relationStartElement.getName()).thenReturn(QName.valueOf("relation"));
         when(relationStartElement.getAttributes()).thenReturn(relationAttributeIterator);
@@ -172,6 +177,12 @@ public class PatternsParserTest {
         when(relationAttributeIterator.next()).thenReturn(nodeAttribute1, nodeAttribute2, nodeAttribute1, nodeAttribute2);
     }
 
+    /**
+     * Tests if the XSD vaslidation handling of the parser.
+     *
+     * @throws IOException  not expected
+     * @throws SAXException will be caught and converted to a parse exception
+     */
     @Test
     public void testXSDValidationFailing() throws IOException, SAXException {
         final String xmlFile = getPath(DUMMY_XML);
@@ -187,10 +198,22 @@ public class PatternsParserTest {
         patternsParser.parse(xmlFile);
     }
 
+    /**
+     * Tests if the pattern elements are handled correctly. Note: the mocked situation would not pass an XSD validation,
+     * but that is not relevant here. Here, we test if the name and family name of the pattern in the element are
+     * stored correctly.
+     *
+     * @throws XMLStreamException not expected
+     */
     @Test
     public void testHandlePatternEvent() throws XMLStreamException {
-        when(xmlEventReader.hasNext()).thenReturn(true, false);
-        when(xmlEventReader.nextEvent()).thenReturn(patternEvent);
+        when(xmlEventReader.hasNext()).thenReturn(
+                true, // patterns start-element
+                true, // pattern start-element
+                true, // pattern end-element
+                true, // patterns end-element
+                false);
+        when(xmlEventReader.nextEvent()).thenReturn(patternsEvent, patternEvent, patternEvent, patternsEvent);
 
         final String xmlFile = getPath(DUMMY_XML);
         final List<DesignPattern> designPatterns = patternsParser.parse(xmlFile);
@@ -200,16 +223,35 @@ public class PatternsParserTest {
         assertThat(designPatterns.get(0).getFamily(), is("patternFamily"));
     }
 
+    /**
+     * Tests if the note elements are handled correctly. Note: the mocked situation would not pass an XSD validation,
+     * but that is not relevant here. Here, we test if any notes in the notes element are stored correctly.
+     */
     @Test
     public void testHandleNoteEvent() throws XMLStreamException {
-        when(xmlEventReader.hasNext()).thenReturn(true, true, true, false);
-        when(xmlEventReader.nextEvent()).thenReturn(patternEvent, notesEvent, noteEvent);
-        when(notesEvent.isStartElement()).thenReturn(true);
+        when(xmlEventReader.hasNext()).thenReturn(
+                true, // patterns start-element
+                true, // pattern start-element
+                true, // notes start-element
+                true, // note start-element
+                true, // note end-element
+                true, // notes end-element
+                true, // pattern end-element
+                true, // patterns end-element
+                false);
+        when(xmlEventReader.nextEvent()).thenReturn(
+                patternsEvent, patternEvent,
+                notesEvent, noteEvent, noteEvent, notesEvent,
+                patternEvent, patternsEvent);
+
+        when(notesEvent.isStartElement()).thenReturn(true, false);
         when(notesEvent.asStartElement()).thenReturn(notesStartElement);
         when(notesStartElement.getName()).thenReturn(QName.valueOf("notes"));
-        when(noteEvent.isStartElement()).thenReturn(true);
+
+        when(noteEvent.isStartElement()).thenReturn(true, false);
         when(noteEvent.asStartElement()).thenReturn(noteStartElement);
         when(noteStartElement.getName()).thenReturn(QName.valueOf("note"));
+
         when(xmlEventReader.getElementText()).thenReturn("A note");
 
         final String xmlFile = getPath(DUMMY_XML);
@@ -220,10 +262,34 @@ public class PatternsParserTest {
         assertThat(designPatterns.get(0).getNotes().iterator().next(), is("A note"));
     }
 
+    /**
+     * Tests if (nodes and) relations are handled correctly by the parser.
+     *
+     * @throws XMLStreamException not expected.
+     */
     @Test
     public void testHandleRelationEvent() throws XMLStreamException {
-        when(xmlEventReader.hasNext()).thenReturn(true, true, true, true, true, true, false);
-        when(xmlEventReader.nextEvent()).thenReturn(patternEvent, nodesEvent, nodeEvent1, nodeEvent2, relationsEvent, relationEvent);
+        when(xmlEventReader.hasNext()).thenReturn(
+                true, // patterns start-element
+                true, // pattern start-element
+                true, // nodes start-element
+                true, // node1 start-element
+                true, // node1 end-element
+                true, // node2 start-element
+                true, // node2 end-element
+                true, // nodes end-element
+                true, // relations start-element
+                true, // relation start-element
+                true, // relation end-element
+                true, // relations end-element
+                true, // pattern end-element
+                true, // patterns end-element
+                false);
+        when(xmlEventReader.nextEvent()).thenReturn(
+                patternsEvent, patternEvent,
+                nodesEvent, nodeEvent1, nodeEvent1, nodeEvent2, nodeEvent2, nodesEvent,
+                relationsEvent, relationEvent, relationEvent, relationsEvent,
+                patternEvent, patternsEvent);
 
         final String xmlFile = getPath(DUMMY_XML);
         final List<DesignPattern> designPatterns = patternsParser.parse(xmlFile);
