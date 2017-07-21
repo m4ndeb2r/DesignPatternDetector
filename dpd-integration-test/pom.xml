@@ -5,14 +5,15 @@
     <parent>
         <artifactId>DesignPatternDetectorParent</artifactId>
         <groupId>nl.ou.dpd</groupId>
-        <version>0.0.5-SNAPSHOT</version>
+        <version>0.0.6-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>DesignPatternDetectorIntegrationTest</artifactId>
     <name>Design Pattern Detector Integration Test Module</name>
     <groupId>nl.ou.dpd</groupId>
-    <version>${dpd.version}</version>
+    <version>${parent.version}</version>
 
     <build>
         <plugins>
@@ -20,7 +21,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven.failsafe.plugin.version}</version>
+                <version>2.20</version>
                 <configuration>
                     <includes>
                         <!-- Override the default include (**/*IT.java) -->
@@ -41,10 +42,43 @@
     </build>
 
     <dependencies>
+        <!-- Design Pattern Detector application -->
         <dependency>
             <groupId>nl.ou.dpd</groupId>
             <artifactId>DesignPatternDetector</artifactId>
             <version>${dpd.version}</version>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
