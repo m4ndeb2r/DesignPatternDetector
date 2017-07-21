@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -60,6 +61,7 @@ public class SystemRelationsExtractorTest {
         when(node1.getName()).thenReturn("Node1");
         when(node2.getName()).thenReturn("Node2");
         when(system.vertexSet()).thenReturn(nodeSet);
+
     }
 
     /**
@@ -102,34 +104,54 @@ public class SystemRelationsExtractorTest {
         assertThat(result, is(system));
     }
 
+    /**
+     * Tests that a relation is added when node1 has an operation with return type of node2. The operation overrides
+     * an existing relation, and should therefore also get the {@link RelationType#OVERRIDES_METHOD_OF} relation
+     * property.
+     */
     @Test
-    public void testNodeWithOperationWithReturnValue() {
+    public void testNodeWithOverridingOperationWithReturnValue() {
         final Set<Operation> node1Operations = new HashSet<>();
         final Operation node1Operation = mock(Operation.class);
         node1Operations.add(node1Operation);
 
         final Set<Parameter> parameterSet = new HashSet<>();
 
+        final Set<Relation> outgoingEdges = new HashSet<>();
+        Relation outgoingEdge = mock(Relation.class);
+        outgoingEdges.add(outgoingEdge);
+
         when(node1Operation.getParentNode()).thenReturn(node1);
         when(node1Operation.getId()).thenReturn("operationId");
         when(node1Operation.getName()).thenReturn("operationName");
         when(node1Operation.getParameters()).thenReturn(parameterSet);
         when(node1Operation.getReturnType()).thenReturn(node2);
+        when(node1Operation.equalsSignature(node1Operation)).thenReturn(true);
         when(node1.getOperations()).thenReturn(node1Operations);
+        when(system.outgoingEdgesOf(node1)).thenReturn(outgoingEdges);
+        when(system.getEdgeTarget(outgoingEdge)).thenReturn(node1);
 
         final SystemUnderConsideration result = systemRelationsExtractor.execute(system);
 
+        // Check the relation (name and id)
         final ArgumentCaptor<Relation> relationCaptor = ArgumentCaptor.forClass(Relation.class);
         verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
-
         final Relation relation = relationCaptor.getValue();
         assertThat(relation.getId(), is("SystemRelation-node1-operationId"));
         assertThat(relation.getName(), is("Node1-operationName"));
 
-        final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
+        // Check the return value's type and cardinality properties
+        final Iterator<RelationProperty> relationProperties = relation.getRelationProperties().iterator();
+        final RelationProperty relationProperty = relationProperties.next();
         assertThat(relationProperty.getRelationType(), is(RelationType.HAS_METHOD_RETURNTYPE));
         assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
         assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+
+        // Check if the relation gets the override property
+        final ArgumentCaptor<RelationProperty> relationPropertyCaptor = ArgumentCaptor.forClass(RelationProperty.class);
+        verify(outgoingEdge, times(1)).addRelationProperty(relationPropertyCaptor.capture());
+        final RelationProperty expectedRelationProperty = relationPropertyCaptor.getValue();
+        assertThat(expectedRelationProperty.getRelationType(), is(RelationType.OVERRIDES_METHOD_OF));
 
         assertThat(result, is(system));
     }
