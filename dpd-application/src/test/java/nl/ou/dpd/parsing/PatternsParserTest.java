@@ -297,7 +297,7 @@ public class PatternsParserTest {
     }
 
     @Test
-    public void testParseError1() {
+    public void testAnyError() {
         // Simulate an arbitrary exception somewhere along the way
         when(concreteClassNodeStartElement.getAttributes()).thenThrow(new NullPointerException());
 
@@ -310,11 +310,11 @@ public class PatternsParserTest {
     }
 
     @Test
-    public void testParseError2() {
+    public void testParseError() {
         // Simulate an arbitrary exception somewhere along the way
         when(concreteClassNodeStartElement.getAttributes()).thenThrow(new ParseException("Oops", null));
 
-        // We expect the arbitrary exception to be mapped to a ParseException
+        // We expect the ParseException to be rethrown directly
         thrown.expect(ParseException.class);
         thrown.expectMessage("Oops");
 
