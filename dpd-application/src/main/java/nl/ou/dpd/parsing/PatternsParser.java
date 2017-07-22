@@ -181,7 +181,6 @@ public class PatternsParser {
     }
 
     private void handleRelationStartElement(XMLEvent event) {
-        final String id = getAttributeFromEvent(event, ID);
         final Node source = getNodeById(getAttributeFromEvent(event, NODE_1));
         final Node target = getNodeById(getAttributeFromEvent(event, NODE_2));
 
@@ -190,7 +189,7 @@ public class PatternsParser {
             designPattern.addVertex(source);
             designPattern.addVertex(target);
             designPattern.addEdge(source, target)
-                    .setId(id == null? name : id)
+                    .setId(name)
                     .setName(name);
         }
         relation = designPattern.getEdge(source, target);
