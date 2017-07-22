@@ -73,6 +73,7 @@ public class ArgoUMLNodeParserTest {
                 true, // class end-element
                 true, // interface start-element
                 true, // interface end-element
+                true, // model end-element
                 false);
         when(xmlEventReader.nextEvent()).thenReturn(
                 modelEvent,
@@ -154,12 +155,16 @@ public class ArgoUMLNodeParserTest {
 
     @Test
     public void testNumberOfNodes() {
+        assertThat(nodeParser.events.size(), is(0));
+
         final Map<String, Node> nodeMap = nodeParser.parse(xmiFile);
         assertThat(nodeMap.keySet().size(), is(2));
         assertTrue(nodeMap.containsKey("classNodeId"));
         assertThat(nodeMap.get("classNodeId").getId(), is("classNodeId"));
         assertTrue(nodeMap.containsKey("interfaceNodeId"));
         assertThat(nodeMap.get("interfaceNodeId").getId(), is("interfaceNodeId"));
+
+        assertThat(nodeParser.events.size(), is(0));
     }
 
     private String getPath(String resourceName) {
