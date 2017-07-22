@@ -43,6 +43,14 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private static final String UNLIMITED_INTEGER = "87D";
     private static final String BOOLEAN = "880";
 
+    private static final Map<String, String> typeMap = new HashMap<>();
+    static {
+        typeMap.put(STRING, String.class.getSimpleName());
+        typeMap.put(INTEGER, Integer.class.getSimpleName());
+        typeMap.put(BOOLEAN, Boolean.class.getSimpleName());
+        typeMap.put(UNLIMITED_INTEGER, "UnlimitedInteger");
+    }
+
     //attributes of the XMI
     private static final String NAME = "name";
     private static final String ID = "xmi.id";
@@ -51,6 +59,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private static final String IDREF = "xmi.idref";
     private static final String HREF = "href";
     private static final String KIND = "kind";
+    private static final String INPUT = "in";
 
     //tags of the XMI
     private static final String MODEL = "Model";
@@ -256,7 +265,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private void setParameterType(String idref) {
         String kind = readAttributes(events.peek()).get(KIND);
-        if ("in".equals(kind)) {
+        if (INPUT.equals(kind)) {
             setParameterInType(idref);
         } else {
             setParameterReturnType(idref);
@@ -391,29 +400,15 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     }
 
     /**
-     * Set the properties of a {@link Node} of the type DATATYPE, including the name, visibility, type and abstractness.
+     * Set the properties of a {@link Node} of the {@link NodeType#DATATYPE}, including the name, visibility, and type.
      *
      * @param node  the {@link Node} to be handled
      * @param event currently handled, containing the necessary attributes.
      * @return the newly updated {@link Node}
      */
     private Node addDataTypeProperties(Node node, XMLEvent event) {
-        String id = readAttributes(event).get(HREF).substring(105);
-        switch (id) {
-            case STRING:
-                node.setName("String");
-                break;
-            case UNLIMITED_INTEGER:
-                node.setName("UnlimitedInteger");
-            case INTEGER:
-                node.setName("Integer");
-                break;
-            case BOOLEAN:
-                node.setName("Boolean");
-                break;
-            default:
-                break;
-        }
+        final String typeId = readAttributes(event).get(HREF).substring(105);
+        node.setName(typeMap.get(typeId));
         node.setVisibility(Visibility.PUBLIC);
         node.addType(NodeType.DATATYPE);
         return node;
