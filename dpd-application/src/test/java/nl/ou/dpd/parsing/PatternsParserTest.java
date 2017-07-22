@@ -67,20 +67,20 @@ public class PatternsParserTest {
     @Mock
     private XMLEvent
             patternsEvent, patternEvent, notesEvent, noteEvent, nodesEvent,
-            nodeEvent1, nodeEvent2, relationsEvent, relationEvent,
+            concreteClassNodeEvent, interfaceNodeEvent, relationsEvent, relationEvent,
             interfaceRuleEvent, concreteClassRuleEvent, inheritanceRuleEvent;
 
     @Mock
     private StartElement
             patternsStartElement, patternStartElement, notesStartElement,
-            noteStartElement, nodesStartElement, nodeStartElement1,
-            nodeStartElement2, relationsStartElement, relationStartElement,
+            noteStartElement, nodesStartElement, concreteClassNodeStartElement,
+            interfaceNodeStartElement, relationsStartElement, relationStartElement,
             interfaceRuleStartElement, concreteClassRuleStartElement, inheritanceRuleStartElement;
 
     @Mock
     private Iterator
-            patternAttributeIterator, nodeAttributeIterator1,
-            nodeAttributeIterator2, relationAttributeIterator,
+            patternAttributeIterator, concreteClassAttributeIterator,
+            interfaceAttributeIterator, relationAttributeIterator,
             interfaceRuleAttributeIterator, concreteClassRuleAttributeIterator,
             inheritanceRuleAttributeIterator;
 
@@ -135,12 +135,12 @@ public class PatternsParserTest {
                 noteEvent, noteEvent,
                 notesEvent,
                 nodesEvent,
-                nodeEvent1,
+                concreteClassNodeEvent,
                 concreteClassRuleEvent, concreteClassRuleEvent,
-                nodeEvent1,
-                nodeEvent2,
+                concreteClassNodeEvent,
+                interfaceNodeEvent,
                 interfaceRuleEvent, interfaceRuleEvent,
-                nodeEvent2,
+                interfaceNodeEvent,
                 nodesEvent,
                 relationsEvent,
                 relationEvent,
@@ -197,13 +197,18 @@ public class PatternsParserTest {
     @Before
     public void initNodeStartElements() {
         // Set up the first node start element (a concrete class)
-        final Attribute concreteClassIdAttr = makeAttributeMock("id", "aConcreteClass");
-        when(nodeEvent1.isStartElement()).thenReturn(true, false);
-        when(nodeEvent1.asStartElement()).thenReturn(nodeStartElement1);
-        when(nodeStartElement1.getName()).thenReturn(QName.valueOf("node"));
-        when(nodeStartElement1.getAttributes()).thenReturn(nodeAttributeIterator1);
-        when(nodeAttributeIterator1.hasNext()).thenReturn(true, false, true, false);
-        when(nodeAttributeIterator1.next()).thenReturn(concreteClassIdAttr, concreteClassIdAttr);
+        final Attribute concreteClassIdAttr = makeAttributeMock("id", "aConcreteClassId");
+        final Attribute concreteClassNameAttr = makeAttributeMock("name", "aConcreteClassName");
+        when(concreteClassNodeEvent.isStartElement()).thenReturn(true, false);
+        when(concreteClassNodeEvent.asStartElement()).thenReturn(concreteClassNodeStartElement);
+        when(concreteClassNodeStartElement.getName()).thenReturn(QName.valueOf("node"));
+        when(concreteClassNodeStartElement.getAttributes()).thenReturn(concreteClassAttributeIterator);
+        when(concreteClassAttributeIterator.hasNext()).thenReturn(
+                true, true, false,
+                true, true, false);
+        when(concreteClassAttributeIterator.next()).thenReturn(
+                concreteClassNameAttr, concreteClassIdAttr,
+                concreteClassNameAttr, concreteClassIdAttr);
 
         // Node rule for a concrete class
         final Attribute nodeTypeAttributeConcreteClass = makeAttributeMock("nodeType", "CONCRETE_CLASS");
@@ -216,12 +221,16 @@ public class PatternsParserTest {
 
         // Set up the second node start element (an interface)
         final Attribute interfaceIdAttr = makeAttributeMock("id", "anInterface");
-        when(nodeEvent2.isStartElement()).thenReturn(true, false);
-        when(nodeEvent2.asStartElement()).thenReturn(nodeStartElement2);
-        when(nodeStartElement2.getName()).thenReturn(QName.valueOf("node"));
-        when(nodeStartElement2.getAttributes()).thenReturn(nodeAttributeIterator2);
-        when(nodeAttributeIterator2.hasNext()).thenReturn(true, false, true, false);
-        when(nodeAttributeIterator2.next()).thenReturn(interfaceIdAttr, interfaceIdAttr);
+        when(interfaceNodeEvent.isStartElement()).thenReturn(true, false);
+        when(interfaceNodeEvent.asStartElement()).thenReturn(interfaceNodeStartElement);
+        when(interfaceNodeStartElement.getName()).thenReturn(QName.valueOf("node"));
+        when(interfaceNodeStartElement.getAttributes()).thenReturn(interfaceAttributeIterator);
+        when(interfaceAttributeIterator.hasNext()).thenReturn(
+                true, false,
+                true, false);
+        when(interfaceAttributeIterator.next()).thenReturn(
+                interfaceIdAttr,
+                interfaceIdAttr);
 
         // Node rule for an interface
         final Attribute nodeTypeAttributeInterface = makeAttributeMock("nodeType", "INTERFACE");
@@ -245,7 +254,7 @@ public class PatternsParserTest {
     @Before
     public void initRelationStartElement() {
         // Set up the relation start element (an inheritance relation)
-        final Attribute nodeAttribute1 = makeAttributeMock("node1", "aConcreteClass");
+        final Attribute nodeAttribute1 = makeAttributeMock("node1", "aConcreteClassId");
         final Attribute nodeAttribute2 = makeAttributeMock("node2", "anInterface");
         when(relationEvent.isStartElement()).thenReturn(true, false);
         when(relationEvent.asStartElement()).thenReturn(relationStartElement);
@@ -290,7 +299,7 @@ public class PatternsParserTest {
     @Test
     public void testParseError1() {
         // Simulate an arbitrary exception somewhere along the way
-        when(nodeStartElement1.getAttributes()).thenThrow(new NullPointerException());
+        when(concreteClassNodeStartElement.getAttributes()).thenThrow(new NullPointerException());
 
         // We expect the arbitrary exception to be mapped to a ParseException
         thrown.expect(ParseException.class);
@@ -303,7 +312,7 @@ public class PatternsParserTest {
     @Test
     public void testParseError2() {
         // Simulate an arbitrary exception somewhere along the way
-        when(nodeStartElement1.getAttributes()).thenThrow(new ParseException("Oops", null));
+        when(concreteClassNodeStartElement.getAttributes()).thenThrow(new ParseException("Oops", null));
 
         // We expect the arbitrary exception to be mapped to a ParseException
         thrown.expect(ParseException.class);
@@ -330,7 +339,7 @@ public class PatternsParserTest {
         assertThat(nodeSet.size(), is(2));
 
         final Node concreteClassNode = nodeIterator.next();
-        assertThat(concreteClassNode.getId(), is("aConcreteClass"));
+        assertThat(concreteClassNode.getId(), is("aConcreteClassId"));
         assertThat(concreteClassNode.getTypes().size(), is(1));
         assertThat(concreteClassNode.getTypes().iterator().next(), is(NodeType.CONCRETE_CLASS));
 
@@ -344,8 +353,8 @@ public class PatternsParserTest {
         assertThat(relationSet.size(), is(1));
 
         final Relation relation = relationIterator.next();
-        assertThat(relation.getId(), is("aConcreteClass-anInterface"));
-        assertThat(relation.getName(), is("aConcreteClass-anInterface"));
+        assertThat(relation.getId(), is("aConcreteClassName-anInterface"));
+        assertThat(relation.getName(), is("aConcreteClassName-anInterface"));
 
         final Set<RelationProperty> relationProperties = relation.getRelationProperties();
         assertThat(relationProperties.size(), is(1));
