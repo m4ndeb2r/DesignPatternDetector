@@ -2,6 +2,11 @@ package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.node.NodeType;
+import nl.ou.dpd.domain.relation.Cardinality;
+import nl.ou.dpd.domain.relation.Relation;
+import nl.ou.dpd.domain.relation.RelationProperty;
+import nl.ou.dpd.domain.relation.RelationType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,8 +49,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PatternsParserTest {
 
-    // This filename is just to satisfy the FileInputStream of the parser
-    private static final String DUMMY_XML = "/patterns/dummy.xml";
+    // This file is created just to satisfy the FileInputStream of the parser
+    private String xmlFile = getPath("/patterns/dummy.xml");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -62,18 +67,22 @@ public class PatternsParserTest {
     @Mock
     private XMLEvent
             patternsEvent, patternEvent, notesEvent, noteEvent, nodesEvent,
-            nodeEvent1, nodeEvent2, relationsEvent, relationEvent;
+            nodeEvent1, nodeEvent2, relationsEvent, relationEvent,
+            interfaceRuleEvent, concreteClassRuleEvent, inheritanceRuleEvent;
 
     @Mock
     private StartElement
             patternsStartElement, patternStartElement, notesStartElement,
             noteStartElement, nodesStartElement, nodeStartElement1,
-            nodeStartElement2, relationsStartElement, relationStartElement;
+            nodeStartElement2, relationsStartElement, relationStartElement,
+            interfaceRuleStartElement, concreteClassRuleStartElement, inheritanceRuleStartElement;
 
     @Mock
     private Iterator
             patternAttributeIterator, nodeAttributeIterator1,
-            nodeAttributeIterator2, relationAttributeIterator;
+            nodeAttributeIterator2, relationAttributeIterator,
+            interfaceRuleAttributeIterator, concreteClassRuleAttributeIterator,
+            inheritanceRuleAttributeIterator;
 
     @Mock
     private Schema schema;
@@ -84,12 +93,6 @@ public class PatternsParserTest {
     // The test subject
     private PatternsParser patternsParser;
 
-    /**
-     * Initialises the {@link PatternsParser}, the test subject.
-     *
-     * @throws XMLStreamException not expected
-     * @throws SAXException       not expected
-     */
     @Before
     public void initParser() throws XMLStreamException, SAXException {
         patternsParser = new PatternsParser(xsdSchemaFactory, xmlInputFactory);
@@ -98,18 +101,64 @@ public class PatternsParserTest {
         when(schema.newValidator()).thenReturn(validator);
     }
 
-    /**
-     * Sets the mock data for the pattern start element of the patterns XML file.
-     *
-     * @throws XMLStreamException not expected
-     */
     @Before
-    public void initPatternStartElement() throws XMLStreamException {
-        // Set up the patterns start element
+    public void initEventReader() throws XMLStreamException {
+        when(xmlEventReader.hasNext()).thenReturn(
+                true, // patterns start-element
+                true, // pattern start-element
+                true, // notes start-element
+                true, // note start-element
+                true, // note end-element
+                true, // notes end-element
+                true, // nodes start-element
+                true, // node1 start-element
+                true, // node1.rule start-element
+                true, // node1.rule end-element
+                true, // node1 end-element
+                true, // node2 start-element
+                true, // node2.rule start-element
+                true, // node2.rule end-element
+                true, // node2 end-element
+                true, // nodes end-element
+                true, // relations start-element
+                true, // relation start-element
+                true, // relation.rule start-element
+                true, // relation.rule end-element
+                true, // relation end-element
+                true, // relations end-element
+                true, // pattern end-element
+                true, // patterns end-element
+                false);
+        when(xmlEventReader.nextEvent()).thenReturn(
+                patternsEvent, patternEvent,
+                notesEvent,
+                noteEvent, noteEvent,
+                notesEvent,
+                nodesEvent,
+                nodeEvent1,
+                concreteClassRuleEvent, concreteClassRuleEvent,
+                nodeEvent1,
+                nodeEvent2,
+                interfaceRuleEvent, interfaceRuleEvent,
+                nodeEvent2,
+                nodesEvent,
+                relationsEvent,
+                relationEvent,
+                inheritanceRuleEvent, inheritanceRuleEvent,
+                relationEvent,
+                relationsEvent,
+                patternEvent, patternsEvent);
+    }
+
+    @Before
+    public void initPatternsStartElement() throws XMLStreamException {
         when(patternsEvent.isStartElement()).thenReturn(true, false);
         when(patternsEvent.asStartElement()).thenReturn(patternsStartElement);
         when(patternsStartElement.getName()).thenReturn(QName.valueOf("patterns"));
+    }
 
+    @Before
+    public void initPatternStartElement() throws XMLStreamException {
         // Set up the attributes of the pattern start element
         final Attribute nameAttribute = makeAttributeMock("name", "patternName");
         final Attribute familyAttribute = makeAttributeMock("family", "patternFamily");
@@ -123,56 +172,100 @@ public class PatternsParserTest {
         when(patternAttributeIterator.next()).thenReturn(nameAttribute, familyAttribute);
     }
 
-    /**
-     * Sets the mock data for the nodes and node start elements of the patterns XML file. Note that any mock data set
-     * here must be consistant with mock data set for the relations and relation start elements below.
-     */
     @Before
-    public void initNodeStartElements() {
+    public void initNoteStartElement() throws XMLStreamException {
+        when(notesEvent.isStartElement()).thenReturn(true, false);
+        when(notesEvent.asStartElement()).thenReturn(notesStartElement);
+        when(notesStartElement.getName()).thenReturn(QName.valueOf("notes"));
+
+        when(noteEvent.isStartElement()).thenReturn(true, false);
+        when(noteEvent.asStartElement()).thenReturn(noteStartElement);
+        when(noteStartElement.getName()).thenReturn(QName.valueOf("note"));
+
+        when(xmlEventReader.getElementText()).thenReturn("A nice note");
+    }
+
+    @Before
+    public void initNodesStartElement() {
         // Set up the nodes start element
         when(nodesEvent.isStartElement()).thenReturn(true, false);
         when(nodesEvent.asStartElement()).thenReturn(nodesStartElement);
         when(nodesStartElement.getName()).thenReturn(QName.valueOf("nodes"));
 
-        // Set up the first node start element
-        final Attribute idAttribute1 = makeAttributeMock("id", "nodeId1");
+    }
+
+    @Before
+    public void initNodeStartElements() {
+        // Set up the first node start element (a concrete class)
+        final Attribute concreteClassIdAttr = makeAttributeMock("id", "aConcreteClass");
         when(nodeEvent1.isStartElement()).thenReturn(true, false);
         when(nodeEvent1.asStartElement()).thenReturn(nodeStartElement1);
         when(nodeStartElement1.getName()).thenReturn(QName.valueOf("node"));
         when(nodeStartElement1.getAttributes()).thenReturn(nodeAttributeIterator1);
         when(nodeAttributeIterator1.hasNext()).thenReturn(true, false, true, false);
-        when(nodeAttributeIterator1.next()).thenReturn(idAttribute1, idAttribute1);
+        when(nodeAttributeIterator1.next()).thenReturn(concreteClassIdAttr, concreteClassIdAttr);
 
-        // Set up the second node start element
-        final Attribute idAttribute2 = makeAttributeMock("id", "nodeId2");
+        // Node rule for a concrete class
+        final Attribute nodeTypeAttributeConcreteClass = makeAttributeMock("nodeType", "CONCRETE_CLASS");
+        when(concreteClassRuleEvent.isStartElement()).thenReturn(true, false);
+        when(concreteClassRuleEvent.asStartElement()).thenReturn(concreteClassRuleStartElement);
+        when(concreteClassRuleStartElement.getName()).thenReturn(QName.valueOf("node.rule"));
+        when(concreteClassRuleStartElement.getAttributes()).thenReturn(concreteClassRuleAttributeIterator);
+        when(concreteClassRuleAttributeIterator.hasNext()).thenReturn(true, false);
+        when(concreteClassRuleAttributeIterator.next()).thenReturn(nodeTypeAttributeConcreteClass);
+
+        // Set up the second node start element (an interface)
+        final Attribute interfaceIdAttr = makeAttributeMock("id", "anInterface");
         when(nodeEvent2.isStartElement()).thenReturn(true, false);
         when(nodeEvent2.asStartElement()).thenReturn(nodeStartElement2);
         when(nodeStartElement2.getName()).thenReturn(QName.valueOf("node"));
         when(nodeStartElement2.getAttributes()).thenReturn(nodeAttributeIterator2);
         when(nodeAttributeIterator2.hasNext()).thenReturn(true, false, true, false);
-        when(nodeAttributeIterator2.next()).thenReturn(idAttribute2, idAttribute2);
+        when(nodeAttributeIterator2.next()).thenReturn(interfaceIdAttr, interfaceIdAttr);
+
+        // Node rule for an interface
+        final Attribute nodeTypeAttributeInterface = makeAttributeMock("nodeType", "INTERFACE");
+        when(interfaceRuleEvent.isStartElement()).thenReturn(true, false);
+        when(interfaceRuleEvent.asStartElement()).thenReturn(interfaceRuleStartElement);
+        when(interfaceRuleStartElement.getName()).thenReturn(QName.valueOf("node.rule"));
+        when(interfaceRuleStartElement.getAttributes()).thenReturn(interfaceRuleAttributeIterator);
+        when(interfaceRuleAttributeIterator.hasNext()).thenReturn(true, false);
+        when(interfaceRuleAttributeIterator.next()).thenReturn(nodeTypeAttributeInterface);
     }
 
-    /**
-     * Sets the mock data for the relations and relation start elements of the patterns XML file. Note that any mock
-     * data set here must be consistant with mock data set for the nodes and node start elements above.
-     */
     @Before
-    public void initRelationStartElement() {
+    public void initRelationsStartElement() {
         // Set up the relations start element
         when(relationsEvent.isStartElement()).thenReturn(true, false);
         when(relationsEvent.asStartElement()).thenReturn(relationsStartElement);
         when(relationsStartElement.getName()).thenReturn(QName.valueOf("relations"));
 
-        // Set up the relation start element
-        final Attribute nodeAttribute1 = makeAttributeMock("node1", "nodeId1");
-        final Attribute nodeAttribute2 = makeAttributeMock("node2", "nodeId2");
+    }
+
+    @Before
+    public void initRelationStartElement() {
+        // Set up the relation start element (an inheritance relation)
+        final Attribute nodeAttribute1 = makeAttributeMock("node1", "aConcreteClass");
+        final Attribute nodeAttribute2 = makeAttributeMock("node2", "anInterface");
         when(relationEvent.isStartElement()).thenReturn(true, false);
         when(relationEvent.asStartElement()).thenReturn(relationStartElement);
         when(relationStartElement.getName()).thenReturn(QName.valueOf("relation"));
         when(relationStartElement.getAttributes()).thenReturn(relationAttributeIterator);
         when(relationAttributeIterator.hasNext()).thenReturn(true, true, false, true, true, false);
         when(relationAttributeIterator.next()).thenReturn(nodeAttribute1, nodeAttribute2, nodeAttribute1, nodeAttribute2);
+
+        // Relation rule for an inheritance relation
+        final Attribute relationtypeAttributeInhertance = makeAttributeMock("relationType", "IMPLEMENTS");
+        final Attribute cardinalityLeftAttributeInhertance = makeAttributeMock("cardinalityLeft", "1..*");
+        // When cardinalityRight is provided, the parser will assume cardinality 1.
+        when(inheritanceRuleEvent.isStartElement()).thenReturn(true, false);
+        when(inheritanceRuleEvent.asStartElement()).thenReturn(inheritanceRuleStartElement);
+        when(inheritanceRuleStartElement.getName()).thenReturn(QName.valueOf("relation.rule"));
+        when(inheritanceRuleStartElement.getAttributes()).thenReturn(inheritanceRuleAttributeIterator);
+        when(inheritanceRuleAttributeIterator.hasNext()).thenReturn(true, true, false);
+        when(inheritanceRuleAttributeIterator.next()).thenReturn(
+                relationtypeAttributeInhertance,
+                cardinalityLeftAttributeInhertance);
     }
 
     /**
@@ -183,8 +276,6 @@ public class PatternsParserTest {
      */
     @Test
     public void testXSDValidationFailing() throws IOException, SAXException {
-        final String xmlFile = getPath(DUMMY_XML);
-
         // Set up the validator to throw a SAXException when the validate methode is called
         doThrow(new SAXException()).when(validator).validate(any(Source.class));
 
@@ -196,110 +287,46 @@ public class PatternsParserTest {
         patternsParser.parse(xmlFile);
     }
 
-    /**
-     * Tests if the pattern elements are handled correctly. Note: the mocked situation would not pass an XSD validation,
-     * but that is not relevant here. Here, we test if the name and family name of the pattern in the element are
-     * stored correctly.
-     *
-     * @throws XMLStreamException not expected
-     */
-    @Test
-    public void testHandlePatternEvent() throws XMLStreamException {
-        when(xmlEventReader.hasNext()).thenReturn(
-                true, // patterns start-element
-                true, // pattern start-element
-                true, // pattern end-element
-                true, // patterns end-element
-                false);
-        when(xmlEventReader.nextEvent()).thenReturn(patternsEvent, patternEvent, patternEvent, patternsEvent);
-
-        final String xmlFile = getPath(DUMMY_XML);
-        final List<DesignPattern> designPatterns = patternsParser.parse(xmlFile);
-
-        assertThat(designPatterns.size(), is(1));
-        assertThat(designPatterns.get(0).getName(), is("patternName"));
-        assertThat(designPatterns.get(0).getFamily(), is("patternFamily"));
-    }
-
-    /**
-     * Tests if the note elements are handled correctly. Note: the mocked situation would not pass an XSD validation,
-     * but that is not relevant here. Here, we test if any notes in the notes element are stored correctly.
-     */
-    @Test
-    public void testHandleNoteEvent() throws XMLStreamException {
-        when(xmlEventReader.hasNext()).thenReturn(
-                true, // patterns start-element
-                true, // pattern start-element
-                true, // notes start-element
-                true, // note start-element
-                true, // note end-element
-                true, // notes end-element
-                true, // pattern end-element
-                true, // patterns end-element
-                false);
-        when(xmlEventReader.nextEvent()).thenReturn(
-                patternsEvent, patternEvent,
-                notesEvent, noteEvent, noteEvent, notesEvent,
-                patternEvent, patternsEvent);
-
-        when(notesEvent.isStartElement()).thenReturn(true, false);
-        when(notesEvent.asStartElement()).thenReturn(notesStartElement);
-        when(notesStartElement.getName()).thenReturn(QName.valueOf("notes"));
-
-        when(noteEvent.isStartElement()).thenReturn(true, false);
-        when(noteEvent.asStartElement()).thenReturn(noteStartElement);
-        when(noteStartElement.getName()).thenReturn(QName.valueOf("note"));
-
-        when(xmlEventReader.getElementText()).thenReturn("A note");
-
-        final String xmlFile = getPath(DUMMY_XML);
-        final List<DesignPattern> designPatterns = patternsParser.parse(xmlFile);
-
-        assertThat(designPatterns.size(), is(1));
-        assertThat(designPatterns.get(0).getNotes().size(), is(1));
-        assertThat(designPatterns.get(0).getNotes().iterator().next(), is("A note"));
-    }
-
-    /**
-     * Tests if (nodes and) relations are handled correctly by the parser.
-     *
-     * @throws XMLStreamException not expected.
-     */
     @Test
     public void testHandleRelationEvent() throws XMLStreamException {
-        when(xmlEventReader.hasNext()).thenReturn(
-                true, // patterns start-element
-                true, // pattern start-element
-                true, // nodes start-element
-                true, // node1 start-element
-                true, // node1 end-element
-                true, // node2 start-element
-                true, // node2 end-element
-                true, // nodes end-element
-                true, // relations start-element
-                true, // relation start-element
-                true, // relation end-element
-                true, // relations end-element
-                true, // pattern end-element
-                true, // patterns end-element
-                false);
-        when(xmlEventReader.nextEvent()).thenReturn(
-                patternsEvent, patternEvent,
-                nodesEvent, nodeEvent1, nodeEvent1, nodeEvent2, nodeEvent2, nodesEvent,
-                relationsEvent, relationEvent, relationEvent, relationsEvent,
-                patternEvent, patternsEvent);
-
-        final String xmlFile = getPath(DUMMY_XML);
         final List<DesignPattern> designPatterns = patternsParser.parse(xmlFile);
 
+        final DesignPattern designPattern = designPatterns.get(0);
+        assertThat(designPattern.getName(), is("patternName"));
+        assertThat(designPattern.getFamily(), is("patternFamily"));
+
+        final Set<String> notes = designPattern.getNotes();
         assertThat(designPatterns.size(), is(1));
+        assertThat(notes.size(), is(1));
+        assertThat(notes.iterator().next(), is("A nice note"));
 
-        final Set<Node> nodeSet = designPatterns.get(0).vertexSet();
-        final Iterator<Node> iterator = nodeSet.iterator();
-
+        final Set<Node> nodeSet = designPattern.vertexSet();
+        final Iterator<Node> nodeIterator = nodeSet.iterator();
         assertThat(nodeSet.size(), is(2));
-        assertThat(iterator.next().getId(), is("nodeId1"));
-        assertThat(iterator.next().getId(), is("nodeId2"));
+
+        final Node concreteClassNode = nodeIterator.next();
+        assertThat(concreteClassNode.getId(), is("aConcreteClass"));
+        assertThat(concreteClassNode.getTypes().size(), is(1));
+        assertThat(concreteClassNode.getTypes().iterator().next(), is(NodeType.CONCRETE_CLASS));
+
+        final Node interfaceNode = nodeIterator.next();
+        assertThat(interfaceNode.getId(), is("anInterface"));
+        assertThat(interfaceNode.getTypes().size(), is(1));
+        assertThat(interfaceNode.getTypes().iterator().next(), is(NodeType.INTERFACE));
+
+        final Set<Relation> relationSet = designPattern.edgeSet();
+        final Iterator<Relation> relationIterator = relationSet.iterator();
+        assertThat(relationSet.size(), is(1));
+
+        final Relation relation = relationIterator.next();
+        final Set<RelationProperty> relationProperties = relation.getRelationProperties();
+        assertThat(relationProperties.size(), is(1));
+
+        final Iterator<RelationProperty> propertyIterator = relationProperties.iterator();
+        final RelationProperty relationProperty = propertyIterator.next();
+        assertThat(relationProperty.getRelationType(), is(RelationType.IMPLEMENTS));
+        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1..*")));
+        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
     }
 
     private String getPath(String resourceName) {
