@@ -18,9 +18,9 @@ public class ParserFactory {
      * @return the created {@link ArgoUMLParser}
      */
     public static ArgoUMLParser createArgoUMLParser() {
-        ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser(XMLInputFactory.newInstance());
-        ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser(XMLInputFactory.newInstance());
-        SystemRelationsExtractor systemRelationsExtractor = new SystemRelationsExtractor();
+        final ArgoUMLNodeParser nodeParser = new ArgoUMLNodeParser(XMLInputFactory.newInstance());
+        final ArgoUMLRelationParser relationParser = new ArgoUMLRelationParser(XMLInputFactory.newInstance());
+        final SystemRelationsExtractor systemRelationsExtractor = new SystemRelationsExtractor();
         return new ArgoUMLParser(nodeParser, relationParser, systemRelationsExtractor);
     }
 

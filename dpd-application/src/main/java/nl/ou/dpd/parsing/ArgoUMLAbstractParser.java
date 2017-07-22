@@ -45,6 +45,10 @@ public abstract class ArgoUMLAbstractParser {
      * Contains the passed events. Keeps track of the hierarchical structure of the XMI-tags.
      */
     protected Stack<XMLEvent> events = new Stack<>();
+
+    /**
+     * Contains the collected nodes from the XMI-tags.
+     */
     protected Map<String, Node> nodes;
 
     protected void doParse(String filename) {

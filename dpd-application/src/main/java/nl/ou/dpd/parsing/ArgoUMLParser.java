@@ -24,14 +24,14 @@ public class ArgoUMLParser {
      * Creates a (compound) parser, consisting of the specified {@link ArgoUMLNodeParser}, {@link ArgoUMLRelationParser}
      * and {@link SystemRelationsExtractor}.
      * <p>
-     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * This constructor has package protected access so it can only be instantiated from within the same package (by the
      * ParserFactory or in a unit test in the same package).
      *
      * @param nodeparser               a parser for the nodes in the ArgoUML input xmi
      * @param relationparser           a parser for the relations in the ArgoUML input xmi
      * @param systemRelationsExtractor the system relation extractor performing a kind of post-parsing
      */
-    protected ArgoUMLParser(
+    ArgoUMLParser(
             ArgoUMLNodeParser nodeparser,
             ArgoUMLRelationParser relationparser,
             SystemRelationsExtractor systemRelationsExtractor) {

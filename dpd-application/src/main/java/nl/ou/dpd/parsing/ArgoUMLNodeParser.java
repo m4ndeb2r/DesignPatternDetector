@@ -79,12 +79,12 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     /**
      * A constructor expecting an {@link XMLInputFactory}.
      * <p>
-     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * This constructor has package protected access so it can only be instantiated from within the same package (by the
      * ParserFactory or in a unit test in the same package).
      *
      * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
      */
-    protected ArgoUMLNodeParser(XMLInputFactory xmlInputFactory) {
+    ArgoUMLNodeParser(XMLInputFactory xmlInputFactory) {
         super(xmlInputFactory);
     }
 
@@ -98,6 +98,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     public Map<String, Node> parse(String filename) {
         this.nodes = new HashMap<>();
         doParse(filename);
+        LOGGER.info(String.format("Parsed %d nodes from %s.", nodes.size(), filename));
         return nodes;
     }
 

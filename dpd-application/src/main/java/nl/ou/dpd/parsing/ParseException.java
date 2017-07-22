@@ -8,9 +8,9 @@ package nl.ou.dpd.parsing;
 public class ParseException extends RuntimeException {
 
     /**
-     * {@inheritDoc}
+     * A constructor with package protected access so only parsers can instantiate it.
      */
-    public ParseException(String message, Throwable cause) {
+    ParseException(String message, Throwable cause) {
         super(message, cause);
     }
 

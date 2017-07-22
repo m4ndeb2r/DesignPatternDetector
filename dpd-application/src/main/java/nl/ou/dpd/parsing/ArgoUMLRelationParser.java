@@ -68,12 +68,12 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     /**
      * A constructor expecting an {@link XMLInputFactory}.
      * <p>
-     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * This constructor has package protected access so it can only be instantiated from within the same package (by the
      * ParserFactory or in a unit test in the same package).
      *
      * @param xmlInputFactory used for instantiating {@link XMLEventReader}s processing XML files.
      */
-    protected ArgoUMLRelationParser(XMLInputFactory xmlInputFactory) {
+    ArgoUMLRelationParser(XMLInputFactory xmlInputFactory) {
         super(xmlInputFactory);
     }
 
@@ -87,6 +87,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     public SystemUnderConsideration parse(String filename, Map<String, Node> nodes) {
         initParse(nodes);
         doParse(filename);
+        LOGGER.info(String.format("Parsed %d relations from %s.", system.edgeSet().size(), filename));
         return system;
     }
 

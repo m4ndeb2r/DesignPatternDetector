@@ -10,9 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import javax.xml.XMLConstants;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.validation.SchemaFactory;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
