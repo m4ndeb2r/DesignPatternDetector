@@ -38,7 +38,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -160,8 +159,8 @@ public class PatternsParserTest {
     @Before
     public void initPatternStartElement() throws XMLStreamException {
         // Set up the attributes of the pattern start element
-        final Attribute nameAttribute = makeAttributeMock("name", "patternName");
-        final Attribute familyAttribute = makeAttributeMock("family", "patternFamily");
+        final Attribute nameAttribute = ParseTestHelper.makeAttributeMock("name", "patternName");
+        final Attribute familyAttribute = ParseTestHelper.makeAttributeMock("family", "patternFamily");
 
         // Set up the pattern start element
         when(patternEvent.isStartElement()).thenReturn(true, false);
@@ -197,8 +196,8 @@ public class PatternsParserTest {
     @Before
     public void initNodeStartElements() {
         // Set up the first node start element (a concrete class)
-        final Attribute concreteClassIdAttr = makeAttributeMock("id", "aConcreteClassId");
-        final Attribute concreteClassNameAttr = makeAttributeMock("name", "aConcreteClassName");
+        final Attribute concreteClassIdAttr = ParseTestHelper.makeAttributeMock("id", "aConcreteClassId");
+        final Attribute concreteClassNameAttr = ParseTestHelper.makeAttributeMock("name", "aConcreteClassName");
         when(concreteClassNodeEvent.isStartElement()).thenReturn(true, false);
         when(concreteClassNodeEvent.asStartElement()).thenReturn(concreteClassNodeStartElement);
         when(concreteClassNodeStartElement.getName()).thenReturn(QName.valueOf("node"));
@@ -211,7 +210,7 @@ public class PatternsParserTest {
                 concreteClassNameAttr, concreteClassIdAttr);
 
         // Node rule for a concrete class
-        final Attribute nodeTypeAttributeConcreteClass = makeAttributeMock("nodeType", "CONCRETE_CLASS");
+        final Attribute nodeTypeAttributeConcreteClass = ParseTestHelper.makeAttributeMock("nodeType", "CONCRETE_CLASS");
         when(concreteClassRuleEvent.isStartElement()).thenReturn(true, false);
         when(concreteClassRuleEvent.asStartElement()).thenReturn(concreteClassRuleStartElement);
         when(concreteClassRuleStartElement.getName()).thenReturn(QName.valueOf("node.rule"));
@@ -220,7 +219,7 @@ public class PatternsParserTest {
         when(concreteClassRuleAttributeIterator.next()).thenReturn(nodeTypeAttributeConcreteClass);
 
         // Set up the second node start element (an interface)
-        final Attribute interfaceIdAttr = makeAttributeMock("id", "anInterface");
+        final Attribute interfaceIdAttr = ParseTestHelper.makeAttributeMock("id", "anInterface");
         when(interfaceNodeEvent.isStartElement()).thenReturn(true, false);
         when(interfaceNodeEvent.asStartElement()).thenReturn(interfaceNodeStartElement);
         when(interfaceNodeStartElement.getName()).thenReturn(QName.valueOf("node"));
@@ -233,7 +232,7 @@ public class PatternsParserTest {
                 interfaceIdAttr);
 
         // Node rule for an interface
-        final Attribute nodeTypeAttributeInterface = makeAttributeMock("nodeType", "INTERFACE");
+        final Attribute nodeTypeAttributeInterface = ParseTestHelper.makeAttributeMock("nodeType", "INTERFACE");
         when(interfaceRuleEvent.isStartElement()).thenReturn(true, false);
         when(interfaceRuleEvent.asStartElement()).thenReturn(interfaceRuleStartElement);
         when(interfaceRuleStartElement.getName()).thenReturn(QName.valueOf("node.rule"));
@@ -254,8 +253,8 @@ public class PatternsParserTest {
     @Before
     public void initRelationStartElement() {
         // Set up the relation start element (an inheritance relation)
-        final Attribute nodeAttribute1 = makeAttributeMock("node1", "aConcreteClassId");
-        final Attribute nodeAttribute2 = makeAttributeMock("node2", "anInterface");
+        final Attribute nodeAttribute1 = ParseTestHelper.makeAttributeMock("node1", "aConcreteClassId");
+        final Attribute nodeAttribute2 = ParseTestHelper.makeAttributeMock("node2", "anInterface");
         when(relationEvent.isStartElement()).thenReturn(true, false);
         when(relationEvent.asStartElement()).thenReturn(relationStartElement);
         when(relationStartElement.getName()).thenReturn(QName.valueOf("relation"));
@@ -264,8 +263,8 @@ public class PatternsParserTest {
         when(relationAttributeIterator.next()).thenReturn(nodeAttribute1, nodeAttribute2, nodeAttribute1, nodeAttribute2);
 
         // Relation rule for an inheritance relation
-        final Attribute relationtypeAttributeInhertance = makeAttributeMock("relationType", "IMPLEMENTS");
-        final Attribute cardinalityLeftAttributeInhertance = makeAttributeMock("cardinalityLeft", "1..*");
+        final Attribute relationtypeAttributeInhertance = ParseTestHelper.makeAttributeMock("relationType", "IMPLEMENTS");
+        final Attribute cardinalityLeftAttributeInhertance = ParseTestHelper.makeAttributeMock("cardinalityLeft", "1..*");
         // When cardinalityRight is provided, the parser will assume cardinality 1.
         when(inheritanceRuleEvent.isStartElement()).thenReturn(true, false);
         when(inheritanceRuleEvent.asStartElement()).thenReturn(inheritanceRuleStartElement);
@@ -297,7 +296,7 @@ public class PatternsParserTest {
     }
 
     @Test
-    public void testAnyError() {
+    public void testAnyException() {
         // Simulate an arbitrary exception somewhere along the way
         when(concreteClassNodeStartElement.getAttributes()).thenThrow(new NullPointerException());
 
@@ -310,7 +309,7 @@ public class PatternsParserTest {
     }
 
     @Test
-    public void testParseError() {
+    public void testParseException() {
         // Simulate an arbitrary exception somewhere along the way
         when(concreteClassNodeStartElement.getAttributes()).thenThrow(new ParseException("Oops", null));
 
@@ -368,13 +367,6 @@ public class PatternsParserTest {
 
     private String getPath(String resourceName) {
         return this.getClass().getResource(resourceName).getPath();
-    }
-
-    private Attribute makeAttributeMock(String name, String value) {
-        final Attribute mock = mock(Attribute.class);
-        when(mock.getName()).thenReturn(QName.valueOf(name));
-        when(mock.getValue()).thenReturn(value);
-        return mock;
     }
 
 }

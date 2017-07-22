@@ -234,7 +234,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
         final Map<String, String> attributes = readAttributes(event);
         final String opId = readAttributes(events.peek()).get(ID);
         final Operation operation = findOperationById(opId);
-        if ("in".equals(attributes.get(KIND))) {
+        if (INPUT.equals(attributes.get(KIND))) {
             createIncompleteParameter(event, operation);
         } else {
             parentOperation = operation;

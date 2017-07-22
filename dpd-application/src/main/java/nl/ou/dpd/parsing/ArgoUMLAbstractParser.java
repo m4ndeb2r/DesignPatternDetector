@@ -94,8 +94,13 @@ public abstract class ArgoUMLAbstractParser {
      */
     protected Map<String, String> readAttributes(XMLEvent event) {
         final Map<String, String> attributes = new HashMap<>();
-        ((Iterator<Attribute>) event.asStartElement().getAttributes())
-                .forEachRemaining(attr -> attributes.put(attr.getName().getLocalPart(), attr.getValue()));
+        final Iterator<Attribute> attributeIterator = event.asStartElement().getAttributes();
+        while (attributeIterator.hasNext()) {
+            final Attribute attribute = attributeIterator.next();
+            final String name = attribute.getName().getLocalPart();
+            final String value = attribute.getValue();
+            attributes.put(name, value);
+        }
         return attributes;
     }
 
