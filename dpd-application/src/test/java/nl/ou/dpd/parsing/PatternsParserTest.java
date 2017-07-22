@@ -288,7 +288,32 @@ public class PatternsParserTest {
     }
 
     @Test
-    public void testHandleRelationEvent() throws XMLStreamException {
+    public void testParseError1() {
+        // Simulate an arbitrary exception somewhere along the way
+        when(nodeStartElement1.getAttributes()).thenThrow(new NullPointerException());
+
+        // We expect the arbitrary exception to be mapped to a ParseException
+        thrown.expect(ParseException.class);
+        thrown.expectCause(is(NullPointerException.class));
+        thrown.expectMessage(String.format("The pattern template file '%s' could not be parsed.", xmlFile));
+
+        patternsParser.parse(xmlFile);
+    }
+
+    @Test
+    public void testParseError2() {
+        // Simulate an arbitrary exception somewhere along the way
+        when(nodeStartElement1.getAttributes()).thenThrow(new ParseException("Oops", null));
+
+        // We expect the arbitrary exception to be mapped to a ParseException
+        thrown.expect(ParseException.class);
+        thrown.expectMessage("Oops");
+
+        patternsParser.parse(xmlFile);
+    }
+
+    @Test
+    public void testParseSuccess() throws XMLStreamException {
         final List<DesignPattern> designPatterns = patternsParser.parse(xmlFile);
 
         final DesignPattern designPattern = designPatterns.get(0);
@@ -319,6 +344,8 @@ public class PatternsParserTest {
         assertThat(relationSet.size(), is(1));
 
         final Relation relation = relationIterator.next();
+        assertThat(relation.getName(), is("aConcreteClass-anInterface"));
+
         final Set<RelationProperty> relationProperties = relation.getRelationProperties();
         assertThat(relationProperties.size(), is(1));
 
