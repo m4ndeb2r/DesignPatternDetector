@@ -344,6 +344,7 @@ public class PatternsParserTest {
         assertThat(relationSet.size(), is(1));
 
         final Relation relation = relationIterator.next();
+        assertThat(relation.getId(), is("aConcreteClass-anInterface"));
         assertThat(relation.getName(), is("aConcreteClass-anInterface"));
 
         final Set<RelationProperty> relationProperties = relation.getRelationProperties();

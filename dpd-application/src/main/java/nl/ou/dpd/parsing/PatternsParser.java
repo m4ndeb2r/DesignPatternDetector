@@ -186,11 +186,12 @@ public class PatternsParser {
         final Node target = getNodeById(getAttributeFromEvent(event, NODE_2));
 
         if (!designPattern.containsEdge(source, target)) {
+            final String name = String.format("%s-%s", source.getName(), target.getName());
             designPattern.addVertex(source);
             designPattern.addVertex(target);
             designPattern.addEdge(source, target)
-                    .setId(id)
-                    .setName(String.format("%s-%s", source.getName(), target.getName()));
+                    .setId(id == null? name : id)
+                    .setName(name);
         }
         relation = designPattern.getEdge(source, target);
     }
