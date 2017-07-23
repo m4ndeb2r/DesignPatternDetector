@@ -5,6 +5,7 @@ import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.node.Parameter;
 import nl.ou.dpd.domain.node.Visibility;
+import nl.ou.dpd.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -389,7 +390,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * @return the newly updated {@link Node}
      */
     private Node addDataTypeProperties(Node node, XMLEvent event) {
-        final String typeId = readAttributes(event).get(HREF).substring(105);
+        final String typeId = Util.lastSubstringOf(readAttributes(event).get(HREF), 3);
         node.setName(typeMap.get(typeId));
         node.setVisibility(Visibility.PUBLIC);
         node.addType(NodeType.DATATYPE);

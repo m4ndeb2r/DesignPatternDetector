@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * A helper class for unit testing.
+ * A helper class for XML parser unit testing. Mainly creates {@link XMLEvent} mock objects and their attributes.
  *
  * @author Martin de Boer
  */
@@ -57,6 +57,10 @@ public class ParseTestHelper {
     static XMLEvent createXMLEventMock(String name, Attribute attribute) {
         final Iterator attributesIterator = mock(Iterator.class);
         when(attributesIterator.hasNext()).thenReturn(
+                true, // hasNext = true (next = attribute)
+                false, // hasNext = false (no more attributes)
+                true, // hasNext = true (next = attribute)
+                false, // hasNext = false (no more attributes)
                 true, // hasNext = true (next = attribute)
                 false, // hasNext = false (no more attributes)
                 true, // hasNext = true (next = attribute)

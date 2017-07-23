@@ -24,4 +24,14 @@ public final class Util {
         return (a == null && b == null) || (a != null && a.equals(b));
     }
 
+    /**
+     * Returns the last i characters of a String s.
+     *
+     * @param s the input string
+     * @param i the number of characters to return
+     * @return the last i characters of s
+     */
+    public static String lastSubstringOf(String s, int i) {
+        return s.substring(s.length() - i);
+    }
 }
