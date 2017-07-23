@@ -28,12 +28,12 @@ public class UtilTest {
 
     @Test
     public void testLastSubstringOf() {
-        assertThat(Util.lastSubstringOf("12345", 3), is("345"));
-        assertThat(Util.lastSubstringOf("12", 2), is("12"));
-        assertThat(Util.lastSubstringOf("12345", 0), is(""));
-        assertThat(Util.lastSubstringOf("", 0), is(""));
+        assertThat(Util.inverseSubstringOf("12345", 3), is("345"));
+        assertThat(Util.inverseSubstringOf("12", 2), is("12"));
+        assertThat(Util.inverseSubstringOf("12345", 0), is(""));
+        assertThat(Util.inverseSubstringOf("", 0), is(""));
 
         thrown.expect(StringIndexOutOfBoundsException.class);
-        Util.lastSubstringOf("12345", 6);
+        Util.inverseSubstringOf("12345", 6);
     }
 }

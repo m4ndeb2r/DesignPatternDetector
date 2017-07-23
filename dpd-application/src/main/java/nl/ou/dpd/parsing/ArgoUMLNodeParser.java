@@ -390,7 +390,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * @return the newly updated {@link Node}
      */
     private Node addDataTypeProperties(Node node, XMLEvent event) {
-        final String typeId = Util.lastSubstringOf(readAttributes(event).get(HREF), 3);
+        final String typeId = Util.inverseSubstringOf(readAttributes(event).get(HREF), 3);
         node.setName(typeMap.get(typeId));
         node.setVisibility(Visibility.PUBLIC);
         node.addType(NodeType.DATATYPE);

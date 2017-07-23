@@ -31,7 +31,7 @@ public final class Util {
      * @param i the number of characters to return
      * @return the last i characters of s
      */
-    public static String lastSubstringOf(String s, int i) {
+    public static String inverseSubstringOf(String s, int i) {
         return s.substring(s.length() - i);
     }
 }
