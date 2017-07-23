@@ -51,25 +51,6 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
         typeMap.put(UNLIMITED_INTEGER, "UnlimitedInteger");
     }
 
-    //attributes of the XMI
-    private static final String NAME = "name";
-    private static final String ID = "xmi.id";
-    private static final String VISIBILITY = "visibility";
-    private static final String IS_ABSTRACT = "isAbstract";
-    private static final String IDREF = "xmi.idref";
-    private static final String HREF = "href";
-    private static final String KIND = "kind";
-    private static final String INPUT = "in";
-
-    //tags of the XMI
-    private static final String MODEL = "Model";
-    private static final String CLASS = "Class";
-    private static final String INTERFACE = "Interface";
-    private static final String ATTRIBUTE = "Attribute";
-    private static final String DATATYPE = "DataType";
-    private static final String OPERATION = "Operation";
-    private static final String PARAMETER = "Parameter";
-
     private static final List<String> eventTags = Arrays.asList(new String[]{
             MODEL, CLASS, INTERFACE, ATTRIBUTE, DATATYPE, OPERATION, PARAMETER
     });
@@ -421,9 +402,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      *
      * @param event      the {@link XMLEvent} containing the name and type in its attributes.
      * @param parentNode the node to add the attribute to
-     * @return the newly created attribute.
      */
-    private nl.ou.dpd.domain.node.Attribute createIncompleteAttribute(XMLEvent event, Node parentNode) {
+    private void createIncompleteAttribute(XMLEvent event, Node parentNode) {
         final Map<String, String> attributes = readAttributes(event);
         final String id = attributes.get(ID);
         final String name = attributes.get(NAME);
@@ -431,7 +411,6 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
         final nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, parentNode);
         attr.setName(name);
         attr.setVisibility(visibility);
-        return attr;
     }
 
     /**
@@ -440,33 +419,29 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      *
      * @param event     the {@link XMLEvent} containing the name and type in its attributes.
      * @param operation the {@link Operation} to add the parameter to.
-     * @return the newly created {@link Parameter}.
      */
-    private Parameter createIncompleteParameter(XMLEvent event, Operation operation) {
+    private void createIncompleteParameter(XMLEvent event, Operation operation) {
         final Map<String, String> attributes = readAttributes(event);
         final String id = attributes.get(ID);
         final String name = attributes.get(NAME);
         final Parameter parameter = new Parameter(id, operation);
         parameter.setName(name);
-        return parameter;
     }
 
     /**
      * Create a new node operation with the name, type and visibility specified in the event's attributes.
-     * ReturnType and parameters are not set.
+     * ReturnType and parameters are not set. The operation is added to the specified parentNode.
      *
      * @param event      the {@link XMLEvent} containing the name and type in its attributes.
      * @param parentNode the {@link Node} to add the {@link Operation} to
-     * @return the newly created {@link Operation}.
      */
-    private Operation createIncompleteOperation(XMLEvent event, Node parentNode) {
+    private void createIncompleteOperation(XMLEvent event, Node parentNode) {
         final Map<String, String> attributes = readAttributes(event);
         final String id = attributes.get(ID);
         final String name = attributes.get(NAME);
         final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
         final Operation operation = new Operation(id, parentNode);
         operation.setName(name).setVisibility(visibility);
-        return operation;
     }
 
     private nl.ou.dpd.domain.node.Attribute findAttributeById(String id) {

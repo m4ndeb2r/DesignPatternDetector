@@ -44,22 +44,26 @@ public class PatternsParser {
 
     private static final Logger LOGGER = LogManager.getLogger(PatternsParser.class);
 
+    private static final String ID = "id";
     private static final String NAME = "name";
     private static final String FAMILY = "family";
-    private static final String ID = "id";
+
+    private static final String PATTERN = "pattern";
+
+    private static final String NOTE = "note";
+
+    private static final String NODE = "node";
+    private static final String NODE_TYPE = "nodeType";
+    private static final String NODE_RULE = "node.rule";
+
+    private static final String RELATION = "relation";
     private static final String NODE_1 = "node1";
     private static final String NODE_2 = "node2";
-    private static final String NODE_TYPE = "nodeType";
+    private static final String RELATION_RULE = "relation.rule";
     private static final String RELATION_TYPE = "relationType";
     private static final String CARDINALITY_LEFT = "cardinalityLeft";
     private static final String CARDINALITY_RIGHT = "cardinalityRight";
     private static final String DEFAULT_CARDINALITY = "1";
-    private static final String PATTERN = "pattern";
-    private static final String NOTE = "note";
-    private static final String NODE = "node";
-    private static final String RELATION = "relation";
-    private static final String RELATION_RULE = "relation.rule";
-    private static final String NODE_RULE = "node.rule";
 
     private List<DesignPattern> designPatterns = new ArrayList<>();
     private DesignPattern designPattern;

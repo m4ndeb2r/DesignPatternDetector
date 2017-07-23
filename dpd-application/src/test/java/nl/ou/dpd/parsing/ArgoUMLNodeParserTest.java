@@ -1,6 +1,7 @@
 package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.node.NodeType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +22,10 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
 
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
@@ -49,13 +54,13 @@ public class ArgoUMLNodeParserTest {
     private XMLEventReader xmlEventReader;
 
     @Mock
-    XMLEvent modelEvent, classEvent, interfaceEvent;
+    XMLEvent modelEvent, classEvent, abstractClassEvent, interfaceEvent;
 
     @Mock
-    StartElement modelStartElement, classStartElement, interfaceStartElement;
+    StartElement modelStartElement, classStartElement, abstractClassStartElement, interfaceStartElement;
 
     @Mock
-    EndElement modelEndElement, classEndElement, interfaceEndElement;
+    EndElement modelEndElement, classEndElement, abstractClassEndElement, interfaceEndElement;
 
     private ArgoUMLNodeParser nodeParser;
 
@@ -71,6 +76,8 @@ public class ArgoUMLNodeParserTest {
                 true, // model start-element
                 true, // class start-element
                 true, // class end-element
+                true, // abstract class start-element
+                true, // abstract class end-element
                 true, // interface start-element
                 true, // interface end-element
                 true, // model end-element
@@ -78,6 +85,7 @@ public class ArgoUMLNodeParserTest {
         when(xmlEventReader.nextEvent()).thenReturn(
                 modelEvent,
                 classEvent, classEvent,
+                abstractClassEvent, abstractClassEvent,
                 interfaceEvent, interfaceEvent,
                 modelEvent);
     }
@@ -86,24 +94,24 @@ public class ArgoUMLNodeParserTest {
     public void initModelStartElement() {
         when(modelEvent.isStartElement()).thenReturn(true, false);
         when(modelEvent.asStartElement()).thenReturn(modelStartElement);
-        when(modelStartElement.getName()).thenReturn(QName.valueOf("Model"));
+        when(modelStartElement.getName()).thenReturn(QName.valueOf(MODEL));
     }
 
     @Before
     public void initModelEndElement() {
         when(modelEvent.isEndElement()).thenReturn(false, true);
         when(modelEvent.asEndElement()).thenReturn(modelEndElement);
-        when(modelEndElement.getName()).thenReturn(QName.valueOf("Model"));
+        when(modelEndElement.getName()).thenReturn(QName.valueOf(MODEL));
     }
 
     @Before
     public void initClassStartElement() {
         when(classEvent.isStartElement()).thenReturn(true, false, true, false);
         when(classEvent.asStartElement()).thenReturn(classStartElement);
-        when(classStartElement.getName()).thenReturn(QName.valueOf("Class"));
+        when(classStartElement.getName()).thenReturn(QName.valueOf(CLASS));
 
         final Iterator attributesIterator = mock(Iterator.class);
-        final Attribute idAttribute = ParseTestHelper.makeAttributeMock("xmi.id", "classNodeId");
+        final Attribute idAttribute = ParseTestHelper.makeAttributeMock(ID, "classNodeId");
         when(attributesIterator.hasNext()).thenReturn(true, false, true, false, true, false);
         when(attributesIterator.next()).thenReturn(idAttribute);
         when(classStartElement.getAttributes()).thenReturn(attributesIterator);
@@ -113,17 +121,38 @@ public class ArgoUMLNodeParserTest {
     public void initClassEndElement() {
         when(classEvent.isEndElement()).thenReturn(false, true, false, true);
         when(classEvent.asEndElement()).thenReturn(classEndElement);
-        when(classEndElement.getName()).thenReturn(QName.valueOf("Class"));
+        when(classEndElement.getName()).thenReturn(QName.valueOf(CLASS));
+    }
+
+    @Before
+    public void initAbstractClassStartElement() {
+        when(abstractClassEvent.isStartElement()).thenReturn(true, false, true, false);
+        when(abstractClassEvent.asStartElement()).thenReturn(abstractClassStartElement);
+        when(abstractClassStartElement.getName()).thenReturn(QName.valueOf(CLASS));
+
+        final Iterator attributesIterator = mock(Iterator.class);
+        final Attribute idAttribute = ParseTestHelper.makeAttributeMock(ID, "abstractClassNodeId");
+        final Attribute abstractionAttribute = ParseTestHelper.makeAttributeMock("isAbstract", "true");
+        when(attributesIterator.hasNext()).thenReturn(true, true, false, true, true, false, true, true, false);
+        when(attributesIterator.next()).thenReturn(idAttribute, abstractionAttribute);
+        when(abstractClassStartElement.getAttributes()).thenReturn(attributesIterator);
+    }
+
+    @Before
+    public void initAbstractClassEndElement() {
+        when(abstractClassEvent.isEndElement()).thenReturn(false, true, false, true);
+        when(abstractClassEvent.asEndElement()).thenReturn(abstractClassEndElement);
+        when(abstractClassEndElement.getName()).thenReturn(QName.valueOf(CLASS));
     }
 
     @Before
     public void initInterfaceStartElement() {
         when(interfaceEvent.isStartElement()).thenReturn(true, false, true, false);
         when(interfaceEvent.asStartElement()).thenReturn(interfaceStartElement);
-        when(interfaceStartElement.getName()).thenReturn(QName.valueOf("Interface"));
+        when(interfaceStartElement.getName()).thenReturn(QName.valueOf(INTERFACE));
 
         final Iterator attributesIterator = mock(Iterator.class);
-        final Attribute idAttribute = ParseTestHelper.makeAttributeMock("xmi.id", "interfaceNodeId");
+        final Attribute idAttribute = ParseTestHelper.makeAttributeMock(ID, "interfaceNodeId");
         when(attributesIterator.hasNext()).thenReturn(true, false, true, false, true, false);
         when(attributesIterator.next()).thenReturn(idAttribute);
         when(interfaceStartElement.getAttributes()).thenReturn(attributesIterator);
@@ -133,7 +162,7 @@ public class ArgoUMLNodeParserTest {
     public void initInterfaceEndElement() {
         when(interfaceEvent.isEndElement()).thenReturn(false, true, false, true);
         when(interfaceEvent.asEndElement()).thenReturn(interfaceEndElement);
-        when(interfaceEndElement.getName()).thenReturn(QName.valueOf("Interface"));
+        when(interfaceEndElement.getName()).thenReturn(QName.valueOf(INTERFACE));
     }
 
     @Test
@@ -154,15 +183,28 @@ public class ArgoUMLNodeParserTest {
     }
 
     @Test
-    public void testNumberOfNodes() {
+    public void testParsedNodes() {
         assertThat(nodeParser.events.size(), is(0));
 
         final Map<String, Node> nodeMap = nodeParser.parse(xmiFile);
-        assertThat(nodeMap.keySet().size(), is(2));
+        assertThat(nodeMap.keySet().size(), is(3));
+
         assertTrue(nodeMap.containsKey("classNodeId"));
-        assertThat(nodeMap.get("classNodeId").getId(), is("classNodeId"));
+        final Node classNode = nodeMap.get("classNodeId");
+        assertThat(classNode.getId(), is("classNodeId"));
+        assertTrue(classNode.getTypes().contains(NodeType.CONCRETE_CLASS));
+
+        assertTrue(nodeMap.containsKey("abstractClassNodeId"));
+        final Node abstractClassNode = nodeMap.get("abstractClassNodeId");
+        assertThat(abstractClassNode.getId(), is("abstractClassNodeId"));
+        assertTrue(abstractClassNode.getTypes().contains(NodeType.ABSTRACT_CLASS));
+        assertTrue(abstractClassNode.getTypes().contains(NodeType.ABSTRACT_CLASS_OR_INTERFACE));
+
         assertTrue(nodeMap.containsKey("interfaceNodeId"));
-        assertThat(nodeMap.get("interfaceNodeId").getId(), is("interfaceNodeId"));
+        final Node interfaceNode = nodeMap.get("interfaceNodeId");
+        assertThat(interfaceNode.getId(), is("interfaceNodeId"));
+        assertTrue(interfaceNode.getTypes().contains(NodeType.INTERFACE));
+        assertTrue(interfaceNode.getTypes().contains(NodeType.ABSTRACT_CLASS_OR_INTERFACE));
 
         assertThat(nodeParser.events.size(), is(0));
     }

@@ -34,26 +34,6 @@ import java.util.Stack;
 public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLRelationParser.class);
 
-    //attributes of the XMI used in the parser
-    private static final String NAME = "name";
-    private static final String ID = "xmi.id";
-    private static final String IDREF = "xmi.idref";
-    private static final String LOWER = "lower";
-    private static final String UPPER = "upper";
-    private static final String IS_NAVIGABLE = "isNavigable";
-
-    //tags of the XMI used in the parser
-    private static final String MODEL = "Model";
-    private static final String CLASS = "Class";
-    private static final String INTERFACE = "Interface";
-    private static final String ATTRIBUTE = "Attribute";
-    private static final String ASSOCIATION = "Association";
-    private static final String ASSOCIATION_END = "AssociationEnd";
-    private static final String MULTIPLICITY_RANGE = "MultiplicityRange";
-    private static final String ABSTRACTION = "Abstraction";
-    private static final String DEPENDENCY = "Dependency";
-    private static final String GENERALIZATION = "Generalization";
-
     private static final List<String> eventTags = Arrays.asList(new String[]{
             MODEL, CLASS, INTERFACE, ASSOCIATION, ASSOCIATION_END,
             MULTIPLICITY_RANGE, ABSTRACTION, DEPENDENCY, GENERALIZATION
