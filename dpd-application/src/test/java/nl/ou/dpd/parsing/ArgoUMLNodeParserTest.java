@@ -104,23 +104,6 @@ public class ArgoUMLNodeParserTest {
     }
 
     @Test
-    public void testAnyException() {
-        when(interfaceEvent.asEndElement()).thenThrow(new IllegalArgumentException());
-        thrown.expect(ParseException.class);
-        thrown.expectCause(is(IllegalArgumentException.class));
-        thrown.expectMessage(String.format("The XMI file '%s' could not be parsed.", xmiFile));
-        nodeParser.parse(xmiFile);
-    }
-
-    @Test
-    public void testParseException() {
-        when(interfaceEvent.asEndElement()).thenThrow(new ParseException("Darn!", null));
-        thrown.expect(ParseException.class);
-        thrown.expectMessage("Darn!");
-        nodeParser.parse(xmiFile);
-    }
-
-    @Test
     public void testParsedNodes() {
         assertThat(nodeParser.events.size(), is(0));
 
@@ -145,6 +128,23 @@ public class ArgoUMLNodeParserTest {
         assertTrue(interfaceNode.getTypes().contains(NodeType.ABSTRACT_CLASS_OR_INTERFACE));
 
         assertThat(nodeParser.events.size(), is(0));
+    }
+
+    @Test
+    public void testAnyException() {
+        when(interfaceEvent.asEndElement()).thenThrow(new IllegalArgumentException());
+        thrown.expect(ParseException.class);
+        thrown.expectCause(is(IllegalArgumentException.class));
+        thrown.expectMessage(String.format("The XMI file '%s' could not be parsed.", xmiFile));
+        nodeParser.parse(xmiFile);
+    }
+
+    @Test
+    public void testParseException() {
+        when(interfaceEvent.asEndElement()).thenThrow(new ParseException("Darn!", null));
+        thrown.expect(ParseException.class);
+        thrown.expectMessage("Darn!");
+        nodeParser.parse(xmiFile);
     }
 
     private String getPath(String resourceName) {

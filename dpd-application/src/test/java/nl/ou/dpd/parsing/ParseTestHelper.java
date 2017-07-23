@@ -5,11 +5,8 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-
-import java.util.Arrays;
 import java.util.Iterator;
 
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,10 +37,23 @@ public class ParseTestHelper {
         return mock;
     }
 
+    /**
+     * Creates a representation of an XMl tag with no attributes.
+     *
+     * @param name the name of the XML tag
+     * @return the created event
+     */
     static XMLEvent createXMLEventMock(String name) {
-        return createXMLEventMock(name, (Iterator<Attribute>)null);
+        return createXMLEventMock(name, (Iterator<Attribute>) null);
     }
 
+    /**
+     * Creates a representation of an XML tag with one attribute.
+     *
+     * @param name      the name of the XML tag
+     * @param attribute the attibute (name and value)
+     * @return the created event
+     */
     static XMLEvent createXMLEventMock(String name, Attribute attribute) {
         final Iterator attributesIterator = mock(Iterator.class);
         when(attributesIterator.hasNext()).thenReturn(
@@ -58,6 +68,14 @@ public class ParseTestHelper {
         return createXMLEventMock(name, attributesIterator);
     }
 
+    /**
+     * Creates a representation of an XML tag with two attributes.
+     *
+     * @param name       the name of the XML tag
+     * @param attribute1 the first attibute (name and value)
+     * @param attribute2 the second attibute (name and value)
+     * @return the created event
+     */
     static XMLEvent createXMLEventMock(String name, Attribute attribute1, Attribute attribute2) {
         final Iterator attributesIterator = mock(Iterator.class);
         when(attributesIterator.hasNext()).thenReturn(
@@ -81,6 +99,13 @@ public class ParseTestHelper {
         return createXMLEventMock(name, attributesIterator);
     }
 
+    /**
+     * Creates a reptresentation of an XML tag with an unspecified number of attributes.
+     *
+     * @param name              the tag name
+     * @param attributeIterator an iterator for the attributes (name and value)
+     * @return the created event
+     */
     static XMLEvent createXMLEventMock(String name, Iterator<Attribute> attributeIterator) {
         final XMLEvent event = mock(XMLEvent.class);
 
