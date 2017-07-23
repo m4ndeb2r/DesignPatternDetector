@@ -71,14 +71,13 @@ public class PatternsParserTest {
 
     @Mock
     private StartElement
-            patternsStartElement, patternStartElement, notesStartElement,
-            noteStartElement, nodesStartElement, concreteClassNodeStartElement,
+            nodesStartElement, concreteClassNodeStartElement,
             interfaceNodeStartElement, relationsStartElement, relationStartElement,
             interfaceRuleStartElement, concreteClassRuleStartElement, inheritanceRuleStartElement;
 
     @Mock
     private Iterator
-            patternAttributeIterator, concreteClassAttributeIterator,
+            concreteClassAttributeIterator,
             interfaceAttributeIterator, relationAttributeIterator,
             interfaceRuleAttributeIterator, concreteClassRuleAttributeIterator,
             inheritanceRuleAttributeIterator;
@@ -150,130 +149,62 @@ public class PatternsParserTest {
     }
 
     @Before
-    public void initPatternsStartElement() throws XMLStreamException {
-        when(patternsEvent.isStartElement()).thenReturn(true, false);
-        when(patternsEvent.asStartElement()).thenReturn(patternsStartElement);
-        when(patternsStartElement.getName()).thenReturn(QName.valueOf("patterns"));
+    public void initPatternEvent() throws XMLStreamException {
+        patternsEvent = ParseTestHelper.createXMLEventMock("patterns");
+        patternEvent = ParseTestHelper.createXMLEventMock(
+                "pattern",
+                ParseTestHelper.createAttributeMock("name", "patternName"),
+                ParseTestHelper.createAttributeMock("family", "patternFamily")
+        );
     }
 
     @Before
-    public void initPatternStartElement() throws XMLStreamException {
-        // Set up the attributes of the pattern start element
-        final Attribute nameAttribute = ParseTestHelper.makeAttributeMock("name", "patternName");
-        final Attribute familyAttribute = ParseTestHelper.makeAttributeMock("family", "patternFamily");
-
-        // Set up the pattern start element
-        when(patternEvent.isStartElement()).thenReturn(true, false);
-        when(patternEvent.asStartElement()).thenReturn(patternStartElement);
-        when(patternStartElement.getName()).thenReturn(QName.valueOf("pattern"));
-        when(patternStartElement.getAttributes()).thenReturn(patternAttributeIterator);
-        when(patternAttributeIterator.hasNext()).thenReturn(true, true, false);
-        when(patternAttributeIterator.next()).thenReturn(nameAttribute, familyAttribute);
-    }
-
-    @Before
-    public void initNoteStartElement() throws XMLStreamException {
-        when(notesEvent.isStartElement()).thenReturn(true, false);
-        when(notesEvent.asStartElement()).thenReturn(notesStartElement);
-        when(notesStartElement.getName()).thenReturn(QName.valueOf("notes"));
-
-        when(noteEvent.isStartElement()).thenReturn(true, false);
-        when(noteEvent.asStartElement()).thenReturn(noteStartElement);
-        when(noteStartElement.getName()).thenReturn(QName.valueOf("note"));
-
+    public void initNoteEvent() throws XMLStreamException {
+        notesEvent = ParseTestHelper.createXMLEventMock("notes");
+        noteEvent = ParseTestHelper.createXMLEventMock("note");
         when(xmlEventReader.getElementText()).thenReturn("A nice note");
     }
 
     @Before
-    public void initNodesStartElement() {
-        // Set up the nodes start element
-        when(nodesEvent.isStartElement()).thenReturn(true, false);
-        when(nodesEvent.asStartElement()).thenReturn(nodesStartElement);
-        when(nodesStartElement.getName()).thenReturn(QName.valueOf("nodes"));
+    public void initNodeEvents() {
+        nodesEvent = ParseTestHelper.createXMLEventMock("nodes");
 
+        // A concrete class node + rule
+        concreteClassNodeEvent = ParseTestHelper.createXMLEventMock(
+                "node",
+                ParseTestHelper.createAttributeMock("name", "aConcreteClassName"),
+                ParseTestHelper.createAttributeMock("id", "aConcreteClassId"));
+        concreteClassRuleEvent = ParseTestHelper.createXMLEventMock(
+                "node.rule",
+                ParseTestHelper.createAttributeMock("nodeType", "CONCRETE_CLASS")
+        );
+
+        // An interface node + rule
+        interfaceNodeEvent = ParseTestHelper.createXMLEventMock(
+                "node",
+                ParseTestHelper.createAttributeMock("id", "anInterface")
+        );
+        interfaceRuleEvent = ParseTestHelper.createXMLEventMock(
+                "node.rule",
+                ParseTestHelper.createAttributeMock("nodeType", "INTERFACE")
+        );
     }
 
     @Before
-    public void initNodeStartElements() {
-        // Set up the first node start element (a concrete class)
-        final Attribute concreteClassIdAttr = ParseTestHelper.makeAttributeMock("id", "aConcreteClassId");
-        final Attribute concreteClassNameAttr = ParseTestHelper.makeAttributeMock("name", "aConcreteClassName");
-        when(concreteClassNodeEvent.isStartElement()).thenReturn(true, false);
-        when(concreteClassNodeEvent.asStartElement()).thenReturn(concreteClassNodeStartElement);
-        when(concreteClassNodeStartElement.getName()).thenReturn(QName.valueOf("node"));
-        when(concreteClassNodeStartElement.getAttributes()).thenReturn(concreteClassAttributeIterator);
-        when(concreteClassAttributeIterator.hasNext()).thenReturn(
-                true, true, false,
-                true, true, false);
-        when(concreteClassAttributeIterator.next()).thenReturn(
-                concreteClassNameAttr, concreteClassIdAttr,
-                concreteClassNameAttr, concreteClassIdAttr);
+    public void initRelationEvents() {
+        relationsEvent = ParseTestHelper.createXMLEventMock("relations");
 
-        // Node rule for a concrete class
-        final Attribute nodeTypeAttributeConcreteClass = ParseTestHelper.makeAttributeMock("nodeType", "CONCRETE_CLASS");
-        when(concreteClassRuleEvent.isStartElement()).thenReturn(true, false);
-        when(concreteClassRuleEvent.asStartElement()).thenReturn(concreteClassRuleStartElement);
-        when(concreteClassRuleStartElement.getName()).thenReturn(QName.valueOf("node.rule"));
-        when(concreteClassRuleStartElement.getAttributes()).thenReturn(concreteClassRuleAttributeIterator);
-        when(concreteClassRuleAttributeIterator.hasNext()).thenReturn(true, false);
-        when(concreteClassRuleAttributeIterator.next()).thenReturn(nodeTypeAttributeConcreteClass);
-
-        // Set up the second node start element (an interface)
-        final Attribute interfaceIdAttr = ParseTestHelper.makeAttributeMock("id", "anInterface");
-        when(interfaceNodeEvent.isStartElement()).thenReturn(true, false);
-        when(interfaceNodeEvent.asStartElement()).thenReturn(interfaceNodeStartElement);
-        when(interfaceNodeStartElement.getName()).thenReturn(QName.valueOf("node"));
-        when(interfaceNodeStartElement.getAttributes()).thenReturn(interfaceAttributeIterator);
-        when(interfaceAttributeIterator.hasNext()).thenReturn(
-                true, false,
-                true, false);
-        when(interfaceAttributeIterator.next()).thenReturn(
-                interfaceIdAttr,
-                interfaceIdAttr);
-
-        // Node rule for an interface
-        final Attribute nodeTypeAttributeInterface = ParseTestHelper.makeAttributeMock("nodeType", "INTERFACE");
-        when(interfaceRuleEvent.isStartElement()).thenReturn(true, false);
-        when(interfaceRuleEvent.asStartElement()).thenReturn(interfaceRuleStartElement);
-        when(interfaceRuleStartElement.getName()).thenReturn(QName.valueOf("node.rule"));
-        when(interfaceRuleStartElement.getAttributes()).thenReturn(interfaceRuleAttributeIterator);
-        when(interfaceRuleAttributeIterator.hasNext()).thenReturn(true, false);
-        when(interfaceRuleAttributeIterator.next()).thenReturn(nodeTypeAttributeInterface);
-    }
-
-    @Before
-    public void initRelationsStartElement() {
-        // Set up the relations start element
-        when(relationsEvent.isStartElement()).thenReturn(true, false);
-        when(relationsEvent.asStartElement()).thenReturn(relationsStartElement);
-        when(relationsStartElement.getName()).thenReturn(QName.valueOf("relations"));
-
-    }
-
-    @Before
-    public void initRelationStartElement() {
-        // Set up the relation start element (an inheritance relation)
-        final Attribute nodeAttribute1 = ParseTestHelper.makeAttributeMock("node1", "aConcreteClassId");
-        final Attribute nodeAttribute2 = ParseTestHelper.makeAttributeMock("node2", "anInterface");
-        when(relationEvent.isStartElement()).thenReturn(true, false);
-        when(relationEvent.asStartElement()).thenReturn(relationStartElement);
-        when(relationStartElement.getName()).thenReturn(QName.valueOf("relation"));
-        when(relationStartElement.getAttributes()).thenReturn(relationAttributeIterator);
-        when(relationAttributeIterator.hasNext()).thenReturn(true, true, false, true, true, false);
-        when(relationAttributeIterator.next()).thenReturn(nodeAttribute1, nodeAttribute2, nodeAttribute1, nodeAttribute2);
-
-        // Relation rule for an inheritance relation
-        final Attribute relationtypeAttributeInhertance = ParseTestHelper.makeAttributeMock("relationType", "IMPLEMENTS");
-        final Attribute cardinalityLeftAttributeInhertance = ParseTestHelper.makeAttributeMock("cardinalityLeft", "1..*");
-        // When cardinalityRight is provided, the parser will assume cardinality 1.
-        when(inheritanceRuleEvent.isStartElement()).thenReturn(true, false);
-        when(inheritanceRuleEvent.asStartElement()).thenReturn(inheritanceRuleStartElement);
-        when(inheritanceRuleStartElement.getName()).thenReturn(QName.valueOf("relation.rule"));
-        when(inheritanceRuleStartElement.getAttributes()).thenReturn(inheritanceRuleAttributeIterator);
-        when(inheritanceRuleAttributeIterator.hasNext()).thenReturn(true, true, false);
-        when(inheritanceRuleAttributeIterator.next()).thenReturn(
-                relationtypeAttributeInhertance,
-                cardinalityLeftAttributeInhertance);
+        // A relation + rule
+        relationEvent = ParseTestHelper.createXMLEventMock(
+                "relation",
+                ParseTestHelper.createAttributeMock("node1", "aConcreteClassId"),
+                ParseTestHelper.createAttributeMock("node2", "anInterface")
+        );
+        inheritanceRuleEvent = ParseTestHelper.createXMLEventMock(
+                "relation.rule",
+                ParseTestHelper.createAttributeMock("relationType", "IMPLEMENTS"),
+                ParseTestHelper.createAttributeMock("cardinalityLeft", "1..*")
+        );
     }
 
     /**
@@ -298,7 +229,7 @@ public class PatternsParserTest {
     @Test
     public void testAnyException() {
         // Simulate an arbitrary exception somewhere along the way
-        when(concreteClassNodeStartElement.getAttributes()).thenThrow(new NullPointerException());
+        when(concreteClassNodeEvent.asStartElement()).thenThrow(new NullPointerException());
 
         // We expect the arbitrary exception to be mapped to a ParseException
         thrown.expect(ParseException.class);
@@ -311,7 +242,7 @@ public class PatternsParserTest {
     @Test
     public void testParseException() {
         // Simulate an arbitrary exception somewhere along the way
-        when(concreteClassNodeStartElement.getAttributes()).thenThrow(new ParseException("Oops", null));
+        when(concreteClassNodeEvent.asStartElement()).thenThrow(new ParseException("Oops", null));
 
         // We expect the ParseException to be rethrown directly
         thrown.expect(ParseException.class);
@@ -339,6 +270,7 @@ public class PatternsParserTest {
 
         final Node concreteClassNode = nodeIterator.next();
         assertThat(concreteClassNode.getId(), is("aConcreteClassId"));
+        assertThat(concreteClassNode.getName(), is("aConcreteClassName"));
         assertThat(concreteClassNode.getTypes().size(), is(1));
         assertThat(concreteClassNode.getTypes().iterator().next(), is(NodeType.CONCRETE_CLASS));
 

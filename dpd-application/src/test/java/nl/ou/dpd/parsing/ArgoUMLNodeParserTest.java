@@ -25,6 +25,7 @@ import java.util.Map;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_ABSTRACT;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -56,12 +57,6 @@ public class ArgoUMLNodeParserTest {
     @Mock
     XMLEvent modelEvent, classEvent, abstractClassEvent, interfaceEvent;
 
-    @Mock
-    StartElement modelStartElement, classStartElement, abstractClassStartElement, interfaceStartElement;
-
-    @Mock
-    EndElement modelEndElement, classEndElement, abstractClassEndElement, interfaceEndElement;
-
     private ArgoUMLNodeParser nodeParser;
 
     @Before
@@ -91,83 +86,26 @@ public class ArgoUMLNodeParserTest {
     }
 
     @Before
-    public void initModelStartElement() {
-        when(modelEvent.isStartElement()).thenReturn(true, false);
-        when(modelEvent.asStartElement()).thenReturn(modelStartElement);
-        when(modelStartElement.getName()).thenReturn(QName.valueOf(MODEL));
-    }
-
-    @Before
-    public void initModelEndElement() {
-        when(modelEvent.isEndElement()).thenReturn(false, true);
-        when(modelEvent.asEndElement()).thenReturn(modelEndElement);
-        when(modelEndElement.getName()).thenReturn(QName.valueOf(MODEL));
-    }
-
-    @Before
-    public void initClassStartElement() {
-        when(classEvent.isStartElement()).thenReturn(true, false, true, false);
-        when(classEvent.asStartElement()).thenReturn(classStartElement);
-        when(classStartElement.getName()).thenReturn(QName.valueOf(CLASS));
-
-        final Iterator attributesIterator = mock(Iterator.class);
-        final Attribute idAttribute = ParseTestHelper.makeAttributeMock(ID, "classNodeId");
-        when(attributesIterator.hasNext()).thenReturn(true, false, true, false, true, false);
-        when(attributesIterator.next()).thenReturn(idAttribute);
-        when(classStartElement.getAttributes()).thenReturn(attributesIterator);
-    }
-
-    @Before
-    public void initClassEndElement() {
-        when(classEvent.isEndElement()).thenReturn(false, true, false, true);
-        when(classEvent.asEndElement()).thenReturn(classEndElement);
-        when(classEndElement.getName()).thenReturn(QName.valueOf(CLASS));
-    }
-
-    @Before
-    public void initAbstractClassStartElement() {
-        when(abstractClassEvent.isStartElement()).thenReturn(true, false, true, false);
-        when(abstractClassEvent.asStartElement()).thenReturn(abstractClassStartElement);
-        when(abstractClassStartElement.getName()).thenReturn(QName.valueOf(CLASS));
-
-        final Iterator attributesIterator = mock(Iterator.class);
-        final Attribute idAttribute = ParseTestHelper.makeAttributeMock(ID, "abstractClassNodeId");
-        final Attribute abstractionAttribute = ParseTestHelper.makeAttributeMock("isAbstract", "true");
-        when(attributesIterator.hasNext()).thenReturn(true, true, false, true, true, false, true, true, false);
-        when(attributesIterator.next()).thenReturn(idAttribute, abstractionAttribute);
-        when(abstractClassStartElement.getAttributes()).thenReturn(attributesIterator);
-    }
-
-    @Before
-    public void initAbstractClassEndElement() {
-        when(abstractClassEvent.isEndElement()).thenReturn(false, true, false, true);
-        when(abstractClassEvent.asEndElement()).thenReturn(abstractClassEndElement);
-        when(abstractClassEndElement.getName()).thenReturn(QName.valueOf(CLASS));
-    }
-
-    @Before
-    public void initInterfaceStartElement() {
-        when(interfaceEvent.isStartElement()).thenReturn(true, false, true, false);
-        when(interfaceEvent.asStartElement()).thenReturn(interfaceStartElement);
-        when(interfaceStartElement.getName()).thenReturn(QName.valueOf(INTERFACE));
-
-        final Iterator attributesIterator = mock(Iterator.class);
-        final Attribute idAttribute = ParseTestHelper.makeAttributeMock(ID, "interfaceNodeId");
-        when(attributesIterator.hasNext()).thenReturn(true, false, true, false, true, false);
-        when(attributesIterator.next()).thenReturn(idAttribute);
-        when(interfaceStartElement.getAttributes()).thenReturn(attributesIterator);
-    }
-
-    @Before
-    public void initInterfaceEndElement() {
-        when(interfaceEvent.isEndElement()).thenReturn(false, true, false, true);
-        when(interfaceEvent.asEndElement()).thenReturn(interfaceEndElement);
-        when(interfaceEndElement.getName()).thenReturn(QName.valueOf(INTERFACE));
+    public void initEvents() {
+        modelEvent = ParseTestHelper.createXMLEventMock(MODEL);
+        classEvent = ParseTestHelper.createXMLEventMock(
+                CLASS,
+                ParseTestHelper.createAttributeMock(ID, "classNodeId")
+        );
+        abstractClassEvent = ParseTestHelper.createXMLEventMock(
+                CLASS,
+                ParseTestHelper.createAttributeMock(ID, "abstractClassNodeId"),
+                ParseTestHelper.createAttributeMock(IS_ABSTRACT, "true")
+        );
+        interfaceEvent = ParseTestHelper.createXMLEventMock(
+                INTERFACE,
+                ParseTestHelper.createAttributeMock(ID, "interfaceNodeId")
+        );
     }
 
     @Test
     public void testAnyException() {
-        when(interfaceStartElement.getAttributes()).thenThrow(new IllegalArgumentException());
+        when(interfaceEvent.asEndElement()).thenThrow(new IllegalArgumentException());
         thrown.expect(ParseException.class);
         thrown.expectCause(is(IllegalArgumentException.class));
         thrown.expectMessage(String.format("The XMI file '%s' could not be parsed.", xmiFile));
@@ -176,7 +114,7 @@ public class ArgoUMLNodeParserTest {
 
     @Test
     public void testParseException() {
-        when(interfaceStartElement.getAttributes()).thenThrow(new ParseException("Darn!", null));
+        when(interfaceEvent.asEndElement()).thenThrow(new ParseException("Darn!", null));
         thrown.expect(ParseException.class);
         thrown.expectMessage("Darn!");
         nodeParser.parse(xmiFile);
