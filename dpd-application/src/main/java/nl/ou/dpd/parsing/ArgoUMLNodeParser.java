@@ -346,18 +346,15 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
             if (isAbstract) {
             	types.add(NodeType.ABSTRACT_CLASS);
             	types.add(NodeType.ABSTRACT_CLASS_OR_INTERFACE);
-                return types;
             } else {
             	types.add(NodeType.CONCRETE_CLASS);
-                return types;
             }
         }
         if (typeString.equals("INTERFACE")) {
         	types.add(NodeType.INTERFACE);
         	types.add(NodeType.ABSTRACT_CLASS_OR_INTERFACE);
-            return types;
         }
-        return null;
+        return types;
     }
 
     /**
