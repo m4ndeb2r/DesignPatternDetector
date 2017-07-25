@@ -348,8 +348,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @return the newly created {@link Relation}
      */
     private Relation createIncompleteRelation(String id, String name) {
-        final Relation relation = new Relation(id, name);
-        return relation;
+        return new Relation(id, name);
     }
 
     private boolean containsRelationType(Relation relation, RelationType relationtype) {

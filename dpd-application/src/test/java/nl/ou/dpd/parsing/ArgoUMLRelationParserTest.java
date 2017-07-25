@@ -1,10 +1,11 @@
 package nl.ou.dpd.parsing;
 
-import nl.ou.dpd.domain.node.Attribute;
+import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.node.NodeType;
-import nl.ou.dpd.domain.node.Operation;
-import nl.ou.dpd.domain.node.Parameter;
+import nl.ou.dpd.domain.relation.Cardinality;
+import nl.ou.dpd.domain.relation.Relation;
+import nl.ou.dpd.domain.relation.RelationProperty;
+import nl.ou.dpd.domain.relation.RelationType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,26 +17,23 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ATTRIBUTE;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ABSTRACTION;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.DATATYPE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.HREF;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IDREF;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_ABSTRACT;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.KIND;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.OPERATION;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.PARAMETER;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -59,7 +57,7 @@ public class ArgoUMLRelationParserTest {
     private XMLEventReader xmlEventReader;
 
     @Mock
-    XMLEvent modelEvent;
+    XMLEvent modelEvent, classEvent, interfaceEvent, abstractionEvent;
 
     private Map<String, Node> nodes;
 
@@ -76,9 +74,22 @@ public class ArgoUMLRelationParserTest {
         when(xmlInputFactory.createXMLEventReader(any(InputStream.class))).thenReturn(xmlEventReader);
     }
 
+    /**
+     * Initialises the nodes that go into the parser's constructor.
+     */
     @Before
     public void initNodes() {
+        final Node interfaceNode = mock(Node.class);
+        when(interfaceNode.getId()).thenReturn("interfaceId");
+        when(interfaceNode.getName()).thenReturn("interfaceName");
+
+        final Node classNode = mock(Node.class);
+        when(classNode.getId()).thenReturn("classId");
+        when(classNode.getName()).thenReturn("className");
+
         nodes = new HashMap<>();
+        nodes.put(interfaceNode.getId(), interfaceNode);
+        nodes.put(classNode.getId(), classNode);
     }
 
     /**
@@ -90,11 +101,22 @@ public class ArgoUMLRelationParserTest {
     public void initEventReader() throws XMLStreamException {
         when(xmlEventReader.hasNext()).thenReturn(
                 true, // model start-element
+                true, // abstraction start-element
+                true, // class start-element
+                true, // class end-element
+                true, // interface start-element
+                true, // interface end-element
+                true, // abstraction end-element
                 true, // model end-element
                 false
         );
         when(xmlEventReader.nextEvent()).thenReturn(
-                modelEvent, modelEvent
+                modelEvent,
+                abstractionEvent,
+                classEvent, classEvent,
+                interfaceEvent, interfaceEvent,
+                abstractionEvent,
+                modelEvent
         );
     }
 
@@ -103,15 +125,40 @@ public class ArgoUMLRelationParserTest {
      */
     @Before
     public void initEvents() {
-        modelEvent = ParseTestHelper.createXMLEventMock(MODEL, ParseTestHelper.createAttributeMock(ID, "modelId"));
+        modelEvent = ParseTestHelper.createXMLEventMock(MODEL, mockId("modelId"));
+        abstractionEvent = ParseTestHelper.createXMLEventMock(ABSTRACTION, mockId("abstractionId"), mockName("abstractionName"));
+        classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockIdRef("classId"));
+        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceId"));
+    }
+
+    private Attribute mockId(String id) {
+        return ParseTestHelper.createAttributeMock(ID, id);
+    }
+
+    private Attribute mockIdRef(String idRef) {
+        return ParseTestHelper.createAttributeMock(IDREF, idRef);
+    }
+
+    private Attribute mockName(String name) {
+        return ParseTestHelper.createAttributeMock(NAME, name);
     }
 
     @Test
-    public void testParsedRelations() {
+    public void testParseRelations() {
         assertThat(relationParser.events.size(), is(0));
 
-        // TODO
-        relationParser.parse(xmiFile, nodes);
+        final SystemUnderConsideration system = relationParser.parse(xmiFile, nodes);
+        assertThat(system.edgeSet().size(), is(1));
+
+        final Relation relation = system.edgeSet().iterator().next();
+        assertThat(relation.getId(), is("abstractionId"));
+        assertThat(relation.getName(), is("abstractionName"));
+        assertThat(relation.getRelationProperties().size(), is(1));
+
+        final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
+        assertThat(relationProperty.getRelationType(), is(RelationType.IMPLEMENTS));
+        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
+        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
 
         assertThat(relationParser.events.size(), is(0));
     }
