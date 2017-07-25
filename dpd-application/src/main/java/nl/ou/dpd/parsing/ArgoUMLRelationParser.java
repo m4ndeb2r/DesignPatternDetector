@@ -167,7 +167,6 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         final String id = readAttributes(event).get(ID);
         final String name = readAttributes(event).get(NAME);
         lastRelation = findSystemRelationById(id);
-        lastRelation = findSystemRelationById(id);
         if (lastRelation == null) {
             lastRelation = createIncompleteRelation(id, name);
         }
