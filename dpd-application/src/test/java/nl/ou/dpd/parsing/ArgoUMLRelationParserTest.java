@@ -150,15 +150,15 @@ public class ArgoUMLRelationParserTest {
         final SystemUnderConsideration system = relationParser.parse(xmiFile, nodes);
         assertThat(system.edgeSet().size(), is(1));
 
-        final Relation relation = system.edgeSet().iterator().next();
-        assertThat(relation.getId(), is("abstractionId"));
-        assertThat(relation.getName(), is("abstractionName"));
-        assertThat(relation.getRelationProperties().size(), is(1));
+        final Relation abstraction = system.edgeSet().iterator().next();
+        assertThat(abstraction.getId(), is("abstractionId"));
+        assertThat(abstraction.getName(), is("abstractionName"));
+        assertThat(abstraction.getRelationProperties().size(), is(1));
 
-        final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
-        assertThat(relationProperty.getRelationType(), is(RelationType.IMPLEMENTS));
-        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
-        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        final RelationProperty abstractionProperty = abstraction.getRelationProperties().iterator().next();
+        assertThat(abstractionProperty.getRelationType(), is(RelationType.IMPLEMENTS));
+        assertThat(abstractionProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
+        assertThat(abstractionProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
 
         assertThat(relationParser.events.size(), is(0));
     }
