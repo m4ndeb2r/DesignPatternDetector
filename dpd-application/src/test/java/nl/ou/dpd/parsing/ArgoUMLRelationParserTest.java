@@ -149,8 +149,11 @@ public class ArgoUMLRelationParserTest {
 
         final SystemUnderConsideration system = relationParser.parse(xmiFile, nodes);
         assertThat(system.edgeSet().size(), is(1));
+        assertThat(system.getId(), is("modelId"));
 
         final Relation abstraction = system.edgeSet().iterator().next();
+        assertThat(system.getEdgeTarget(abstraction).getId(), is("interfaceId"));
+        assertThat(system.getEdgeSource(abstraction).getId(), is("classId"));
         assertThat(abstraction.getId(), is("abstractionId"));
         assertThat(abstraction.getName(), is("abstractionName"));
         assertThat(abstraction.getRelationProperties().size(), is(1));
