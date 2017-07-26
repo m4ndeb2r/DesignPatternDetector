@@ -22,6 +22,7 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -202,8 +203,9 @@ public class ArgoUMLRelationParserTest {
 
         // Check the second relation: a reversed association combined with an abstraction
         final Relation associationReversed = setToMap(system.edgeSet()).get("associationId-reversed");
-        final RelationProperty firstProperty = associationReversed.getRelationProperties().iterator().next();
-        final RelationProperty secondProperty = associationReversed.getRelationProperties().iterator().next();
+        final Iterator<RelationProperty> relationPropertyIterator = associationReversed.getRelationProperties().iterator();
+        final RelationProperty firstProperty = relationPropertyIterator.next();
+        final RelationProperty secondProperty = relationPropertyIterator.next();
 
         assertThat(system.getEdgeTarget(associationReversed).getId(), is("interfaceId"));
         assertThat(system.getEdgeSource(associationReversed).getId(), is("classId"));
