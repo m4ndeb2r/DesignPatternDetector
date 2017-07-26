@@ -6,6 +6,7 @@ import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,12 +23,16 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ABSTRACTION;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ASSOCIATION;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ASSOCIATION_END;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IDREF;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_NAVIGABLE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -57,7 +62,9 @@ public class ArgoUMLRelationParserTest {
     private XMLEventReader xmlEventReader;
 
     @Mock
-    XMLEvent modelEvent, classEvent, interfaceEvent, abstractionEvent;
+    XMLEvent
+            modelEvent, classEvent, interfaceEvent, abstractionEvent,
+            associationEvent, associationClassEndEvent, associationInterfaceEndEvent;
 
     private Map<String, Node> nodes;
 
@@ -101,17 +108,31 @@ public class ArgoUMLRelationParserTest {
     public void initEventReader() throws XMLStreamException {
         when(xmlEventReader.hasNext()).thenReturn(
                 true, // model start-element
+                true, // association start-element
+                true, // association-end start-element
+                true, // interface start-element
+                true, // interface end-element
+                true, // association-end end-element
+                true, // association-end start-element
+                true, // class start-element
+                true, // class end-element
+                true, // association-end end-element
+                true, // association end-element
+                true, // model end-element
                 true, // abstraction start-element
                 true, // class start-element
                 true, // class end-element
                 true, // interface start-element
                 true, // interface end-element
                 true, // abstraction end-element
-                true, // model end-element
                 false
         );
         when(xmlEventReader.nextEvent()).thenReturn(
                 modelEvent,
+                associationEvent,
+                associationInterfaceEndEvent, interfaceEvent, interfaceEvent, associationInterfaceEndEvent,
+                associationClassEndEvent, classEvent, classEvent, associationClassEndEvent,
+                associationEvent,
                 abstractionEvent,
                 classEvent, classEvent,
                 interfaceEvent, interfaceEvent,
@@ -129,6 +150,17 @@ public class ArgoUMLRelationParserTest {
         abstractionEvent = ParseTestHelper.createXMLEventMock(ABSTRACTION, mockId("abstractionId"), mockName("abstractionName"));
         classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockIdRef("classId"));
         interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceId"));
+        associationEvent = ParseTestHelper.createXMLEventMock(ASSOCIATION, mockId("associationId"));
+        associationInterfaceEndEvent = ParseTestHelper.createXMLEventMock(
+                ASSOCIATION_END,
+                mockId("associationClassEndId"),
+                mockNavigable("true")
+        );
+        associationClassEndEvent = ParseTestHelper.createXMLEventMock(
+                ASSOCIATION_END,
+                mockId("associationClassEndId"),
+                mockNavigable("false")
+        );
     }
 
     private Attribute mockId(String id) {
@@ -137,6 +169,10 @@ public class ArgoUMLRelationParserTest {
 
     private Attribute mockIdRef(String idRef) {
         return ParseTestHelper.createAttributeMock(IDREF, idRef);
+    }
+
+    private Attribute mockNavigable(String isNavigable) {
+        return ParseTestHelper.createAttributeMock(IS_NAVIGABLE, isNavigable);
     }
 
     private Attribute mockName(String name) {
@@ -148,22 +184,54 @@ public class ArgoUMLRelationParserTest {
         assertThat(relationParser.events.size(), is(0));
 
         final SystemUnderConsideration system = relationParser.parse(xmiFile, nodes);
-        assertThat(system.edgeSet().size(), is(1));
         assertThat(system.getId(), is("modelId"));
+        assertThat(system.edgeSet().size(), is(2));
 
-        final Relation abstraction = system.edgeSet().iterator().next();
-        assertThat(system.getEdgeTarget(abstraction).getId(), is("interfaceId"));
-        assertThat(system.getEdgeSource(abstraction).getId(), is("classId"));
-        assertThat(abstraction.getId(), is("abstractionId"));
-        assertThat(abstraction.getName(), is("abstractionName"));
-        assertThat(abstraction.getRelationProperties().size(), is(1));
+        // Check the first relation: an association
+        final Relation association = setToMap(system.edgeSet()).get("associationId");
+        final RelationProperty associationProperty = association.getRelationProperties().iterator().next();
 
-        final RelationProperty abstractionProperty = abstraction.getRelationProperties().iterator().next();
-        assertThat(abstractionProperty.getRelationType(), is(RelationType.IMPLEMENTS));
-        assertThat(abstractionProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
-        assertThat(abstractionProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(system.getEdgeSource(association).getId(), is("interfaceId"));
+        assertThat(system.getEdgeTarget(association).getId(), is("classId"));
+        assertThat(association.getId(), is("associationId"));
+        assertThat(association.getRelationProperties().size(), is(1));
+
+        assertThat(associationProperty.getRelationType(), is(RelationType.ASSOCIATES_WITH));
+        assertThat(associationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
+        assertThat(associationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+
+        // Check the second relation: a reversed association combined with an abstraction
+        final Relation associationReversed = setToMap(system.edgeSet()).get("associationId-reversed");
+        final RelationProperty firstProperty = associationReversed.getRelationProperties().iterator().next();
+        final RelationProperty secondProperty = associationReversed.getRelationProperties().iterator().next();
+
+        assertThat(system.getEdgeTarget(associationReversed).getId(), is("interfaceId"));
+        assertThat(system.getEdgeSource(associationReversed).getId(), is("classId"));
+        assertThat(associationReversed.getId(), is("associationId-reversed"));
+        assertThat(associationReversed.getRelationProperties().size(), is(2));
+
+        assertThat(firstProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
+        assertThat(firstProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(firstProperty.getRelationType(), Matchers.anyOf(is(RelationType.ASSOCIATES_WITH), is(RelationType.IMPLEMENTS)));
+
+        assertThat(secondProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
+        assertThat(secondProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(secondProperty.getRelationType(), Matchers.anyOf(is(RelationType.ASSOCIATES_WITH), is(RelationType.IMPLEMENTS)));
+
+        if(firstProperty.getRelationType() == RelationType.ASSOCIATES_WITH) {
+            assertThat(secondProperty.getRelationType(), is(RelationType.IMPLEMENTS));
+        }
+        if(secondProperty.getRelationType() == RelationType.ASSOCIATES_WITH) {
+            assertThat(firstProperty.getRelationType(), is(RelationType.IMPLEMENTS));
+        }
 
         assertThat(relationParser.events.size(), is(0));
+    }
+
+    private Map<String, Relation> setToMap(Set<Relation> relations) {
+        final Map<String, Relation> result = new HashMap<>();
+        relations.forEach(relation -> result.put(relation.getId(), relation));
+        return result;
     }
 
     @Test
