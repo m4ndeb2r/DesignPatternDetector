@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Properties>
+        <!--
+        The base directory for log files relative to the application
+        -->
+        <Property name="logDir">test-logs</Property>
+        <!--
+        The name of the log file (without the extension
+        -->
+        <Property name="logFile">DesignPatternDetector-test</Property>
+    </Properties>
+
+    <Appenders>
+        <!--
+        A Console appender logging to the console (system.out)
+        -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+        </Console>
+
+        <!--
+        A RollingFileAppender with both the time and size based triggering policies, will create up to 100 archives on
+        the same day (1-100) that are stored in a directory based on the current year and month, and will compress each
+        archive using gzip and will roll every hour.
+        -->
+        <RollingFile name="RollingFile" fileName="${logDir}/${logFile}.log"
+                     filePattern="${logDir}/$${date:yyyy-MM}/${logFile}-%d{yyyy-MM-dd-HH}-%i.log.gz">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="50 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100">
+                <!--
+                During every rollover, this configuration will delete files that match "*/${logFile}-*.log.gz" and
+                are 30 days old or older, but keep the most recent 1 GB or the most recent 10 files, whichever comes
+                first.
+                -->
+                <Delete basePath="${logDir}" maxDepth="2">
+                    <IfFileName glob="*/${logFile}-*.log.gz">
+                        <IfLastModified age="30d">
+                            <IfAny>
+                                <IfAccumulatedFileSize exceeds="1 GB" />
+                                <IfAccumulatedFileCount exceeds="10" />
+                            </IfAny>
+                        </IfLastModified>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="trace">
+            <AppenderRef ref="RollingFile" level="debug"/>
+        </Root>
+    </Loggers>
+</Configuration>

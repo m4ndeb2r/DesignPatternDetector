@@ -2,21 +2,22 @@
 
 ## TODO's in the code
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Styling in CSS instead of FXML
-* Scrollbars in project view are not working 100% okay
-* Cleanup test files
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
 * Implement or remove unimplemented menu items in GUI.
-* Merge graphstructure branch to develop branch; merge develop to master; remove graphstructure branch; remove feature-matching bramch
 
 ## TODO: testing
-* separate integration tests from unittests
-* Consider more tests for the GUI....
-* Create an overall patterns file with all GOF patterns as a deliverable
+* Get better coverage with unittests (integration tests are separate, and should not be included in coverage metrics)
+* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
+* Finish unit tests for ArgoUML parsers (coverage is now 81% - 86%)
+* More extensive testing in integration tests (solutions/feedback)
+* Get rid of @Ignore annotations (ChainOfResponsibilityMatchingTest for example)
 
-## TODO's in documentation 
-* Document Observer pattern of JavaFX
-* Remove PDF's from codebase (add TEX files to ABI Scriptie codebase)
+## Other (final) project deliverables
+* Create an overall patterns file with all GOF patterns as a deliverable
+  * Use note tags for general warnings
+
+
+

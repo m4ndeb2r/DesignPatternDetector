@@ -10,6 +10,10 @@ local.properties
 .loadpath
 .recommenders
 
+# IntelliJ
+**/*.iml
+.idea
+
 # Eclipse Core
 .project
 
@@ -55,7 +59,7 @@ local.properties
 .worksheet
 
 # custom
-/target/
-/jar/
-/logs/
-/test-logs/
+**/target/
+**/jar/
+**/logs/
+**/test-logs/
