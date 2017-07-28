@@ -312,10 +312,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
             node = nodes.get(id);
             if (node == null) {
                 node = new Node(id);
-                node = addNodeProperties(node, event);
-            } else {
-                addNodeProperties(node, event);
             }
+            node = addNodeProperties(node, event);
         }
         return node;
     }
