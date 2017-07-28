@@ -120,14 +120,20 @@ public class ArgoUMLNodeParserTest {
     @Before
     public void initEvents() {
         modelEvent = ParseTestHelper.createXMLEventMock(MODEL);
+
+        // Mock an interface, a class and an abstract class
         interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockId("interfaceNodeId"));
         classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("classNodeId"));
+        abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("abstractClassNodeId"), mockIsAbstract(true));
+
+        // Mock an operation that has one input parameter of type
         operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId("operationId"));
         parameterEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind("in"), mockId("parameterId"));
         paramTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceNodeId"));
+
+        // Mock an attribute of type "Integer" (datatype ends with 87C)
         attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE, mockId("attributeId"));
         datatypeEvent = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref("...87C"));
-        abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("abstractClassNodeId"), mockIsAbstract(true));
     }
 
     private javax.xml.stream.events.Attribute mockHref(String href) {
