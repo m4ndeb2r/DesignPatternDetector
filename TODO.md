@@ -2,21 +2,22 @@
 
 ## TODO's in the code
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
 * Styling in CSS instead of FXML
-* Cleanup test files
 * Cleanup code (dead code, comments)
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
 * Implement or remove unimplemented menu items in GUI.
 
 ## TODO: testing
-* separate integration tests from unittests
-* Consider more tests for the GUI.... See TODO's in PatternTests!!
+* Get better coverage with unittests (integration tests are separate, and should not be included in coverage metrics)
+* Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
+* Finish unit tests for ArgoUML parsers (coverage is now 81% - 86%)
+* More extensive testing in integration tests (solutions/feedback)
+* Get rid of @Ignore annotations (ChainOfResponsibilityMatchingTest for example)
+
+## Other (final) project deliverables
 * Create an overall patterns file with all GOF patterns as a deliverable
+  * Use note tags for general warnings
 
-## TODO's in documentation 
-* Document Observer pattern of JavaFX
 
-## TODO Logging
-* Check the log files. Is there too much, enough, not enough relevant logging?
+

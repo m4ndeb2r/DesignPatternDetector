@@ -17,16 +17,51 @@ missing edges in detected patterns. Typical values for -n are 0 (strict) or 1 (n
 ## Current version
 The current version is a JavaFX application with a graphic userinterface. Just like the original prototype, it analyses 
 exports from ArgoUML (\*.xmi) and attempts to find design patterns, specied in templates file (\*.xml). All arguments 
-can be entered in the GUI. Pattern detection is currently no different from the original prototype, fundamentally.
+can be entered in the GUI. Also, the matching process is refatored, and is based on graphs, using the JGraphT library.
+
+### How to build and automatically test the application
+The application consists of two modules: dpd-application (the application) and dpd-integrations-test (the integration 
+tests tesing the dpd-application). 
+
+To run the unittests of the application, in the dpd-application module directory, run:
+
+`$ mvn clean test`
+
+To run the integration tests, in the dpd-integration-test directory, run:
+
+`$ mvn clean install`
+
+or:
+
+`$mvn clean integration-test`
+
+or:
+
+`$mvn clean test`
+
+To run all tests, in the root directory of the project, run:
+
+`$mvn clean test`
+
+To run all tests, build and package the application jar, in the root directory of the project, run:
+
+`$mvn clean install`
+
+To run the unit tests (and skip the integration tests), build and package the application jar, in the dpd-application 
+directory, run:
+
+`$mvn clean install`
+
+### How to run the application
+After building and packaging the application, go to the dpd-application directory of the project, and enter:
+
+`$ java -jar ./target/DesignPatternDetector-<version>.jar`
 
 **Example**
 
-`$ java -jar ./target/DesignPatternDetector.jar
-`
+`$ java -jar ./target/DesignPatternDetector-0.0.5-SNAHPSHOT.jar`
 
-(Note that the name of the application has changed from patterndetectionArgouml to DesignPatternDedector.)
-
-**Using the application (the happy flow)**
+###Using the application (the happy flow)
 
 After starting the application choose *File* > *New project* from the menu. A new project opens with the default name 
 [New Project]. To run an analysis, two input parameters have to be provided: (1) select an input (an export from
@@ -41,12 +76,9 @@ are stored as *.gz files in subdirectories named after the date of creation.
 
 ## Working on ...
 We are currently working on:
-* implementing a new matching method
-* the new matching method requires a new parsing method
 * extension of recognized patterns (made possible by the new matching method)
 * unit- and integrationtests (on-going)
 * documentation
-* updating the GUI to work with the new matcher/parsers
 * perfection of the user-friendly GUI
 
 ## Other future work ...
