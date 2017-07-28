@@ -169,6 +169,7 @@ public class ArgoUMLNodeParserTest {
         assertThat(node.getAttributes().size(), is(1));
         final Attribute attribute = node.getAttributes().iterator().next();
         assertThat(attribute.getId(), is("attributeId"));
+        assertThat(attribute.getType().getName(), is("Integer"));
         assertThat(attribute.getParentNode().getId(), is(node.getId()));
     }
 
