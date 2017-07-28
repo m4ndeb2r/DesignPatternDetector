@@ -25,6 +25,7 @@ import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.DATATYPE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.HREF;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IDREF;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_ABSTRACT;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.KIND;
@@ -59,7 +60,8 @@ public class ArgoUMLNodeParserTest {
 
     @Mock
     XMLEvent modelEvent, classEvent, abstractClassEvent, interfaceEvent,
-            datatypeEvent, attributeEvent, operationEvent, parameterEvent;
+            datatypeEvent, attributeEvent, operationEvent, parameterEvent,
+            paramTypeEvent;
 
     private ArgoUMLNodeParser nodeParser;
 
@@ -83,6 +85,8 @@ public class ArgoUMLNodeParserTest {
     public void initEventReader() throws XMLStreamException {
         when(xmlEventReader.hasNext()).thenReturn(
                 true, // model start-element
+                true, // interface start-element
+                true, // interface end-element
                 true, // class start-element
                 true, // attribute start-element
                 true, // datatype start-element
@@ -90,23 +94,23 @@ public class ArgoUMLNodeParserTest {
                 true, // attribute end-element
                 true, // operation start-element
                 true, // parameter start-element
+                true, // paramType start-element
+                true, // paramType end-element
                 true, // parameter end-element
                 true, // operation end-element
                 true, // class end-element
                 true, // abstract class start-element
                 true, // abstract class end-element
-                true, // interface start-element
-                true, // interface end-element
                 true, // model end-element
                 false);
         when(xmlEventReader.nextEvent()).thenReturn(
                 modelEvent,
+                interfaceEvent, interfaceEvent,
                 classEvent,
                 attributeEvent, datatypeEvent, datatypeEvent, attributeEvent,
-                operationEvent, parameterEvent, parameterEvent, operationEvent,
+                operationEvent, parameterEvent, paramTypeEvent, paramTypeEvent, parameterEvent, operationEvent,
                 classEvent,
                 abstractClassEvent, abstractClassEvent,
-                interfaceEvent, interfaceEvent,
                 modelEvent);
     }
 
@@ -116,12 +120,13 @@ public class ArgoUMLNodeParserTest {
     @Before
     public void initEvents() {
         modelEvent = ParseTestHelper.createXMLEventMock(MODEL);
+        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockId("interfaceNodeId"));
         classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("classNodeId"));
         operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId("operationId"));
-        parameterEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockId("parameterId"), mockParamKind("in"));
+        parameterEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind("in"), mockId("parameterId"));
+        paramTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceNodeId"));
         attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE, mockId("attributeId"));
         datatypeEvent = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref("...87C"));
-        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockId("interfaceNodeId"));
         abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("abstractClassNodeId"), mockIsAbstract(true));
     }
 
@@ -139,6 +144,10 @@ public class ArgoUMLNodeParserTest {
 
     private javax.xml.stream.events.Attribute mockId(String id) {
         return ParseTestHelper.createAttributeMock(ID, id);
+    }
+
+    private javax.xml.stream.events.Attribute mockIdRef(String idRef) {
+        return ParseTestHelper.createAttributeMock(IDREF, idRef);
     }
 
     @Test
@@ -185,6 +194,7 @@ public class ArgoUMLNodeParserTest {
         assertThat(operation.getParameters().size(), is(1));
         final Parameter parameter = operation.getParameters().iterator().next();
         assertThat(parameter.getId(), is("parameterId"));
+        assertThat(parameter.getType().getId(), is("interfaceNodeId"));
         assertThat(parameter.getParentOperation().getId(), is(operation.getId()));
     }
 

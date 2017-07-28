@@ -91,6 +91,9 @@ public class ParseTestHelper {
                 false, // hasNext = false (no more attributes)
                 true, // hasNext = true (next = attribute1)
                 true, // hasNext = true (next = attribute2)
+                false, // hasNext = false (no more attributes)
+                true, // hasNext = true (next = attribute1)
+                true, // hasNext = true (next = attribute2)
                 false // hasNext = false (no more attributes)
         );
         when(attributesIterator.next()).thenReturn(
