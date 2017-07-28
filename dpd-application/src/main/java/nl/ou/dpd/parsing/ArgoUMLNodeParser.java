@@ -307,15 +307,14 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private Node findOrcreateNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
         final String id = attributes.get(ID);
-        Node node = null;
         if (id != null) {
-            node = nodes.get(id);
+            Node node = nodes.get(id);
             if (node == null) {
                 node = new Node(id);
             }
-            node = addNodeProperties(node, event);
+            return addNodeProperties(node, event);
         }
-        return node;
+        return null;
     }
 
     /**

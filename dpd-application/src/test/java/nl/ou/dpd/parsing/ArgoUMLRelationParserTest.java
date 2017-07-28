@@ -101,7 +101,8 @@ public class ArgoUMLRelationParserTest {
     }
 
     /**
-     * Mocks the order in which the event reader reads the XML elements.
+     * Mocks the order in which the event reader reads the XML elements. Here, we put together a complete, mocked,
+     * structure of the system design that is being parsed by the {@link ArgoUMLRelationParser}.
      *
      * @throws XMLStreamException not expected
      */
