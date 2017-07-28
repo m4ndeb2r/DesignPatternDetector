@@ -60,8 +60,8 @@ public class ArgoUMLNodeParserTest {
 
     @Mock
     XMLEvent modelEvent, classEvent, abstractClassEvent, interfaceEvent,
-            datatypeEvent, attributeEvent, operationEvent, parameterEvent,
-            paramTypeEvent;
+            datatypeEvent, attributeEvent, operationEvent, inputParamEvent,
+            inputParamTypeEvent, returnParamEvent, returnParamTypeEvent;
 
     private ArgoUMLNodeParser nodeParser;
 
@@ -94,10 +94,14 @@ public class ArgoUMLNodeParserTest {
                 true, // datatype end-element
                 true, // attribute end-element
                 true, // operation start-element
-                true, // parameter start-element
-                true, // paramType start-element
-                true, // paramType end-element
-                true, // parameter end-element
+                true, // input parameter start-element
+                true, // input paramType start-element
+                true, // input paramType end-element
+                true, // input parameter end-element
+                true, // return parameter start-element
+                true, // return paramType start-element
+                true, // return paramType end-element
+                true, // return parameter end-element
                 true, // operation end-element
                 true, // class end-element
                 true, // abstract class start-element
@@ -109,7 +113,10 @@ public class ArgoUMLNodeParserTest {
                 interfaceEvent, interfaceEvent,
                 classEvent,
                 attributeEvent, datatypeEvent, datatypeEvent, attributeEvent,
-                operationEvent, parameterEvent, paramTypeEvent, paramTypeEvent, parameterEvent, operationEvent,
+                operationEvent,
+                inputParamEvent, inputParamTypeEvent, inputParamTypeEvent, inputParamEvent,
+                returnParamEvent, returnParamTypeEvent, returnParamTypeEvent, returnParamEvent,
+                operationEvent,
                 classEvent,
                 abstractClassEvent, abstractClassEvent,
                 modelEvent);
@@ -127,10 +134,12 @@ public class ArgoUMLNodeParserTest {
         classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("classNodeId"));
         abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("abstractClassNodeId"), mockIsAbstract(true));
 
-        // Mock an operation that has one input parameter of type
+        // Mock an operation that has one input parameter of type "interfaceNode"
         operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId("operationId"));
-        parameterEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind("in"), mockId("parameterId"));
-        paramTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceNodeId"));
+        inputParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind("in"), mockId("parameterId"));
+        inputParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceNodeId"));
+        returnParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind("return"), mockId("returnTypeId"));
+        returnParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceNodeId"));
 
         // Mock an attribute of type "Integer" (datatype ends with 87C)
         attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE, mockId("attributeId"));
@@ -195,6 +204,7 @@ public class ArgoUMLNodeParserTest {
         assertThat(operation.getId(), is("operationId"));
         assertThat(operation.getParentNode().getId(), is(node.getId()));
         assertParameter(operation);
+        assertReturnType(operation);
     }
 
     private void assertParameter(Operation operation) {
@@ -203,6 +213,10 @@ public class ArgoUMLNodeParserTest {
         assertThat(parameter.getId(), is("parameterId"));
         assertThat(parameter.getType().getId(), is("interfaceNodeId"));
         assertThat(parameter.getParentOperation().getId(), is(operation.getId()));
+    }
+
+    private void assertReturnType(Operation operation) {
+        assertThat(operation.getReturnType().getId(), is("interfaceNodeId"));
     }
 
     private void assertAbstractClassNode(Map<String, Node> nodeMap) {
