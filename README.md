@@ -59,7 +59,7 @@ After building and packaging the application, go to the dpd-application director
 
 **Example**
 
-`$ java -jar ./target/DesignPatternDetector-0.0.5-SNAHPSHOT.jar`
+`$ java -jar ./target/DesignPatternDetector-0.0.7-SNAPSHOT.jar`
 
 ###Using the application (the happy flow)
 
