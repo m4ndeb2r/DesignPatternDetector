@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 /**
  * Remembers the most recently used {@link Project} {@link File}s, so they can, of example, be shown in the File menu
- * of the application. This class is a singleton that is implemented as an enum with one
+ * of the application. This class is a singleton that is implemented as an enum with one instance.
  *
  * @author Martin de Boer
  */

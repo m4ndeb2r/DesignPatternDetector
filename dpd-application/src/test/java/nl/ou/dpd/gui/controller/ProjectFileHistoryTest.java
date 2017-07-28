@@ -1,5 +1,6 @@
 package nl.ou.dpd.gui.controller;
 
+import nl.ou.dpd.gui.model.Project;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -91,6 +92,13 @@ public class ProjectFileHistoryTest {
         assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().get(2), is(testProjectHistoryFile5));
         assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().get(3), is(testProjectHistoryFile4));
         assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().get(4), is(testProjectHistoryFile2));
+
+        ProjectFileHistory.INSTANCE.store();
+        ProjectFileHistory.INSTANCE.getProjectFiles().removeAll(ProjectFileHistory.INSTANCE.getProjectFiles());
+        assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().size(), is(0)); // Empty
+
+        ProjectFileHistory.INSTANCE.restore();
+        assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().size(), is(5)); // Unchanged
     }
 
     private String getPath(String resourceName) {
