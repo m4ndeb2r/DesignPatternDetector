@@ -160,7 +160,7 @@ public class ArgoUMLRelationParserTest {
         associationClassEndEvent = ParseTestHelper.createXMLEventMock(
                 ASSOCIATION_END,
                 mockId("associationClassEndId"),
-                mockNavigable("false")
+                mockNavigable("true")
         );
     }
 

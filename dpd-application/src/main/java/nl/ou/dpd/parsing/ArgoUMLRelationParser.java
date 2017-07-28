@@ -308,9 +308,11 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
             system.getEdge(targetNode, sourceNode).getRelationProperties().add(new RelationProperty(RelationType.ASSOCIATES_WITH));
         } else {
             if (isAssociation && navigabilities.size() == 2) {
-                navigabilities.pop();
-                navigabilities.pop();
-                lastRelation = createReverseAssociation(relation, sourceNode, targetNode);
+                final boolean nav1 = navigabilities.pop();
+                final boolean nav2 = navigabilities.pop();
+                if (nav1 && nav2) {
+                    lastRelation = createReverseAssociation(relation, sourceNode, targetNode);
+                }
             }
         }
     }
