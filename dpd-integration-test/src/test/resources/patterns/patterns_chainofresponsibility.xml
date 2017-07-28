@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patterns>
+    <pattern name="ChainOfResponsability" family="ChainOfResponsability">
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Handler">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="ConcreteHandlerA">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteHandlerB">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Handler">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteHandlerA" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteHandlerB" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Handler" node2="Handler">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+</patterns>
+

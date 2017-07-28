@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patterns>
+    <pattern name="Observer" family="Observer">
+        <nodes>
+            <node id="ConcreteSubject">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Subject">
+                <node.rule nodeType="ABSTRACT_CLASS"/>
+            </node>
+            <node id="Observer">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="ConcreteObserver">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Subject" node2="Observer">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_METHOD_PARAMETER_OF_TYPE" cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteSubject" node2="Subject">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteObserver" node2="ConcreteSubject">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteObserver" node2="Observer">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+</patterns>
+

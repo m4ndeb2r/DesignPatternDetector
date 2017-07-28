@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patterns>
+    <pattern name="Singleton" family="Singleton">
+        <nodes>
+            <node id="Singleton">
+                <node.rule nodeType="CONCRETE_CLASS"/> <!-- Class -->
+                <node.rule nodeType="CLASS_WITH_PRIVATE_CONSTRUCTOR"/> <!-- Private constructor -->
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Singleton" node2="Singleton">
+                <relation.rule relationType="CREATES_INSTANCE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+</patterns>
+
