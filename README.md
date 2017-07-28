@@ -61,7 +61,7 @@ After building and packaging the application, go to the dpd-application director
 
 `$ java -jar ./target/DesignPatternDetector-0.0.7-SNAPSHOT.jar`
 
-###Using the application (the happy flow)
+### Using the application (the happy flow)
 
 After starting the application choose *File* > *New project* from the menu. A new project opens with the default name 
 [New Project]. To run an analysis, two input parameters have to be provided: (1) select an input (an export from
