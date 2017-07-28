@@ -7,17 +7,14 @@
 * JavaDoc (some of it is old, missing, or superfluous....)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
 * Implement or remove unimplemented menu items in GUI.
+* Create an overall patterns file with all GOF patterns as a deliverable
 
 ## TODO: testing
 * Get better coverage with unittests (integration tests are separate, and should not be included in coverage metrics)
 * Test-coverage GUI (JavaFX testing is not that straight-forward ... sadly)
-* Create an overall patterns file with all GOF patterns as a deliverable
-* Finish unit tests for ArgoUML parsers (coverage is now 76% - 81%)
+* Finish unit tests for ArgoUML parsers (coverage is now 81% - 86%)
 * More extensive testing in integration tests (solutions/feedback)
-* 12 of 22 integration test methods fail after a bug fix!?! Was ist hier loss?
 
 ## TODO's in documentation 
 * Document Observer pattern of JavaFX
 
-## TODO Logging
-* Check the log files. Is there too much, enough, not enough relevant logging?
