@@ -7,7 +7,7 @@
     <groupId>nl.ou.dpd</groupId>
     <artifactId>DesignPatternDetectorParent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <name>Design Pattern Detector Parent</name>
 
     <modules>
