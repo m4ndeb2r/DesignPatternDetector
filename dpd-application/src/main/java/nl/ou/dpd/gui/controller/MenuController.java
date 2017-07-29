@@ -65,19 +65,6 @@ public class MenuController extends Controller implements Observer {
     }
 
     /**
-     * Called to initialize a controller after its root element has been completely processed. It sets some of the
-     * menu items' state to disabled (the initial state), because those menu items work on open projects, and initially
-     * no project has been opened.
-     *
-     * @param location  The location used to resolve relative paths for the root object, or
-     *                  <tt>null</tt> if the location is not known.
-     * @param resources The resources used to localize the root object, or <tt>null</tt>
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-    }
-
-    /**
      * Opens a new (blank) project. Prompts the user if the project has any changes that might get lost.
      *
      * @param event is ignored
@@ -122,7 +109,7 @@ public class MenuController extends Controller implements Observer {
         if (!getModel().hasOpenProject()
                 || getModel().canCloseProjectWithoutDataLoss()
                 || canCloseWithoutSaving()) {
-            getModel().closeProject();
+            getModel().showMainView();
         }
     }
 
@@ -208,7 +195,7 @@ public class MenuController extends Controller implements Observer {
      */
     @FXML
     protected void aboutAction(ActionEvent event) {
-        showNotImplementedAlert("About");
+        getModel().showAboutWindow();
     }
 
     /**
@@ -218,7 +205,7 @@ public class MenuController extends Controller implements Observer {
      */
     @FXML
     protected void helpAction(ActionEvent event) {
-        showNotImplementedAlert("Help");
+        getModel().showHelpWindow();
     }
 
     private void showNotImplementedAlert(String function) {

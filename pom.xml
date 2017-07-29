@@ -8,7 +8,43 @@
     <artifactId>DesignPatternDetectorParent</artifactId>
     <packaging>pom</packaging>
     <version>0.0.8-SNAPSHOT</version>
-    <name>Design Pattern Detector Parent</name>
+    <organization>
+        <name>Open University</name>
+        <url>http://www.ou.nl</url>
+    </organization>
+    <inceptionYear>2017</inceptionYear>
+    <developers>
+        <developer>
+            <name>Peter Vansweevelt</name>
+            <roles>
+                <role>developer</role>
+                <role>student</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Martin de Boer</name>
+            <roles>
+                <role>developer</role>
+                <role>student</role>
+            </roles>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Sylvia Stuurman</name>
+            <roles>
+                <role>supervisor</role>
+            </roles>
+        </contributor>
+    </contributors>
+
+    <name>Design Pattern Detector</name>
+    <description>
+        This application was developed as one of the deliverables for the Design Pattern Detection
+        graduation project at the Open University of The Netherlands. It is part of our research
+        to what extend it is possible to detect design patterns in ArgoUML diagram exports (*.xmi
+        files).
+    </description>
 
     <modules>
         <module>dpd-integration-test</module>
@@ -41,6 +77,13 @@
                 <groupId>org.jgrapht</groupId>
                 <artifactId>jgrapht-core</artifactId>
                 <version>1.0.1</version>
+            </dependency>
+
+            <!-- Maven model -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>3.3.9</version>
             </dependency>
 
             <!-- Logging -->

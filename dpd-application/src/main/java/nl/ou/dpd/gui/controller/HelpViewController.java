@@ -6,20 +6,19 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * A {@link Controller} for the main view of the application.
+ * A {@link Controller} for the help view of the application.
  *
  * @author Martin de Boer
  */
-public class MainViewController extends Controller {
+public class HelpViewController extends Controller {
 
     /**
-     * Constructs a {@link MainViewController} with the specified {@link Model}.
+     * Constructs a {@link HelpViewController} with the specified {@link Model}.
      *
      * @param model the model of the MVC pattern
      */
-    public MainViewController(Model model) {
+    public HelpViewController(Model model) {
         super(model);
     }
-
 }
 
