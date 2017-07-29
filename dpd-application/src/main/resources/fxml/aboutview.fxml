@@ -25,11 +25,15 @@
                 <GridPane fx:id="aboutContributersGridPane" styleClass="about-gridpane"/>
 
                 <BorderPane>
+                    <left></left>
+                    <center>
                     <ImageView preserveRatio="true" BorderPane.alignment="CENTER">
                         <image>
                             <Image url="@../img/dpd_logo@0,5x.png"/>
                         </image>
                     </ImageView>
+                    </center>
+                    <right></right>
                 </BorderPane>
             </children>
             <padding>
