@@ -13,32 +13,8 @@
         <url>http://www.ou.nl</url>
     </organization>
     <inceptionYear>2017</inceptionYear>
-    <developers>
-        <developer>
-            <name>Peter Vansweevelt</name>
-            <roles>
-                <role>developer</role>
-                <role>student</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Martin de Boer</name>
-            <roles>
-                <role>developer</role>
-                <role>student</role>
-            </roles>
-        </developer>
-    </developers>
-    <contributors>
-        <contributor>
-            <name>Sylvia Stuurman</name>
-            <roles>
-                <role>supervisor</role>
-            </roles>
-        </contributor>
-    </contributors>
 
-    <name>Design Pattern Detector</name>
+    <name>Design Pattern Detector Parent</name>
     <description>
         This application was developed as one of the deliverables for the Design Pattern Detection
         graduation project at the Open University of The Netherlands. It is part of our research
@@ -51,9 +27,20 @@
         <module>dpd-application</module>
     </modules>
 
+    <!--
+      These properties can be used in the application, thanks to the properties-maven-plugin.
+      In our case, we use them in the about window of the application.
+    -->
     <properties>
-        <!-- The current Design Pattern Detector version -->
         <dpd.version>${project.version}</dpd.version>
+        <dpd.name>${project.name}</dpd.name>
+        <dpd.build.finalName>${project.build.finalName}</dpd.build.finalName>
+        <dpd.organisation.name>${project.organization.name}</dpd.organisation.name>
+        <dpd.organisation.url>${project.organization.url}</dpd.organisation.url>
+        <dpd.year>${project.inceptionYear}</dpd.year>
+        <dpd.description>${project.description}</dpd.description>
+        <dpd.developers>Martin de Boer[developer,student], Peter Vansweevelt[developer,student]</dpd.developers>
+        <dpd.contributors>Sylvia Stuurman[supervisor]</dpd.contributors>
     </properties>
 
     <build>
@@ -66,6 +53,24 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+
+            <!-- A plugin for storing application properties while building the application -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>write-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>${project.build.outputDirectory}/dpd-application.properties</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
