@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Inspects a system under control for design patterns. Both objects (the system under control as well as the design
- * pattern) must be implemented as {@link org.jgrapht.DirectedGraph}s with {@link Node}s as vertices and
+ * Inspects a system under consideration for design patterns. Both objects (the system under control as well as the
+ * design pattern) must be implemented as {@link org.jgrapht.DirectedGraph}s with {@link Node}s as vertices and
  * {@link Relation}s as edges.
  *
  * @author Martin de Boer

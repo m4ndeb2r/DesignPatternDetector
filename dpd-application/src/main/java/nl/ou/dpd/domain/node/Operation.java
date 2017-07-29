@@ -20,6 +20,12 @@ public class Operation implements SignatureComparable<Operation> {
     private Set<Parameter> parameters;
     private Node returnType; // null if returnType is 'void'
 
+    /**
+     * Creates an {@link Operation} with the specified id and parent node
+     *
+     * @param id         a unitque identifier for this {@link Operation}
+     * @param parentNode the {@link Node} this operation belongs to
+     */
     public Operation(String id, Node parentNode) {
         this.id = id;
         this.parentNode = parentNode;
