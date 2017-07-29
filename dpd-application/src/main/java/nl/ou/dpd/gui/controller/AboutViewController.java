@@ -110,17 +110,11 @@ public class AboutViewController extends Controller {
                 new Text(organisation.getUrl()));
     }
 
-    private void showApplicationInformation() {
-        int row = 0;
-        aboutApplicationGridPane.addRow(row++, new Text("Name"), new Text(":"), new Text(this.applicationName));
-        aboutApplicationGridPane.addRow(row++, new Text("Version"), new Text(":"), new Text(this.applicationVersion));
-        aboutApplicationGridPane.addRow(row, new Text("Year"), new Text(":"), new Text(this.inceptionYear));
-    }
-
     private void getApplicationInformation() {
         try {
-            final MavenXpp3Reader reader = new MavenXpp3Reader();
-            final org.apache.maven.model.Model mavenModel = reader.read(new FileReader("pom.xml"));
+            final MavenXpp3Reader xpp3Reader = new MavenXpp3Reader();
+            final FileReader fileReader = new FileReader("pom.xml");
+            final org.apache.maven.model.Model mavenModel = xpp3Reader.read(fileReader);
 
             developers = mavenModel.getDevelopers();
             description = mavenModel.getDescription();

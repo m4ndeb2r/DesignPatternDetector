@@ -99,6 +99,12 @@ public class ProjectFileHistoryTest {
 
         ProjectFileHistory.INSTANCE.restore();
         assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().size(), is(5)); // Unchanged
+
+        // Cleanup
+        ProjectFileHistory.INSTANCE.getProjectFiles().removeAll(ProjectFileHistory.INSTANCE.getProjectFiles());
+        ProjectFileHistory.INSTANCE.store();
+        ProjectFileHistory.INSTANCE.restore();
+        assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().size(), is(0)); // Empty
     }
 
     private String getPath(String resourceName) {
