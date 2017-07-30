@@ -267,8 +267,8 @@ public class Model extends Observable {
         stage.initStyle(StageStyle.UTILITY);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
-        stage.setWidth(550.0);
-        stage.setHeight(650.0);
+        stage.setWidth(575.0);
+        stage.setHeight(700.0);
 
         stage.show();
     }

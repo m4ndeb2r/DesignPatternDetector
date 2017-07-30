@@ -54,14 +54,14 @@
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 19px;
-    -fx-padding: 10 20 10 20px;
+    -fx-padding: 10 20 3 20px;
 }
 
 .page-subsubtitle {
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 16px;
-    -fx-padding: 0 20 10 20px;
+    -fx-padding: 0 10 3 20px;
 }
 
 .paragraph {
@@ -69,7 +69,8 @@
     -fx-wrap-text: true;
     -fx-font-style: normal;
     -fx-text-fill: rgb(0, 0, 0);
-    -fx-padding: 10 20 10 20px;
+    -fx-padding: 0 22 10 22px;
+    -fx-text-alignment: justify;
 }
 
 .error {

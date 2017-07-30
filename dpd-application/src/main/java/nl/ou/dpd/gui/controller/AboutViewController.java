@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.model.Contributor;
 
-import java.io.FileReader;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class AboutViewController extends Controller {
     private GridPane aboutContributersGridPane;
 
     private String description;
-    private String inceptionYear;
+    private String buildNumber;
     private String applicationName;
     private String applicationVersion;
     private String organisationName;
@@ -80,7 +79,7 @@ public class AboutViewController extends Controller {
         this.getApplicationInformation();
 
         applicationNameLabel.setText(this.applicationName);
-        applicationVersionLabel.setText(String.format("Version: %s (%s)", applicationVersion, inceptionYear));
+        applicationVersionLabel.setText(String.format("Version: %s (build number: %s)", applicationVersion, buildNumber));
         aboutDescriptionLabel.setText(tidy(description));
 
         showContributersInformation();
@@ -125,7 +124,7 @@ public class AboutViewController extends Controller {
             properties.load(inputStream);
 
             description = tidy(properties.getProperty("dpd.description"));
-            inceptionYear = properties.getProperty("dpd.year");
+            buildNumber = properties.getProperty("dpd.buildNumber");
             applicationName = properties.getProperty("dpd.name");
             applicationVersion = properties.getProperty("dpd.version");
             organisationName = properties.getProperty("dpd.organisation.name");

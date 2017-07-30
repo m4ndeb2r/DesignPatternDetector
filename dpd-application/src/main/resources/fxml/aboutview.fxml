@@ -19,6 +19,7 @@
                 <Label fx:id="applicationNameLabel" styleClass="page-title"/>
                 <Label fx:id="applicationVersionLabel" styleClass="page-subsubtitle"/>
 
+                <Label fx:id="aboutProjectSubtitle" styleClass="page-subtitle" text="About the project"/>
                 <Label fx:id="aboutDescriptionLabel" styleClass="paragraph" text="Description"/>
 
                 <Label fx:id="aboutContributersSubtitle" styleClass="page-subtitle" text="Contributors"/>

@@ -41,6 +41,8 @@
         <dpd.description>${project.description}</dpd.description>
         <dpd.developers>Martin de Boer[developer,student], Peter Vansweevelt[developer,student]</dpd.developers>
         <dpd.contributors>Sylvia Stuurman[supervisor]</dpd.contributors>
+        <maven.build.timestamp.format>yyMMdd_HHmm</maven.build.timestamp.format>
+        <dpd.buildNumber>${maven.build.timestamp}</dpd.buildNumber>
     </properties>
 
     <build>
