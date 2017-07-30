@@ -5,14 +5,10 @@
 * Styling in CSS instead of FXML
 * Cleanup code (dead code, comments)
 * What to do with matching relations in Solution (show it in feedback? remove it?)
-* Implement or remove unimplemented menu items in GUI.
-  * Language is removed
-  * About is done
-  * Help is still incomplete
 
 ## TODO: testing
-* Get better coverage with unittests (integration tests are separate, and should not be included in coverage metrics)
 * More extensive testing in integration tests (solutions/feedback)
+* Disable System.out.println in integration test. 
 * Get rid of @Ignore annotations (ChainOfResponsibilityMatchingTest for example)
 
 ## Other (final) project deliverables
