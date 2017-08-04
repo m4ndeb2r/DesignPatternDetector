@@ -25,16 +25,24 @@ public class RelationTest {
     @Mock
     private RelationProperty relationProperty;
 
+    // The test subject
+    private Relation relation;
+
     @Before
     public void initRelationProperty() {
+        final Cardinality cardinality_1 = Cardinality.valueOf("1");
         when(relationProperty.getRelationType()).thenReturn(RelationType.ASSOCIATES_WITH);
-        when(relationProperty.getCardinalityLeft()).thenReturn(Cardinality.valueOf("1"));
-        when(relationProperty.getCardinalityRight()).thenReturn(Cardinality.valueOf("1"));
+        when(relationProperty.getCardinalityLeft()).thenReturn(cardinality_1);
+        when(relationProperty.getCardinalityRight()).thenReturn(cardinality_1);
+    }
+
+    @Before
+    public void initTestSubject() {
+        relation = new Relation("id1", "relation1");
     }
 
     @Test
     public void testConstructor() {
-        final Relation relation = new Relation("id1", "relation1");
         assertThat(relation.getId(), is("id1"));
         assertThat(relation.getName(), is("relation1"));
         assertThat(relation.getRelationProperties().size(), is(0));
@@ -42,7 +50,6 @@ public class RelationTest {
 
     @Test
     public void testAddRelationProperty() {
-        final Relation relation = new Relation("id1", "relation1");
         relation.addRelationProperty(relationProperty);
         assertEquals(1, relation.getRelationProperties().size());
         assertTrue(relation.getRelationProperties().contains(relationProperty));
@@ -55,31 +62,30 @@ public class RelationTest {
 
     @Test
     public void testEquals() {
-        Relation rel1 = new Relation("id1", "relation1");
-        Relation rel2 = new Relation(null, "relation1");
+        final Relation relation2 = new Relation(null, relation.getName());
 
-        assertEquals(rel1, rel1);
-        assertEquals(rel1.hashCode(), rel1.hashCode());
-        assertNotEquals(rel1, null);
-        assertNotEquals(rel1, relationProperty);
-        assertNotEquals(rel1, rel2);
+        assertEquals(relation, relation);
+        assertEquals(relation.hashCode(), relation.hashCode());
+        assertNotEquals(relation, null);
+        assertNotEquals(relation, relationProperty);
+        assertNotEquals(relation, relation2);
 
-        rel2.setId("id1");
-        assertEquals(rel1, rel2);
-        assertEquals(rel1.hashCode(), rel2.hashCode());
+        relation2.setId(relation.getId());
+        assertEquals(relation, relation2);
+        assertEquals(relation.hashCode(), relation2.hashCode());
 
-        rel2.setName("anotherName");
-        assertNotEquals(rel1, rel2);
+        relation2.setName(String.format("Not %s", relation2.getName()));
+        assertNotEquals(relation, relation2);
 
-        rel2.setName(null);
-        assertNotEquals(rel1, rel2);
+        relation2.setName(null);
+        assertNotEquals(relation, relation2);
 
-        rel2.setName("relation1");
-        rel2.addRelationProperty(relationProperty);
-        assertNotEquals(rel1, rel2);
+        relation2.setName(relation.getName());
+        relation2.addRelationProperty(relationProperty);
+        assertNotEquals(relation, relation2);
 
-        rel1.addRelationProperty(relationProperty);
-        assertEquals(rel1, rel2);
-        assertEquals(rel1.hashCode(), rel2.hashCode());
+        relation.addRelationProperty(relationProperty);
+        assertEquals(relation, relation2);
+        assertEquals(relation.hashCode(), relation2.hashCode());
     }
 }
