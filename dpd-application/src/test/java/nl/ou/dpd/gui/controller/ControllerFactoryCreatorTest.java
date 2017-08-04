@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.TestCase.assertFalse;
+import static nl.ou.dpd.gui.controller.ControllerFactoryCreator.UNABLE_TO_CREATE_CONTROLLER_FACTORY_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
@@ -23,9 +24,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class ControllerFactoryCreatorTest {
 
-    /**
-     * Exception rule.
-     */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     @Mock
@@ -123,7 +121,7 @@ public class ControllerFactoryCreatorTest {
     @Test
     public void testCreateControllerFactoryException() {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage("Unable to create controller factory.");
+        thrown.expectMessage(UNABLE_TO_CREATE_CONTROLLER_FACTORY_MSG);
         thrown.expectCause(is(NoSuchMethodException.class));
         ControllerFactoryCreator.createControllerFactory(model).call(String.class);
     }
