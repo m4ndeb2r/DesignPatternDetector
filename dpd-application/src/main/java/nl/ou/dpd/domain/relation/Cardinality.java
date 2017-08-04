@@ -15,6 +15,11 @@ public class Cardinality {
 
     public static final int UNLIMITED = -1;
 
+    protected static final String ILLEGAL_CARDINALITY_MSG = "Illegal cardinality value: '%s'.";
+    protected static final String NEGATIVES_NOT_ALLOWED_MSG = "No negative values allowed in cardinality.";
+    protected static final String UNLIMITED_NOT_ALLOWED_MSG = "Unlimited value not allowed for lowerbound value.";
+    protected static final String UPPERBOUND_MUST_BE_GE_LOWERBOUND_MSG = "Upperbound value must be >= lowerbound value.";
+
     private static final String[] SEPARATORS = new String[]{"\\.\\.", ","};
 
     private final int lower, upper;
@@ -29,13 +34,13 @@ public class Cardinality {
      */
     public Cardinality(int lower, int upper) {
         if (upper < lower && upper != UNLIMITED) {
-            throw new IllegalArgumentException("Upperbound value must be >= lowerbound value.");
+            throw new IllegalArgumentException(UPPERBOUND_MUST_BE_GE_LOWERBOUND_MSG);
         }
         if (lower == UNLIMITED) {
-            throw new IllegalArgumentException("Unlimited value not allowed for lowerbound value.");
+            throw new IllegalArgumentException(UNLIMITED_NOT_ALLOWED_MSG);
         }
         if (lower < UNLIMITED || upper < UNLIMITED) {
-            throw new IllegalArgumentException("No negative values allowed in cardinality.");
+            throw new IllegalArgumentException(NEGATIVES_NOT_ALLOWED_MSG);
         }
         this.lower = lower;
         this.upper = upper;
@@ -73,7 +78,7 @@ public class Cardinality {
                     .collect(Collectors.toList())
                     .toArray(new Integer[values.length]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(String.format("Illegal cardinality value: '%s'.", cardinality));
+            throw new IllegalArgumentException(String.format(ILLEGAL_CARDINALITY_MSG, cardinality));
         }
     }
 
@@ -82,7 +87,7 @@ public class Cardinality {
         for (int i = 0; i < SEPARATORS.length; i++) {
             values = cardinality.split(SEPARATORS[i]);
             if (values.length > 2) {
-                throw new IllegalArgumentException(String.format("Illegal cardinality value: '%s'.", cardinality));
+                throw new IllegalArgumentException(String.format(ILLEGAL_CARDINALITY_MSG, cardinality));
             }
             if (values.length > 1) {
                 return values;
