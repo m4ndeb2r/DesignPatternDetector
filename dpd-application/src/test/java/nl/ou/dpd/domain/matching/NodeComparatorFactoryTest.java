@@ -10,7 +10,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashSet;
 
+import static nl.ou.dpd.domain.matching.CompoundComparator.MATCHED_WITH_MSG;
+import static nl.ou.dpd.domain.matching.CompoundComparator.MATCH_FAILED_WITH_MSG;
 import static nl.ou.dpd.domain.matching.MatchingTestHelper.assertFeedbackMessages;
+import static nl.ou.dpd.domain.matching.NodeComparatorFactory.MISMATCH_MISSING_NODE_TYPE_MSG;
+import static nl.ou.dpd.domain.matching.NodeComparatorFactory.NODE_TYPES_ANALYSED_MSG;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -63,10 +67,10 @@ public class NodeComparatorFactoryTest {
 
         assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{
                 String.format(
-                        "Matched with '%s'.",
+                        MATCHED_WITH_MSG,
                         concreteClassNode.getName())});
         assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{});
-        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{NODE_TYPES_ANALYSED_MSG});
     }
 
     /**
@@ -77,13 +81,13 @@ public class NodeComparatorFactoryTest {
         defaultCompoundComparator.compare(concreteClassNode, abstractClassNode);
         final Feedback feedback = defaultCompoundComparator.getFeedback();
         assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{});
-        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{NODE_TYPES_ANALYSED_MSG});
         assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{
                 String.format(
-                        "Match failed with '%s'.",
+                        MATCH_FAILED_WITH_MSG,
                         abstractClassNode.getName()),
                 String.format(
-                        "Mismatch with '%s': missing node type '%s' in '%s'.",
+                        MISMATCH_MISSING_NODE_TYPE_MSG,
                         abstractClassNode.getName(),
                         NodeType.ABSTRACT_CLASS.name(),
                         concreteClassNode.getName())
