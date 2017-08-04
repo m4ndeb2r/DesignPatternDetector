@@ -2,20 +2,17 @@ package nl.ou.dpd.domain.matching;
 
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
-import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
+import static nl.ou.dpd.domain.matching.MatchingTestHelper.assertFeedbackMessages;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -64,12 +61,12 @@ public class NodeComparatorFactoryTest {
         defaultCompoundComparator.compare(concreteClassNode, concreteClassNode);
         final Feedback feedback = defaultCompoundComparator.getFeedback();
 
-        assertMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{
                 String.format(
                         "Matched with '%s'.",
                         concreteClassNode.getName())});
-        assertMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{});
-        assertMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
     }
 
     /**
@@ -79,9 +76,9 @@ public class NodeComparatorFactoryTest {
     public void testGetFeedbackForRelationTypeMismatch() {
         defaultCompoundComparator.compare(concreteClassNode, abstractClassNode);
         final Feedback feedback = defaultCompoundComparator.getFeedback();
-        assertMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{});
-        assertMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
-        assertMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
+        assertFeedbackMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{
                 String.format(
                         "Match failed with '%s'.",
                         abstractClassNode.getName()),
@@ -110,12 +107,6 @@ public class NodeComparatorFactoryTest {
 
         // Check the collective result of subComparator1, subComparator2 and subComparator3
         assertThat(customCompoundComparator.compare(dummyNode1, dummyNode2), is(1));
-    }
-
-    private void assertMessages(Feedback feedback, Node node, FeedbackType feedbackType, String... messages) {
-        final List<String> feedbackMessages = feedback.getFeedbackMessages(node, feedbackType);
-        MatcherAssert.assertThat(feedbackMessages.size(), is(messages.length));
-        assertTrue(feedbackMessages.containsAll(Arrays.asList(messages)));
     }
 
 }

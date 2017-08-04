@@ -12,9 +12,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
+import static nl.ou.dpd.domain.matching.MatchingTestHelper.assertFeedbackMessages;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
@@ -114,40 +114,28 @@ public class FeedbackTest {
         final Feedback fb3 = fb1.merge(fb2).merge(new Feedback()).merge(null);
 
         assertNotes(fb3, aNote);
-        assertMessages(fb3, node1, FeedbackType.INFO, new String[]{});
-        assertMessages(fb3, node1, FeedbackType.MATCH, new String[]{});
-        assertMessages(fb3, node1, FeedbackType.MISMATCH, new String[]{});
-        assertMessages(fb3, node1, FeedbackType.NOT_ANALYSED, new String[]{notAnalysedMsg});
+        assertFeedbackMessages(fb3, node1, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, node1, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(fb3, node1, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(fb3, node1, FeedbackType.NOT_ANALYSED, new String[]{notAnalysedMsg});
 
-        assertMessages(fb3, node2, FeedbackType.INFO, new String[]{infoMsg});
-        assertMessages(fb3, node2, FeedbackType.MATCH, new String[]{});
-        assertMessages(fb3, node2, FeedbackType.MISMATCH, new String[]{});
-        assertMessages(fb3, node2, FeedbackType.NOT_ANALYSED, new String[]{});
+        assertFeedbackMessages(fb3, node2, FeedbackType.INFO, new String[]{infoMsg});
+        assertFeedbackMessages(fb3, node2, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(fb3, node2, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(fb3, node2, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertMessages(fb3, relation1, FeedbackType.INFO, new String[]{});
-        assertMessages(fb3, relation1, FeedbackType.MATCH, new String[]{});
-        assertMessages(fb3, relation1, FeedbackType.MISMATCH, new String[]{misMatchMsg});
-        assertMessages(fb3, relation1, FeedbackType.NOT_ANALYSED, new String[]{});
+        assertFeedbackMessages(fb3, relation1, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, relation1, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(fb3, relation1, FeedbackType.MISMATCH, new String[]{misMatchMsg});
+        assertFeedbackMessages(fb3, relation1, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertMessages(fb3, relation2, FeedbackType.INFO, new String[]{});
-        assertMessages(fb3, relation2, FeedbackType.MATCH, new String[]{matchMsg});
-        assertMessages(fb3, relation2, FeedbackType.MISMATCH, new String[]{});
-        assertMessages(fb3, relation2, FeedbackType.NOT_ANALYSED, new String[]{});
+        assertFeedbackMessages(fb3, relation2, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, relation2, FeedbackType.MATCH, new String[]{matchMsg});
+        assertFeedbackMessages(fb3, relation2, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(fb3, relation2, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertMessages(fb3, (Node)null, FeedbackType.INFO, new String[]{});
-        assertMessages(fb3, (Relation)null, FeedbackType.INFO, new String[]{});
-    }
-
-    private void assertMessages(Feedback feedback, Node node, FeedbackType feedbackType, String... messages) {
-        final List<String> feedbackMessages = feedback.getFeedbackMessages(node, feedbackType);
-        assertThat(feedbackMessages.size(), is(messages.length));
-        assertTrue(feedbackMessages.containsAll(Arrays.asList(messages)));
-    }
-
-    private void assertMessages(Feedback feedback, Relation relation, FeedbackType feedbackType, String... messages) {
-        final List<String> feedbackMessages = feedback.getFeedbackMessages(relation, feedbackType);
-        assertThat(feedbackMessages.size(), is(messages.length));
-        assertTrue(feedbackMessages.containsAll(Arrays.asList(messages)));
+        assertFeedbackMessages(fb3, (Node)null, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, (Relation)null, FeedbackType.INFO, new String[]{});
     }
 
     private void assertNotes(Feedback feedback, String... notes) {

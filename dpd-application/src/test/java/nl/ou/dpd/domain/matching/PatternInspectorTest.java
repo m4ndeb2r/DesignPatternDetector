@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
+import static nl.ou.dpd.domain.matching.MatchingTestHelper.assertFeedbackMessages;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
@@ -29,16 +30,21 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PatternInspectorTest {
 
-    private SystemUnderConsideration system;
+    private static final String ANALYSED_MSG = "Analysed!";
+    private static final String NODE_MATCH_MSG = "Node match!";
+    private static final String NODE_MISMATCH_MSG = "Node mismatch!";
+    private static final String RELATION_MATCH_MSG = "Relation match!";
+    private static final String RELATION_MISMATCH_MSG = "Relation mismatch!";
+
     private DesignPattern designPattern;
+    private SystemUnderConsideration system;
 
     @Mock
-    private Node systemNode1, systemNode2, patternNode1, patternNode2;
+    private DesignPattern designPatternMock;
     @Mock
     private Relation systemRelation, patternRelation;
     @Mock
-    private DesignPattern designPatternMock;
-
+    private Node systemNode1, systemNode2, patternNode1, patternNode2;
     @Mock
     private FeedbackEnabledComparator<Node> rejectingNodeComparator, acceptingNodeComparator;
     @Mock
@@ -64,16 +70,16 @@ public class PatternInspectorTest {
     @Before
     public void initRejectingComparatorMocks() {
         final Feedback systemNodeFeedback = new Feedback();
-        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.INFO, "Analysed!");
-        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.MISMATCH, "Node mismatch!");
-        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.INFO, "Analysed!");
-        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.MISMATCH, "Node mismatch!");
+        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.INFO, ANALYSED_MSG);
+        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.MISMATCH, NODE_MISMATCH_MSG);
+        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.INFO, ANALYSED_MSG);
+        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.MISMATCH, NODE_MISMATCH_MSG);
         when(rejectingNodeComparator.getFeedback()).thenReturn(systemNodeFeedback);
         when(rejectingNodeComparator.compare(any(Node.class), any(Node.class))).thenReturn(-1);
 
         final Feedback systemRelationFeedback = new Feedback();
-        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, "Analysed!");
-        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.MISMATCH, "Relation mismatch!");
+        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, ANALYSED_MSG);
+        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.MISMATCH, RELATION_MISMATCH_MSG);
         when(rejectingRelationComparator.getFeedback()).thenReturn(systemRelationFeedback);
         when(rejectingRelationComparator.compare(any(Relation.class), any(Relation.class))).thenReturn(-1);
     }
@@ -81,16 +87,16 @@ public class PatternInspectorTest {
     @Before
     public void initAcceptingComparatorMocks() {
         final Feedback systemNodeFeedback = new Feedback();
-        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.INFO, "Analysed!");
-        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.MATCH, "Node match!");
-        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.INFO, "Analysed!");
-        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.MATCH, "Node match!");
+        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.INFO, ANALYSED_MSG);
+        systemNodeFeedback.addFeedbackMessage(systemNode1, FeedbackType.MATCH, NODE_MATCH_MSG);
+        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.INFO, ANALYSED_MSG);
+        systemNodeFeedback.addFeedbackMessage(systemNode2, FeedbackType.MATCH, NODE_MATCH_MSG);
         when(acceptingNodeComparator.getFeedback()).thenReturn(systemNodeFeedback);
         when(acceptingNodeComparator.compare(any(Node.class), any(Node.class))).thenReturn(0);
 
         final Feedback systemRelationFeedback = new Feedback();
-        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, "Analysed!");
-        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.MATCH, "Relation match!");
+        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, ANALYSED_MSG);
+        systemRelationFeedback.addFeedbackMessage(systemRelation, FeedbackType.MATCH, RELATION_MATCH_MSG);
         when(acceptingRelationComparator.getFeedback()).thenReturn(systemRelationFeedback);
         when(acceptingRelationComparator.compare(any(Relation.class), any(Relation.class))).thenReturn(0);
     }
@@ -134,27 +140,22 @@ public class PatternInspectorTest {
 
         // Check feedback
         final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.NOT_ANALYSED).size(), is(0));
 
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.MISMATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.MISMATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.MISMATCH).size(), is(0));
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.NOT_ANALYSED, new String[]{});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.NOT_ANALYSED, new String[]{});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.INFO).get(0), is("Analysed!"));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.INFO).get(0), is("Analysed!"));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.INFO).get(0), is("Analysed!"));
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.MISMATCH, new String[]{});
 
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.MATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.MATCH).get(0), is("Node match!"));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.MATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.MATCH).get(0), is("Node match!"));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.MATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.MATCH).get(0), is("Relation match!"));
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.INFO, new String[]{ANALYSED_MSG});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.INFO, new String[]{ANALYSED_MSG});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.INFO, new String[]{ANALYSED_MSG});
+
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.MATCH, new String[]{NODE_MATCH_MSG});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.MATCH, new String[]{NODE_MATCH_MSG});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.MATCH, new String[]{RELATION_MATCH_MSG});
     }
 
     @Test
@@ -173,27 +174,22 @@ public class PatternInspectorTest {
 
         // Check feedback
         final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.NOT_ANALYSED).size(), is(0));
 
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.MATCH).size(), is(0));
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.NOT_ANALYSED, new String[]{});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.NOT_ANALYSED, new String[]{});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.INFO).get(0), is("Analysed!"));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.INFO).get(0), is("Analysed!"));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.INFO).get(0), is("Analysed!"));
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.MATCH, new String[]{});
 
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.MISMATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode1, FeedbackType.MISMATCH).get(0), is("Node mismatch!"));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.MISMATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemNode2, FeedbackType.MISMATCH).get(0), is("Node mismatch!"));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.MISMATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(systemRelation, FeedbackType.MISMATCH).get(0), is("Relation mismatch!"));
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.INFO, new String[]{ANALYSED_MSG});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.INFO, new String[]{ANALYSED_MSG});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.INFO, new String[]{ANALYSED_MSG});
+
+        assertFeedbackMessages(feedback, systemNode1, FeedbackType.MISMATCH, new String[]{NODE_MISMATCH_MSG});
+        assertFeedbackMessages(feedback, systemNode2, FeedbackType.MISMATCH, new String[]{NODE_MISMATCH_MSG});
+        assertFeedbackMessages(feedback, systemRelation, FeedbackType.MISMATCH, new String[]{RELATION_MISMATCH_MSG});
     }
 
 
