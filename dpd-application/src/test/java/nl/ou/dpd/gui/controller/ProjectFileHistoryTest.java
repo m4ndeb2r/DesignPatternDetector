@@ -1,6 +1,5 @@
 package nl.ou.dpd.gui.controller;
 
-import nl.ou.dpd.gui.model.Project;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +9,6 @@ import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-
 
 /**
  * Tests the {@link ProjectFileHistory} enum.
