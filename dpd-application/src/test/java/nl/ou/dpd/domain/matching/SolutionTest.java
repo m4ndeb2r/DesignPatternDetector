@@ -22,6 +22,9 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SolutionTest {
 
+    private static final String MY_PATTERN = "myPattern";
+    private static final String PATTERN_FAMILY = "patternFamily";
+
     private Solution solution;
 
     @Mock
@@ -32,28 +35,28 @@ public class SolutionTest {
 
     @Before
     public void initSolution() {
-        solution = new Solution("myPattern", "patternFamily");
+        solution = new Solution(MY_PATTERN, PATTERN_FAMILY);
     }
 
     @Before
     public void initNodeMocks() {
         when(systemNode.getName()).thenReturn("systemNode");
-        when(systemNode.getId()).thenReturn("systemNode");
+        when(systemNode.getId()).thenReturn("SystemNode");
 
         when(systemNode2.getName()).thenReturn("systemNode2");
-        when(systemNode2.getId()).thenReturn("systemNode2");
+        when(systemNode2.getId()).thenReturn("SystemNode2");
 
         when(patternNode.getName()).thenReturn("patternNode");
-        when(patternNode.getId()).thenReturn("patternNode");
+        when(patternNode.getId()).thenReturn("PatternNode");
 
         when(patternNode2.getName()).thenReturn("patternNode2");
-        when(patternNode2.getId()).thenReturn("patternNode2");
+        when(patternNode2.getId()).thenReturn("PatternNode2");
     }
 
     @Test
     public void testConstructor() {
-        assertThat(solution.getDesignPatternName(), is("myPattern"));
-        assertThat(solution.getPatternFamilyName(), is("patternFamily"));
+        assertThat(solution.getDesignPatternName(), is(MY_PATTERN));
+        assertThat(solution.getPatternFamilyName(), is(PATTERN_FAMILY));
         assertThat(solution.getMatchingNodes().size(), is(0));
         assertThat(solution.getMatchingRelations().size(), is(0));
         assertThat(solution.getMatchingNodeNames().size(), is(0));
@@ -62,62 +65,53 @@ public class SolutionTest {
     @Test
     public void testAddMatchingNodes() {
         solution.addMatchingNodes(systemNode, patternNode);
-        assertThat(solution.getMatchingNodes().size(), is(1));
-        assertThat(solution.getMatchingNodeNames().size(), is(1));
+        assertMostRecentlyAddedNodes(systemNode, patternNode, 1);
 
-        Node[] nodes = solution.getMatchingNodes().get(0);
+        // Adding the same nodes twice should be prevented: expect no changes
+        solution.addMatchingNodes(systemNode, patternNode);
+        assertMostRecentlyAddedNodes(systemNode, patternNode, 1);
+
+        // Adding a different set of nodes should result in changes
+        solution.addMatchingNodes(systemNode, patternNode2);
+        assertMostRecentlyAddedNodes(systemNode, patternNode2, 2);
+    }
+
+    private void assertMostRecentlyAddedNodes(Node systemNode, Node patternNode, int expectedSize) {
+        assertThat(solution.getMatchingNodes().size(), is(expectedSize));
+        assertThat(solution.getMatchingNodeNames().size(), is(expectedSize));
+
+        final Node[] nodes = solution.getMatchingNodes().get(expectedSize - 1);
         assertThat(nodes.length, is(2));
         assertThat(nodes[0], is(systemNode));
         assertThat(nodes[1], is(patternNode));
 
-        String[] nodeNames = solution.getMatchingNodeNames().get(0);
+        final String[] nodeNames = solution.getMatchingNodeNames().get(expectedSize - 1);
         assertThat(nodeNames.length, is(2));
-        assertThat(nodeNames[0], is("systemNode"));
-        assertThat(nodeNames[1], is("patternNode"));
-
-        // Adding the same nodes twice should be prevented: expect no changes
-        solution.addMatchingNodes(systemNode, patternNode);
-        assertThat(solution.getMatchingNodes().size(), is(1));
-        assertThat(solution.getMatchingNodeNames().size(), is(1));
-
-        // Adding a different set of nodes should result in changes
-        solution.addMatchingNodes(systemNode, patternNode2);
-        assertThat(solution.getMatchingNodes().size(), is(2));
-        assertThat(solution.getMatchingNodeNames().size(), is(2));
-
-        nodes = solution.getMatchingNodes().get(1);
-        assertThat(nodes.length, is(2));
-        assertThat(nodes[0], is(systemNode));
-        assertThat(nodes[1], is(patternNode2));
-
-        nodeNames = solution.getMatchingNodeNames().get(1);
-        assertThat(nodeNames.length, is(2));
-        assertThat(nodeNames[0], is("systemNode"));
-        assertThat(nodeNames[1], is("patternNode2"));
+        assertThat(nodeNames[0], is(systemNode.getName()));
+        assertThat(nodeNames[1], is(patternNode.getName()));
     }
 
     @Test
     public void testAddMatchingRelations() {
         solution.addMatchingRelations(systemRelation, patternRelation);
-        assertThat(solution.getMatchingRelations().size(), is(1));
+        assertMostRecentlyAddedRelations(systemRelation, patternRelation, 1);
 
-        Relation[] relations = solution.getMatchingRelations().get(0);
+        // Adding the same relations twice should be prevented: expect no changes
+        solution.addMatchingRelations(systemRelation, patternRelation);
+        assertMostRecentlyAddedRelations(systemRelation, patternRelation, 1);
+
+        // Adding a different set of relations should result in changes
+        solution.addMatchingRelations(systemRelation, patternRelation2);
+        assertMostRecentlyAddedRelations(systemRelation, patternRelation2, 2);
+    }
+
+    private void assertMostRecentlyAddedRelations(Relation systemRelation, Relation patternRelation, int expectedSize) {
+        assertThat(solution.getMatchingRelations().size(), is(expectedSize));
+
+        final Relation[] relations = solution.getMatchingRelations().get(expectedSize - 1);
         assertThat(relations.length, is(2));
         assertThat(relations[0], is(systemRelation));
         assertThat(relations[1], is(patternRelation));
-
-        // Adding the same nodes twice should be prevented: expect no changes
-        solution.addMatchingRelations(systemRelation, patternRelation);
-        assertThat(solution.getMatchingRelations().size(), is(1));
-
-        // Adding a different set of nodes should result in changes
-        solution.addMatchingRelations(systemRelation, patternRelation2);
-        assertThat(solution.getMatchingRelations().size(), is(2));
-
-        relations = solution.getMatchingRelations().get(1);
-        assertThat(relations.length, is(2));
-        assertThat(relations[0], is(systemRelation));
-        assertThat(relations[1], is(patternRelation2));
     }
 
     @Test
