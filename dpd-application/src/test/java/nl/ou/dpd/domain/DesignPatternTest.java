@@ -22,6 +22,11 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class DesignPatternTest {
 
+    private static final String NOTE_1 = "note1";
+    private static final String NOTE_2 = "note2";
+    private static final String MY_PATTERN = "myPattern";
+    private static final String MY_PATTERN_FAMILY = "myPatternFamily";
+
     private DesignPattern designPattern;
 
     @Mock
@@ -31,13 +36,13 @@ public class DesignPatternTest {
 
     @Before
     public void initDesignPattern() {
-        designPattern = new DesignPattern("myPattern", "myPatternFamily");
+        designPattern = new DesignPattern(MY_PATTERN, MY_PATTERN_FAMILY);
     }
 
     @Test
     public void testConstructor() {
-        assertThat(designPattern.getName(), is("myPattern"));
-        assertThat(designPattern.getFamily(), is("myPatternFamily"));
+        assertThat(designPattern.getName(), is(MY_PATTERN));
+        assertThat(designPattern.getFamily(), is(MY_PATTERN_FAMILY));
         assertThat(designPattern.getNotes().size(), is(0));
 
         assertNull(designPattern.getNodeComparator());
@@ -46,14 +51,14 @@ public class DesignPatternTest {
 
     @Test
     public void testAddNotes() {
-        designPattern.addNote("note1");
+        designPattern.addNote(NOTE_1);
         assertThat(designPattern.getNotes().size(), is(1));
 
-        designPattern.addNote("note2");
+        designPattern.addNote(NOTE_2);
         assertThat(designPattern.getNotes().size(), is(2));
 
-        assertTrue(designPattern.getNotes().contains("note1"));
-        assertTrue(designPattern.getNotes().contains("note2"));
+        assertTrue(designPattern.getNotes().contains(NOTE_1));
+        assertTrue(designPattern.getNotes().contains(NOTE_2));
     }
 
     @Test
