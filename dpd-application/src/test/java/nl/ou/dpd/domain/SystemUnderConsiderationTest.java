@@ -12,10 +12,13 @@ import static org.hamcrest.core.Is.is;
  */
 public class SystemUnderConsiderationTest {
 
+    private static final String ID = "id";
+    private static final String NAME = "name";
+
     @Test
     public void testConstructor() {
-        SystemUnderConsideration sys = new SystemUnderConsideration("id", "name");
-        assertThat(sys.getId(), is("id"));
-        assertThat(sys.getName(), is("name"));
+        SystemUnderConsideration sys = new SystemUnderConsideration(ID, NAME);
+        assertThat(sys.getId(), is(ID));
+        assertThat(sys.getName(), is(NAME));
     }
 }
