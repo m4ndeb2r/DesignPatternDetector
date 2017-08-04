@@ -22,5 +22,5 @@ public class VisibilityTest {
             assertThat(Visibility.valueOfIgnoreCase(null), is((Visibility)null));
         }
     }
-    
+
 }
