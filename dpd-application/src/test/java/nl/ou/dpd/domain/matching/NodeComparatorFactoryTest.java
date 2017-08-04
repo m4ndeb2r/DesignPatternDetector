@@ -2,16 +2,20 @@ package nl.ou.dpd.domain.matching;
 
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.node.NodeType;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -42,14 +46,14 @@ public class NodeComparatorFactoryTest {
         types1.add(NodeType.CONCRETE_CLASS);
         when(concreteClassNode.getTypes()).thenReturn(types1);
         when(concreteClassNode.getId()).thenReturn("concreteClassNode");
-        when(concreteClassNode.getName()).thenReturn("concreteClassNode");
+        when(concreteClassNode.getName()).thenReturn("ConcreteClassNode");
 
         // Init concreteClassNode
         final HashSet<NodeType> types2 = new HashSet<>();
         types2.add(NodeType.ABSTRACT_CLASS);
         when(abstractClassNode.getTypes()).thenReturn(types2);
         when(abstractClassNode.getId()).thenReturn("abstractClassNode");
-        when(abstractClassNode.getName()).thenReturn("abstractClassNode");
+        when(abstractClassNode.getName()).thenReturn("AbstractClassNode");
     }
 
     /**
@@ -58,11 +62,14 @@ public class NodeComparatorFactoryTest {
     @Test
     public void testGetFeedbackForMatch() {
         defaultCompoundComparator.compare(concreteClassNode, concreteClassNode);
-        Feedback feedback = defaultCompoundComparator.getFeedback();
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MISMATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.INFO).get(0), is("Node type(s) analysed."));
+        final Feedback feedback = defaultCompoundComparator.getFeedback();
+
+        assertMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{
+                String.format(
+                        "Matched with '%s'.",
+                        concreteClassNode.getName())});
+        assertMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{});
+        assertMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
     }
 
     /**
@@ -71,12 +78,19 @@ public class NodeComparatorFactoryTest {
     @Test
     public void testGetFeedbackForRelationTypeMismatch() {
         defaultCompoundComparator.compare(concreteClassNode, abstractClassNode);
-        Feedback feedback = defaultCompoundComparator.getFeedback();
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MISMATCH).size(), is(2));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.MISMATCH).get(1), is("Match failed with 'abstractClassNode'."));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(concreteClassNode, FeedbackType.INFO).get(0), is("Node type(s) analysed."));
+        final Feedback feedback = defaultCompoundComparator.getFeedback();
+        assertMessages(feedback, concreteClassNode, FeedbackType.MATCH, new String[]{});
+        assertMessages(feedback, concreteClassNode, FeedbackType.INFO, new String[]{"Node type(s) analysed."});
+        assertMessages(feedback, concreteClassNode, FeedbackType.MISMATCH, new String[]{
+                String.format(
+                        "Match failed with '%s'.",
+                        abstractClassNode.getName()),
+                String.format(
+                        "Mismatch with '%s': missing node type '%s' in '%s'.",
+                        abstractClassNode.getName(),
+                        NodeType.ABSTRACT_CLASS.name(),
+                        concreteClassNode.getName())
+        });
     }
 
     /**
@@ -97,4 +111,11 @@ public class NodeComparatorFactoryTest {
         // Check the collective result of subComparator1, subComparator2 and subComparator3
         assertThat(customCompoundComparator.compare(dummyNode1, dummyNode2), is(1));
     }
+
+    private void assertMessages(Feedback feedback, Node node, FeedbackType feedbackType, String... messages) {
+        final List<String> feedbackMessages = feedback.getFeedbackMessages(node, feedbackType);
+        MatcherAssert.assertThat(feedbackMessages.size(), is(messages.length));
+        assertTrue(feedbackMessages.containsAll(Arrays.asList(messages)));
+    }
+
 }
