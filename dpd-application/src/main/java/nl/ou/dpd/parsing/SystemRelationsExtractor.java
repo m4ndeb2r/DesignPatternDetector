@@ -49,12 +49,14 @@ public class SystemRelationsExtractor {
     }
 
     private void updateOrCreateAttributeRelation(Attribute attribute) {
-        Relation relation = system.getEdge(attribute.getParentNode(), attribute.getType());
-        if (relation == null) {
-            relation = createSystemAttributeRelation(attribute);
-        }
-        relation.addRelationProperty(new RelationProperty(RelationType.HAS_ATTRIBUTE_OF));
-        addEdge(attribute, relation);
+    	if (attribute.getType() != null) {
+	        Relation relation = system.getEdge(attribute.getParentNode(), attribute.getType());
+	        if (relation == null) {
+	            relation = createSystemAttributeRelation(attribute);
+	        }
+	        relation.addRelationProperty(new RelationProperty(RelationType.HAS_ATTRIBUTE_OF));
+	        addEdge(attribute, relation);
+    	}
     }
 
     private Relation createSystemAttributeRelation(Attribute attribute) {
@@ -90,12 +92,14 @@ public class SystemRelationsExtractor {
 
     private void updateOrCreateInParameterRelation(Operation operation) {
         for (Parameter param : operation.getParameters()) {
-            Relation relation = system.getEdge(operation.getParentNode(), param.getType());
-            if (relation == null) {
-                relation = createSystemOperationRelation(operation);
-            }
-            relation.addRelationProperty(new RelationProperty(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
-            addEdge(operation, param, relation);
+        	if (param.getType() != null) {
+	            Relation relation = system.getEdge(operation.getParentNode(), param.getType());
+	            if (relation == null) {
+	                relation = createSystemOperationRelation(operation);
+	            }
+	            relation.addRelationProperty(new RelationProperty(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
+	            addEdge(operation, param, relation);
+        	}
         }
     }
 
