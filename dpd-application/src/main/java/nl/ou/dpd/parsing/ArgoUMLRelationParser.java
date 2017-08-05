@@ -13,6 +13,7 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -35,6 +36,14 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLRelationParser.class);
 
     static final String REVERSED_POSTFIX = "-reversed";
+
+    private static final Map<String, RelationType> RELATION_TYPE_BY_STRING_MAP = new HashMap<>();
+    static {
+        RELATION_TYPE_BY_STRING_MAP.put(ATTRIBUTE, RelationType.HAS_ATTRIBUTE_OF);
+        RELATION_TYPE_BY_STRING_MAP.put(ASSOCIATION, RelationType.ASSOCIATES_WITH);
+        RELATION_TYPE_BY_STRING_MAP.put(ABSTRACTION, RelationType.IMPLEMENTS);
+        RELATION_TYPE_BY_STRING_MAP.put(GENERALIZATION, RelationType.INHERITS_FROM);
+    }
 
     private static final List<String> eventTags = Arrays.asList(new String[]{
             MODEL, CLASS, INTERFACE, ASSOCIATION, ASSOCIATION_END,
@@ -193,6 +202,10 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         }
     }
 
+    private RelationType findRelationTypeByString(String relationType) {
+        return RELATION_TYPE_BY_STRING_MAP.get(relationType);
+    }
+
     /**
      * Keep track of the navigabilities of the association in order to find out if the association is directed.
      *
@@ -279,22 +292,6 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private void addRelationProperties(Relation source, Relation target) {
         for (RelationProperty srcProperty : source.getRelationProperties()) {
             target.addRelationProperty(srcProperty);
-        }
-    }
-
-    // TODO: solve this using a Map!!! We don't need a method for this
-    private RelationType findRelationTypeByString(String relationType) {
-        switch (relationType) {
-            case ASSOCIATION:
-                return RelationType.ASSOCIATES_WITH;
-            case ABSTRACTION:
-                return RelationType.IMPLEMENTS;
-            case GENERALIZATION:
-                return RelationType.INHERITS_FROM;
-            case ATTRIBUTE:
-                return RelationType.HAS_ATTRIBUTE_OF;
-            default:
-                return null;
         }
     }
 
