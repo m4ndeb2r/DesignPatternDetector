@@ -55,6 +55,8 @@ public abstract class ArgoUMLAbstractParser {
 
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLAbstractParser.class);
 
+    static final String XMI_FILE_COULD_NOT_BE_PARSED_MSG = "The XMI file '%s' could not be parsed.";
+
     private XMLInputFactory xmlInputFactory;
 
     /**
@@ -88,7 +90,7 @@ public abstract class ArgoUMLAbstractParser {
             // Rethrow ParseExceptions directly
             throw pe;
         } catch (Exception e) {
-            String msg = String.format("The XMI file '%s' could not be parsed.", filename);
+            String msg = String.format(XMI_FILE_COULD_NOT_BE_PARSED_MSG, filename);
             error(msg, e);
         }
     }

@@ -36,6 +36,9 @@ import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_NAVIGABLE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.NAME;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_MSG;
+import static nl.ou.dpd.parsing.ArgoUMLRelationParser.REVERSED_POSTFIX;
+import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
@@ -49,6 +52,18 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ArgoUMLRelationParserTest {
+
+    private static final String CLASS_ID = "classId";
+    private static final String MODEL_ID = "modelId";
+    private static final String CLASS_NAME = "className";
+    private static final String INTERFACE_ID = "interfaceId";
+    private static final String INTERFACE_NAME = "interfaceName";
+    private static final String ASSOCIATION_ID = "associationId";
+    private static final String ABSTRACTION_ID = "abstractionId";
+    private static final String ABSTRACTION_NAME = "abstractionName";
+    private static final String ASSOCIATION_CLASS_END_ID = "associationClassEndId";
+
+    private static final Cardinality CARDINALITY_1 = Cardinality.valueOf("1");
 
     // This file is created just to satisfy the FileInputStream of the parser
     private String xmiFile = getPath("/argoUML/dummy.xmi");
@@ -88,12 +103,12 @@ public class ArgoUMLRelationParserTest {
     @Before
     public void initNodes() {
         final Node interfaceNode = mock(Node.class);
-        when(interfaceNode.getId()).thenReturn("interfaceId");
-        when(interfaceNode.getName()).thenReturn("interfaceName");
+        when(interfaceNode.getId()).thenReturn(INTERFACE_ID);
+        when(interfaceNode.getName()).thenReturn(INTERFACE_NAME);
 
         final Node classNode = mock(Node.class);
-        when(classNode.getId()).thenReturn("classId");
-        when(classNode.getName()).thenReturn("className");
+        when(classNode.getId()).thenReturn(CLASS_ID);
+        when(classNode.getName()).thenReturn(CLASS_NAME);
 
         nodes = new HashMap<>();
         nodes.put(interfaceNode.getId(), interfaceNode);
@@ -148,37 +163,37 @@ public class ArgoUMLRelationParserTest {
      */
     @Before
     public void initEvents() {
-        modelEvent = ParseTestHelper.createXMLEventMock(MODEL, mockId("modelId"));
-        abstractionEvent = ParseTestHelper.createXMLEventMock(ABSTRACTION, mockId("abstractionId"), mockName("abstractionName"));
-        classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockIdRef("classId"));
-        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceId"));
-        associationEvent = ParseTestHelper.createXMLEventMock(ASSOCIATION, mockId("associationId"));
+        modelEvent = ParseTestHelper.createXMLEventMock(MODEL, mockId(MODEL_ID));
+        abstractionEvent = ParseTestHelper.createXMLEventMock(ABSTRACTION, mockId(ABSTRACTION_ID), mockName(ABSTRACTION_NAME));
+        classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockIdRef(CLASS_ID));
+        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_ID));
+        associationEvent = ParseTestHelper.createXMLEventMock(ASSOCIATION, mockId(ASSOCIATION_ID));
         associationInterfaceEndEvent = ParseTestHelper.createXMLEventMock(
                 ASSOCIATION_END,
-                mockId("associationClassEndId"),
+                mockId(ASSOCIATION_CLASS_END_ID),
                 mockNavigable("true")
         );
         associationClassEndEvent = ParseTestHelper.createXMLEventMock(
                 ASSOCIATION_END,
-                mockId("associationClassEndId"),
+                mockId(ASSOCIATION_CLASS_END_ID),
                 mockNavigable("true")
         );
     }
 
     private Attribute mockId(String id) {
-        return ParseTestHelper.createAttributeMock(ID, id);
+        return createAttributeMock(ID, id);
     }
 
     private Attribute mockIdRef(String idRef) {
-        return ParseTestHelper.createAttributeMock(IDREF, idRef);
+        return createAttributeMock(IDREF, idRef);
     }
 
     private Attribute mockNavigable(String isNavigable) {
-        return ParseTestHelper.createAttributeMock(IS_NAVIGABLE, isNavigable);
+        return createAttributeMock(IS_NAVIGABLE, isNavigable);
     }
 
     private Attribute mockName(String name) {
-        return ParseTestHelper.createAttributeMock(NAME, name);
+        return createAttributeMock(NAME, name);
     }
 
     @Test
@@ -186,39 +201,43 @@ public class ArgoUMLRelationParserTest {
         assertThat(relationParser.events.size(), is(0));
 
         final SystemUnderConsideration system = relationParser.parse(xmiFile, nodes);
-        assertThat(system.getId(), is("modelId"));
+        assertThat(system.getId(), is(MODEL_ID));
         assertThat(system.edgeSet().size(), is(2));
 
         // Check the first relation: an association
-        final Relation association = setToMap(system.edgeSet()).get("associationId");
+        final Relation association = setToMap(system.edgeSet()).get(ASSOCIATION_ID);
         final RelationProperty associationProperty = association.getRelationProperties().iterator().next();
 
-        assertThat(system.getEdgeSource(association).getId(), is("interfaceId"));
-        assertThat(system.getEdgeTarget(association).getId(), is("classId"));
-        assertThat(association.getId(), is("associationId"));
+        assertThat(system.getEdgeSource(association).getId(), is(INTERFACE_ID));
+        assertThat(system.getEdgeSource(association).getName(), is(INTERFACE_NAME));
+        assertThat(system.getEdgeTarget(association).getId(), is(CLASS_ID));
+        assertThat(system.getEdgeTarget(association).getName(), is(CLASS_NAME));
+        assertThat(association.getId(), is(ASSOCIATION_ID));
         assertThat(association.getRelationProperties().size(), is(1));
 
         assertThat(associationProperty.getRelationType(), is(RelationType.ASSOCIATES_WITH));
-        assertThat(associationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
-        assertThat(associationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(associationProperty.getCardinalityLeft(), is(CARDINALITY_1));
+        assertThat(associationProperty.getCardinalityRight(), is(CARDINALITY_1));
 
         // Check the second relation: a reversed association combined with an abstraction
-        final Relation associationReversed = setToMap(system.edgeSet()).get("associationId-reversed");
+        final Relation associationReversed = setToMap(system.edgeSet()).get(ASSOCIATION_ID + REVERSED_POSTFIX);
         final Iterator<RelationProperty> relationPropertyIterator = associationReversed.getRelationProperties().iterator();
         final RelationProperty firstProperty = relationPropertyIterator.next();
         final RelationProperty secondProperty = relationPropertyIterator.next();
 
-        assertThat(system.getEdgeTarget(associationReversed).getId(), is("interfaceId"));
-        assertThat(system.getEdgeSource(associationReversed).getId(), is("classId"));
-        assertThat(associationReversed.getId(), is("associationId-reversed"));
+        assertThat(system.getEdgeTarget(associationReversed).getId(), is(INTERFACE_ID));
+        assertThat(system.getEdgeTarget(associationReversed).getName(), is(INTERFACE_NAME));
+        assertThat(system.getEdgeSource(associationReversed).getId(), is(CLASS_ID));
+        assertThat(system.getEdgeSource(associationReversed).getName(), is(CLASS_NAME));
+        assertThat(associationReversed.getId(), is(ASSOCIATION_ID + REVERSED_POSTFIX));
         assertThat(associationReversed.getRelationProperties().size(), is(2));
 
-        assertThat(firstProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
-        assertThat(firstProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(firstProperty.getCardinalityLeft(), is(CARDINALITY_1));
+        assertThat(firstProperty.getCardinalityRight(), is(CARDINALITY_1));
         assertThat(firstProperty.getRelationType(), Matchers.anyOf(is(RelationType.ASSOCIATES_WITH), is(RelationType.IMPLEMENTS)));
 
-        assertThat(secondProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
-        assertThat(secondProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(secondProperty.getCardinalityLeft(), is(CARDINALITY_1));
+        assertThat(secondProperty.getCardinalityRight(), is(CARDINALITY_1));
         assertThat(secondProperty.getRelationType(), Matchers.anyOf(is(RelationType.ASSOCIATES_WITH), is(RelationType.IMPLEMENTS)));
 
         if(firstProperty.getRelationType() == RelationType.ASSOCIATES_WITH) {
@@ -242,15 +261,16 @@ public class ArgoUMLRelationParserTest {
         when(modelEvent.asEndElement()).thenThrow(new IllegalArgumentException());
         thrown.expect(ParseException.class);
         thrown.expectCause(is(IllegalArgumentException.class));
-        thrown.expectMessage(String.format("The XMI file '%s' could not be parsed.", xmiFile));
+        thrown.expectMessage(String.format(XMI_FILE_COULD_NOT_BE_PARSED_MSG, xmiFile));
         relationParser.parse(xmiFile, nodes);
     }
 
     @Test
     public void testParseException() {
-        when(modelEvent.asEndElement()).thenThrow(new ParseException("Darn!", null));
+        final String errorMsg = "Darn!";
+        when(modelEvent.asEndElement()).thenThrow(new ParseException(errorMsg, null));
         thrown.expect(ParseException.class);
-        thrown.expectMessage("Darn!");
+        thrown.expectMessage(errorMsg);
         relationParser.parse(xmiFile, nodes);
     }
 

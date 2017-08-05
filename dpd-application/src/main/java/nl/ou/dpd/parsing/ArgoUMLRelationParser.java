@@ -34,6 +34,8 @@ import java.util.Stack;
 public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLRelationParser.class);
 
+    static final String REVERSED_POSTFIX = "-reversed";
+
     private static final List<String> eventTags = Arrays.asList(new String[]{
             MODEL, CLASS, INTERFACE, ASSOCIATION, ASSOCIATION_END,
             MULTIPLICITY_RANGE, ABSTRACTION, DEPENDENCY, GENERALIZATION
@@ -67,7 +69,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     public SystemUnderConsideration parse(String filename, Map<String, Node> nodes) {
         initParse(nodes);
         doParse(filename);
-        LOGGER.info(String.format("Parsed %d relations from %s.", system.edgeSet().size(), filename));
+        LOGGER.info(String.format("Parsed %d relations from '%s'.", system.edgeSet().size(), filename));
         return system;
     }
 
@@ -240,7 +242,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
 
     private void setSourceOrTargetNode(XMLEvent event) {
         final String idref = readAttributes(event).get(IDREF);
-        Node node = nodes.get(idref);
+        final Node node = nodes.get(idref);
         //add node to system (if new Node, e.g. datatype)
         system.addVertex(node);
         sourceAndTarget.push(node);
@@ -250,8 +252,8 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     }
 
     private void addEdgeToSystem() {
-        Node targetNode = sourceAndTarget.pop();
-        Node sourceNode = sourceAndTarget.pop();
+        final Node targetNode = sourceAndTarget.pop();
+        final Node sourceNode = sourceAndTarget.pop();
         boolean added = system.addEdge(sourceNode, targetNode, lastRelation);
         if (!added) {
             //add the new relationproperties to the existing relation
@@ -319,9 +321,9 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     }
 
     private Relation createReverseAssociation(Relation originalRelation, Node originalSourceNode, Node originalTargetNode) {
-        final Relation relation = new Relation(originalRelation.getId() + "-reversed", null);
+        final Relation relation = new Relation(originalRelation.getId() + REVERSED_POSTFIX, null);
         if (originalRelation.getName() != null) {
-        	relation.setName(originalRelation.getName() + "-reversed");
+        	relation.setName(originalRelation.getName() + REVERSED_POSTFIX);
         }
         final RelationProperty originalRelationProperty = findRelationPropertyByType(originalRelation, RelationType.ASSOCIATES_WITH);
         final RelationProperty relationProperty = new RelationProperty(

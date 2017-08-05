@@ -18,12 +18,12 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Map;
 
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ATTRIBUTE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.DATATYPE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.HREF;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IDREF;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
@@ -32,6 +32,9 @@ import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.KIND;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.OPERATION;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.PARAMETER;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_MSG;
+import static nl.ou.dpd.parsing.ArgoUMLNodeParser.INTEGER;
+import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
@@ -45,6 +48,17 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ArgoUMLNodeParserTest {
+
+    private static final String INTEGER_HREF = String.format(".......%s", INTEGER);
+    private static final String OPERATION_ID = "operationId";
+    private static final String PARAMETER_ID = "parameterId";
+    private static final String ATTRIBUTE_ID = "attributeId";
+    private static final String CLASS_NODE_ID = "classNodeId";
+    private static final String RETURN_TYPE_ID = "returnTypeId";
+    private static final String INPUT_PARAM_TYPE = "in";
+    private static final String RETURN_VALUE_TYPE = "return";
+    private static final String INTERFACE_NODE_ID = "interfaceNodeId";
+    private static final String ABSTRACT_CLASS_NODE_ID = "abstractClassNodeId";
 
     // This file is created just to satisfy the FileInputStream of the parser
     private String xmiFile = getPath("/argoUML/dummy.xmi");
@@ -130,40 +144,40 @@ public class ArgoUMLNodeParserTest {
         modelEvent = ParseTestHelper.createXMLEventMock(MODEL);
 
         // Mock an interface, a class and an abstract class
-        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockId("interfaceNodeId"));
-        classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("classNodeId"));
-        abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId("abstractClassNodeId"), mockIsAbstract(true));
+        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockId(INTERFACE_NODE_ID));
+        classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId(CLASS_NODE_ID));
+        abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId(ABSTRACT_CLASS_NODE_ID), mockIsAbstract(true));
 
-        // Mock an operation that has one input parameter of type "interfaceNode"
-        operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId("operationId"));
-        inputParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind("in"), mockId("parameterId"));
-        inputParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceNodeId"));
-        returnParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind("return"), mockId("returnTypeId"));
-        returnParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef("interfaceNodeId"));
+        // Mock an operation that has one input parameter of type "interfaceNode" and one return value of type "interfaceNode"
+        operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId(OPERATION_ID));
+        inputParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(INPUT_PARAM_TYPE), mockId(PARAMETER_ID));
+        inputParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
+        returnParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(RETURN_VALUE_TYPE), mockId(RETURN_TYPE_ID));
+        returnParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
 
-        // Mock an attribute of type "Integer" (datatype ends with 87C)
-        attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE, mockId("attributeId"));
-        datatypeEvent = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref("...87C"));
+        // Mock an attribute of type "Integer"
+        attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE, mockId(ATTRIBUTE_ID));
+        datatypeEvent = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref(INTEGER_HREF));
     }
 
     private javax.xml.stream.events.Attribute mockHref(String href) {
-        return ParseTestHelper.createAttributeMock(HREF, href);
+        return createAttributeMock(ArgoUMLAbstractParser.HREF, href);
     }
 
     private javax.xml.stream.events.Attribute mockIsAbstract(boolean isAbstract) {
-        return ParseTestHelper.createAttributeMock(IS_ABSTRACT, Boolean.toString(isAbstract));
+        return createAttributeMock(IS_ABSTRACT, Boolean.toString(isAbstract));
     }
 
     private javax.xml.stream.events.Attribute mockParamKind(String inOrReturn) {
-        return ParseTestHelper.createAttributeMock(KIND, inOrReturn);
+        return createAttributeMock(KIND, inOrReturn);
     }
 
     private javax.xml.stream.events.Attribute mockId(String id) {
-        return ParseTestHelper.createAttributeMock(ID, id);
+        return createAttributeMock(ID, id);
     }
 
     private javax.xml.stream.events.Attribute mockIdRef(String idRef) {
-        return ParseTestHelper.createAttributeMock(IDREF, idRef);
+        return createAttributeMock(IDREF, idRef);
     }
 
     @Test
@@ -182,9 +196,9 @@ public class ArgoUMLNodeParserTest {
     }
 
     private void assertClassNode(Map<String, Node> nodeMap) {
-        assertTrue(nodeMap.containsKey("classNodeId"));
-        final Node classNode = nodeMap.get("classNodeId");
-        assertThat(classNode.getId(), is("classNodeId"));
+        assertTrue(nodeMap.containsKey(CLASS_NODE_ID));
+        final Node classNode = nodeMap.get(CLASS_NODE_ID);
+        assertThat(classNode.getId(), is(CLASS_NODE_ID));
         assertTrue(classNode.getTypes().contains(NodeType.CONCRETE_CLASS));
         assertAttributes(classNode);
         assertOperations(classNode);
@@ -193,15 +207,15 @@ public class ArgoUMLNodeParserTest {
     private void assertAttributes(Node node) {
         assertThat(node.getAttributes().size(), is(1));
         final Attribute attribute = node.getAttributes().iterator().next();
-        assertThat(attribute.getId(), is("attributeId"));
-        assertThat(attribute.getType().getName(), is("Integer"));
+        assertThat(attribute.getId(), is(ATTRIBUTE_ID));
+        assertThat(attribute.getType().getName(), is(Integer.class.getSimpleName()));
         assertThat(attribute.getParentNode().getId(), is(node.getId()));
     }
 
     private void assertOperations(Node node) {
         assertThat(node.getOperations().size(), is(1));
         final Operation operation = node.getOperations().iterator().next();
-        assertThat(operation.getId(), is("operationId"));
+        assertThat(operation.getId(), is(OPERATION_ID));
         assertThat(operation.getParentNode().getId(), is(node.getId()));
         assertParameter(operation);
         assertReturnType(operation);
@@ -210,46 +224,46 @@ public class ArgoUMLNodeParserTest {
     private void assertParameter(Operation operation) {
         assertThat(operation.getParameters().size(), is(1));
         final Parameter parameter = operation.getParameters().iterator().next();
-        assertThat(parameter.getId(), is("parameterId"));
-        assertThat(parameter.getType().getId(), is("interfaceNodeId"));
+        assertThat(parameter.getId(), is(PARAMETER_ID));
+        assertThat(parameter.getType().getId(), is(INTERFACE_NODE_ID));
         assertThat(parameter.getParentOperation().getId(), is(operation.getId()));
     }
 
     private void assertReturnType(Operation operation) {
-        assertThat(operation.getReturnType().getId(), is("interfaceNodeId"));
+        assertThat(operation.getReturnType().getId(), is(INTERFACE_NODE_ID));
     }
 
     private void assertAbstractClassNode(Map<String, Node> nodeMap) {
-        assertTrue(nodeMap.containsKey("abstractClassNodeId"));
-        final Node abstractClassNode = nodeMap.get("abstractClassNodeId");
-        assertThat(abstractClassNode.getId(), is("abstractClassNodeId"));
-        assertThat(abstractClassNode.getTypes().size(), is(2));
-        assertTrue(abstractClassNode.getTypes().contains(NodeType.ABSTRACT_CLASS));
-        assertTrue(abstractClassNode.getTypes().contains(NodeType.ABSTRACT_CLASS_OR_INTERFACE));
+        assertTrue(nodeMap.containsKey(ABSTRACT_CLASS_NODE_ID));
+        final Node abstractClassNode = nodeMap.get(ABSTRACT_CLASS_NODE_ID);
+        assertThat(abstractClassNode.getId(), is(ABSTRACT_CLASS_NODE_ID));
+        assertNodeHasTypes(abstractClassNode, new NodeType[]{NodeType.ABSTRACT_CLASS, NodeType.ABSTRACT_CLASS_OR_INTERFACE});
         assertThat(abstractClassNode.getOperations().size(), is(0));
         assertThat(abstractClassNode.getAttributes().size(), is(0));
     }
 
     private void assertInterface(Map<String, Node> nodeMap) {
-        assertTrue(nodeMap.containsKey("interfaceNodeId"));
-        final Node interfaceNode = nodeMap.get("interfaceNodeId");
-        assertThat(interfaceNode.getId(), is("interfaceNodeId"));
-        assertThat(interfaceNode.getTypes().size(), is(2));
-        assertTrue(interfaceNode.getTypes().contains(NodeType.INTERFACE));
-        assertTrue(interfaceNode.getTypes().contains(NodeType.ABSTRACT_CLASS_OR_INTERFACE));
+        assertTrue(nodeMap.containsKey(INTERFACE_NODE_ID));
+        final Node interfaceNode = nodeMap.get(INTERFACE_NODE_ID);
+        assertThat(interfaceNode.getId(), is(INTERFACE_NODE_ID));
+        assertNodeHasTypes(interfaceNode, new NodeType[]{NodeType.INTERFACE, NodeType.ABSTRACT_CLASS_OR_INTERFACE});
         assertThat(interfaceNode.getAttributes().size(), is(0));
         assertThat(interfaceNode.getOperations().size(), is(0));
     }
 
     private void assertDataType(Map<String, Node> nodeMap) {
-        assertTrue(nodeMap.containsKey("...87C"));
-        final Node datatypeNode = nodeMap.get("...87C");
-        assertThat(datatypeNode.getId(), is("...87C"));
-        assertThat(datatypeNode.getName(), is("Integer"));
-        assertThat(datatypeNode.getTypes().size(), is(1));
-        assertTrue(datatypeNode.getTypes().contains(NodeType.DATATYPE));
+        assertTrue(nodeMap.containsKey(INTEGER_HREF));
+        final Node datatypeNode = nodeMap.get(INTEGER_HREF);
+        assertThat(datatypeNode.getId(), is(INTEGER_HREF));
+        assertThat(datatypeNode.getName(), is(Integer.class.getSimpleName()));
+        assertNodeHasTypes(datatypeNode, new NodeType[]{NodeType.DATATYPE});
         assertThat(datatypeNode.getAttributes().size(), is(0));
         assertThat(datatypeNode.getOperations().size(), is(0));
+    }
+
+    private void assertNodeHasTypes(Node node, NodeType... types) {
+        assertThat(node.getTypes().size(), is(types.length));
+        Arrays.stream(types).forEach(nodeType -> assertTrue(node.getTypes().contains(nodeType)));
     }
 
     @Test
@@ -257,15 +271,16 @@ public class ArgoUMLNodeParserTest {
         when(interfaceEvent.asEndElement()).thenThrow(new IllegalArgumentException());
         thrown.expect(ParseException.class);
         thrown.expectCause(is(IllegalArgumentException.class));
-        thrown.expectMessage(String.format("The XMI file '%s' could not be parsed.", xmiFile));
+        thrown.expectMessage(String.format(XMI_FILE_COULD_NOT_BE_PARSED_MSG, xmiFile));
         nodeParser.parse(xmiFile);
     }
 
     @Test
     public void testParseException() {
-        when(interfaceEvent.asEndElement()).thenThrow(new ParseException("Darn!", null));
+        final String errorMsg = "Darn!";
+        when(interfaceEvent.asEndElement()).thenThrow(new ParseException(errorMsg, null));
         thrown.expect(ParseException.class);
-        thrown.expectMessage("Darn!");
+        thrown.expectMessage(errorMsg);
         nodeParser.parse(xmiFile);
     }
 
