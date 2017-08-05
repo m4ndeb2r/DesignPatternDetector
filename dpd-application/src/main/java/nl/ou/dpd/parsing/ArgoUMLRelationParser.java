@@ -209,12 +209,13 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      */
     private void handleDependencyEvent(XMLEvent event) {
         if (CLASS.equals(getParentElementNameLocalPart())) {
-            String dependencyId = readAttributes(event).get(ID);
-            if (dependencyId != null && findSystemRelationById(dependencyId) == null) {
-                //create an incomplete relation if the relation does not exist yet
-                lastRelation = createIncompleteRelation(dependencyId, null);
-                lastRelation.getRelationProperties().add(new RelationProperty(RelationType.DEPENDS_ON));
-            }
+            final String id = readAttributes(event).get(ID);
+            final String name = readAttributes(event).get(NAME);
+	        if (id != null && findSystemRelationById(id) == null) {
+		        //create an incomplete relation if the relation does not exist yet
+		        lastRelation = createIncompleteRelation(id, name);
+		        lastRelation.getRelationProperties().add(new RelationProperty(RelationType.DEPENDS_ON));
+	        }
         }
     }
 
