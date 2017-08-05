@@ -15,10 +15,10 @@ public class Cardinality {
 
     public static final int UNLIMITED = -1;
 
-    protected static final String ILLEGAL_CARDINALITY_MSG = "Illegal cardinality value: '%s'.";
-    protected static final String NEGATIVES_NOT_ALLOWED_MSG = "No negative values allowed in cardinality.";
-    protected static final String UNLIMITED_NOT_ALLOWED_MSG = "Unlimited value not allowed for lowerbound value.";
-    protected static final String UPPERBOUND_MUST_BE_GE_LOWERBOUND_MSG = "Upperbound value must be >= lowerbound value.";
+    static final String ILLEGAL_CARDINALITY_MSG = "Illegal cardinality value: '%s'.";
+    static final String NEGATIVES_NOT_ALLOWED_MSG = "No negative values allowed in cardinality.";
+    static final String UNLIMITED_NOT_ALLOWED_MSG = "Unlimited value not allowed for lowerbound value.";
+    static final String UPPERBOUND_MUST_BE_GE_LOWERBOUND_MSG = "Upperbound value must be >= lowerbound value.";
 
     private static final String[] SEPARATORS = new String[]{"\\.\\.", ","};
 
