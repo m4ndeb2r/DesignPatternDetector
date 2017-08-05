@@ -170,7 +170,7 @@ public class PatternInspectorTest {
 
         // Check solutions
         final List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
-        assertThat(solutions.size(), is(0));
+        assertTrue(solutions.isEmpty());
 
         // Check feedback
         final Feedback feedback = patternInspector.getMatchingResult().getFeedback();

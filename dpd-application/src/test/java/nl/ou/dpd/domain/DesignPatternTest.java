@@ -43,7 +43,7 @@ public class DesignPatternTest {
     public void testConstructor() {
         assertThat(designPattern.getName(), is(MY_PATTERN));
         assertThat(designPattern.getFamily(), is(MY_PATTERN_FAMILY));
-        assertThat(designPattern.getNotes().size(), is(0));
+        assertTrue(designPattern.getNotes().isEmpty());
 
         assertNull(designPattern.getNodeComparator());
         assertNull(designPattern.getRelationComparator());

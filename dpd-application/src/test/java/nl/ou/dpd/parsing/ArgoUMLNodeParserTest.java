@@ -194,7 +194,7 @@ public class ArgoUMLNodeParserTest {
 
     @Test
     public void testParsedNodes() {
-        assertThat(nodeParser.events.size(), is(0));
+        assertTrue(nodeParser.events.isEmpty());
 
         final Map<String, Node> nodeMap = nodeParser.parse(xmiFile);
         assertThat(nodeMap.keySet().size(), is(4));
@@ -204,7 +204,7 @@ public class ArgoUMLNodeParserTest {
         assertInterface(nodeMap);
         assertDataType(nodeMap);
 
-        assertThat(nodeParser.events.size(), is(0));
+        assertTrue(nodeParser.events.isEmpty());
     }
 
     private void assertClassNode(Map<String, Node> nodeMap) {
@@ -261,8 +261,8 @@ public class ArgoUMLNodeParserTest {
         final Node abstractClassNode = nodeMap.get(ABSTRACT_CLASS_NODE_ID);
         assertThat(abstractClassNode.getId(), is(ABSTRACT_CLASS_NODE_ID));
         assertNodeHasTypes(abstractClassNode, new NodeType[]{NodeType.ABSTRACT_CLASS, NodeType.ABSTRACT_CLASS_OR_INTERFACE});
-        assertThat(abstractClassNode.getOperations().size(), is(0));
-        assertThat(abstractClassNode.getAttributes().size(), is(0));
+        assertTrue(abstractClassNode.getOperations().isEmpty());
+        assertTrue(abstractClassNode.getAttributes().isEmpty());
     }
 
     private void assertInterface(Map<String, Node> nodeMap) {
@@ -270,8 +270,8 @@ public class ArgoUMLNodeParserTest {
         final Node interfaceNode = nodeMap.get(INTERFACE_NODE_ID);
         assertThat(interfaceNode.getId(), is(INTERFACE_NODE_ID));
         assertNodeHasTypes(interfaceNode, new NodeType[]{NodeType.INTERFACE, NodeType.ABSTRACT_CLASS_OR_INTERFACE});
-        assertThat(interfaceNode.getAttributes().size(), is(0));
-        assertThat(interfaceNode.getOperations().size(), is(0));
+        assertTrue(interfaceNode.getAttributes().isEmpty());
+        assertTrue(interfaceNode.getOperations().isEmpty());
     }
 
     private void assertDataType(Map<String, Node> nodeMap) {
@@ -280,8 +280,8 @@ public class ArgoUMLNodeParserTest {
         assertThat(datatypeNode.getId(), is(INTEGER_HREF));
         assertThat(datatypeNode.getName(), is(Integer.class.getSimpleName()));
         assertNodeHasTypes(datatypeNode, new NodeType[]{NodeType.DATATYPE});
-        assertThat(datatypeNode.getAttributes().size(), is(0));
-        assertThat(datatypeNode.getOperations().size(), is(0));
+        assertTrue(datatypeNode.getAttributes().isEmpty());
+        assertTrue(datatypeNode.getOperations().isEmpty());
     }
 
     private void assertNodeHasTypes(Node node, NodeType... types) {

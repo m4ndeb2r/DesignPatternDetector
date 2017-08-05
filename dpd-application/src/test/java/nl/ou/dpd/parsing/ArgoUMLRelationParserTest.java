@@ -41,6 +41,7 @@ import static nl.ou.dpd.parsing.ArgoUMLRelationParser.REVERSED_POSTFIX;
 import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -198,7 +199,7 @@ public class ArgoUMLRelationParserTest {
 
     @Test
     public void testParseRelations() {
-        assertThat(relationParser.events.size(), is(0));
+        assertTrue(relationParser.events.isEmpty());
 
         final SystemUnderConsideration system = relationParser.parse(xmiFile, nodes);
         assertThat(system.getId(), is(MODEL_ID));
@@ -247,7 +248,7 @@ public class ArgoUMLRelationParserTest {
             assertThat(firstProperty.getRelationType(), is(RelationType.IMPLEMENTS));
         }
 
-        assertThat(relationParser.events.size(), is(0));
+        assertTrue(relationParser.events.isEmpty());
     }
 
     private Map<String, Relation> setToMap(Set<Relation> relations) {

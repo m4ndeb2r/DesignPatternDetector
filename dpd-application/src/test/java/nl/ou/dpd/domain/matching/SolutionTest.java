@@ -57,9 +57,9 @@ public class SolutionTest {
     public void testConstructor() {
         assertThat(solution.getDesignPatternName(), is(MY_PATTERN));
         assertThat(solution.getPatternFamilyName(), is(PATTERN_FAMILY));
-        assertThat(solution.getMatchingNodes().size(), is(0));
-        assertThat(solution.getMatchingRelations().size(), is(0));
-        assertThat(solution.getMatchingNodeNames().size(), is(0));
+        assertTrue(solution.getMatchingNodes().isEmpty());
+        assertTrue(solution.getMatchingRelations().isEmpty());
+        assertTrue(solution.getMatchingNodeNames().isEmpty());
     }
 
     @Test

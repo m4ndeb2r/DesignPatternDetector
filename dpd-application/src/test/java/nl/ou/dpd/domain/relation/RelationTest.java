@@ -45,7 +45,7 @@ public class RelationTest {
     public void testConstructor() {
         assertThat(relation.getId(), is("id1"));
         assertThat(relation.getName(), is("relation1"));
-        assertThat(relation.getRelationProperties().size(), is(0));
+        assertTrue(relation.getRelationProperties().isEmpty());
     }
 
     @Test
