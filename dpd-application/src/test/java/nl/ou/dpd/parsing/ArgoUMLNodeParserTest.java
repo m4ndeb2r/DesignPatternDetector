@@ -19,13 +19,16 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 
+import static junit.framework.TestCase.fail;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ATTRIBUTE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.DATATYPE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IDREF;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INPUT;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_ABSTRACT;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.KIND;
@@ -50,12 +53,13 @@ import static org.mockito.Mockito.when;
 public class ArgoUMLNodeParserTest {
 
     private static final String INTEGER_HREF = String.format(".......%s", INTEGER);
+
     private static final String OPERATION_ID = "operationId";
-    private static final String PARAMETER_ID = "parameterId";
     private static final String ATTRIBUTE_ID = "attributeId";
     private static final String CLASS_NODE_ID = "classNodeId";
+    private static final String PARAMETER_ID_1 = "parameterId1";
+    private static final String PARAMETER_ID_2 = "parameterId2";
     private static final String RETURN_TYPE_ID = "returnTypeId";
-    private static final String INPUT_PARAM_TYPE = "in";
     private static final String RETURN_VALUE_TYPE = "return";
     private static final String INTERFACE_NODE_ID = "interfaceNodeId";
     private static final String ABSTRACT_CLASS_NODE_ID = "abstractClassNodeId";
@@ -73,9 +77,9 @@ public class ArgoUMLNodeParserTest {
     private XMLEventReader xmlEventReader;
 
     @Mock
-    XMLEvent modelEvent, classEvent, abstractClassEvent, interfaceEvent,
-            datatypeEvent, attributeEvent, operationEvent, inputParamEvent,
-            inputParamTypeEvent, returnParamEvent, returnParamTypeEvent;
+    XMLEvent modelEvent, classEvent, abstractClassEvent, interfaceEvent, datatypeEvent,
+            attributeEvent, operationEvent, inputParamEvent1, inputParamEvent2,
+            inputParamTypeEvent1, inputParamTypeEvent2, returnParamEvent, returnParamTypeEvent;
 
     private ArgoUMLNodeParser nodeParser;
 
@@ -108,10 +112,14 @@ public class ArgoUMLNodeParserTest {
                 true, // datatype end-element
                 true, // attribute end-element
                 true, // operation start-element
-                true, // input parameter start-element
-                true, // input paramType start-element
-                true, // input paramType end-element
-                true, // input parameter end-element
+                true, // input parameter start-element 1
+                true, // input paramType start-element 1
+                true, // input paramType end-element 1
+                true, // input parameter end-element 1
+                true, // input parameter start-element 2
+                true, // input paramType start-element 2
+                true, // input paramType end-element 2
+                true, // input parameter end-element 2
                 true, // return parameter start-element
                 true, // return paramType start-element
                 true, // return paramType end-element
@@ -128,7 +136,8 @@ public class ArgoUMLNodeParserTest {
                 classEvent,
                 attributeEvent, datatypeEvent, datatypeEvent, attributeEvent,
                 operationEvent,
-                inputParamEvent, inputParamTypeEvent, inputParamTypeEvent, inputParamEvent,
+                inputParamEvent1, inputParamTypeEvent1, inputParamTypeEvent1, inputParamEvent1,
+                inputParamEvent2, inputParamTypeEvent2, inputParamTypeEvent2, inputParamEvent2,
                 returnParamEvent, returnParamTypeEvent, returnParamTypeEvent, returnParamEvent,
                 operationEvent,
                 classEvent,
@@ -148,16 +157,19 @@ public class ArgoUMLNodeParserTest {
         classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId(CLASS_NODE_ID));
         abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId(ABSTRACT_CLASS_NODE_ID), mockIsAbstract(true));
 
-        // Mock an operation that has one input parameter of type "interfaceNode" and one return value of type "interfaceNode"
-        operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId(OPERATION_ID));
-        inputParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(INPUT_PARAM_TYPE), mockId(PARAMETER_ID));
-        inputParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
-        returnParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(RETURN_VALUE_TYPE), mockId(RETURN_TYPE_ID));
-        returnParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
-
         // Mock an attribute of type "Integer"
         attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE, mockId(ATTRIBUTE_ID));
         datatypeEvent = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref(INTEGER_HREF));
+
+        // Mock an operation that has two input parameters: one of type "interfaceNode" and one of type Integer, and
+        // one return value of type "interfaceNode"
+        operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId(OPERATION_ID));
+        inputParamEvent1 = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(INPUT), mockId(PARAMETER_ID_1));
+        inputParamTypeEvent1 = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
+        inputParamEvent2 = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(INPUT), mockId(PARAMETER_ID_2));
+        inputParamTypeEvent2 = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref(INTEGER_HREF));
+        returnParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(RETURN_VALUE_TYPE), mockId(RETURN_TYPE_ID));
+        returnParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
     }
 
     private javax.xml.stream.events.Attribute mockHref(String href) {
@@ -217,16 +229,27 @@ public class ArgoUMLNodeParserTest {
         final Operation operation = node.getOperations().iterator().next();
         assertThat(operation.getId(), is(OPERATION_ID));
         assertThat(operation.getParentNode().getId(), is(node.getId()));
-        assertParameter(operation);
+        assertParameters(operation);
         assertReturnType(operation);
     }
 
-    private void assertParameter(Operation operation) {
-        assertThat(operation.getParameters().size(), is(1));
-        final Parameter parameter = operation.getParameters().iterator().next();
-        assertThat(parameter.getId(), is(PARAMETER_ID));
-        assertThat(parameter.getType().getId(), is(INTERFACE_NODE_ID));
-        assertThat(parameter.getParentOperation().getId(), is(operation.getId()));
+    private void assertParameters(Operation operation) {
+        assertThat(operation.getParameters().size(), is(2));
+
+        final Iterator<Parameter> iterator = operation.getParameters().iterator();
+        while (iterator.hasNext()) {
+            Parameter parameter = iterator.next();
+            if (parameter.getId().equals(PARAMETER_ID_1)) {
+                assertThat(parameter.getType().getId(), is(INTERFACE_NODE_ID));
+            }
+            else if (parameter.getId().equals(PARAMETER_ID_2)) {
+                assertThat(parameter.getType().getId(), is(INTEGER_HREF));
+            }
+            else {
+                fail(String.format("Unexpected parameter id: '%s'!", parameter.getId()));
+            }
+            assertThat(parameter.getParentOperation().getId(), is(operation.getId()));
+        }
     }
 
     private void assertReturnType(Operation operation) {
