@@ -228,9 +228,10 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      */
     private void handleMultiplicityRangeEvent(XMLEvent event) {
         if (!events.empty() && getParentElementNameLocalPart().equals(ASSOCIATION_END)) {
-            int lower = Integer.parseInt(readAttributes(event).get(LOWER));
-            int upper = Integer.parseInt(readAttributes(event).get(UPPER));
-            RelationProperty rp = findRelationPropertyByType(lastRelation, RelationType.ASSOCIATES_WITH);
+            final Map<String, String> attributes = readAttributes(event);
+            final int lower = Integer.parseInt(attributes.get(LOWER));
+            final int upper = Integer.parseInt(attributes.get(UPPER));
+            final RelationProperty rp = findRelationPropertyByType(lastRelation, RelationType.ASSOCIATES_WITH);
             if (rp != null) {
                 cardinalities.push(new Cardinality(lower, upper));
                 if (cardinalities.size() == 2) {
@@ -281,6 +282,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         }
     }
 
+    // TODO: solve this using a Map!!! We don't need a method for this
     private RelationType findRelationTypeByString(String relationType) {
         switch (relationType) {
             case ASSOCIATION:
@@ -305,12 +307,10 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      */
     private void addReverseRelation(Node sourceNode, Node targetNode) {
         final Relation relation = system.getEdge(sourceNode, targetNode);
-        boolean isAssociation = containsRelationType(relation, RelationType.ASSOCIATES_WITH);
-        boolean reverseRelationExists = system.containsEdge(targetNode, sourceNode);
-        if (reverseRelationExists) {
-            system.getEdge(targetNode, sourceNode).getRelationProperties().add(new RelationProperty(RelationType.ASSOCIATES_WITH));
-        } else {
-            if (isAssociation && navigabilities.size() == 2) {
+        final boolean isAssociation = containsRelationType(relation, RelationType.ASSOCIATES_WITH);
+        if (isAssociation) {
+            final boolean reverseRelationExists = system.containsEdge(targetNode, sourceNode);
+            if (!reverseRelationExists && navigabilities.size() == 2) {
                 final boolean nav1 = navigabilities.pop();
                 final boolean nav2 = navigabilities.pop();
                 if (nav1 && nav2) {
