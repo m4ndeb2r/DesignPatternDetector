@@ -53,9 +53,6 @@ public class AdapterMatchingTest {
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
         assertTrue(patternInspector.isomorphismExists());
         //more detailed inspection
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
@@ -82,9 +79,6 @@ public class AdapterMatchingTest {
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
         // This pattern is not found because of the bidirected association.
         assertFalse(patternInspector.isomorphismExists());
 
@@ -106,9 +100,6 @@ public class AdapterMatchingTest {
 
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
 

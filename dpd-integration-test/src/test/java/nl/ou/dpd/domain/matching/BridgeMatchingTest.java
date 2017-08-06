@@ -58,9 +58,6 @@ public class BridgeMatchingTest {
         final PatternInspector.MatchingResult matchingResult = patternInspector.getMatchingResult();
         final Feedback feedback = matchingResult.getFeedback();
 
-        //TODO: test the values instead of printing it to the console
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
         assertTrue(patternInspector.isomorphismExists());
 
         // More detailed, but not exhaustive inspection

@@ -4,8 +4,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static junit.framework.TestCase.assertTrue;
+import static nl.ou.dpd.util.Util.inverseSubstringOf;
+import static nl.ou.dpd.util.Util.nullSafeEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests the {@link Util} utility class.
@@ -19,21 +23,21 @@ public class UtilTest {
 
     @Test
     public void testNullSafeEquals() {
-        assertThat(Util.nullSafeEquals(null, null), is(true));
-        assertThat(Util.nullSafeEquals("a", null), is(false));
-        assertThat(Util.nullSafeEquals(null, "a"), is(false));
-        assertThat(Util.nullSafeEquals("a", new String("a")), is(true));
-        assertThat(Util.nullSafeEquals("a", new StringBuilder("a")), is(false));
+        assertTrue(nullSafeEquals(null, null));
+        assertFalse(nullSafeEquals("a", null));
+        assertFalse(nullSafeEquals(null, "a"));
+        assertTrue(nullSafeEquals("a", new String("a")));
+        assertFalse(nullSafeEquals("a", new StringBuilder("a")));
     }
 
     @Test
     public void testLastSubstringOf() {
-        assertThat(Util.inverseSubstringOf("12345", 3), is("345"));
-        assertThat(Util.inverseSubstringOf("12", 2), is("12"));
-        assertThat(Util.inverseSubstringOf("12345", 0), is(""));
-        assertThat(Util.inverseSubstringOf("", 0), is(""));
+        assertThat(inverseSubstringOf("12345", 3), is("345"));
+        assertThat(inverseSubstringOf("12", 2), is("12"));
+        assertThat(inverseSubstringOf("12345", 0), is(""));
+        assertThat(inverseSubstringOf("", 0), is(""));
 
         thrown.expect(StringIndexOutOfBoundsException.class);
-        Util.inverseSubstringOf("12345", 6);
+        inverseSubstringOf("12345", 6);
     }
 }

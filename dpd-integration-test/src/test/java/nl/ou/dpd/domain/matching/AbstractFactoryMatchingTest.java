@@ -52,9 +52,6 @@ public class AbstractFactoryMatchingTest {
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
@@ -92,9 +89,6 @@ public class AbstractFactoryMatchingTest {
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
         assertTrue(patternInspector.isomorphismExists());
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
         assertEquals(12, solutions.size());
@@ -120,9 +114,6 @@ public class AbstractFactoryMatchingTest {
 
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
 
         assertTrue(patternInspector.isomorphismExists());
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);

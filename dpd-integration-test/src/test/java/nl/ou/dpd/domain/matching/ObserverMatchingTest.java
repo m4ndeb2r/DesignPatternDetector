@@ -49,9 +49,6 @@ public class ObserverMatchingTest {
         // Inspect the system for patterns
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
 
-        // TODO Temporary method for visual feedback
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
         assertTrue(patternInspector.isomorphismExists());
         //more detailed, but not exhaustive inspection
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
