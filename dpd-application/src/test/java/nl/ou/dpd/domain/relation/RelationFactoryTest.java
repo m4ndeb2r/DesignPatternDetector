@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class RelationFactoryTest {
 
     @Mock
-    Node leftNode, rightNode;
+    private Node leftNode, rightNode;
 
     @Before
     public void setUp() {
@@ -31,7 +31,7 @@ public class RelationFactoryTest {
     }
 
     @Test
-    public void testMethod() {
+    public void testRelationFactory() {
         final Relation relation = new RelationFactory().createEdge(leftNode, rightNode);
         assertThat(relation.getId(), is("left-right"));
         assertThat(relation.getName(), is("Left-Right"));
