@@ -46,21 +46,21 @@ import static org.mockito.Mockito.when;
 public class ArgoUMLRelationParserTest {
 
     // XMI tags
-    private static final String MODEL = "Model";
-    private static final String CLASS ="Class";
-    private static final String INTERFACE = "Interface";
-    private static final String ABSTRACTION = "Abstraction";
-    private static final String ASSOCIATION = "Association";
-    private static final String ASSOCIATION_END = "AssociationEnd";
-    private static final String MULTIPLICITY_RANGE = "MultiplicityRange";
+    private static final String MODEL_TAG = "Model";
+    private static final String CLASS_TAG ="Class";
+    private static final String INTERFACE_TAG = "Interface";
+    private static final String ABSTRACTION_TAG = "Abstraction";
+    private static final String ASSOCIATION_TAG = "Association";
+    private static final String ASSOCIATION_END_TAG = "AssociationEnd";
+    private static final String MULTIPLICITY_RANGE_TAG = "MultiplicityRange";
 
     // XMI attributes
-    private static final String ID = "xmi.id";
-    private static final String NAME = "name";
-    private static final String LOWER = "lower";
-    private static final String UPPER = "upper";
-    private static final String IDREF = "xmi.idref";
-    private static final String IS_NAVIGABLE = "isNavigable";
+    private static final String ID_ATTRIBUTE = "xmi.id";
+    private static final String NAME_ATTRIBUTE = "name";
+    private static final String LOWER_ATTRIBUTE = "lower";
+    private static final String UPPER_ATTRIBUTE = "upper";
+    private static final String IDREF_ATTRIBUTE = "xmi.idref";
+    private static final String IS_NAVIGABLE_ATTRIBUTE = "isNavigable";
 
     // Id's in tests
     private static final String CLASS_ID = "classId";
@@ -185,24 +185,24 @@ public class ArgoUMLRelationParserTest {
      */
     @Before
     public void initEvents() {
-        modelEvent = ParseTestHelper.createXMLEventMock(MODEL, mockId(MODEL_ID));
-        abstractionEvent = ParseTestHelper.createXMLEventMock(ABSTRACTION, mockId(ABSTRACTION_ID), mockName(ABSTRACTION_NAME));
-        classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockIdRef(CLASS_ID));
-        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_ID));
+        modelEvent = ParseTestHelper.createXMLEventMock(MODEL_TAG, mockId(MODEL_ID));
+        abstractionEvent = ParseTestHelper.createXMLEventMock(ABSTRACTION_TAG, mockId(ABSTRACTION_ID), mockName(ABSTRACTION_NAME));
+        classEvent = ParseTestHelper.createXMLEventMock(CLASS_TAG, mockIdRef(CLASS_ID));
+        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE_TAG, mockIdRef(INTERFACE_ID));
 
-        associationEvent = ParseTestHelper.createXMLEventMock(ASSOCIATION, mockId(ASSOCIATION_ID));
+        associationEvent = ParseTestHelper.createXMLEventMock(ASSOCIATION_TAG, mockId(ASSOCIATION_ID));
         multiplicityRangeClassEvent = ParseTestHelper.createXMLEventMock(
-                MULTIPLICITY_RANGE,
+                MULTIPLICITY_RANGE_TAG,
                 mockIdAndCardinality(MULTIPLICITY_RANGE_ID, 0, Cardinality.UNLIMITED));
         multiplicityRangeInterfaceEvent = ParseTestHelper.createXMLEventMock(
-                MULTIPLICITY_RANGE,
+                MULTIPLICITY_RANGE_TAG,
                 mockIdAndCardinality(MULTIPLICITY_RANGE_ID, 1, 1));
         associationInterfaceEndEvent = ParseTestHelper.createXMLEventMock(
-                ASSOCIATION_END,
+                ASSOCIATION_END_TAG,
                 mockId(ASSOCIATION_CLASS_END_ID),
                 mockNavigable("true"));
         associationClassEndEvent = ParseTestHelper.createXMLEventMock(
-                ASSOCIATION_END,
+                ASSOCIATION_END_TAG,
                 mockId(ASSOCIATION_INTERFACE_END_ID),
                 mockNavigable("true"));
     }
@@ -210,25 +210,25 @@ public class ArgoUMLRelationParserTest {
     private Iterator<Attribute> mockIdAndCardinality(String id, int lower, int upper) {
         final Set<Attribute> attributes = new HashSet<>();
         attributes.add(mockId(id));
-        attributes.add(createAttributeMock(LOWER, Integer.toString(lower)));
-        attributes.add(createAttributeMock(UPPER, Integer.toString(upper)));
+        attributes.add(createAttributeMock(LOWER_ATTRIBUTE, Integer.toString(lower)));
+        attributes.add(createAttributeMock(UPPER_ATTRIBUTE, Integer.toString(upper)));
         return attributes.iterator();
     }
 
     private Attribute mockId(String id) {
-        return createAttributeMock(ID, id);
+        return createAttributeMock(ID_ATTRIBUTE, id);
     }
 
     private Attribute mockIdRef(String idRef) {
-        return createAttributeMock(IDREF, idRef);
+        return createAttributeMock(IDREF_ATTRIBUTE, idRef);
     }
 
     private Attribute mockNavigable(String isNavigable) {
-        return createAttributeMock(IS_NAVIGABLE, isNavigable);
+        return createAttributeMock(IS_NAVIGABLE_ATTRIBUTE, isNavigable);
     }
 
     private Attribute mockName(String name) {
-        return createAttributeMock(NAME, name);
+        return createAttributeMock(NAME_ATTRIBUTE, name);
     }
 
     @Test

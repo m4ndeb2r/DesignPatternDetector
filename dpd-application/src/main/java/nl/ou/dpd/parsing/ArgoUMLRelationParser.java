@@ -38,27 +38,27 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     static final String REVERSED_POSTFIX = "-reversed";
 
     // XMI tags
-    private static final String ASSOCIATION = "Association";
-    private static final String ABSTRACTION = "Abstraction";
-    private static final String GENERALIZATION = "Generalization";
-    private static final String ASSOCIATION_END = "AssociationEnd";
-    private static final String MULTIPLICITY_RANGE = "MultiplicityRange";
+    private static final String ASSOCIATION_TAG = "Association";
+    private static final String ABSTRACTION_TAG = "Abstraction";
+    private static final String GENERALIZATION_TAG = "Generalization";
+    private static final String ASSOCIATION_END_TAG = "AssociationEnd";
+    private static final String MULTIPLICITY_RANGE_TAG = "MultiplicityRange";
 
     // XMI attributes
-    private static final String LOWER = "lower";
-    private static final String UPPER = "upper";
+    private static final String LOWER_ATTRIBUTE = "lower";
+    private static final String UPPER_ATTRIBUTE = "upper";
 
     private static final Map<String, RelationType> RELATION_TYPE_BY_STRING_MAP = new HashMap<>();
     static {
-        RELATION_TYPE_BY_STRING_MAP.put(ATTRIBUTE, RelationType.HAS_ATTRIBUTE_OF);
-        RELATION_TYPE_BY_STRING_MAP.put(ASSOCIATION, RelationType.ASSOCIATES_WITH);
-        RELATION_TYPE_BY_STRING_MAP.put(ABSTRACTION, RelationType.IMPLEMENTS);
-        RELATION_TYPE_BY_STRING_MAP.put(GENERALIZATION, RelationType.INHERITS_FROM);
+        RELATION_TYPE_BY_STRING_MAP.put(ATTRIBUTE_TAG, RelationType.HAS_ATTRIBUTE_OF);
+        RELATION_TYPE_BY_STRING_MAP.put(ASSOCIATION_TAG, RelationType.ASSOCIATES_WITH);
+        RELATION_TYPE_BY_STRING_MAP.put(ABSTRACTION_TAG, RelationType.IMPLEMENTS);
+        RELATION_TYPE_BY_STRING_MAP.put(GENERALIZATION_TAG, RelationType.INHERITS_FROM);
     }
 
     private static final List<String> eventTags = Arrays.asList(new String[]{
-            MODEL, CLASS, INTERFACE, ASSOCIATION, ASSOCIATION_END,
-            MULTIPLICITY_RANGE, ABSTRACTION, DEPENDENCY, GENERALIZATION
+            MODEL_TAG, CLASS_TAG, INTERFACE_TAG, ASSOCIATION_TAG, ASSOCIATION_END_TAG,
+            MULTIPLICITY_RANGE_TAG, ABSTRACTION_TAG, DEPENDENCY_TAG, GENERALIZATION_TAG
     });
 
     private Relation lastRelation; //holds the information of the last Relation.
@@ -102,34 +102,34 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
 
     protected void handleStartElement(XMLEvent event) {
         switch (getStartElementNameLocalPart(event)) {
-            case MODEL:
+            case MODEL_TAG:
                 system = createSystem(event);
                 nodes.values().forEach(node -> system.addVertex(node));
                 events.push(event);
                 break;
-            case CLASS:
-            case INTERFACE:
+            case CLASS_TAG:
+            case INTERFACE_TAG:
                 handleNodeEvent(event);
                 events.push(event);
                 break;
-            case ASSOCIATION:
+            case ASSOCIATION_TAG:
                 handleAssociationEvent(event);
                 events.push(event);
                 break;
-            case ABSTRACTION:
-            case GENERALIZATION:
+            case ABSTRACTION_TAG:
+            case GENERALIZATION_TAG:
                 handleInheritance(event);
                 events.push(event);
                 break;
-            case ASSOCIATION_END:
+            case ASSOCIATION_END_TAG:
                 handleAssociationEndEvent(event);
                 events.push(event);
                 break;
-            case DEPENDENCY:
+            case DEPENDENCY_TAG:
                 handleDependencyEvent(event);
                 events.push(event);
                 break;
-            case MULTIPLICITY_RANGE:
+            case MULTIPLICITY_RANGE_TAG:
                 handleMultiplicityRangeEvent(event);
                 events.push(event);
                 break;
@@ -156,8 +156,8 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @return a new {@link SystemUnderConsideration} with the id and name specified in the event.
      */
     private SystemUnderConsideration createSystem(XMLEvent event) {
-        final String id = readAttributes(event).get(ID);
-        final String name = readAttributes(event).get(NAME);
+        final String id = readAttributes(event).get(ID_ATTRIBUTE);
+        final String name = readAttributes(event).get(NAME_ATTRIBUTE);
         return new SystemUnderConsideration(id, name);
     }
 
@@ -169,10 +169,10 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private void handleNodeEvent(XMLEvent event) {
         //look for the event one level higher
         switch (getParentElementNameLocalPart()) {
-            case ASSOCIATION_END:
-            case ABSTRACTION:
-            case GENERALIZATION:
-            case DEPENDENCY:
+            case ASSOCIATION_END_TAG:
+            case ABSTRACTION_TAG:
+            case GENERALIZATION_TAG:
+            case DEPENDENCY_TAG:
                 setSourceOrTargetNode(event);
                 break;
             default:
@@ -186,8 +186,8 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @param event the {@link XMLEvent} containing the name and id in its attributes.
      */
     private void handleAssociationEvent(XMLEvent event) {
-        final String id = readAttributes(event).get(ID);
-        final String name = readAttributes(event).get(NAME);
+        final String id = readAttributes(event).get(ID_ATTRIBUTE);
+        final String name = readAttributes(event).get(NAME_ATTRIBUTE);
         lastRelation = findSystemRelationById(id);
         if (lastRelation == null) {
             lastRelation = createIncompleteRelation(id, name);
@@ -203,9 +203,9 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @param event the {@link XMLEvent} that contains the id and name in its attributes.
      */
     private void handleInheritance(XMLEvent event) {
-        if (MODEL.equals(getParentElementNameLocalPart())) {
-            final String id = readAttributes(event).get(ID);
-            final String name = readAttributes(event).get(NAME);
+        if (MODEL_TAG.equals(getParentElementNameLocalPart())) {
+            final String id = readAttributes(event).get(ID_ATTRIBUTE);
+            final String name = readAttributes(event).get(NAME_ATTRIBUTE);
             lastRelation = createIncompleteRelation(id, name);
 
             final RelationType rt = findRelationTypeByString(getStartElementNameLocalPart(event));
@@ -225,7 +225,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private void handleAssociationEndEvent(XMLEvent event) {
         //association directed if first node !isNavigable and second node isNavigable
         //will be used when an association edge is created
-        navigabilities.push(Boolean.valueOf(readAttributes(event).get(IS_NAVIGABLE)));
+        navigabilities.push(Boolean.valueOf(readAttributes(event).get(IS_NAVIGABLE_ATTRIBUTE)));
     }
 
     /**
@@ -234,9 +234,9 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @param event the {@link XMLEvent} containing the necessary XML attributes
      */
     private void handleDependencyEvent(XMLEvent event) {
-        if (CLASS.equals(getParentElementNameLocalPart())) {
-            final String id = readAttributes(event).get(ID);
-            final String name = readAttributes(event).get(NAME);
+        if (CLASS_TAG.equals(getParentElementNameLocalPart())) {
+            final String id = readAttributes(event).get(ID_ATTRIBUTE);
+            final String name = readAttributes(event).get(NAME_ATTRIBUTE);
 	        if (id != null && findSystemRelationById(id) == null) {
 		        //create an incomplete relation if the relation does not exist yet
 		        lastRelation = createIncompleteRelation(id, name);
@@ -251,10 +251,10 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @param event the {@link XMLEvent} containing the necessary XML attributes
      */
     private void handleMultiplicityRangeEvent(XMLEvent event) {
-        if (!events.empty() && getParentElementNameLocalPart().equals(ASSOCIATION_END)) {
+        if (!events.empty() && getParentElementNameLocalPart().equals(ASSOCIATION_END_TAG)) {
             final Map<String, String> attributes = readAttributes(event);
-            final int lower = Integer.parseInt(attributes.get(LOWER));
-            final int upper = Integer.parseInt(attributes.get(UPPER));
+            final int lower = Integer.parseInt(attributes.get(LOWER_ATTRIBUTE));
+            final int upper = Integer.parseInt(attributes.get(UPPER_ATTRIBUTE));
             final RelationProperty rp = findRelationPropertyByType(lastRelation, RelationType.ASSOCIATES_WITH);
             if (rp != null) {
                 cardinalities.push(new Cardinality(lower, upper));
@@ -266,7 +266,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     }
 
     private void setSourceOrTargetNode(XMLEvent event) {
-        final String idref = readAttributes(event).get(IDREF);
+        final String idref = readAttributes(event).get(IDREF_ATTRIBUTE);
         final Node node = nodes.get(idref);
         //add node to system (if new Node, e.g. datatype)
         system.addVertex(node);

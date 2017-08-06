@@ -25,24 +25,24 @@ import java.util.Stack;
  */
 public abstract class ArgoUMLAbstractParser {
 
-    //attributes of the XMI used in the parser
-    protected static final String ID = "xmi.id";
-    protected static final String NAME = "name";
-    protected static final String HREF = "href";
-    protected static final String KIND = "kind";
-    protected static final String INPUT = "in";
-    protected static final String IDREF = "xmi.idref";
-    protected static final String VISIBILITY = "visibility";
-    protected static final String IS_ABSTRACT = "isAbstract";
-    protected static final String IS_NAVIGABLE = "isNavigable";
+    // XMI attributes
+    protected static final String ID_ATTRIBUTE = "xmi.id";
+    protected static final String NAME_ATTRIBUTE = "name";
+    protected static final String HREF_ATTRIBUTE = "href";
+    protected static final String KIND_ATTRIBUTE = "kind";
+    protected static final String INPUT_ATTRIBUTE = "in";
+    protected static final String IDREF_ATTRIBUTE = "xmi.idref";
+    protected static final String VISIBILITY_ATTRIBUTE = "visibility";
+    protected static final String IS_ABSTRACT_ATTRIBUTE = "isAbstract";
+    protected static final String IS_NAVIGABLE_ATTRIBUTE = "isNavigable";
 
-    //tags of the XMI used in the parser
-    protected static final String MODEL = "Model";
-    protected static final String CLASS = "Class";
-    protected static final String DATATYPE = "DataType";
-    protected static final String INTERFACE = "Interface";
-    protected static final String ATTRIBUTE = "Attribute";
-    protected static final String DEPENDENCY = "Dependency";
+    //XMI tags
+    protected static final String MODEL_TAG = "Model";
+    protected static final String CLASS_TAG = "Class";
+    protected static final String DATATYPE_TAG = "DataType";
+    protected static final String INTERFACE_TAG = "Interface";
+    protected static final String ATTRIBUTE_TAG = "Attribute";
+    protected static final String DEPENDENCY_TAG = "Dependency";
 
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLAbstractParser.class);
 

@@ -40,22 +40,23 @@ import static org.mockito.Mockito.when;
 public class ArgoUMLNodeParserTest {
 
     // XMI attributes
-    private static final String ID = "xmi.id";
-    private static final String KIND = "kind";
-    private static final String IDREF = "xmi.idref";
-    private static final String INPUT = "in";
-    private static final String RETURN_VALUE_TYPE = "return";
+    private static final String ID_ATTRIBUTE = "xmi.id";
+    private static final String KIND_ATTRIBUTE = "kind";
+    private static final String IDREF_ATTRIBUTE = "xmi.idref";
+    private static final String INPUT_ATTRIBUTE = "in";
+    private static final String RETURN_ATTRIBUTE = "return";
+    private static final String IS_ABSTRACT_ATTRIBUTE = "isAbstract";
 
     // XMI tags
-    private static final String MODEL = "Model";
-    private static final String CLASS = "Class";
+    private static final String MODEL_TAG = "Model";
+    private static final String CLASS_TAG = "Class";
+    private static final String DATATYPE_TAG = "DataType";
+    private static final String ATTRIBUTE_TAG = "Attribute";
+    private static final String INTERFACE_TAG = "Interface";
+    private static final String OPERATION_TAG = "Operation";
+    private static final String PARAMETER_TAG = "Parameter";
+
     private static final String INTEGER = "87C";
-    private static final String DATATYPE = "DataType";
-    private static final String ATTRIBUTE = "Attribute";
-    private static final String INTERFACE = "Interface";
-    private static final String OPERATION = "Operation";
-    private static final String PARAMETER = "Parameter";
-    private static final String IS_ABSTRACT = "isAbstract";
     private static final String INTEGER_HREF = String.format(".......%s", INTEGER);
 
     // Id's in the tests
@@ -154,46 +155,46 @@ public class ArgoUMLNodeParserTest {
      */
     @Before
     public void initEvents() {
-        modelEvent = ParseTestHelper.createXMLEventMock(MODEL);
+        modelEvent = ParseTestHelper.createXMLEventMock(MODEL_TAG);
 
         // Mock an interface, a class and an abstract class
-        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockId(INTERFACE_NODE_ID));
-        classEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId(CLASS_NODE_ID));
-        abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS, mockId(ABSTRACT_CLASS_NODE_ID), mockIsAbstract(true));
+        interfaceEvent = ParseTestHelper.createXMLEventMock(INTERFACE_TAG, mockId(INTERFACE_NODE_ID));
+        classEvent = ParseTestHelper.createXMLEventMock(CLASS_TAG, mockId(CLASS_NODE_ID));
+        abstractClassEvent = ParseTestHelper.createXMLEventMock(CLASS_TAG, mockId(ABSTRACT_CLASS_NODE_ID), mockIsAbstract(true));
 
         // Mock an attribute of type "Integer"
-        attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE, mockId(ATTRIBUTE_ID));
-        datatypeEvent = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref(INTEGER_HREF));
+        attributeEvent = ParseTestHelper.createXMLEventMock(ATTRIBUTE_TAG, mockId(ATTRIBUTE_ID));
+        datatypeEvent = ParseTestHelper.createXMLEventMock(DATATYPE_TAG, mockHref(INTEGER_HREF));
 
         // Mock an operation that has two input parameters: one of type "interfaceNode" and one of type Integer, and
         // one return value of type "interfaceNode"
-        operationEvent = ParseTestHelper.createXMLEventMock(OPERATION, mockId(OPERATION_ID));
-        inputParamEvent1 = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(INPUT), mockId(PARAMETER_ID_1));
-        inputParamTypeEvent1 = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
-        inputParamEvent2 = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(INPUT), mockId(PARAMETER_ID_2));
-        inputParamTypeEvent2 = ParseTestHelper.createXMLEventMock(DATATYPE, mockHref(INTEGER_HREF));
-        returnParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER, mockParamKind(RETURN_VALUE_TYPE), mockId(RETURN_TYPE_ID));
-        returnParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE, mockIdRef(INTERFACE_NODE_ID));
+        operationEvent = ParseTestHelper.createXMLEventMock(OPERATION_TAG, mockId(OPERATION_ID));
+        inputParamEvent1 = ParseTestHelper.createXMLEventMock(PARAMETER_TAG, mockParamKind(INPUT_ATTRIBUTE), mockId(PARAMETER_ID_1));
+        inputParamTypeEvent1 = ParseTestHelper.createXMLEventMock(INTERFACE_TAG, mockIdRef(INTERFACE_NODE_ID));
+        inputParamEvent2 = ParseTestHelper.createXMLEventMock(PARAMETER_TAG, mockParamKind(INPUT_ATTRIBUTE), mockId(PARAMETER_ID_2));
+        inputParamTypeEvent2 = ParseTestHelper.createXMLEventMock(DATATYPE_TAG, mockHref(INTEGER_HREF));
+        returnParamEvent = ParseTestHelper.createXMLEventMock(PARAMETER_TAG, mockParamKind(RETURN_ATTRIBUTE), mockId(RETURN_TYPE_ID));
+        returnParamTypeEvent = ParseTestHelper.createXMLEventMock(INTERFACE_TAG, mockIdRef(INTERFACE_NODE_ID));
     }
 
     private javax.xml.stream.events.Attribute mockHref(String href) {
-        return createAttributeMock(ArgoUMLAbstractParser.HREF, href);
+        return createAttributeMock(ArgoUMLAbstractParser.HREF_ATTRIBUTE, href);
     }
 
     private javax.xml.stream.events.Attribute mockIsAbstract(boolean isAbstract) {
-        return createAttributeMock(IS_ABSTRACT, Boolean.toString(isAbstract));
+        return createAttributeMock(IS_ABSTRACT_ATTRIBUTE, Boolean.toString(isAbstract));
     }
 
     private javax.xml.stream.events.Attribute mockParamKind(String inOrReturn) {
-        return createAttributeMock(KIND, inOrReturn);
+        return createAttributeMock(KIND_ATTRIBUTE, inOrReturn);
     }
 
     private javax.xml.stream.events.Attribute mockId(String id) {
-        return createAttributeMock(ID, id);
+        return createAttributeMock(ID_ATTRIBUTE, id);
     }
 
     private javax.xml.stream.events.Attribute mockIdRef(String idRef) {
-        return createAttributeMock(IDREF, idRef);
+        return createAttributeMock(IDREF_ATTRIBUTE, idRef);
     }
 
     @Test
