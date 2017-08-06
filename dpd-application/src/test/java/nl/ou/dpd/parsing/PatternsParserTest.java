@@ -69,8 +69,6 @@ public class PatternsParserTest {
     private static final String RELATION_TYPE_ATTRIBUTE = "relationType";
     private static final String CARDINALITY_LEFT_ATTRIBUTE = "cardinalityLeft";
 
-    private static final String DEFAULT_CARDINALITY = "1";
-
     // Test values
     private static final String AN_INTERFACE = "anInterface";
     private static final String A_NOTE_VALUE = "A nice note";
@@ -78,7 +76,9 @@ public class PatternsParserTest {
     private static final String A_PATTERN_FAMILY = "aPatternFamily";
     private static final String A_CONCRETE_CLASS_ID = "aConcreteClassId";
     private static final String A_CONCRETE_CLASS_NAME = "aConcreteClassName";
-    private static final String CARDINALITY_1_UNLIMITED = "1..*";
+
+    private static final Cardinality CARDINALITY_1_UNLIMITED = Cardinality.valueOf("1..*");
+    private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
 
     // This file is created just to satisfy the FileInputStream of the parser
     private String xmlFile = getPath("/patterns/dummy.xml");
@@ -222,7 +222,7 @@ public class PatternsParserTest {
         inheritanceRuleEvent = ParseTestHelper.createXMLEventMock(
                 RELATION_RULE_TAG,
                 ParseTestHelper.createAttributeMock(RELATION_TYPE_ATTRIBUTE, IMPLEMENTS.name()),
-                ParseTestHelper.createAttributeMock(CARDINALITY_LEFT_ATTRIBUTE, CARDINALITY_1_UNLIMITED)
+                ParseTestHelper.createAttributeMock(CARDINALITY_LEFT_ATTRIBUTE, CARDINALITY_1_UNLIMITED.toString())
         );
     }
 
@@ -314,8 +314,8 @@ public class PatternsParserTest {
         final Iterator<RelationProperty> propertyIterator = relationProperties.iterator();
         final RelationProperty relationProperty = propertyIterator.next();
         assertThat(relationProperty.getRelationType(), is(IMPLEMENTS));
-        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf(CARDINALITY_1_UNLIMITED)));
-        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf(DEFAULT_CARDINALITY)));
+        assertThat(relationProperty.getCardinalityLeft(), is(CARDINALITY_1_UNLIMITED));
+        assertThat(relationProperty.getCardinalityRight(), is(DEFAULT_CARDINALITY));
     }
 
     private String getPath(String resourceName) {

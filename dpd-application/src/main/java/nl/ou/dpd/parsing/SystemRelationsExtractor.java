@@ -26,6 +26,8 @@ public class SystemRelationsExtractor {
 
     private SystemUnderConsideration system;
 
+    static final String SYSTEM_RELATION_PREFIX = "SystemRelation";
+
     /**
      * This constructor has protected access so it can only be instantiated from within the same package (by the
      * ParserFactory or in a unit test in the same package).
@@ -62,7 +64,7 @@ public class SystemRelationsExtractor {
     private Relation createSystemAttributeRelation(Attribute attribute) {
         final Node parentNode = attribute.getParentNode();
         return new Relation(
-                String.format("SystemRelation-%s-%s", parentNode.getId(), attribute.getId()),
+                String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), attribute.getId()),
                 String.format("%s-%s", parentNode.getName(), attribute.getName())
         );
     }
@@ -117,7 +119,7 @@ public class SystemRelationsExtractor {
     private Relation createSystemOperationRelation(Operation operation) {
         final Node parentNode = operation.getParentNode();
         return new Relation(
-                String.format("SystemRelation-%s-%s", parentNode.getId(), operation.getId()),
+                String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), operation.getId()),
                 String.format("%s-%s", parentNode.getName(), operation.getName())
         );
     }

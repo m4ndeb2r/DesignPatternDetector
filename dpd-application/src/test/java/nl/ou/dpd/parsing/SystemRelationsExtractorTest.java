@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import static nl.ou.dpd.parsing.SystemRelationsExtractor.SYSTEM_RELATION_PREFIX;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
@@ -36,6 +37,18 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SystemRelationsExtractorTest {
+
+    // Test values
+    private static final String NODE_1_ID = "node1";
+    private static final String NODE_2_ID = "node2";
+    private static final String ATTR_1_ID = "attr1";
+    private static final String NODE_1_NAME = "Node1";
+    private static final String NODE_2_NAME = "Node2";
+    private static final String ATTR_1_NAME = "Attr1";
+    private static final String OPERATION_ID = "operationId";
+    private static final String OPERATION_NAME = "operationName";
+
+    private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
 
     @Mock
     private SystemUnderConsideration system;
@@ -56,12 +69,11 @@ public class SystemRelationsExtractorTest {
         nodeSet = new HashSet<>();
         nodeSet.add(node1);
         nodeSet.add(node2);
-        when(node1.getId()).thenReturn("node1");
-        when(node2.getId()).thenReturn("node2");
-        when(node1.getName()).thenReturn("Node1");
-        when(node2.getName()).thenReturn("Node2");
+        when(node1.getId()).thenReturn(NODE_1_ID);
+        when(node2.getId()).thenReturn(NODE_2_ID);
+        when(node1.getName()).thenReturn(NODE_1_NAME);
+        when(node2.getName()).thenReturn(NODE_2_NAME);
         when(system.vertexSet()).thenReturn(nodeSet);
-
     }
 
     /**
@@ -87,8 +99,8 @@ public class SystemRelationsExtractorTest {
         node1Attributes.add(node1Attribute);
 
         when(node1Attribute.getParentNode()).thenReturn(node1);
-        when(node1Attribute.getId()).thenReturn("attr1");
-        when(node1Attribute.getName()).thenReturn("Attr1");
+        when(node1Attribute.getId()).thenReturn(ATTR_1_ID);
+        when(node1Attribute.getName()).thenReturn(ATTR_1_NAME);
         when(node1Attribute.getType()).thenReturn(node2);
         when(node1.getAttributes()).thenReturn(node1Attributes);
 
@@ -98,8 +110,8 @@ public class SystemRelationsExtractorTest {
         verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
 
         final Relation relation = relationCaptor.getValue();
-        assertThat(relation.getId(), is("SystemRelation-node1-attr1"));
-        assertThat(relation.getName(), is("Node1-Attr1"));
+        assertThat(relation.getId(), is(String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, node1.getId(), node1Attribute.getId())));
+        assertThat(relation.getName(), is(String.format("%s-%s", node1.getName(), node1Attribute.getName())));
 
         assertThat(result, is(system));
     }
@@ -122,8 +134,8 @@ public class SystemRelationsExtractorTest {
         outgoingEdges.add(outgoingEdge);
 
         when(node1Operation.getParentNode()).thenReturn(node1);
-        when(node1Operation.getId()).thenReturn("operationId");
-        when(node1Operation.getName()).thenReturn("operationName");
+        when(node1Operation.getId()).thenReturn(OPERATION_ID);
+        when(node1Operation.getName()).thenReturn(OPERATION_NAME);
         when(node1Operation.getParameters()).thenReturn(parameterSet);
         when(node1Operation.getReturnType()).thenReturn(node2);
         when(node1Operation.equalsSignature(node1Operation)).thenReturn(true);
@@ -137,8 +149,8 @@ public class SystemRelationsExtractorTest {
         final ArgumentCaptor<Relation> relationCaptor = ArgumentCaptor.forClass(Relation.class);
         verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
         final Relation relation = relationCaptor.getValue();
-        assertThat(relation.getId(), is("SystemRelation-node1-operationId"));
-        assertThat(relation.getName(), is("Node1-operationName"));
+        assertThat(relation.getId(), is(String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, node1.getId(), node1Operation.getId())));
+        assertThat(relation.getName(), is(String.format("%s-%s", node1.getName(), node1Operation.getName())));
 
         // Check the return value's type and cardinality properties
         final Iterator<RelationProperty> relationProperties = relation.getRelationProperties().iterator();
@@ -171,8 +183,8 @@ public class SystemRelationsExtractorTest {
         parameterSet.add(parameter);
 
         when(node1Operation.getParentNode()).thenReturn(node1);
-        when(node1Operation.getId()).thenReturn("operationId");
-        when(node1Operation.getName()).thenReturn("operationName");
+        when(node1Operation.getId()).thenReturn(OPERATION_ID);
+        when(node1Operation.getName()).thenReturn(OPERATION_NAME);
         when(node1Operation.getParameters()).thenReturn(parameterSet);
         when(parameter.getType()).thenReturn(node2);
         when(node1.getOperations()).thenReturn(node1Operations);
@@ -183,13 +195,13 @@ public class SystemRelationsExtractorTest {
         verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
 
         final Relation relation = relationCaptor.getValue();
-        assertThat(relation.getId(), is("SystemRelation-node1-operationId"));
-        assertThat(relation.getName(), is("Node1-operationName"));
+        assertThat(relation.getId(), is(String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, node1.getId(), node1Operation.getId())));
+        assertThat(relation.getName(), is(String.format("%s-%s", node1.getName(), node1Operation.getName())));
 
         final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
         assertThat(relationProperty.getRelationType(), is(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
-        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
-        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(relationProperty.getCardinalityLeft(), is(DEFAULT_CARDINALITY));
+        assertThat(relationProperty.getCardinalityRight(), is(DEFAULT_CARDINALITY));
 
         assertThat(result, is(system));
     }

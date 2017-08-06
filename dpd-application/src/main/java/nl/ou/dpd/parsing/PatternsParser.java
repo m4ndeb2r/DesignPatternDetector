@@ -59,7 +59,8 @@ public class PatternsParser {
     private static final String RELATION_TYPE = "relationType";
     private static final String CARDINALITY_LEFT = "cardinalityLeft";
     private static final String CARDINALITY_RIGHT = "cardinalityRight";
-    private static final String DEFAULT_CARDINALITY = "1";
+
+    private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
 
     static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG = "The pattern template file '%s' could not be parsed.";
 
@@ -221,7 +222,7 @@ public class PatternsParser {
     private Cardinality getCardinality(XMLEvent event, String elementName) {
         final String elementValue = getAttributeFromEvent(event, elementName);
         if (elementValue == null) {
-            return Cardinality.valueOf(DEFAULT_CARDINALITY);
+            return DEFAULT_CARDINALITY;
         } else {
             return Cardinality.valueOf(elementValue);
         }
