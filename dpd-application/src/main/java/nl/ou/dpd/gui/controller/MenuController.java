@@ -13,11 +13,9 @@ import nl.ou.dpd.gui.model.Project;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  * A {@link Controller} for the menu of the application.

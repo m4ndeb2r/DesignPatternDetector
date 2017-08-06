@@ -16,12 +16,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.SAXException;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
@@ -34,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static nl.ou.dpd.parsing.PatternsParser.PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
@@ -68,19 +66,6 @@ public class PatternsParserTest {
             patternsEvent, patternEvent, notesEvent, noteEvent, nodesEvent,
             concreteClassNodeEvent, interfaceNodeEvent, relationsEvent, relationEvent,
             interfaceRuleEvent, concreteClassRuleEvent, inheritanceRuleEvent;
-
-    @Mock
-    private StartElement
-            nodesStartElement, concreteClassNodeStartElement,
-            interfaceNodeStartElement, relationsStartElement, relationStartElement,
-            interfaceRuleStartElement, concreteClassRuleStartElement, inheritanceRuleStartElement;
-
-    @Mock
-    private Iterator
-            concreteClassAttributeIterator,
-            interfaceAttributeIterator, relationAttributeIterator,
-            interfaceRuleAttributeIterator, concreteClassRuleAttributeIterator,
-            inheritanceRuleAttributeIterator;
 
     @Mock
     private Schema schema;
@@ -221,7 +206,7 @@ public class PatternsParserTest {
         // We expect the parser to throw a ParseException, caused by a SAXException
         thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXException.class));
-        thrown.expectMessage(String.format("The pattern template file '%s' could not be parsed.", xmlFile));
+        thrown.expectMessage(String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG, xmlFile));
 
         patternsParser.parse(xmlFile);
     }
@@ -234,7 +219,7 @@ public class PatternsParserTest {
         // We expect the arbitrary exception to be mapped to a ParseException
         thrown.expect(ParseException.class);
         thrown.expectCause(is(NullPointerException.class));
-        thrown.expectMessage(String.format("The pattern template file '%s' could not be parsed.", xmlFile));
+        thrown.expectMessage(String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG, xmlFile));
 
         patternsParser.parse(xmlFile);
     }

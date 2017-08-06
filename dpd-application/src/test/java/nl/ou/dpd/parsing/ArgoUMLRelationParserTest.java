@@ -27,19 +27,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ABSTRACTION;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ASSOCIATION;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ASSOCIATION_END;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IDREF;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_NAVIGABLE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.LOWER;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MULTIPLICITY_RANGE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.NAME;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.UPPER;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_MSG;
 import static nl.ou.dpd.parsing.ArgoUMLRelationParser.REVERSED_POSTFIX;
 import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
@@ -58,6 +45,24 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ArgoUMLRelationParserTest {
 
+    // XMI tags
+    private static final String MODEL = "Model";
+    private static final String CLASS ="Class";
+    private static final String INTERFACE = "Interface";
+    private static final String ABSTRACTION = "Abstraction";
+    private static final String ASSOCIATION = "Association";
+    private static final String ASSOCIATION_END = "AssociationEnd";
+    private static final String MULTIPLICITY_RANGE = "MultiplicityRange";
+
+    // XMI attributes
+    private static final String ID = "xmi.id";
+    private static final String NAME = "name";
+    private static final String LOWER = "lower";
+    private static final String UPPER = "upper";
+    private static final String IDREF = "xmi.idref";
+    private static final String IS_NAVIGABLE = "isNavigable";
+
+    // Id's in tests
     private static final String CLASS_ID = "classId";
     private static final String MODEL_ID = "modelId";
     private static final String CLASS_NAME = "className";

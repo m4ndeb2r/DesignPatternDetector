@@ -26,32 +26,23 @@ import java.util.Stack;
 public abstract class ArgoUMLAbstractParser {
 
     //attributes of the XMI used in the parser
-    protected static final String NAME = "name";
     protected static final String ID = "xmi.id";
-    protected static final String IDREF = "xmi.idref";
-    protected static final String VISIBILITY = "visibility";
-    protected static final String IS_ABSTRACT = "isAbstract";
+    protected static final String NAME = "name";
     protected static final String HREF = "href";
     protected static final String KIND = "kind";
     protected static final String INPUT = "in";
-    protected static final String LOWER = "lower";
-    protected static final String UPPER = "upper";
+    protected static final String IDREF = "xmi.idref";
+    protected static final String VISIBILITY = "visibility";
+    protected static final String IS_ABSTRACT = "isAbstract";
     protected static final String IS_NAVIGABLE = "isNavigable";
 
     //tags of the XMI used in the parser
     protected static final String MODEL = "Model";
     protected static final String CLASS = "Class";
+    protected static final String DATATYPE = "DataType";
     protected static final String INTERFACE = "Interface";
     protected static final String ATTRIBUTE = "Attribute";
-    protected static final String DATATYPE = "DataType";
-    protected static final String OPERATION = "Operation";
-    protected static final String PARAMETER = "Parameter";
-    protected static final String ASSOCIATION = "Association";
-    protected static final String ASSOCIATION_END = "AssociationEnd";
-    protected static final String MULTIPLICITY_RANGE = "MultiplicityRange";
-    protected static final String ABSTRACTION = "Abstraction";
     protected static final String DEPENDENCY = "Dependency";
-    protected static final String GENERALIZATION = "Generalization";
 
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLAbstractParser.class);
 

@@ -38,11 +38,15 @@ import java.util.Set;
 public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLNodeParser.class);
 
-    //Datatype xmi.id endings
-    static final String STRING = "87E";
-    static final String INTEGER = "87C";
-    static final String UNLIMITED_INTEGER = "87D";
-    static final String BOOLEAN = "880";
+    // Datatype xmi.id endings
+    private static final String STRING = "87E";
+    private static final String INTEGER = "87C";
+    private static final String UNLIMITED_INTEGER = "87D";
+    private static final String BOOLEAN = "880";
+
+    // XMI tags
+    private static final String OPERATION = "Operation";
+    private static final String PARAMETER = "Parameter";
 
     private static final Map<String, String> typeMap = new HashMap<>();
     static {

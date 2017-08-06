@@ -2,9 +2,6 @@ package nl.ou.dpd.gui.controller;
 
 import nl.ou.dpd.gui.model.Model;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 /**
  * A {@link Controller} for the main view of the application.
  *

@@ -23,20 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static junit.framework.TestCase.fail;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ATTRIBUTE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.CLASS;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.DATATYPE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.ID;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IDREF;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INPUT;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.INTERFACE;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.IS_ABSTRACT;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.KIND;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.MODEL;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.OPERATION;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.PARAMETER;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_MSG;
-import static nl.ou.dpd.parsing.ArgoUMLNodeParser.INTEGER;
 import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -52,15 +39,32 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ArgoUMLNodeParserTest {
 
+    // XMI attributes
+    private static final String ID = "xmi.id";
+    private static final String KIND = "kind";
+    private static final String IDREF = "xmi.idref";
+    private static final String INPUT = "in";
+    private static final String RETURN_VALUE_TYPE = "return";
+
+    // XMI tags
+    private static final String MODEL = "Model";
+    private static final String CLASS = "Class";
+    private static final String INTEGER = "87C";
+    private static final String DATATYPE = "DataType";
+    private static final String ATTRIBUTE = "Attribute";
+    private static final String INTERFACE = "Interface";
+    private static final String OPERATION = "Operation";
+    private static final String PARAMETER = "Parameter";
+    private static final String IS_ABSTRACT = "isAbstract";
     private static final String INTEGER_HREF = String.format(".......%s", INTEGER);
 
+    // Id's in the tests
     private static final String OPERATION_ID = "operationId";
     private static final String ATTRIBUTE_ID = "attributeId";
     private static final String CLASS_NODE_ID = "classNodeId";
     private static final String PARAMETER_ID_1 = "parameterId1";
     private static final String PARAMETER_ID_2 = "parameterId2";
     private static final String RETURN_TYPE_ID = "returnTypeId";
-    private static final String RETURN_VALUE_TYPE = "return";
     private static final String INTERFACE_NODE_ID = "interfaceNodeId";
     private static final String ABSTRACT_CLASS_NODE_ID = "abstractClassNodeId";
 

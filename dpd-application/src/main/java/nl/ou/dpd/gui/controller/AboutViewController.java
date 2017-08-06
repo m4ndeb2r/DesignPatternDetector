@@ -41,8 +41,6 @@ public class AboutViewController extends Controller {
 
     @FXML
     private Label aboutDescriptionLabel;
-    @FXML
-    private GridPane aboutApplicationGridPane;
 
     @FXML
     private Label aboutContributersSubtitle;

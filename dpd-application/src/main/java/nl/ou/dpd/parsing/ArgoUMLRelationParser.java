@@ -37,6 +37,17 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
 
     static final String REVERSED_POSTFIX = "-reversed";
 
+    // XMI tags
+    private static final String ASSOCIATION = "Association";
+    private static final String ABSTRACTION = "Abstraction";
+    private static final String GENERALIZATION = "Generalization";
+    private static final String ASSOCIATION_END = "AssociationEnd";
+    private static final String MULTIPLICITY_RANGE = "MultiplicityRange";
+
+    // XMI attributes
+    private static final String LOWER = "lower";
+    private static final String UPPER = "upper";
+
     private static final Map<String, RelationType> RELATION_TYPE_BY_STRING_MAP = new HashMap<>();
     static {
         RELATION_TYPE_BY_STRING_MAP.put(ATTRIBUTE, RelationType.HAS_ATTRIBUTE_OF);

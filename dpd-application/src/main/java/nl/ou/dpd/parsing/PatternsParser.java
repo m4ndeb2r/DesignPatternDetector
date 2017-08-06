@@ -65,6 +65,8 @@ public class PatternsParser {
     private static final String CARDINALITY_RIGHT = "cardinalityRight";
     private static final String DEFAULT_CARDINALITY = "1";
 
+    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG = "The pattern template file '%s' could not be parsed.";
+
     private List<DesignPattern> designPatterns = new ArrayList<>();
     private DesignPattern designPattern;
     private Set<Node> nodes;
@@ -102,7 +104,7 @@ public class PatternsParser {
             // Rethrow ParseExceptions directly
             throw pe;
         } catch (Exception e) {
-            final String message = String.format("The pattern template file '%s' could not be parsed.", xmlFilename);
+            final String message = String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG, xmlFilename);
             error(message, e);
         }
         return designPatterns;
