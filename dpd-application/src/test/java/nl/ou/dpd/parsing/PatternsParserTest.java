@@ -70,12 +70,12 @@ public class PatternsParserTest {
     private static final String CARDINALITY_LEFT_ATTRIBUTE = "cardinalityLeft";
 
     // Test values
-    private static final String AN_INTERFACE = "anInterface";
     private static final String A_NOTE_VALUE = "A nice note";
     private static final String A_PATTERN_NAME = "aPatternName";
-    private static final String A_PATTERN_FAMILY = "aPatternFamily";
+    private static final String AN_INTERFACE_ID = "anInterfaceId";
     private static final String A_CONCRETE_CLASS_ID = "aConcreteClassId";
     private static final String A_CONCRETE_CLASS_NAME = "aConcreteClassName";
+    private static final String A_PATTERN_FAMILY_NAME = "aPatternFamily";
 
     private static final Cardinality CARDINALITY_1_UNLIMITED = Cardinality.valueOf("1..*");
     private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
@@ -173,7 +173,7 @@ public class PatternsParserTest {
         patternEvent = ParseTestHelper.createXMLEventMock(
                 PATTERN_TAG,
                 ParseTestHelper.createAttributeMock(NAME_ATTRIBUTE, A_PATTERN_NAME),
-                ParseTestHelper.createAttributeMock(FAMILY_ATTRIBUTE, A_PATTERN_FAMILY)
+                ParseTestHelper.createAttributeMock(FAMILY_ATTRIBUTE, A_PATTERN_FAMILY_NAME)
         );
     }
 
@@ -201,7 +201,7 @@ public class PatternsParserTest {
         // An interface node + rule
         interfaceNodeEvent = ParseTestHelper.createXMLEventMock(
                 NODE_TAG,
-                ParseTestHelper.createAttributeMock(ID_ATTRIBUTE, AN_INTERFACE)
+                ParseTestHelper.createAttributeMock(ID_ATTRIBUTE, AN_INTERFACE_ID)
         );
         interfaceRuleEvent = ParseTestHelper.createXMLEventMock(
                 NODE_RULE_TAG,
@@ -217,7 +217,7 @@ public class PatternsParserTest {
         relationEvent = ParseTestHelper.createXMLEventMock(
                 RELATION_TAG,
                 ParseTestHelper.createAttributeMock(NODE_1_ATTRIBUTE, A_CONCRETE_CLASS_ID),
-                ParseTestHelper.createAttributeMock(NODE_2_ATTRIBUTE, AN_INTERFACE)
+                ParseTestHelper.createAttributeMock(NODE_2_ATTRIBUTE, AN_INTERFACE_ID)
         );
         inheritanceRuleEvent = ParseTestHelper.createXMLEventMock(
                 RELATION_RULE_TAG,
@@ -278,7 +278,7 @@ public class PatternsParserTest {
 
         final DesignPattern designPattern = designPatterns.get(0);
         assertThat(designPattern.getName(), is(A_PATTERN_NAME));
-        assertThat(designPattern.getFamily(), is(A_PATTERN_FAMILY));
+        assertThat(designPattern.getFamily(), is(A_PATTERN_FAMILY_NAME));
 
         final Set<String> notes = designPattern.getNotes();
         assertThat(designPatterns.size(), is(1));
@@ -296,7 +296,7 @@ public class PatternsParserTest {
         assertThat(concreteClassNode.getTypes().iterator().next(), is(CONCRETE_CLASS));
 
         final Node interfaceNode = nodeIterator.next();
-        assertThat(interfaceNode.getId(), is(AN_INTERFACE));
+        assertThat(interfaceNode.getId(), is(AN_INTERFACE_ID));
         assertThat(interfaceNode.getTypes().size(), is(1));
         assertThat(interfaceNode.getTypes().iterator().next(), is(INTERFACE));
 
@@ -305,8 +305,8 @@ public class PatternsParserTest {
         assertThat(relationSet.size(), is(1));
 
         final Relation relation = relationIterator.next();
-        assertThat(relation.getId(), is(String.format("%s-%s", A_CONCRETE_CLASS_NAME, AN_INTERFACE)));
-        assertThat(relation.getName(), is(String.format("%s-%s", A_CONCRETE_CLASS_NAME, AN_INTERFACE)));
+        assertThat(relation.getId(), is(String.format("%s-%s", A_CONCRETE_CLASS_NAME, AN_INTERFACE_ID)));
+        assertThat(relation.getName(), is(String.format("%s-%s", A_CONCRETE_CLASS_NAME, AN_INTERFACE_ID)));
 
         final Set<RelationProperty> relationProperties = relation.getRelationProperties();
         assertThat(relationProperties.size(), is(1));
