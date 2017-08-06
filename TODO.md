@@ -8,7 +8,7 @@
 
 ## TODO: testing
 * More extensive testing in integration tests (solutions/feedback)
-* Disable System.out.println in integration test. 
+* Remove code smells form integration tests. 
 * Get rid of @Ignore annotations (ChainOfResponsibilityMatchingTest for example)
 
 ## Other (final) project deliverables
