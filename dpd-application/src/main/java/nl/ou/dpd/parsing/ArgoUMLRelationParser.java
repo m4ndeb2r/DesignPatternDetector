@@ -14,8 +14,10 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -48,12 +50,12 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private static final String LOWER_ATTRIBUTE = "lower";
     private static final String UPPER_ATTRIBUTE = "upper";
 
-    private static final Map<String, RelationType> RELATION_TYPE_BY_STRING_MAP = new HashMap<>();
+    private static final Map<String, Set<RelationType>> RELATION_TYPE_BY_STRING_MAP = new HashMap<>();
     static {
-        RELATION_TYPE_BY_STRING_MAP.put(ATTRIBUTE_TAG, RelationType.HAS_ATTRIBUTE_OF);
-        RELATION_TYPE_BY_STRING_MAP.put(ASSOCIATION_TAG, RelationType.ASSOCIATES_WITH);
-        RELATION_TYPE_BY_STRING_MAP.put(ABSTRACTION_TAG, RelationType.IMPLEMENTS);
-        RELATION_TYPE_BY_STRING_MAP.put(GENERALIZATION_TAG, RelationType.INHERITS_FROM);
+        RELATION_TYPE_BY_STRING_MAP.put(ATTRIBUTE_TAG, new HashSet<>(Arrays.asList(RelationType.HAS_ATTRIBUTE_OF)));
+        RELATION_TYPE_BY_STRING_MAP.put(ASSOCIATION_TAG, new HashSet<>(Arrays.asList(RelationType.ASSOCIATES_WITH)));
+        RELATION_TYPE_BY_STRING_MAP.put(ABSTRACTION_TAG, new HashSet<>(Arrays.asList(RelationType.IMPLEMENTS, RelationType.INHERITS_FROM_OR_IMPLEMENTS)));
+        RELATION_TYPE_BY_STRING_MAP.put(GENERALIZATION_TAG, new HashSet<>(Arrays.asList(RelationType.INHERITS_FROM, RelationType.INHERITS_FROM_OR_IMPLEMENTS)));
     }
 
     private static final List<String> eventTags = Arrays.asList(new String[]{
@@ -192,8 +194,8 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         if (lastRelation == null) {
             lastRelation = createIncompleteRelation(id, name);
         }
-        final RelationType rt = findRelationTypeByString(getStartElementNameLocalPart(event));
-        lastRelation.getRelationProperties().add(new RelationProperty(rt));
+        final Set<RelationType> rts = findRelationTypesByString(getStartElementNameLocalPart(event));
+  		rts.forEach(rt -> lastRelation.getRelationProperties().add(new RelationProperty(rt)));
     }
 
     /**
@@ -208,12 +210,12 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
             final String name = readAttributes(event).get(NAME_ATTRIBUTE);
             lastRelation = createIncompleteRelation(id, name);
 
-            final RelationType rt = findRelationTypeByString(getStartElementNameLocalPart(event));
-            lastRelation.getRelationProperties().add(new RelationProperty(rt));
-        }
+            final Set<RelationType> rts = findRelationTypesByString(getStartElementNameLocalPart(event));
+      		rts.forEach(rt -> lastRelation.getRelationProperties().add(new RelationProperty(rt)));
+      	}
     }
 
-    private RelationType findRelationTypeByString(String relationType) {
+    private Set<RelationType> findRelationTypesByString(String relationType) {
         return RELATION_TYPE_BY_STRING_MAP.get(relationType);
     }
 

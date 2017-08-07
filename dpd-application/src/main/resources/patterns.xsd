@@ -49,6 +49,7 @@
             <xs:enumeration value='DEPENDS_ON'/>
             <xs:enumeration value='INHERITS_FROM'/>
             <xs:enumeration value='IMPLEMENTS'/>
+            <xs:enumeration value='INHERITS_FROM_OR_IMPLEMENTS'/>
             <xs:enumeration value='HAS_ATTRIBUTE_OF'/>
             <xs:enumeration value='CREATES_INSTANCE_OF'/>
             <xs:enumeration value='HAS_METHOD_PARAMETER_OF_TYPE'/>
