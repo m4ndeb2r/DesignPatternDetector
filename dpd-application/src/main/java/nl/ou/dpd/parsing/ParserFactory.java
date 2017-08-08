@@ -12,6 +12,12 @@ import javax.xml.validation.SchemaFactory;
 public class ParserFactory {
 
     /**
+     * Private constructor, because this is a utility class.
+     */
+    private ParserFactory() {
+    }
+
+    /**
      * Creates an {@link ArgoUMLParser}, consisting of an {@link ArgoUMLNodeParser}, an {@link ArgoUMLRelationParser}
      * and a {@link SystemRelationsExtractor}.
      *
