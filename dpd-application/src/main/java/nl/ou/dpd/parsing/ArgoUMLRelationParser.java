@@ -51,6 +51,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private static final String UPPER_ATTRIBUTE = "upper";
 
     private static final Map<String, Set<RelationType>> RELATION_TYPE_BY_STRING_MAP = new HashMap<>();
+
     static {
         RELATION_TYPE_BY_STRING_MAP.put(ATTRIBUTE_TAG, new HashSet<>(Arrays.asList(RelationType.HAS_ATTRIBUTE_OF)));
         RELATION_TYPE_BY_STRING_MAP.put(ASSOCIATION_TAG, new HashSet<>(Arrays.asList(RelationType.ASSOCIATES_WITH)));
@@ -195,7 +196,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
             lastRelation = createIncompleteRelation(id, name);
         }
         final Set<RelationType> rts = findRelationTypesByString(getStartElementNameLocalPart(event));
-  		rts.forEach(rt -> lastRelation.getRelationProperties().add(new RelationProperty(rt)));
+        rts.forEach(rt -> lastRelation.getRelationProperties().add(new RelationProperty(rt)));
     }
 
     /**
@@ -211,8 +212,8 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
             lastRelation = createIncompleteRelation(id, name);
 
             final Set<RelationType> rts = findRelationTypesByString(getStartElementNameLocalPart(event));
-      		rts.forEach(rt -> lastRelation.getRelationProperties().add(new RelationProperty(rt)));
-      	}
+            rts.forEach(rt -> lastRelation.getRelationProperties().add(new RelationProperty(rt)));
+        }
     }
 
     private Set<RelationType> findRelationTypesByString(String relationType) {
@@ -239,11 +240,11 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
         if (CLASS_TAG.equals(getParentElementNameLocalPart())) {
             final String id = readAttributes(event).get(ID_ATTRIBUTE);
             final String name = readAttributes(event).get(NAME_ATTRIBUTE);
-	        if (id != null && findSystemRelationById(id) == null) {
-		        //create an incomplete relation if the relation does not exist yet
-		        lastRelation = createIncompleteRelation(id, name);
-		        lastRelation.getRelationProperties().add(new RelationProperty(RelationType.DEPENDS_ON));
-	        }
+            if (id != null && findSystemRelationById(id) == null) {
+                //create an incomplete relation if the relation does not exist yet
+                lastRelation = createIncompleteRelation(id, name);
+                lastRelation.getRelationProperties().add(new RelationProperty(RelationType.DEPENDS_ON));
+            }
         }
     }
 
@@ -333,7 +334,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
     private Relation createReverseAssociation(Relation originalRelation, Node originalSourceNode, Node originalTargetNode) {
         final Relation relation = new Relation(originalRelation.getId() + REVERSED_POSTFIX, null);
         if (originalRelation.getName() != null) {
-        	relation.setName(originalRelation.getName() + REVERSED_POSTFIX);
+            relation.setName(originalRelation.getName() + REVERSED_POSTFIX);
         }
         final RelationProperty originalRelationProperty = findRelationPropertyByType(originalRelation, RelationType.ASSOCIATES_WITH);
         final RelationProperty relationProperty = new RelationProperty(

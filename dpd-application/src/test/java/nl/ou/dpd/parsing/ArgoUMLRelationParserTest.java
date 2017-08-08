@@ -6,7 +6,7 @@ import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
-import org.hamcrest.Matchers;
+import org.hamcrest.core.AnyOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,11 +27,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import static nl.ou.dpd.domain.relation.RelationType.ASSOCIATES_WITH;
+import static nl.ou.dpd.domain.relation.RelationType.IMPLEMENTS;
+import static nl.ou.dpd.domain.relation.RelationType.INHERITS_FROM_OR_IMPLEMENTS;
 import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_MSG;
 import static nl.ou.dpd.parsing.ArgoUMLRelationParser.REVERSED_POSTFIX;
 import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -47,7 +52,7 @@ public class ArgoUMLRelationParserTest {
 
     // XMI tags
     private static final String MODEL_TAG = "Model";
-    private static final String CLASS_TAG ="Class";
+    private static final String CLASS_TAG = "Class";
     private static final String INTERFACE_TAG = "Interface";
     private static final String ABSTRACTION_TAG = "Abstraction";
     private static final String ASSOCIATION_TAG = "Association";
@@ -242,59 +247,66 @@ public class ArgoUMLRelationParserTest {
         // Check the first relation: an association from an interface (source) to a class (target) with a multiplicity
         // of 0..-1.
         final Relation association = setToMap(system.edgeSet()).get(ASSOCIATION_ID);
-        final RelationProperty associationProperty = association.getRelationProperties().iterator().next();
+        final Iterator<RelationProperty> associationPropertyIterator = association.getRelationProperties().iterator();
+        assertTrue(associationPropertyIterator.hasNext());
+        final RelationProperty associationProperty = associationPropertyIterator.next();
+        assertFalse(associationPropertyIterator.hasNext());
 
         assertThat(system.getEdgeSource(association).getId(), is(INTERFACE_ID));
         assertThat(system.getEdgeSource(association).getName(), is(INTERFACE_NAME));
         assertThat(system.getEdgeTarget(association).getId(), is(CLASS_ID));
         assertThat(system.getEdgeTarget(association).getName(), is(CLASS_NAME));
         assertThat(association.getId(), is(ASSOCIATION_ID));
-        assertThat(association.getRelationProperties().size(), is(1));
 
-        assertThat(associationProperty.getRelationType(), is(RelationType.ASSOCIATES_WITH));
+        assertThat(associationProperty.getRelationType(), is(ASSOCIATES_WITH));
         assertThat(associationProperty.getCardinalityLeft(), is(CARDINALITY_1));
         assertThat(associationProperty.getCardinalityRight(), is(Cardinality.valueOf("*")));
 
         // Check the second relation: a reversed association (reversed version of the first relation) combined with an
         // abstraction.
-        final Relation associationReversed = setToMap(system.edgeSet()).get(ASSOCIATION_ID + REVERSED_POSTFIX);
+        final Relation associationReversed = setToMap(system.edgeSet()).get(String.format("%s%s", ASSOCIATION_ID, REVERSED_POSTFIX));
         final Iterator<RelationProperty> relationPropertyIterator = associationReversed.getRelationProperties().iterator();
+        assertTrue(relationPropertyIterator.hasNext());
         final RelationProperty firstProperty = relationPropertyIterator.next();
+        assertTrue(relationPropertyIterator.hasNext());
         final RelationProperty secondProperty = relationPropertyIterator.next();
+        assertTrue(relationPropertyIterator.hasNext());
         final RelationProperty thirdProperty = relationPropertyIterator.next();
+        assertFalse(relationPropertyIterator.hasNext());
 
-        assertThat(system.getEdgeTarget(associationReversed).getId(), is("interfaceId"));
-        assertThat(system.getEdgeSource(associationReversed).getId(), is("classId"));
-        assertThat(associationReversed.getId(), is("associationId-reversed"));
-        assertThat(associationReversed.getRelationProperties().size(), is(3));
+        assertThat(system.getEdgeTarget(associationReversed).getId(), is(INTERFACE_ID));
+        assertThat(system.getEdgeSource(associationReversed).getId(), is(CLASS_ID));
+        assertThat(associationReversed.getId(), is(String.format("%s%s", ASSOCIATION_ID, REVERSED_POSTFIX)));
 
-        assertThat(firstProperty.getRelationType(), Matchers.anyOf(is(RelationType.ASSOCIATES_WITH), is(RelationType.IMPLEMENTS), is(RelationType.INHERITS_FROM_OR_IMPLEMENTS)));
-        assertThat(secondProperty.getRelationType(), Matchers.anyOf(is(RelationType.ASSOCIATES_WITH), is(RelationType.IMPLEMENTS), is(RelationType.INHERITS_FROM_OR_IMPLEMENTS)));
-        assertThat(thirdProperty.getRelationType(), Matchers.anyOf(is(RelationType.ASSOCIATES_WITH), is(RelationType.IMPLEMENTS), is(RelationType.INHERITS_FROM_OR_IMPLEMENTS)));
+        final RelationType firstRelationType = firstProperty.getRelationType();
+        final RelationType secondRelationType = secondProperty.getRelationType();
+        final RelationType thirdRelationType = thirdProperty.getRelationType();
 
-        if((firstProperty.getRelationType() == RelationType.ASSOCIATES_WITH 
-        		&& secondProperty.getRelationType() == RelationType.IMPLEMENTS)
-        		|| (secondProperty.getRelationType() == RelationType.ASSOCIATES_WITH
-        		&& firstProperty.getRelationType() == RelationType.IMPLEMENTS)) {
-            assertThat(thirdProperty.getRelationType(), is(RelationType.INHERITS_FROM_OR_IMPLEMENTS));
-            assertThat(thirdProperty.getCardinalityLeft(), is(Cardinality.valueOf("1")));
-            assertThat(thirdProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        final AnyOf<RelationType> isExpectedRelationType = anyOf(
+                is(ASSOCIATES_WITH),
+                is(IMPLEMENTS),
+                is(INHERITS_FROM_OR_IMPLEMENTS));
+        assertThat(firstRelationType, isExpectedRelationType);
+        assertThat(secondRelationType, isExpectedRelationType);
+        assertThat(thirdRelationType, isExpectedRelationType);
+
+        if ((firstRelationType == ASSOCIATES_WITH && secondRelationType == IMPLEMENTS)
+                || (secondRelationType == ASSOCIATES_WITH && firstRelationType == IMPLEMENTS)) {
+            assertThat(thirdRelationType, is(INHERITS_FROM_OR_IMPLEMENTS));
+            assertThat(thirdProperty.getCardinalityLeft(), is(CARDINALITY_1));
+            assertThat(thirdProperty.getCardinalityRight(), is(CARDINALITY_1));
         }
 
-        if((firstProperty.getRelationType() == RelationType.INHERITS_FROM_OR_IMPLEMENTS 
-        		&& secondProperty.getRelationType() == RelationType.IMPLEMENTS)
-        		|| (secondProperty.getRelationType() == RelationType.INHERITS_FROM_OR_IMPLEMENTS
-        		&& firstProperty.getRelationType() == RelationType.IMPLEMENTS)) {
-            assertThat(thirdProperty.getRelationType(), is(RelationType.ASSOCIATES_WITH));
+        if ((firstRelationType == INHERITS_FROM_OR_IMPLEMENTS && secondRelationType == IMPLEMENTS)
+                || (secondRelationType == INHERITS_FROM_OR_IMPLEMENTS && firstRelationType == IMPLEMENTS)) {
+            assertThat(thirdRelationType, is(ASSOCIATES_WITH));
             assertThat(associationProperty.getCardinalityLeft(), is(CARDINALITY_1));
             assertThat(associationProperty.getCardinalityRight(), is(Cardinality.valueOf("*")));
         }
 
-        if((firstProperty.getRelationType() == RelationType.INHERITS_FROM_OR_IMPLEMENTS 
-        		&& secondProperty.getRelationType() == RelationType.ASSOCIATES_WITH)
-        		|| (secondProperty.getRelationType() == RelationType.INHERITS_FROM_OR_IMPLEMENTS
-        		&& firstProperty.getRelationType() == RelationType.ASSOCIATES_WITH)) {
-            assertThat(thirdProperty.getRelationType(), is(RelationType.IMPLEMENTS));
+        if ((firstRelationType == INHERITS_FROM_OR_IMPLEMENTS && secondRelationType == ASSOCIATES_WITH)
+                || (secondRelationType == INHERITS_FROM_OR_IMPLEMENTS && firstRelationType == ASSOCIATES_WITH)) {
+            assertThat(thirdRelationType, is(IMPLEMENTS));
             assertThat(associationProperty.getCardinalityLeft(), is(CARDINALITY_1));
             assertThat(associationProperty.getCardinalityRight(), is(Cardinality.valueOf("*")));
         }
