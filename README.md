@@ -33,24 +33,24 @@ To run the integration tests, in the dpd-integration-test directory, run:
 
 or:
 
-`$mvn clean integration-test`
+`$ mvn clean integration-test`
 
 or:
 
-`$mvn clean test`
+`$ mvn clean test`
 
 To run all tests, in the root directory of the project, run:
 
-`$mvn clean test`
+`$ mvn clean test`
 
 To run all tests, build and package the application jar, in the root directory of the project, run:
 
-`$mvn clean install`
+`$ mvn clean install`
 
 To run the unit tests (and skip the integration tests), build and package the application jar, in the dpd-application 
 directory, run:
 
-`$mvn clean install`
+`$ mvn clean install`
 
 ### How to run the application
 After building and packaging the application, go to the dpd-application directory of the project, and enter:
@@ -89,5 +89,7 @@ Besides detecting patterns in UML, we foresee:
 Build tool: Maven 3.3.9 (Bundled with IntelliJ)
 
 Compiler: jdk1.8.0_121
+
+IntelliJ IDEA 2017.x
 
 JavaFX SceneBuilder 2.0
