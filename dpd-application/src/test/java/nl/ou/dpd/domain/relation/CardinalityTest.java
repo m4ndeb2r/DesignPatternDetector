@@ -86,6 +86,9 @@ public class CardinalityTest {
     @Test
     public void testValueOfTooManyArgs() {
         testValueOfWithIllegalValue("1..2..3");
+        testValueOfWithIllegalValue("1,2..3");
+        testValueOfWithIllegalValue("1,2,3");
+        testValueOfWithIllegalValue("1..2,3");
     }
 
     @Test
