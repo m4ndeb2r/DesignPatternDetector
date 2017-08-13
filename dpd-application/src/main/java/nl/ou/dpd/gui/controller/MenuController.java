@@ -25,12 +25,6 @@ import java.util.Optional;
 public class MenuController extends Controller implements Observer {
 
     @FXML
-    private MenuItem newProject;
-
-    @FXML
-    private MenuItem openProject;
-
-    @FXML
     private Menu recentProjectsMenu;
 
     @FXML
@@ -41,15 +35,6 @@ public class MenuController extends Controller implements Observer {
 
     @FXML
     private MenuItem closeProject;
-
-    @FXML
-    private MenuItem exit;
-
-    @FXML
-    private MenuItem help;
-
-    @FXML
-    private MenuItem about;
 
     /**
      * Constructs a {@link MenuController} with the specified {@link Model}.
@@ -204,14 +189,6 @@ public class MenuController extends Controller implements Observer {
     @FXML
     protected void helpAction(ActionEvent event) {
         getModel().showHelpWindow();
-    }
-
-    private void showNotImplementedAlert(String function) {
-        Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setHeaderText("Not implemented yet: " + function);
-        alert.setContentText("This function will be implemented in a future version of the application. Our apologies for the inconvenience.");
-        alert.showAndWait();
     }
 
     /**
