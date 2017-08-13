@@ -130,8 +130,8 @@ public class CardinalityTest {
         assertIsWithinLimitsOf("*", "1..*", false);
         assertIsWithinLimitsOf("1..*", "1..999", false);
         assertIsWithinLimitsOf("5..*", "6..*", false);
-        assertIsWithinLimitsOf("5..8", "6..7", false);
-        assertIsWithinLimitsOf("5..8", "15..18", false);
+        assertIsWithinLimitsOf("5..8", "6,7", false);
+        assertIsWithinLimitsOf("5,8", "15..18", false);
     }
 
     private void assertIsWithinLimitsOf(String c1, String c2, boolean expect) {
@@ -160,10 +160,13 @@ public class CardinalityTest {
 
     @Test
     public void testEquals() {
-        Cardinality c = Cardinality.valueOf("*");
+        final Cardinality c = Cardinality.valueOf("*");
         assertTrue(c.equals(c));
         assertTrue(c.equals(Cardinality.valueOf("*")));
         assertFalse(c.equals(null));
+
+        assertTrue(Cardinality.valueOf("1,3").equals(Cardinality.valueOf("1..3")));
+        assertTrue(Cardinality.valueOf("1..*").equals(Cardinality.valueOf("1,*")));
     }
 
 }
