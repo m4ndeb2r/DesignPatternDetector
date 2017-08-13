@@ -110,10 +110,8 @@ public class Node implements SignatureComparable<Node> {
         if (!nullSafeEquals(name, other.name)) return false;
         if (!nullSafeEquals(types, other.types)) return false;
         if (!nullSafeEquals(visibility, other.visibility)) return false;
-        if (!equalsAttributesSignatures(attributes, other.attributes))
-            return false;
-        if (!equalsOperationsSignatures(operations, other.operations))
-            return false;
+        if (!equalsAttributesSignatures(attributes, other.attributes)) return false;
+        if (!equalsOperationsSignatures(operations, other.operations)) return false;
         return true;
     }
 
@@ -130,5 +128,5 @@ public class Node implements SignatureComparable<Node> {
         }
         return sourceOperations.stream().allMatch(op1 -> targetOperations.stream().anyMatch(op2 -> op1.equalsSignature(op2)));
     }
-    
+
 }
