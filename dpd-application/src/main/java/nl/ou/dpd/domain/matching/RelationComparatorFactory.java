@@ -23,6 +23,12 @@ public class RelationComparatorFactory {
     protected static final String MISMATCH_UNEXPECTED_RIGHT_CARDINALITY_MSG = "Mismatch with '%s': unexpected right cardinality '%s' in relation '%s'.";
 
     /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
+    private RelationComparatorFactory() {
+    }
+
+    /**
      * Creates a {@link CompoundRelationComparator} containing all the available sub comparators for {@link Relation}s.
      *
      * @return the created {@link CompoundRelationComparator}.

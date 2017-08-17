@@ -18,6 +18,12 @@ public class NodeComparatorFactory {
     protected static final String MISMATCH_MISSING_NODE_TYPE_MSG = "Mismatch with '%s': missing node type '%s' in '%s'.";
 
     /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
+    private NodeComparatorFactory() {
+    }
+
+    /**
      * Creates a {@link CompoundNodeComparator} containing all the available sub comparators for {@link Node}s.
      *
      * @return the created {@link CompoundNodeComparator}.
