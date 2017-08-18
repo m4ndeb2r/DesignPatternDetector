@@ -7,6 +7,10 @@ package nl.ou.dpd.exception;
  */
 public class DesignPatternDetectorException extends RuntimeException {
 
+    public DesignPatternDetectorException(String message) {
+        super(message);
+    }
+
     public DesignPatternDetectorException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -14,7 +14,6 @@ import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.matching.PatternInspector;
 import nl.ou.dpd.exception.DesignPatternDetectorException;
-import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
 import nl.ou.dpd.parsing.ArgoUMLParser;
 import nl.ou.dpd.parsing.ParserFactory;
 import nl.ou.dpd.parsing.PatternsParser;
@@ -39,10 +38,13 @@ public class Model extends Observable {
 
     private static final Logger LOGGER = LogManager.getLogger(Model.class);
 
-    private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
-    private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
-    private static final String ABOUTVIEW_FXML = "fxml/aboutview.fxml";
     private static final String HELPVIEW_FXML = "fxml/helpview.fxml";
+    private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
+    private static final String ABOUTVIEW_FXML = "fxml/aboutview.fxml";
+    private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
+
+    private static final String NO_CONTROLLER_ERR_MSG = "Initialization error. No controller factory was set in model.";
+    private static final String UNABLE_TO_OPEN_RESOURCE_MSG = "Unable to open resource '%s'.";
 
     private final RetentionFileChooser fileChooser;
     private Scene scene;
@@ -56,8 +58,17 @@ public class Model extends Observable {
      */
     public Model(Scene scene) {
         this.scene = scene;
-        this.controllerFactory = ControllerFactoryCreator.createControllerFactory(this);
         this.fileChooser = new RetentionFileChooser(new FileChooser());
+    }
+
+    /**
+     * Sets the controller factory for this model. A controller factory is {@link Callback} object that is used
+     * by the {@link FXMLLoader} to determine the controller object when loading a view.
+     *
+     * @param controllerFactory the {@link Callback} object used for determining the appropriate controller(s)
+     */
+    public void setControllerFactory(Callback<Class<?>, Object> controllerFactory) {
+        this.controllerFactory = controllerFactory;
     }
 
     /**
@@ -274,13 +285,16 @@ public class Model extends Observable {
     }
 
     private Parent loadParentFromResource(String resource) {
+        if (controllerFactory == null) {
+            throw new DesignPatternDetectorException(NO_CONTROLLER_ERR_MSG);
+        }
         try {
             final URL location = getClass().getClassLoader().getResource(resource);
             final FXMLLoader loader = new FXMLLoader(location);
             loader.setControllerFactory(controllerFactory);
             return (Parent) loader.load();
         } catch (Exception e) {
-            final String msg = String.format("Unable to open resource '%s'.", resource);
+            final String msg = String.format(UNABLE_TO_OPEN_RESOURCE_MSG, resource);
             LOGGER.error(msg, e);
             throw new DesignPatternDetectorException(msg, e);
         }
