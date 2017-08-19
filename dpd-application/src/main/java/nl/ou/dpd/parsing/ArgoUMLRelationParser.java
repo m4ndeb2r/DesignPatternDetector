@@ -89,7 +89,7 @@ public class ArgoUMLRelationParser extends ArgoUMLAbstractParser {
      * @param nodes    the nodes that were parsed previously by the {@link ArgoUMLNodeParser}.
      * @return a new {@link SystemUnderConsideration}.
      */
-    public SystemUnderConsideration parse(String filename, Map<String, Node> nodes) {
+    SystemUnderConsideration parse(String filename, Map<String, Node> nodes) {
         initParse(nodes);
         doParse(filename);
         LOGGER.info(String.format("Parsed %d relations from '%s'.", system.edgeSet().size(), filename));

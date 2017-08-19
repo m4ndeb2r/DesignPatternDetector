@@ -81,7 +81,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * @return a map of {@link Node}s including attributes and operations. The key is represented by the node id, the
      * value is represented by the node itself.
      */
-    public Map<String, Node> parse(String filename) {
+    Map<String, Node> parse(String filename) {
         this.nodes = new HashMap<>();
         doParse(filename);
         LOGGER.info(String.format("Parsed %d nodes from %s.", nodes.size(), filename));

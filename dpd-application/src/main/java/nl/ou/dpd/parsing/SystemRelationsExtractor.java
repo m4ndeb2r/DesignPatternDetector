@@ -29,13 +29,13 @@ public class SystemRelationsExtractor {
     static final String SYSTEM_RELATION_PREFIX = "SystemRelation";
 
     /**
-     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * This constructor has package protected access so it can only be instantiated from within the same package (by the
      * ParserFactory or in a unit test in the same package).
      */
-    protected SystemRelationsExtractor() {
+    SystemRelationsExtractor() {
     }
 
-    public SystemUnderConsideration execute(SystemUnderConsideration system) {
+    SystemUnderConsideration execute(SystemUnderConsideration system) {
         this.system = system;
         for (Node node : system.vertexSet()) {
             exploreAttributesRelations(node);
