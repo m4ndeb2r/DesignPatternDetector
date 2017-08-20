@@ -7,7 +7,7 @@
     <groupId>nl.ou.dpd</groupId>
     <artifactId>DesignPatternDetectorParent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>0.0.10-SNAPSHOT</version>
     <organization>
         <name>Open University</name>
         <url>http://www.ou.nl</url>
@@ -43,6 +43,8 @@
         <dpd.contributors>Sylvia Stuurman[supervisor]</dpd.contributors>
         <maven.build.timestamp.format>yyMMdd_HHmm</maven.build.timestamp.format>
         <dpd.buildNumber>${maven.build.timestamp}</dpd.buildNumber>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <build>
