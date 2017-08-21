@@ -62,7 +62,8 @@ public class PatternsParser {
 
     private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
 
-    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG = "The pattern template file '%s' could not be parsed.";
+    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_LONG_MSG = "The pattern template file '%s' could not be parsed.";
+    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG = "The pattern template file could not be parsed.";
 
     private List<DesignPattern> designPatterns = new ArrayList<>();
     private DesignPattern designPattern;
@@ -101,8 +102,8 @@ public class PatternsParser {
             // Rethrow ParseExceptions directly
             throw pe;
         } catch (Exception e) {
-            final String message = String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG, xmlFilename);
-            error(message, e);
+            final String message = String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_LONG_MSG, xmlFilename);
+            error(message, PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG, e);
         }
         return designPatterns;
     }
@@ -246,9 +247,9 @@ public class PatternsParser {
         return null;
     }
 
-    private void error(String message, Exception cause) {
-        LOGGER.error(message);
-        throw new ParseException(message, cause);
+    private void error(String longMsg, String shortMsg, Exception cause) {
+        LOGGER.error(longMsg);
+        throw new ParseException(shortMsg, cause);
     }
 
 }

@@ -11,9 +11,6 @@ import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
 import nl.ou.dpd.domain.relation.RelationType;
-import nl.ou.dpd.parsing.ArgoUMLNodeParser;
-import nl.ou.dpd.parsing.ArgoUMLRelationParser;
-import nl.ou.dpd.parsing.ParseException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,6 +22,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
@@ -72,9 +70,9 @@ public class ArgoUMLRelationParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The XMI file '" + path + "' could not be parsed.");
+        thrown.expectMessage("The XMI file could not be parsed.");
 
-        nodes = argoUMLNodeParser.parse(path);
+        nodes = new HashMap<>();
         argoUMLRelationParser.parse(path, nodes);
     }
 
@@ -85,9 +83,9 @@ public class ArgoUMLRelationParserTest {
     public void testFileNotFoundException() {
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The XMI file 'missing.xml' could not be parsed.");
+        thrown.expectMessage("The XMI file could not be parsed.");
 
-        nodes = argoUMLNodeParser.parse("missing.xml");
+        nodes = new HashMap<>();
         argoUMLRelationParser.parse("missing.xml", nodes);
     }
 

@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static junit.framework.TestCase.fail;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_MSG;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG;
 import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -299,7 +299,7 @@ public class ArgoUMLNodeParserTest {
         when(interfaceEvent.asEndElement()).thenThrow(new IllegalArgumentException());
         thrown.expect(ParseException.class);
         thrown.expectCause(is(IllegalArgumentException.class));
-        thrown.expectMessage(String.format(XMI_FILE_COULD_NOT_BE_PARSED_MSG, xmiFile));
+        thrown.expectMessage(XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG);
         nodeParser.parse(xmiFile);
     }
 

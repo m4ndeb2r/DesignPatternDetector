@@ -30,7 +30,7 @@ import java.util.Set;
 import static nl.ou.dpd.domain.relation.RelationType.ASSOCIATES_WITH;
 import static nl.ou.dpd.domain.relation.RelationType.IMPLEMENTS;
 import static nl.ou.dpd.domain.relation.RelationType.INHERITS_FROM_OR_IMPLEMENTS;
-import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_MSG;
+import static nl.ou.dpd.parsing.ArgoUMLAbstractParser.XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG;
 import static nl.ou.dpd.parsing.ArgoUMLRelationParser.REVERSED_POSTFIX;
 import static nl.ou.dpd.parsing.ParseTestHelper.createAttributeMock;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -325,7 +325,7 @@ public class ArgoUMLRelationParserTest {
         when(modelEvent.asEndElement()).thenThrow(new IllegalArgumentException());
         thrown.expect(ParseException.class);
         thrown.expectCause(is(IllegalArgumentException.class));
-        thrown.expectMessage(String.format(XMI_FILE_COULD_NOT_BE_PARSED_MSG, xmiFile));
+        thrown.expectMessage(XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG);
         relationParser.parse(xmiFile, nodes);
     }
 

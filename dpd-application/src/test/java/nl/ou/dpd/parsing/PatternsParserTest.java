@@ -32,7 +32,7 @@ import java.util.Set;
 import static nl.ou.dpd.domain.node.NodeType.CONCRETE_CLASS;
 import static nl.ou.dpd.domain.node.NodeType.INTERFACE;
 import static nl.ou.dpd.domain.relation.RelationType.IMPLEMENTS;
-import static nl.ou.dpd.parsing.PatternsParser.PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG;
+import static nl.ou.dpd.parsing.PatternsParser.PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
@@ -240,7 +240,7 @@ public class PatternsParserTest {
         // We expect the parser to throw a ParseException, caused by a SAXException
         thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXException.class));
-        thrown.expectMessage(String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG, xmlFile));
+        thrown.expectMessage(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG);
 
         patternsParser.parse(xmlFile);
     }
@@ -253,7 +253,7 @@ public class PatternsParserTest {
         // We expect the arbitrary exception to be mapped to a ParseException
         thrown.expect(ParseException.class);
         thrown.expectCause(is(NullPointerException.class));
-        thrown.expectMessage(String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_MSG, xmlFile));
+        thrown.expectMessage(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG);
 
         patternsParser.parse(xmlFile);
     }

@@ -7,9 +7,6 @@ import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.node.Operation;
 import nl.ou.dpd.domain.node.Parameter;
 import nl.ou.dpd.domain.node.Visibility;
-import nl.ou.dpd.parsing.ArgoUMLNodeParser;
-import nl.ou.dpd.parsing.ParseException;
-import nl.ou.dpd.parsing.SystemRelationsExtractor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -67,7 +64,7 @@ public class ArgoUMLNodeParserTest {
         final String path = getPath(INVALID_XML);
         thrown.expect(ParseException.class);
         thrown.expectCause(is(XMLStreamException.class));
-        thrown.expectMessage("The XMI file '" + path + "' could not be parsed.");
+        thrown.expectMessage("The XMI file could not be parsed.");
         argoUMLNodeParser.parse(path);
     }
 
@@ -78,7 +75,7 @@ public class ArgoUMLNodeParserTest {
     public void testFileNotFoundException() {
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The XMI file 'missing.xml' could not be parsed.");
+        thrown.expectMessage("The XMI file could not be parsed.");
         argoUMLNodeParser.parse("missing.xml");
     }
 

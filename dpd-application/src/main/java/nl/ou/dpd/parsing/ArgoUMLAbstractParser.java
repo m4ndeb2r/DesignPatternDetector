@@ -46,7 +46,8 @@ public abstract class ArgoUMLAbstractParser {
 
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLAbstractParser.class);
 
-    static final String XMI_FILE_COULD_NOT_BE_PARSED_MSG = "The XMI file '%s' could not be parsed.";
+    static final String XMI_FILE_COULD_NOT_BE_PARSED_LONG_MSG = "The XMI file '%s' could not be parsed.";
+    static final String XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG = "The XMI file could not be parsed.";
 
     private XMLInputFactory xmlInputFactory;
 
@@ -81,8 +82,8 @@ public abstract class ArgoUMLAbstractParser {
             // Rethrow ParseExceptions directly
             throw pe;
         } catch (Exception e) {
-            String msg = String.format(XMI_FILE_COULD_NOT_BE_PARSED_MSG, filename);
-            error(msg, e);
+            String msg = String.format(XMI_FILE_COULD_NOT_BE_PARSED_LONG_MSG, filename);
+            error(msg, XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG, e);
         }
     }
 
@@ -133,8 +134,8 @@ public abstract class ArgoUMLAbstractParser {
         return event.asStartElement().getName().getLocalPart();
     }
 
-    protected void error(String msg, Exception cause) {
-        LOGGER.error(msg, cause);
-        throw new ParseException(msg, cause);
+    protected void error(String longMsg, String shortMsg, Exception cause) {
+        LOGGER.error(longMsg);
+        throw new ParseException(shortMsg, cause);
     }
 }
