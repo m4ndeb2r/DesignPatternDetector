@@ -111,7 +111,7 @@ public class SystemRelationsExtractorTest {
 
         final Relation relation = relationCaptor.getValue();
         assertThat(relation.getId(), is(String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, node1.getId(), node1Attribute.getId())));
-        assertThat(relation.getName(), is(String.format("%s-%s", node1.getName(), node1Attribute.getName())));
+        assertThat(relation.getName(), is(String.format("%s-%s (%s)", node1.getName(), node1Attribute.getType().getName(), node1Attribute.getName())));
 
         assertThat(result, is(system));
     }
@@ -150,7 +150,7 @@ public class SystemRelationsExtractorTest {
         verify(system, times(1)).addEdge(eq(node1), eq(node2), relationCaptor.capture());
         final Relation relation = relationCaptor.getValue();
         assertThat(relation.getId(), is(String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, node1.getId(), node1Operation.getId())));
-        assertThat(relation.getName(), is(String.format("%s-%s", node1.getName(), node1Operation.getName())));
+        assertThat(relation.getName(), is(String.format("%s-%s (%s)", node1.getName(), node1Operation.getReturnType().getName(), node1Operation.getName())));
 
         // Check the return value's type and cardinality properties
         final Iterator<RelationProperty> relationProperties = relation.getRelationProperties().iterator();
@@ -196,7 +196,7 @@ public class SystemRelationsExtractorTest {
 
         final Relation relation = relationCaptor.getValue();
         assertThat(relation.getId(), is(String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, node1.getId(), node1Operation.getId())));
-        assertThat(relation.getName(), is(String.format("%s-%s", node1.getName(), node1Operation.getName())));
+        assertThat(relation.getName(), is(String.format("%s-Void (%s)", node1.getName(), node1Operation.getName())));
 
         final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
         assertThat(relationProperty.getRelationType(), is(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));

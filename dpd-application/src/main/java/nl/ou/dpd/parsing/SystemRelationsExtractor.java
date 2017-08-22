@@ -63,10 +63,13 @@ public class SystemRelationsExtractor {
 
     private Relation createSystemAttributeRelation(Attribute attribute) {
         final Node parentNode = attribute.getParentNode();
-        return new Relation(
-                String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), attribute.getId()),
-                String.format("%s-%s", parentNode.getName(), attribute.getName())
-        );
+        final String relationId = String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), attribute.getId());
+
+        final Node type = attribute.getType();
+        final String typeName = type == null ? "Void" : type.getName();
+        final String relationName = String.format("%s-%s (%s)", parentNode.getName(), typeName, attribute.getName());
+
+        return new Relation(relationId, relationName);
     }
 
     private void exploreOperationsRelations(Node node) {
@@ -118,10 +121,13 @@ public class SystemRelationsExtractor {
 
     private Relation createSystemOperationRelation(Operation operation) {
         final Node parentNode = operation.getParentNode();
-        return new Relation(
-                String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), operation.getId()),
-                String.format("%s-%s", parentNode.getName(), operation.getName())
-        );
+        final String relationId = String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), operation.getId());
+
+        final Node type = operation.getReturnType();
+        final String typeName = type == null ? "Void" : type.getName();
+        final String relationName = String.format("%s-%s (%s)", parentNode.getName(), typeName, operation.getName());
+
+        return new Relation(relationId, relationName);
     }
 
     private void addEdge(Attribute attr, Relation relation) {
