@@ -196,7 +196,7 @@ public class SystemRelationsExtractorTest {
 
         final Relation relation = relationCaptor.getValue();
         assertThat(relation.getId(), is(String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, node1.getId(), node1Operation.getId())));
-        assertThat(relation.getName(), is(String.format("%s-Void (%s)", node1.getName(), node1Operation.getName())));
+        assertThat(relation.getName(), is(String.format("%s-%s (%s)", node1.getName(), node2.getName(), node1Operation.getName())));
 
         final RelationProperty relationProperty = relation.getRelationProperties().iterator().next();
         assertThat(relationProperty.getRelationType(), is(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
