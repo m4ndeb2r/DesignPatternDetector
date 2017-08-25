@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patterns>
+    <pattern name="Abstract Factory" family="Abstract Factory">
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="AbstractFactory">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="AbstractProductA">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="AbstractProductB">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="ConcreteFactory1">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteFactory2">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ProductA1">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ProductA2">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ProductB1">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ProductB2">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="AbstractFactory">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+
+            </relation>
+            <relation node1="Client" node2="AbstractProductA">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Client" node2="AbstractProductB">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ProductA1" node2="AbstractProductA">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ProductA2" node2="AbstractProductA">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ProductB1" node2="AbstractProductB">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ProductB2" node2="AbstractProductB">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteFactory1" node2="AbstractFactory">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteFactory2" node2="AbstractFactory">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteFactory1" node2="ProductA1">
+                <relation.rule relationType="DEPENDS_ON"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteFactory2" node2="ProductA2">
+                <relation.rule relationType="DEPENDS_ON"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteFactory1" node2="ProductB1">
+                <relation.rule relationType="DEPENDS_ON"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteFactory2" node2="ProductB2">
+                <relation.rule relationType="DEPENDS_ON"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="AbstractFactory" node2="AbstractProductA">
+                <relation.rule relationType="HAS_METHOD_RETURNTYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="AbstractFactory" node2="AbstractProductB">
+                <relation.rule relationType="HAS_METHOD_RETURNTYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+
+    <pattern name="Adapter (Object Adapter)" family="Adapter">
+        <notes>
+            <note>An operation of the Adapter must call an operation of the Adaptee.</note>
+            <note>Set the adaptee attribute of the object adapter class Adapter with private visibility.</note>
+        </notes>
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Target">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="Adapter">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Adaptee">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Target">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Adapter" node2="Target">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Adapter" node2="Adaptee">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+    <pattern name="Adapter (Class Adapter)" family="Adapter">
+        <notes>
+            <note>An operation of the Adapter must call an operation of the Adaptee</note>
+        </notes>
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Target">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="Adapter">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Adaptee">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Target">
+                <relation.rule relationType="ASSOCIATES_WITH" cardinalityLeft="1" cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF" cardinalityLeft="1" cardinalityRight="1"/>
+            </relation>
+            <relation node1="Adapter" node2="Target">
+                <relation.rule relationType="IMPLEMENTS" cardinalityLeft="1" cardinalityRight="1"/>
+            </relation>
+            <relation node1="Adapter" node2="Adaptee">
+                <relation.rule relationType="INHERITS_FROM" cardinalityLeft="1" cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Bridge" family="Bridge">
+        <notes>
+            <note>ArgoUML diagrams lack information regarding implementation of the methods which can lead to false
+                positives.
+            </note>
+            <note>Note1: The Operation of the Abstraction class must call a method of the attribute of type
+                Implementor.
+            </note>
+        </notes>
+        <nodes>
+            <node id="Abstraction">
+                <node.rule nodeType="ABSTRACT_CLASS"/>
+            </node>
+            <node id="Implementor">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="RefinedAbstraction">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteImplementorA">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteImplementorB">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Abstraction" node2="Implementor">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteImplementorA" node2="Implementor">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteImplementorB" node2="Implementor">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="RefinedAbstraction" node2="Abstraction">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Builder" family="Builder">
+        <notes>
+            <note>The Director may not deliver a Product. The Product must be provided by calling a method of the
+                ConcreteBuilder.
+            </note>
+        </notes>
+        <nodes>
+            <node id="Director">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteBuilder">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Builder">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="Product">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Director" node2="Builder">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteBuilder" node2="Builder">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteBuilder" node2="Product">
+                <relation.rule relationType="DEPENDS_ON"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_METHOD_RETURNTYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Chain Of Responsibility" family="Chain Of Responsibility">
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Handler">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="ConcreteHandlerA">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteHandlerB">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Handler">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteHandlerA" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteHandlerB" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Handler" node2="Handler">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Command" family="Command">
+        <notes>
+            <note>The execute method of the ConcreteCommand must invoke an action of the Reciever.</note>
+            <note>The attribute of type Reciever of the ConcreteCommand should be set with a private visibility.</note>
+        </notes>
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Reciever">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Command">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="ConcreteCommand">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Invoker">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Reciever">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Client" node2="ConcreteCommand">
+                <relation.rule relationType="DEPENDS_ON"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteCommand" node2="Reciever">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteCommand" node2="Command">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Invoker" node2="Command">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Composite" family="Composite">
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Component">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="Leaf">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Composite">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Component">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Leaf" node2="Component">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Composite" node2="Component">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="OVERRIDES_METHOD_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Decorator" family="Decorator">
+        <nodes>
+            <node id="Component">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="Decorator">
+                <node.rule nodeType="ABSTRACT_CLASS"/>
+            </node>
+            <node id="ConcreteComponent">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteDecoratorA">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteDecoratorB">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Decorator" node2="Component">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteComponent" node2="Component">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteDecoratorA" node2="Decorator">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteDecoratorB" node2="Decorator">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Chain Of Responsibility" family="Chain Of Responsibility">
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Handler">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="ConcreteHandlerA">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteHandlerB">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Handler">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteHandlerA" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteHandlerB" node2="Handler">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Handler" node2="Handler">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Flyweight" family="Flyweight">
+        <notes>
+            <note>The ConcreteFlyweight must be taken from the FlyweightFactory. The constructor of the
+                ConcreteFlyweight should be inaccessible, except by the FlyweightFactory.
+            </note>
+        </notes>
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="FlyweightFactory">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Flyweight">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="ConcreteFlyweight">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="FlyweightFactory">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="FlyweightFactory" node2="Flyweight">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_METHOD_RETURNTYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteFlyweight" node2="Flyweight">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Client" node2="ConcreteFlyweight">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Interpreter" family="Interpreter">
+        <nodes>
+            <node id="Client">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Context">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="AbstractExpression">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="TerminalExpression">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="NonterminalExpression">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Client" node2="Context">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Client" node2="AbstractExpression">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="TerminalExpression" node2="AbstractExpression">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="NonterminalExpression" node2="AbstractExpression">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="AbstractExpression" node2="Context">
+                <relation.rule relationType="HAS_METHOD_PARAMETER_OF_TYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Iterator" family="Iterator">
+        <nodes>
+            <node id="Aggregate">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="Iterator">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="ConcreteAggregate">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteIterator">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="ConcreteAggregate" node2="Aggregate">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteIterator" node2="Iterator">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteIterator" node2="ConcreteAggregate">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteAggregate" node2="ConcreteIterator">
+                <relation.rule relationType="HAS_METHOD_RETURNTYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteAggregate" node2="ConcreteAggregate">
+                <relation.rule relationType="HAS_METHOD_PARAMETER_OF_TYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Mediator" family="Mediator">
+        <nodes>
+            <node id="Mediator">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="Colleague">
+                <node.rule nodeType="ABSTRACT_CLASS"/>
+            </node>
+            <node id="ConcreteMediator">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteColleague1">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteColleague2">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Colleague" node2="Mediator">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteMediator" node2="Mediator">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteMediator" node2="ConcreteColleague1">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteMediator" node2="ConcreteColleague2">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteColleague1" node2="Colleague">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteColleague2" node2="Colleague">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Memento" family="Memento">
+        <notes>
+            <note>The Originator has a method which calls a method of Memento.</note>
+            <note>The Caretaker has a limited access to the Memento and never operates on or examines its contents.
+            </note>
+        </notes>
+        <nodes>
+            <node id="Originator">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Memento">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Caretaker">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Originator" node2="Memento">
+                <relation.rule relationType="HAS_METHOD_PARAMETER_OF_TYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_METHOD_RETURNTYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="Caretaker" node2="Memento">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Observer" family="Observer">
+        <notes>
+            <note>The Subject must provide a method which calls the Update-operation of all Observers.</note>
+        </notes>
+        <nodes>
+            <node id="ConcreteSubject">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Subject">
+                <node.rule nodeType="ABSTRACT_CLASS"/>
+            </node>
+            <node id="Observer">
+                <node.rule nodeType="INTERFACE"/>
+            </node>
+            <node id="ConcreteObserver">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Subject" node2="Observer">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_METHOD_PARAMETER_OF_TYPE"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteSubject" node2="Subject">
+                <relation.rule relationType="INHERITS_FROM"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteObserver" node2="ConcreteSubject">
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteObserver" node2="Observer">
+                <relation.rule relationType="IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+    <pattern name="Strategy" family="Strategy">
+        <notes>
+            <note>The structure of the Strategy pattern is rather straightforward. Bear in mind the context and the
+                semantics to decide if the Strategy pattern is genuine.
+            </note>
+            <note>According the patttern, at least three different concrete strategies must be defined.</note>
+        </notes>
+        <nodes>
+            <node id="Context">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="Strategy">
+                <node.rule nodeType="ABSTRACT_CLASS_OR_INTERFACE"/>
+            </node>
+            <node id="ConcreteStrategyA">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteStrategyB">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+            <node id="ConcreteStrategyC">
+                <node.rule nodeType="CONCRETE_CLASS"/>
+            </node>
+        </nodes>
+        <relations>
+            <relation node1="Context" node2="Strategy">
+                <relation.rule relationType="ASSOCIATES_WITH"
+                               cardinalityLeft="0..*"
+                               cardinalityRight="1"/>
+                <relation.rule relationType="HAS_ATTRIBUTE_OF"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteStrategyA" node2="Strategy">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteStrategyB" node2="Strategy">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+            <relation node1="ConcreteStrategyC" node2="Strategy">
+                <relation.rule relationType="INHERITS_FROM_OR_IMPLEMENTS"
+                               cardinalityLeft="1"
+                               cardinalityRight="1"/>
+            </relation>
+        </relations>
+    </pattern>
+
+</patterns>
+
