@@ -335,7 +335,7 @@
             <node id="Client">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
-            <node id="Reciever">
+            <node id="Receiver">
                 <node.rule nodeType="CONCRETE_CLASS"/>
             </node>
             <node id="Command">
@@ -349,7 +349,7 @@
             </node>
         </nodes>
         <relations>
-            <relation node1="Client" node2="Reciever">
+            <relation node1="Client" node2="Receiver">
                 <relation.rule relationType="ASSOCIATES_WITH"
                                cardinalityLeft="1"
                                cardinalityRight="1"/>
@@ -359,7 +359,7 @@
                                cardinalityLeft="1"
                                cardinalityRight="1"/>
             </relation>
-            <relation node1="ConcreteCommand" node2="Reciever">
+            <relation node1="ConcreteCommand" node2="Receiver">
                 <relation.rule relationType="HAS_ATTRIBUTE_OF"
                                cardinalityLeft="1"
                                cardinalityRight="1"/>

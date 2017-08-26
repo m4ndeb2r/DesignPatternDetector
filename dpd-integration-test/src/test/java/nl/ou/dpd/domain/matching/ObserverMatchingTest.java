@@ -3,8 +3,10 @@ package nl.ou.dpd.domain.matching;
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.parsing.ParserFactory;
+import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.parsing.ArgoUMLParser;
+import nl.ou.dpd.parsing.ParserFactory;
 import nl.ou.dpd.parsing.PatternsParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,51 +14,73 @@ import org.junit.experimental.categories.Category;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Set;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Test the matching process for a Observer pattern.
+ * Test the matching process for a Builder pattern.
  *
  * @author Martin de Boer
- * @author Peter Vansweevelt
  */
 @Category(IntegrationTest.class)
-public class ObserverMatchingTest {
+public class ObserverMatchingTest extends AbstractMatchingTest {
 
-    private String patternsXmlFilename;
-    private PatternsParser patternsParser;
-    private ArgoUMLParser xmiParser;
+    private static final String MATCHING_SYSTEM_XMI = "/systems/MyObserver.xmi";
+    private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String PATTERN_NAME = "Observer";
+
+    private DesignPattern designPattern;
 
     @Before
     public void initTests() {
-        patternsParser = ParserFactory.createPatternParser();
-        xmiParser = ParserFactory.createArgoUMLParser();
+        final PatternsParser patternsParser = ParserFactory.createPatternParser();
+        final String patternsXmlFile = ObserverMatchingTest.class.getResource(TEMPLATES_XML).getFile();
+        designPattern = getDesignPatternByName(patternsParser.parse(patternsXmlFile), PATTERN_NAME);
     }
 
     @Test
-    public void testMatchingObserverExample() {
-        patternsXmlFilename = ObserverMatchingTest.class.getResource("/patterns/patterns_observer.xml").getFile();
-
-        // Parse the observer pattern xml ands create a DesignPattern
-        final DesignPattern designPattern = patternsParser.parse(patternsXmlFilename).get(0);
-
-        // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = ObserverMatchingTest.class.getResource("/systems/MyObserver.xmi");
+    public void testMatchingObserver() {
+        final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
+        final URL sucXmiUrl = ObserverMatchingTest.class.getResource(MATCHING_SYSTEM_XMI);
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
-        // Inspect the system for patterns
-        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
+        // Check for a general note regarding the pattern, available from the xml-file
+        assertEqualNotes(designPattern, new String[]{
+                "The Subject must provide a method which calls the Update-operation of all Observers.",
+        });
 
+        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
         assertTrue(patternInspector.isomorphismExists());
-        //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
+        assertMatchingSolutions(patternInspector.getMatchingResult());
+        assertMatchingFeedback(patternInspector.getMatchingResult(), designPattern);
+    }
+
+    @Test
+    public void testMismatchingObserver() {
+        final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
+        final URL sucXmiUrl = ObserverMatchingTest.class.getResource(MISMATCHING_SYSTEM_XMI);
+        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
+
+        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
+        assertFalse(patternInspector.isomorphismExists());
+
+        final Set<Relation> relations = system.edgeSet();
+        final Set<Node> nodes = system.vertexSet();
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
+        assertMinimumFailedMatches(feedback, nodes, relations, 2);
+    }
+
+    private void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {
+        final List<Solution> solutions = matchingResult.getSolutions();
         assertEquals(1, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MySubject", "Subject"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyObserver", "Observer"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcreteSubject", "ConcreteSubject"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyConcreteObserver", "ConcreteObserver"));
+
+        assertMatchingNodes(solutions, "MySubject", "Subject");
+        assertMatchingNodes(solutions, "MyObserver", "Observer");
+        assertMatchingNodes(solutions, "MyConcreteSubject", "ConcreteSubject");
+        assertMatchingNodes(solutions, "MyConcreteObserver", "ConcreteObserver");
     }
 
 }

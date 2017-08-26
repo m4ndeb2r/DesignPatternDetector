@@ -10,6 +10,8 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import java.util.HashSet;
 import java.util.Set;
 
+import static nl.ou.dpd.util.Util.tidy;
+
 /**
  * A {@link DesignPattern} is a {@link DefaultDirectedGraph} representation of a design pattern. It contains a set of
  * {@link CompoundComparator}s for matching purposes.
@@ -63,7 +65,8 @@ public class DesignPattern extends DefaultDirectedGraph<Node, Relation> {
     }
 
     public DesignPattern addNote(String note) {
-        this.notes.add(note);
+        this.notes.add(tidy(note));
         return this;
     }
+
 }

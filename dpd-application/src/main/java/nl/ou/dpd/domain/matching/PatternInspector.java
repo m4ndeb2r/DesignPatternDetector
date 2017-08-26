@@ -82,9 +82,11 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
         for (Relation relation : system.edgeSet()) {
             final Node edgeSource = system.getEdgeSource(relation);
             final Node edgeTarget = system.getEdgeTarget(relation);
-            addMatchingNodesToSolution(solution, edgeSource, mapping);
-            addMatchingNodesToSolution(solution, edgeTarget, mapping);
-            addMatchingRelationsToSolution(solution, relation, mapping);
+            final boolean isSourceAdded = addMatchingNodesToSolution(solution, edgeSource, mapping);
+            final boolean isTargetAdded = addMatchingNodesToSolution(solution, edgeTarget, mapping);
+            if (isSourceAdded && isTargetAdded) {
+                addMatchingRelationsToSolution(solution, relation, mapping);
+            }
         }
         return solution;
     }
@@ -94,11 +96,13 @@ public class PatternInspector extends VF2SubgraphIsomorphismInspector<Node, Rela
         solution.addMatchingRelations(systemRelation, patternRelation);
     }
 
-    private void addMatchingNodesToSolution(Solution solution, Node systemNode, GraphMapping<Node, Relation> mapping) {
+    private boolean addMatchingNodesToSolution(Solution solution, Node systemNode, GraphMapping<Node, Relation> mapping) {
         final Node patternNode = mapping.getVertexCorrespondence(systemNode, true);
         if (patternNode != null) {
             solution.addMatchingNodes(systemNode, patternNode);
+            return true;
         }
+        return false;
     }
 
     private List<GraphMapping<Node, Relation>> asList(Iterator<GraphMapping<Node, Relation>> iter) {

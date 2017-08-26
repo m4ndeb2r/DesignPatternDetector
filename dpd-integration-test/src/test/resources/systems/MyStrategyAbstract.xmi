@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8' ?>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sat Aug 26 10:49:32 CEST 2017'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sat Aug 26 10:54:48 CEST 2017'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -26,73 +26,73 @@
                 </UML:Multiplicity>
               </UML:StructuralFeature.multiplicity>
               <UML:StructuralFeature.type>
-                <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
+                <UML:Class xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA0'/>
               </UML:StructuralFeature.type>
             </UML:Attribute>
           </UML:Classifier.feature>
         </UML:Class>
-        <UML:Interface xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'
-          name = 'Vehicle' visibility = 'public' isSpecification = 'false' isRoot = 'false'
-          isLeaf = 'false' isAbstract = 'false'/>
         <UML:Class xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000868'
           name = 'CityBus' visibility = 'public' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
-          <UML:ModelElement.clientDependency>
-            <UML:Abstraction xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000874'/>
-          </UML:ModelElement.clientDependency>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA1'/>
+          </UML:GeneralizableElement.generalization>
         </UML:Class>
         <UML:Class xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000869'
           name = 'PersonalCar' visibility = 'public' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
-          <UML:ModelElement.clientDependency>
-            <UML:Abstraction xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000870'/>
-          </UML:ModelElement.clientDependency>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA2'/>
+          </UML:GeneralizableElement.generalization>
         </UML:Class>
         <UML:Class xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:000000000000086A'
           name = 'Taxi' visibility = 'public' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
-          <UML:ModelElement.clientDependency>
-            <UML:Abstraction xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000872'/>
-          </UML:ModelElement.clientDependency>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA3'/>
+          </UML:GeneralizableElement.generalization>
         </UML:Class>
-        <UML:Abstraction xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000870'
-          name = 'PersonalCar-Vehicle' isSpecification = 'false'>
-          <UML:Dependency.client>
-            <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000869'/>
-          </UML:Dependency.client>
-          <UML:Dependency.supplier>
-            <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
-          </UML:Dependency.supplier>
-        </UML:Abstraction>
-        <UML:Abstraction xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000872'
-          name = 'Taxi-Vehicle' isSpecification = 'false'>
-          <UML:Dependency.client>
-            <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:000000000000086A'/>
-          </UML:Dependency.client>
-          <UML:Dependency.supplier>
-            <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
-          </UML:Dependency.supplier>
-        </UML:Abstraction>
-        <UML:Abstraction xmi.id = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000874'
+        <UML:Class xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA0'
+          name = 'Vehicle' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'true' isActive = 'false'/>
+        <UML:Generalization xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA1'
           name = 'CityBus-Vehicle' isSpecification = 'false'>
-          <UML:Dependency.client>
+          <UML:Generalization.child>
             <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000868'/>
-          </UML:Dependency.client>
-          <UML:Dependency.supplier>
-            <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
-          </UML:Dependency.supplier>
-        </UML:Abstraction>
-        <UML:Association xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C87'
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA0'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Generalization xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA2'
+          name = 'PersonalCar-Vehicle' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000869'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA0'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Generalization xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA3'
+          name = 'Taxi-Vehicle' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:000000000000086A'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA0'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Association xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA4'
           name = 'Transportation-Vehicle' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false'>
           <UML:Association.connection>
-            <UML:AssociationEnd xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C88'
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA5'
               visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
               aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
               <UML:AssociationEnd.multiplicity>
-                <UML:Multiplicity xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8F'>
+                <UML:Multiplicity xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA8'>
                   <UML:Multiplicity.range>
-                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8E'
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA7'
                       lower = '0' upper = '-1'/>
                   </UML:Multiplicity.range>
                 </UML:Multiplicity>
@@ -101,19 +101,19 @@
                 <UML:Class xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000866'/>
               </UML:AssociationEnd.participant>
             </UML:AssociationEnd>
-            <UML:AssociationEnd xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C89'
+            <UML:AssociationEnd xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA6'
               visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
               aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
               <UML:AssociationEnd.multiplicity>
-                <UML:Multiplicity xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8D'>
+                <UML:Multiplicity xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BAA'>
                   <UML:Multiplicity.range>
-                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-2c35b7df:15ced84c157:-8000:0000000000000C8C'
+                    <UML:MultiplicityRange xmi.id = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA9'
                       lower = '1' upper = '1'/>
                   </UML:Multiplicity.range>
                 </UML:Multiplicity>
               </UML:AssociationEnd.multiplicity>
               <UML:AssociationEnd.participant>
-                <UML:Interface xmi.idref = '127-0-1-1-4a06d3bb:153796fe65b:-8000:0000000000000867'/>
+                <UML:Class xmi.idref = '-84-26-0-54-649e1f6f:15e1d58eb99:-8000:0000000000002BA0'/>
               </UML:AssociationEnd.participant>
             </UML:AssociationEnd>
           </UML:Association.connection>

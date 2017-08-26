@@ -3,10 +3,11 @@ package nl.ou.dpd.domain.matching;
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.parsing.ParserFactory;
 import nl.ou.dpd.parsing.ArgoUMLParser;
+import nl.ou.dpd.parsing.ParserFactory;
 import nl.ou.dpd.parsing.PatternsParser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -23,8 +24,9 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  * @author Peter Vansweevelt
  */
+@Ignore
 @Category(IntegrationTest.class)
-public class AdapterMatchingTest {
+public class OldAdapterMatchingTest extends AbstractMatchingTest {
 
     private URL patternsXmlUrl;
     private URL sucXmiUrl;
@@ -40,8 +42,8 @@ public class AdapterMatchingTest {
     @Test
     public void testMatchingObjectAdapter() {
 
-        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/systems/MyObjectAdapter.xmi");
+        patternsXmlUrl = OldAdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
+        sucXmiUrl = OldAdapterMatchingTest.class.getResource("/systems/MyObjectAdapter.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -57,17 +59,17 @@ public class AdapterMatchingTest {
         //more detailed inspection
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdapter", "Adapter"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
+        assertTrue(areMatchingNodes(solutions, "MyClient", "Client"));
+        assertTrue(areMatchingNodes(solutions, "MyTarget", "Target"));
+        assertTrue(areMatchingNodes(solutions, "MyAdapter", "Adapter"));
+        assertTrue(areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
     }
 
     //test with an undirected association between Client and Target
     @Test
     public void testMatchingAdapterWithUndirectedAssociation() {
-        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/systems/MyAdapterWithUndirectedAssociation.xmi");
+        patternsXmlUrl = OldAdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
+        sucXmiUrl = OldAdapterMatchingTest.class.getResource("/systems/MyAdapterWithUndirectedAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -88,8 +90,8 @@ public class AdapterMatchingTest {
     //test with an undirected association to a Dummy and an extra Attribute in Adapter
     @Test
     public void testMatchingAdapterWithExtraAssociation() {
-        patternsXmlUrl = AdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
-        sucXmiUrl = AdapterMatchingTest.class.getResource("/systems/MyAdapterWithExtraAssociation.xmi");
+        patternsXmlUrl = OldAdapterMatchingTest.class.getResource("/patterns/patterns_adapter.xml");
+        sucXmiUrl = OldAdapterMatchingTest.class.getResource("/systems/MyAdapterWithExtraAssociation.xmi");
 
         // Parse the observer pattern xml ands create a DesignPattern
         final List<DesignPattern> designPatterns = patternsParser.parse(patternsXmlUrl.getFile());
@@ -105,17 +107,17 @@ public class AdapterMatchingTest {
 
         List<Solution> solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdapter", "Adapter"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
+        assertTrue(areMatchingNodes(solutions, "MyClient", "Client"));
+        assertTrue(areMatchingNodes(solutions, "MyTarget", "Target"));
+        assertTrue(areMatchingNodes(solutions, "MyAdapter", "Adapter"));
+        assertTrue(areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
 
         solutions = patternInspector.getMatchingResult().getSolutions();
         assertEquals(1, solutions.size());
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyClient", "Client"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyTarget", "Target"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdapter", "Adapter"));
-        assertTrue(TestHelper.areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
+        assertTrue(areMatchingNodes(solutions, "MyClient", "Client"));
+        assertTrue(areMatchingNodes(solutions, "MyTarget", "Target"));
+        assertTrue(areMatchingNodes(solutions, "MyAdapter", "Adapter"));
+        assertTrue(areMatchingNodes(solutions, "MyAdaptee", "Adaptee"));
 
         // TODO Test feedback (getMatchingResult().getFeedback())
     }

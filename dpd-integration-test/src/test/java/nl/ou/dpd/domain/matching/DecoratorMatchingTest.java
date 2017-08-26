@@ -3,8 +3,10 @@ package nl.ou.dpd.domain.matching;
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
-import nl.ou.dpd.parsing.ParserFactory;
+import nl.ou.dpd.domain.node.Node;
+import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.parsing.ArgoUMLParser;
+import nl.ou.dpd.parsing.ParserFactory;
 import nl.ou.dpd.parsing.PatternsParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,81 +15,73 @@ import org.junit.experimental.categories.Category;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test the matching process for a Decorator pattern.
+ * Test the matching process for a Builder pattern.
  *
  * @author Martin de Boer
- * @author Peter Vansweevelt
  */
 @Category(IntegrationTest.class)
-public class DecoratorMatchingTest {
+public class DecoratorMatchingTest extends AbstractMatchingTest {
 
-    private String patternsXmlFile;
-    private PatternsParser patternsParser;
-    private ArgoUMLParser xmiParser;
+    private static final String MATCHING_SYSTEM_XMI = "/systems/MyDecorator.xmi";
+    private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String PATTERN_NAME = "Decorator";
+
+    private DesignPattern designPattern;
 
     @Before
     public void initTests() {
-        patternsParser = ParserFactory.createPatternParser();
-        xmiParser = ParserFactory.createArgoUMLParser();
+        final PatternsParser patternsParser = ParserFactory.createPatternParser();
+        final String patternsXmlFile = DecoratorMatchingTest.class.getResource(TEMPLATES_XML).getFile();
+        designPattern = getDesignPatternByName(patternsParser.parse(patternsXmlFile), PATTERN_NAME);
     }
 
     @Test
     public void testMatchingDecorator() {
-        patternsXmlFile = DecoratorMatchingTest.class.getResource("/patterns/patterns_decorator.xml").getFile();
-
-        // Parse the decorator pattern xml ands create a DesignPattern
-        final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
-
-        // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource("/systems/MyDecorator.xmi");
+        final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
+        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource(MATCHING_SYSTEM_XMI);
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
-        // Inspect the system for patterns
+        // Check for a general note regarding the pattern, available from the xml-file
+        assertEqualNotes(designPattern, new String[]{});
+
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-
         assertTrue(patternInspector.isomorphismExists());
-        //more detailed, but not exhaustive inspection
-        List<Solution> solutions = patternInspector.getMatchingResult().getSolutions(true);
-        assertEquals(2, solutions.size());
-        assertMatch(solutions, "MyPart", "Component");
-        assertMatch(solutions, "MyPart", "Component");
-        assertMatch(solutions, "MyDecorator", "Decorator");
-        assertMatch(solutions, "MyConcrDecA", "ConcreteDecoratorA");
-        assertMatch(solutions, "MyConcrDecB", "ConcreteDecoratorB");
-        assertMatch(solutions, "MyConcretePart", "ConcreteComponent");
+        assertMatchingSolutions(patternInspector.getMatchingResult());
+        assertMatchingFeedback(patternInspector.getMatchingResult(), designPattern);
+    }
 
-        assertMatch(solutions, "MyPart", "Component");
-        assertMatch(solutions, "MyDecorator", "Decorator");
-        assertMatch(solutions, "MyConcrDecB", "ConcreteDecoratorA");
-        assertMatch(solutions, "MyConcrDecA", "ConcreteDecoratorB");
-        assertMatch(solutions, "MyConcretePart", "ConcreteComponent");
+    @Test
+    public void testMismatchingDecorator() {
+        final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
+        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource(MISMATCHING_SYSTEM_XMI);
+        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
-        solutions = patternInspector.getMatchingResult().getSolutions();
+        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
+        assertFalse(patternInspector.isomorphismExists());
+
+        final Set<Relation> relations = system.edgeSet();
+        final Set<Node> nodes = system.vertexSet();
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
+        assertMinimumFailedMatches(feedback, nodes, relations, 2);
+    }
+
+    private void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {
+        final List<Solution> solutions = matchingResult.getSolutions();
         assertEquals(1, solutions.size());
-        assertMatch(solutions, "MyPart", "Component");
-        assertMatch(solutions, "MyDecorator", "Decorator");
-        assertAnyMatch(solutions, Arrays.asList(new String[]{"MyConcrDecB", "MyConcrDecB"}), Arrays.asList(new String[]{"ConcreteDecoratorA", "ConcreteDecoratorB"}));
-        assertMatch(solutions, "MyConcretePart", "ConcreteComponent");
 
-        // TODO Test feedback (getMatchingResult().getFeedback())
+        assertMatchingNodes(solutions, "MyPart", "Component");
+        assertMatchingNodes(solutions, "MyDecorator", "Decorator");
+        assertAnyMatchingNode(solutions,
+                Arrays.asList(new String[]{"MyConcrDecA", "MyConcrDecB"}),
+                Arrays.asList(new String[]{"ConcreteDecoratorA", "ConcreteDecoratorB"}));
+        assertMatchingNodes(solutions, "MyConcretePart", "ConcreteComponent");
     }
 
-    private void assertMatch(List<Solution> solutions, String sysNodeName, String patternNodeName) {
-        assertTrue(TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName));
-    }
-
-    private void assertAnyMatch(List<Solution> solutions, List<String> sysNodeNames, List<String> patternNodeNames) {
-        boolean match = false;
-        for (String sysNodeName : sysNodeNames) {
-            for (String patternNodeName : patternNodeNames) {
-                match |= TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName);
-            }
-        }
-        assertTrue(match);
-    }
 }

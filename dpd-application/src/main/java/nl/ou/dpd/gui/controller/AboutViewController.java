@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
+import static nl.ou.dpd.util.Util.tidy;
+
 /**
  * A {@link Controller} for the about view of the application.
  *
@@ -165,12 +167,5 @@ public class AboutViewController extends Controller {
         return roles.stream().map(s -> s.trim()).collect(Collectors.toList());
     }
 
-    private String tidy(String description) {
-        description = description.replaceAll("\n", " ");
-        while(description.contains("  ")) {
-            description = description.replaceAll("  ", " ");
-        }
-        return description.trim();
-    }
 }
 

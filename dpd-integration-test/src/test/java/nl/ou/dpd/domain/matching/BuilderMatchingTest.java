@@ -27,31 +27,30 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  */
 @Category(IntegrationTest.class)
-public class BridgeMatchingTest extends AbstractMatchingTest {
+public class BuilderMatchingTest extends AbstractMatchingTest {
 
-    private static final String MATCHING_SYSTEM_XMI = "/systems/MyBridge.xmi";
+    private static final String MATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyDecorator.xmi";
-    private static final String PATTERN_NAME = "Bridge";
+    private static final String PATTERN_NAME = "Builder";
 
     private DesignPattern designPattern;
 
     @Before
     public void initTests() {
         final PatternsParser patternsParser = ParserFactory.createPatternParser();
-        final String patternsXmlFile = BridgeMatchingTest.class.getResource(TEMPLATES_XML).getFile();
+        final String patternsXmlFile = BuilderMatchingTest.class.getResource(TEMPLATES_XML).getFile();
         designPattern = getDesignPatternByName(patternsParser.parse(patternsXmlFile), PATTERN_NAME);
     }
 
     @Test
-    public void testMatchingBridge() {
+    public void testMatchingBuilder() {
         final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
-        final URL sucXmiUrl = BridgeMatchingTest.class.getResource(MATCHING_SYSTEM_XMI);
+        final URL sucXmiUrl = BuilderMatchingTest.class.getResource(MATCHING_SYSTEM_XMI);
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Check for a general note regarding the pattern, available from the xml-file
         assertEqualNotes(designPattern, new String[]{
-                "ArgoUML diagrams lack information regarding implementation of the methods which can lead to false positives.",
-                "Note1: The Operation of the Abstraction class must call a method of the attribute of type Implementor."
+                "The Director may not deliver a Product. The Product must be provided by calling a method of the ConcreteBuilder."
         });
 
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
@@ -61,9 +60,9 @@ public class BridgeMatchingTest extends AbstractMatchingTest {
     }
 
     @Test
-    public void testMismatchingBridge() {
+    public void testMismatchingBuilder() {
         final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
-        final URL sucXmiUrl = BridgeMatchingTest.class.getResource(MISMATCHING_SYSTEM_XMI);
+        final URL sucXmiUrl = BuilderMatchingTest.class.getResource(MISMATCHING_SYSTEM_XMI);
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
@@ -77,16 +76,14 @@ public class BridgeMatchingTest extends AbstractMatchingTest {
 
     private void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {
         final List<Solution> solutions = matchingResult.getSolutions();
-        assertEquals(6, solutions.size());
+        assertEquals(2, solutions.size());
 
-        assertMatchingNodes(solutions, "MyConcImpl1", "ConcreteImplementorB");
-        assertMatchingNodes(solutions, "MyConcAbstr1", "RefinedAbstraction");
-        assertMatchingNodes(solutions, "MyConcAbstr2", "RefinedAbstraction");
-        assertMatchingNodes(solutions, "MyAbstraction", "Abstraction");
-        assertMatchingNodes(solutions, "MyImplementor", "Implementor");
+        assertMatchingNodes(solutions, "Pizza", "Product");
+        assertMatchingNodes(solutions, "Waiter", "Director");
+        assertMatchingNodes(solutions, "PizzaBuilder", "Builder");
         assertAnyMatchingNode(solutions,
-                Arrays.asList(new String[]{"MyConcImpl1", "MyConcImpl2", "MyConcImpl3"}),
-                Arrays.asList(new String[]{"ConcreteImplementorA", "ConcreteImplementorB"})
+                Arrays.asList(new String[]{"SpicyPizza", "HawaiianPizza"}),
+                Arrays.asList(new String[]{"ConcreteBuilder"})
         );
     }
 
