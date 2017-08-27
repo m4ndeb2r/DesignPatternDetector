@@ -116,7 +116,7 @@
         </relations>
     </pattern>
 
-    <pattern name="Adapter (Object Adapter)" family="Adapter">
+    <pattern name="Object Adapter" family="Adapter">
         <notes>
             <note>An operation of the Adapter must call an operation of the Adaptee.</note>
             <note>Set the adaptee attribute of the object adapter class Adapter with private visibility.</note>
@@ -160,7 +160,7 @@
         </relations>
     </pattern>
 
-    <pattern name="Adapter (Class Adapter)" family="Adapter">
+    <pattern name="Class Adapter" family="Adapter">
         <notes>
             <note>An operation of the Adapter must call an operation of the Adaptee</note>
         </notes>
