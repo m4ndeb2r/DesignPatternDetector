@@ -4,7 +4,10 @@ import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.node.Node;
 import nl.ou.dpd.domain.relation.Relation;
+import nl.ou.dpd.parsing.ArgoUMLParser;
+import nl.ou.dpd.parsing.ParserFactory;
 
+import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +15,7 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -79,6 +83,64 @@ public abstract class AbstractMatchingTest {
             feedback.getFeedbackMessages(r, FeedbackType.MISMATCH).forEach(s -> System.out.println("\t- " + s));
             feedback.getFeedbackMessages(r, FeedbackType.NOT_ANALYSED).forEach(s -> System.out.println("\t- " + s));
         });
+    }
+
+    /**
+     * Asserts that the system design in the specified {@code matchingSystemXmi} contains the specified {@code pattern}.
+     * It also checks if the specified {@code notes} are present in the {@link DesignPattern} and in the
+     * {@link Feedback}.
+     *
+     * @param matchingSystemXmi an XMI file NOT containing the specified {@code pattern}
+     * @param pattern           the p{@link DesignPattern} that must be present in the XMI file
+     * @param notes             the expected notes in the pattern, parsed form the XMI file
+     */
+    protected void assertMatchingPattern(String matchingSystemXmi, DesignPattern pattern, String... notes) {
+        final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
+        final URL sucXmiUrl = ObserverMatchingTest.class.getResource(matchingSystemXmi);
+        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
+
+        // Check for a general note regarding the pattern, available from the xml-file
+        assertEqualNotes(pattern, notes);
+
+        final PatternInspector patternInspector = new PatternInspector(system, pattern);
+        assertTrue(patternInspector.isomorphismExists());
+        assertMatchingSolutions(patternInspector.getMatchingResult());
+        assertMatchingFeedback(patternInspector.getMatchingResult(), pattern);
+
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
+        assertTotalOfFeedbackNodes(feedback, system);
+        assertTotalOfFeedbackRelations(feedback, system);
+    }
+
+    /**
+     * Asserts that the generated {@link Solution}s match the expectations.
+     *
+     * @param matchingResult the object containing the solutions.
+     */
+    protected abstract void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult);
+
+    /**
+     * Asserts that the system design in the specified {@code mismatchingSystemXmi} does not contain the specified
+     * {@code pattern}.
+     *
+     * @param mismatchingSystemXmi an XMI file NOT containing the specified {@code pattern}
+     * @param pattern              a {@link DesignPattern} that is NOT present in the specified
+     *                             {@code mismatchingSystemXmi} file
+     */
+    protected void assertMismatchingPattern(String mismatchingSystemXmi, DesignPattern pattern) {
+        final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
+        final URL sucXmiUrl = BridgeMatchingTest.class.getResource(mismatchingSystemXmi);
+        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
+
+        final PatternInspector patternInspector = new PatternInspector(system, pattern);
+        assertFalse(patternInspector.isomorphismExists());
+
+        final Set<Relation> relations = system.edgeSet();
+        final Set<Node> nodes = system.vertexSet();
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
+        assertMinimumFailedMatches(feedback, nodes, relations, 2);
+        assertTotalOfFeedbackNodes(feedback, system);
+        assertTotalOfFeedbackRelations(feedback, system);
     }
 
     /**
