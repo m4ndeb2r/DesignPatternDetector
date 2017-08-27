@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test the matching process for a Builder pattern.
+ * Test the matching process for a Observer pattern.
  *
  * @author Martin de Boer
  */
