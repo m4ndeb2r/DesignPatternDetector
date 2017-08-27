@@ -27,25 +27,25 @@ import static org.junit.Assert.assertTrue;
  * @author Martin de Boer
  */
 @Category(IntegrationTest.class)
-public class DecoratorMatchingTest extends AbstractMatchingTest {
+public class ChainOfResponsibilityMatchingTest extends AbstractMatchingTest {
 
-    private static final String MATCHING_SYSTEM_XMI = "/systems/MyDecorator.xmi";
+    private static final String MATCHING_SYSTEM_XMI = "/systems/MyChainOfResponsibility.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
-    private static final String PATTERN_NAME = "Decorator";
+    private static final String PATTERN_NAME = "Chain Of Responsibility";
 
     private DesignPattern designPattern;
 
     @Before
     public void initTests() {
         final PatternsParser patternsParser = ParserFactory.createPatternParser();
-        final String patternsXmlFile = DecoratorMatchingTest.class.getResource(TEMPLATES_XML).getFile();
+        final String patternsXmlFile = ChainOfResponsibilityMatchingTest.class.getResource(TEMPLATES_XML).getFile();
         designPattern = getDesignPatternByName(patternsParser.parse(patternsXmlFile), PATTERN_NAME);
     }
 
     @Test
-    public void testMatchingDecorator() {
+    public void testMatchingChainOfResponsibility() {
         final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
-        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource(MATCHING_SYSTEM_XMI);
+        final URL sucXmiUrl = ChainOfResponsibilityMatchingTest.class.getResource(MATCHING_SYSTEM_XMI);
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         // Check for a general note regarding the pattern, available from the xml-file
@@ -62,9 +62,9 @@ public class DecoratorMatchingTest extends AbstractMatchingTest {
     }
 
     @Test
-    public void testMismatchingDecorator() {
+    public void testMismatchingChainOfResponsibility() {
         final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
-        final URL sucXmiUrl = DecoratorMatchingTest.class.getResource(MISMATCHING_SYSTEM_XMI);
+        final URL sucXmiUrl = ChainOfResponsibilityMatchingTest.class.getResource(MISMATCHING_SYSTEM_XMI);
         final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
 
         final PatternInspector patternInspector = new PatternInspector(system, designPattern);
@@ -82,12 +82,10 @@ public class DecoratorMatchingTest extends AbstractMatchingTest {
         final List<Solution> solutions = matchingResult.getSolutions();
         assertEquals(1, solutions.size());
 
-        assertMatchingNodes(solutions, "MyPart", "Component");
-        assertMatchingNodes(solutions, "MyDecorator", "Decorator");
-        assertAnyMatchingNode(solutions,
-                Arrays.asList(new String[]{"MyConcrDecA", "MyConcrDecB"}),
-                Arrays.asList(new String[]{"ConcreteDecoratorA", "ConcreteDecoratorB"}));
-        assertMatchingNodes(solutions, "MyConcretePart", "ConcreteComponent");
+        assertMatchingNodes(solutions, "MyUser", "Client");
+        assertMatchingNodes(solutions, "MyProcessor", "Handler");
+        assertMatchingNodes(solutions, "MyConcrProcess1", "ConcreteHandlerA");
+        assertMatchingNodes(solutions, "MyConcrProcess2", "ConcreteHandlerB");
     }
 
 }

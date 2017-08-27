@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,6 +60,10 @@ public class BridgeMatchingTest extends AbstractMatchingTest {
         assertTrue(patternInspector.isomorphismExists());
         assertMatchingSolutions(patternInspector.getMatchingResult());
         assertMatchingFeedback(patternInspector.getMatchingResult(), designPattern);
+
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
+        assertTotalOfFeedbackNodes(feedback, system);
+        assertTotalOfFeedbackRelations(feedback, system);
     }
 
     @Test
@@ -73,6 +79,8 @@ public class BridgeMatchingTest extends AbstractMatchingTest {
         final Set<Node> nodes = system.vertexSet();
         final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
         assertMinimumFailedMatches(feedback, nodes, relations, 2);
+        assertTotalOfFeedbackNodes(feedback, system);
+        assertTotalOfFeedbackRelations(feedback, system);
     }
 
     private void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

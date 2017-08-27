@@ -132,6 +132,30 @@ public abstract class AbstractMatchingTest {
     }
 
     /**
+     * Asserts that there is feedback info for all the system nodes.
+     *
+     * @param feedback the feedback object
+     * @param system   the system under consideration
+     */
+    protected void assertTotalOfFeedbackNodes(Feedback feedback, SystemUnderConsideration system) {
+        final int feedbackNodes = feedback.getNodeSet().size();
+        final int systemNodes = system.vertexSet().size();
+        assertThat(feedbackNodes, is(systemNodes));
+    }
+
+    /**
+     * Asserts that there is feedback info for all the system relations.
+     *
+     * @param feedback the feedback object
+     * @param system   the system under consideration
+     */
+    protected void assertTotalOfFeedbackRelations(Feedback feedback, SystemUnderConsideration system) {
+        final int feedbackRelations = feedback.getRelationSet().size();
+        final int systemRelations = system.edgeSet().size();
+        assertThat(feedbackRelations, is(systemRelations));
+    }
+
+    /**
      * Checks is the specified notes are present in the design pattern.
      *
      * @param pattern the design pattern to inspect
@@ -186,28 +210,6 @@ public abstract class AbstractMatchingTest {
         final Feedback feedback = matchingResult.getFeedback();
         assertThat(feedback.getNotes(), is(designPattern.getNotes()));
         assertMatchingNodesFeedback(matchingResult);
-        assertMatchingRelationsFeedback(matchingResult);
-    }
-
-    /**
-     * Asserts that for every matching {@link Relation} in de {@link Solution}s, there is a corresponding
-     * {@link Feedback} message that confirms this match.
-     *
-     * @param matchingResult contains the list of {@link Solution}s as well as the {@link Feedback}.
-     */
-    private void assertMatchingRelationsFeedback(PatternInspector.MatchingResult matchingResult) {
-        final Feedback feedback = matchingResult.getFeedback();
-        final List<Relation> matchingSystemRelations = getMatchingSystemRelations(matchingResult);
-        matchingSystemRelations.forEach(relation -> assertTrue(feedback.getFeedbackMessages(relation, FeedbackType.MATCH).size() > 0));
-    }
-
-    private List<Relation> getMatchingSystemRelations(PatternInspector.MatchingResult matchingResult) {
-        return matchingResult.getSolutions()
-                .stream()
-                .flatMap(solution -> solution.getMatchingRelations().stream())
-                .map(relations -> relations[0])
-                .distinct()
-                .collect(Collectors.toList());
     }
 
     /**

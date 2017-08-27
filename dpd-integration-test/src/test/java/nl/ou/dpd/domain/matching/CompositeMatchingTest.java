@@ -55,6 +55,10 @@ public class CompositeMatchingTest extends AbstractMatchingTest {
         assertTrue(patternInspector.isomorphismExists());
         assertMatchingSolutions(patternInspector.getMatchingResult());
         assertMatchingFeedback(patternInspector.getMatchingResult(), designPattern);
+
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
+        assertTotalOfFeedbackNodes(feedback, system);
+        assertTotalOfFeedbackRelations(feedback, system);
     }
 
     @Test
@@ -70,6 +74,8 @@ public class CompositeMatchingTest extends AbstractMatchingTest {
         final Set<Node> nodes = system.vertexSet();
         final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
         assertMinimumFailedMatches(feedback, nodes, relations, 2);
+        assertTotalOfFeedbackNodes(feedback, system);
+        assertTotalOfFeedbackRelations(feedback, system);
     }
 
     private void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {
