@@ -19,34 +19,31 @@ import static org.junit.Assert.assertEquals;
  * @author Martin de Boer
  */
 @Category(IntegrationTest.class)
-public class MementoMatchingTest extends AbstractMatchingTest {
+public class IteratorMatchingTest extends AbstractMatchingTest {
 
-    private static final String PATTERN_NAME = "Memento";
-    private static final String MATCHING_SYSTEM_XMI = "/systems/MyMemento.xmi";
+    private static final String PATTERN_NAME = "Iterator";
+    private static final String MATCHING_SYSTEM_XMI = "/systems/MyIterator.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
 
-    private static final String[] EXPECTED_NOTES = {
-            "The Originator has a method which calls a method of Memento.",
-            "The Caretaker has a limited access to the Memento and never operates on or examines its contents."
-    };
+    private static final String[] EXPECTED_NOTES = {};
 
     private DesignPattern designPattern;
 
     @Before
     public void initTests() {
         final PatternsParser patternsParser = ParserFactory.createPatternParser();
-        final String patternsXmlFile = MementoMatchingTest.class.getResource(TEMPLATES_XML).getFile();
+        final String patternsXmlFile = IteratorMatchingTest.class.getResource(TEMPLATES_XML).getFile();
         designPattern = getDesignPatternByName(patternsParser.parse(patternsXmlFile), PATTERN_NAME);
     }
 
     @Test
-    public void testMatchingMemento() {
+    public void testMatchingIterator() {
         assertMatchingPattern(MATCHING_SYSTEM_XMI, designPattern, EXPECTED_NOTES);
 
     }
 
     @Test
-    public void testMismatchingMemento() {
+    public void testMismatchingIterator() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
     }
 
@@ -54,9 +51,10 @@ public class MementoMatchingTest extends AbstractMatchingTest {
         final List<Solution> solutions = matchingResult.getSolutions();
 
         assertEquals(1, solutions.size());
-        assertMatchingNodes(solutions, "SolverState", "Memento");
-        assertMatchingNodes(solutions, "UndoOperation", "Caretaker");
-        assertMatchingNodes(solutions, "ConstraintSolver", "Originator");
+        assertMatchingNodes(solutions, "TunedChannel", "ConcreteAggregate");
+        assertMatchingNodes(solutions, "ChannelIterator", "Iterator");
+        assertMatchingNodes(solutions, "ChannelSelector", "ConcreteIterator");
+        assertMatchingNodes(solutions, "ChannelFrequencies", "Aggregate");
     }
 
 }
