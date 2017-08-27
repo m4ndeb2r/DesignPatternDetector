@@ -13,17 +13,16 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test the matching process for a Mediator pattern.
+ * Test the matching process for a Interpreter pattern.
  *
  * @author Martin de Boer
  */
 @Category(IntegrationTest.class)
-public class MediatorMatchingTest extends AbstractMatchingTest {
+public class InterpreterMatchingTest extends AbstractMatchingTest {
 
-    private static final String PATTERN_NAME = "Mediator";
-    private static final String MATCHING_SYSTEM_XMI = "/systems/MyMediator.xmi";
-    // private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi"; -> TODO: test fails due to no MISMATCH feedback!?!?
-    private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBridge.xmi";
+    private static final String PATTERN_NAME = "Interpreter";
+    private static final String MATCHING_SYSTEM_XMI = "/systems/MyInterpreter.xmi";
+    private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
 
     private static final String[] EXPECTED_NOTES = {};
 
@@ -32,18 +31,18 @@ public class MediatorMatchingTest extends AbstractMatchingTest {
     @Before
     public void initTests() {
         final PatternsParser patternsParser = ParserFactory.createPatternParser();
-        final String patternsXmlFile = MediatorMatchingTest.class.getResource(TEMPLATES_XML).getFile();
+        final String patternsXmlFile = InterpreterMatchingTest.class.getResource(TEMPLATES_XML).getFile();
         designPattern = getDesignPatternByName(patternsParser.parse(patternsXmlFile), PATTERN_NAME);
     }
 
     @Test
-    public void testMatchingMediator() {
+    public void testMatchingInterpreter() {
         assertMatchingPattern(MATCHING_SYSTEM_XMI, designPattern, EXPECTED_NOTES);
 
     }
 
     @Test
-    public void testMismatchingMediator() {
+    public void testMismatchingInterpreter() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
     }
 
@@ -51,11 +50,11 @@ public class MediatorMatchingTest extends AbstractMatchingTest {
         final List<Solution> solutions = matchingResult.getSolutions();
 
         assertEquals(1, solutions.size());
-        assertMatchingNodes(solutions, "ControlTower", "ConcreteMediator");
-        assertMatchingNodes(solutions, "ATCMediator", "Mediator");
-        assertMatchingNodes(solutions, "UA973", "ConcreteColleague1");
-        assertMatchingNodes(solutions, "LX787", "ConcreteColleague2");
-        assertMatchingNodes(solutions, "Flight", "Colleague");
+        assertMatchingNodes(solutions, "Sound", "Context");
+        assertMatchingNodes(solutions, "Score", "NonterminalExpression");
+        assertMatchingNodes(solutions, "MusicalNotation", "AbstractExpression");
+        assertMatchingNodes(solutions, "MusicalSignature", "TerminalExpression");
+        assertMatchingNodes(solutions, "DigitalInstrument", "Client");
     }
 
 }
