@@ -4,11 +4,11 @@
 * Get rid of TODO's in the code (JavaDoc, improvements, etc.)
 
 ## TODO: testing
-* More extensive testing in integration tests (solutions/feedback); remove code smells from integration tests; Get rid of @Ignore annotations (ChainOfResponsibilityMatchingTest for example)
+* Solve the mystery in MediatorMatchingTest: non-matching systems with no node/relation analysed?!?!
+  Or is this a BUG in our feedback?
 
 ## Other (final) project deliverables
 * Create an overall patterns file with all GOF patterns as a deliverable
-  * use this overall patterns file in the integration tests
 
 ## Won't do's:
 * JavaFX unit testing. Looks like we need another framework to do this properly...
