@@ -1,13 +1,6 @@
 # TODO's
 
-## TODO's in the code
-* Get rid of TODO's in the code (JavaDoc, improvements, etc.)
-
-## TODO: testing
-* Solve the mystery in MediatorMatchingTest: non-matching systems with no node/relation analysed?!?!
-  Or is this a BUG in our feedback?
-
-## Other (final) project deliverables
+## Final project deliverables
 * Create an overall patterns file with all GOF patterns as a deliverable
 
 ## Won't do's:
