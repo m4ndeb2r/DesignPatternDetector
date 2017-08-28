@@ -15,7 +15,6 @@
             <xs:enumeration value='ABSTRACT_CLASS'/>
             <xs:enumeration value='INTERFACE'/>
             <xs:enumeration value='CONCRETE_CLASS'/>
-            <xs:enumeration value='CLASS_WITH_PRIVATE_CONSTRUCTOR'/>
         </xs:restriction>
     </xs:simpleType>
 
