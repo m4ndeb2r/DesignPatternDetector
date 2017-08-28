@@ -119,7 +119,7 @@
     <pattern name="Object Adapter" family="Adapter">
         <notes>
             <note>An operation of the Adapter must call an operation of the Adaptee.</note>
-            <note>Set the adaptee attribute of the object adapter class Adapter with private visibility.</note>
+            <note>Set the adaptee attribute of the object adapter with private visibility.</note>
         </notes>
         <nodes>
             <node id="Client">

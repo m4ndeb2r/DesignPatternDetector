@@ -52,7 +52,7 @@ public class StrategyAbstractMatchingTest extends AbstractMatchingTest {
     }
 
     @Test
-    public void testMismatchingStrategyWithoutAnalysingNodesAndRelations() {
+    public void testMismatchingStrategyAbstractWithoutAnalysingNodesAndRelations() {
         assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
