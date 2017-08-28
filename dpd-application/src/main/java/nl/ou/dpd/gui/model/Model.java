@@ -243,7 +243,13 @@ public class Model extends Observable {
         final Map<String, PatternInspector.MatchingResult> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {
             final PatternInspector patternInspector = new PatternInspector(system, pattern);
-            assembledMatchResults.put(pattern.getName(), patternInspector.getMatchingResult());
+            final String patternName = pattern.getName();
+            final String patternFamilyName = pattern.getFamily();
+            String key = patternName;
+            if (!patternName.equals(patternFamilyName)) {
+                key = String.format("%s (%s)", patternName, patternFamilyName);
+            }
+            assembledMatchResults.put(key, patternInspector.getMatchingResult());
         });
 
         return assembledMatchResults;
