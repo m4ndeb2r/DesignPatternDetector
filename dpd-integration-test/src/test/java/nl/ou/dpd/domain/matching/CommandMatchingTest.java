@@ -24,6 +24,7 @@ public class CommandMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Command";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyCommand.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {
             "The execute method of the ConcreteCommand must invoke an action of the Reciever.",
@@ -47,6 +48,11 @@ public class CommandMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingCommand() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingCommandWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

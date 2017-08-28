@@ -144,6 +144,33 @@ public abstract class AbstractMatchingTest {
     }
 
     /**
+     * Asserts that the system design in the specified {@code mismatchingSystemXmi} does not contain any node or
+     * relation that is analysed. This is the case when the pattern we are looking for has a more nodes or relations
+     * than are present in the system we are analysing. The system design is therefore rejected beforehand, and no
+     * nodes and no relations need to be analysed.
+     *
+     * @param mismatchingSystemXmi an XMI file NOT containing the specified {@code pattern}
+     * @param pattern              a {@link DesignPattern} that is NOT present in the specified
+     *                             {@code mismatchingSystemXmi} file and is rejected beforehand
+     */
+    protected void assertMismatchingPatternWithoutAnalysingNodesAndRelations(String mismatchingSystemXmi, DesignPattern pattern) {
+        final ArgoUMLParser xmiParser = ParserFactory.createArgoUMLParser();
+        final URL sucXmiUrl = BridgeMatchingTest.class.getResource(mismatchingSystemXmi);
+        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
+
+        final PatternInspector patternInspector = new PatternInspector(system, pattern);
+        assertFalse(patternInspector.isomorphismExists());
+
+        final Set<Relation> relations = system.edgeSet();
+        final Set<Node> nodes = system.vertexSet();
+        final Feedback feedback = patternInspector.getMatchingResult().getFeedback();
+        nodes.forEach(node -> assertThat(feedback.getFeedbackMessages(node, FeedbackType.NOT_ANALYSED).size(), is(1)));
+        relations.forEach(relation -> assertThat(feedback.getFeedbackMessages(relation, FeedbackType.NOT_ANALYSED).size(), is(1)));
+        assertTotalOfFeedbackNodes(feedback, system);
+        assertTotalOfFeedbackRelations(feedback, system);
+    }
+
+    /**
      * Finds out if the specified system node and and the specified pattern node match at least once in the specified
      * solutions.
      *

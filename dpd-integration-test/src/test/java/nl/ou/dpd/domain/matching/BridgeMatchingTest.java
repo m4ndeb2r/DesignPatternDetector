@@ -24,6 +24,7 @@ public class BridgeMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Bridge";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyBridge.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyDecorator.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {
             "ArgoUML diagrams lack information regarding implementation of the methods which can lead to false positives.",
@@ -47,6 +48,11 @@ public class BridgeMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingBridge() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingBridgeWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

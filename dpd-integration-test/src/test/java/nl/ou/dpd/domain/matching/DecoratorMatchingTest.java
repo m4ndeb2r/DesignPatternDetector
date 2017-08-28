@@ -24,6 +24,7 @@ public class DecoratorMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Decorator";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyDecorator.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {};
 
@@ -45,6 +46,11 @@ public class DecoratorMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingDecorator() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingDecoratorWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

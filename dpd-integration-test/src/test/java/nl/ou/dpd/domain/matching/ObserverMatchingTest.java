@@ -23,6 +23,7 @@ public class ObserverMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Observer";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyObserver.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {
             "The Subject must provide a method which calls the Update-operation of all Observers.",
@@ -45,6 +46,11 @@ public class ObserverMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingObserver() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingObserverWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

@@ -22,8 +22,8 @@ public class MediatorMatchingTest extends AbstractMatchingTest {
 
     private static final String PATTERN_NAME = "Mediator";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyMediator.xmi";
-    // private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi"; -> TODO: test fails due to no MISMATCH feedback!?!?
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBridge.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyBuilder.xmi";
 
     private static final String[] EXPECTED_NOTES = {};
 
@@ -45,6 +45,11 @@ public class MediatorMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingMediator() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingMediatorWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

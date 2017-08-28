@@ -23,6 +23,7 @@ public class StrategyMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Strategy";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyStrategy.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {
             "The structure of the Strategy pattern is rather straightforward. " +
@@ -48,6 +49,11 @@ public class StrategyMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingStrategy() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingStrategyWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

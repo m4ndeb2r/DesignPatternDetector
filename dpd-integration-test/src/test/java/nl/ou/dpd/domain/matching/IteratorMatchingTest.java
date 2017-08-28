@@ -23,6 +23,7 @@ public class IteratorMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Iterator";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyIterator.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {};
 
@@ -44,6 +45,11 @@ public class IteratorMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingIterator() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingIteratorWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

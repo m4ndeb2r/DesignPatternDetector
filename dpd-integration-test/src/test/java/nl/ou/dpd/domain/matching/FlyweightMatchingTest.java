@@ -24,6 +24,7 @@ public class FlyweightMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Flyweight";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyFlyweight.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {
             "The ConcreteFlyweight must be taken from the FlyweightFactory. The constructor of the " +
@@ -47,6 +48,11 @@ public class FlyweightMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingFlyweight() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingFlyweightWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

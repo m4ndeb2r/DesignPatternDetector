@@ -23,6 +23,7 @@ public class InterpreterMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Interpreter";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyInterpreter.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {};
 
@@ -44,6 +45,11 @@ public class InterpreterMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingInterpreter() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingInterpreterWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {

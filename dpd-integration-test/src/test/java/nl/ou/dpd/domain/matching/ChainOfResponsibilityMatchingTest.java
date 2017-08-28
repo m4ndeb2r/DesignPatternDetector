@@ -23,6 +23,7 @@ public class ChainOfResponsibilityMatchingTest extends AbstractMatchingTest {
     private static final String PATTERN_NAME = "Chain Of Responsibility";
     private static final String MATCHING_SYSTEM_XMI = "/systems/MyChainOfResponsibility.xmi";
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {};
 
@@ -43,6 +44,11 @@ public class ChainOfResponsibilityMatchingTest extends AbstractMatchingTest {
     @Test
     public void testMismatchingChainOfResponsibility() {
         assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
+
+    @Test
+    public void testMismatchingChainOfResponsibilityWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
     }
 
     protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {
