@@ -74,14 +74,7 @@ Save the project via *File > Save* or *File > Save as*. Saved projects can be re
 For info, warning and error messages, see the log files that are also new in the new application. Older log files
 are stored as *.gz files in subdirectories named after the date of creation.
 
-## Working on ...
-We are currently working on:
-* extension of recognized patterns (made possible by the new matching method)
-* unit- and integrationtests (on-going)
-* documentation
-* perfection of the user-friendly GUI
-
-## Other future work ...
+## Future work ...
 Besides detecting patterns in UML, we foresee:
 * detection of patterns in Java-code
 
