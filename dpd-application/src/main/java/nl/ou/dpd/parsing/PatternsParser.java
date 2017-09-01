@@ -62,8 +62,8 @@ public class PatternsParser {
 
     private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
 
-    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_LONG_MSG = "The pattern template file '%s' could not be parsed.";
-    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG = "The pattern template file could not be parsed.";
+    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_LONG_MSG = "The design pattern template file '%s' could not be parsed.";
+    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG = "The design pattern template file could not be parsed.";
 
     private List<DesignPattern> designPatterns = new ArrayList<>();
     private DesignPattern designPattern;
