@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.Region;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 
@@ -78,6 +79,7 @@ public class MenuController extends Controller implements Observer {
                 alert.setTitle("Error");
                 alert.setHeaderText("The file could not be saved");
                 alert.setContentText(fnfe.getMessage());
+                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             }
         }
     }
@@ -102,6 +104,7 @@ public class MenuController extends Controller implements Observer {
         alert.setTitle("Note: unsaved changes");
         alert.setHeaderText("The current project will be discarded");
         alert.setContentText("Are you sure you want to close the current project and lose unsaved changes?");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
@@ -167,6 +170,7 @@ public class MenuController extends Controller implements Observer {
             if (detailMsg != null) {
                 alert.setContentText(detailMsg);
             }
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         }
         alert.showAndWait();
     }
@@ -226,6 +230,7 @@ public class MenuController extends Controller implements Observer {
         alert.setTitle("Exit application");
         alert.setHeaderText("The application will stop");
         alert.setContentText("Are you sure you want exit the application?");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
@@ -295,6 +300,7 @@ public class MenuController extends Controller implements Observer {
                     alert.setTitle("Error");
                     alert.setHeaderText("Project file not found");
                     alert.setContentText(ex.getMessage());
+                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                     alert.showAndWait();
                 }
             }
