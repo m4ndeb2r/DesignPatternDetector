@@ -7,7 +7,7 @@
     <parent>
         <artifactId>DesignPatternDetectorParent</artifactId>
         <groupId>nl.ou.dpd</groupId>
-        <version>0.0.10-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -15,7 +15,7 @@
     <artifactId>DesignPatternDetector</artifactId>
     <name>Design Pattern Detector</name>
     <groupId>nl.ou.dpd</groupId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <build>
         <plugins>
