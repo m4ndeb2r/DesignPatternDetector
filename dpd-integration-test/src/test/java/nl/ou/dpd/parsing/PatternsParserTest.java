@@ -43,7 +43,7 @@ public class PatternsParserTest {
 
         thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXParseException.class));
-        thrown.expectMessage("The pattern template file could not be parsed.");
+        thrown.expectMessage("The design pattern template file could not be parsed.");
 
         parser.parse(path);
     }
@@ -54,7 +54,7 @@ public class PatternsParserTest {
     public void testFileNotFoundException() {
         thrown.expect(ParseException.class);
         thrown.expectCause(is(FileNotFoundException.class));
-        thrown.expectMessage("The pattern template file could not be parsed.");
+        thrown.expectMessage("The design pattern template file could not be parsed.");
 
         parser.parse("missing.xml");
     }
