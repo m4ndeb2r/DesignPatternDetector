@@ -16,6 +16,18 @@ import java.util.stream.Collectors;
  */
 public class RelationComparatorFactory {
 
+    protected static final String RELATION_TYPE_ANALYSED_MSG = "Relation type(s) analysed.";
+    protected static final String CARDINALITIES_ANALYSED_MSG = "Cardinalities analysed.";
+    protected static final String MISMATCH_MISSING_RELATION_TYPE_MSG = "Mismatch with '%s': missing relation type '%s' in relation '%s'.";
+    protected static final String MISMATCH_UNEXPECTED_LEFT_CARDINALITY_MSG = "Mismatch with '%s': unexpected left cardinality '%s' in relation '%s'.";
+    protected static final String MISMATCH_UNEXPECTED_RIGHT_CARDINALITY_MSG = "Mismatch with '%s': unexpected right cardinality '%s' in relation '%s'.";
+
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
+    private RelationComparatorFactory() {
+    }
+
     /**
      * Creates a {@link CompoundRelationComparator} containing all the available sub comparators for {@link Relation}s.
      *
@@ -55,10 +67,10 @@ public class RelationComparatorFactory {
         public int compare(Relation systemRelation, Relation patternRelation) {
             final int result = super.compare(systemRelation, patternRelation);
             if (result == 0) {
-                final String feedbackMsg = String.format("Matched with '%s'.", patternRelation.getName());
+                final String feedbackMsg = String.format(MATCHED_WITH_MSG, patternRelation.getName());
                 feedback.addFeedbackMessage(systemRelation, FeedbackType.MATCH, feedbackMsg);
             } else {
-                final String feedbackMsg = String.format("Match failed with '%s'.", patternRelation.getName());
+                final String feedbackMsg = String.format(MATCH_FAILED_WITH_MSG, patternRelation.getName());
                 feedback.addFeedbackMessage(systemRelation, FeedbackType.MISMATCH, feedbackMsg);
             }
             return result;
@@ -97,7 +109,7 @@ public class RelationComparatorFactory {
                     .collect(Collectors.toSet());
             final Set<RelationType> dpDisjunction = getLeftDisjunction(dpTypes, sysTypes);
 
-            feedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, "Relation type(s) analysed.");
+            feedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, RELATION_TYPE_ANALYSED_MSG);
 
             final int result = dpDisjunction.size();
             if (result != 0) {
@@ -109,7 +121,7 @@ public class RelationComparatorFactory {
         private void createMismatchFeedback(Relation systemRelation, Relation patternRelation, Set<RelationType> dpDisjunction) {
             dpDisjunction.forEach(relationType -> {
                 final String feedbackMsg = String.format(
-                        "Mismatch with '%s': missing relation type '%s' in relation '%s'.",
+                        MISMATCH_MISSING_RELATION_TYPE_MSG,
                         patternRelation.getName(),
                         relationType,
                         systemRelation.getName());
@@ -124,7 +136,7 @@ public class RelationComparatorFactory {
         }
 
         private int compareCardinalities(Relation systemRelation, Relation patternRelation) {
-            feedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, "Cardinalities analysed.");
+            feedback.addFeedbackMessage(systemRelation, FeedbackType.INFO, CARDINALITIES_ANALYSED_MSG);
 
             for (RelationProperty patternRelationProperties : patternRelation.getRelationProperties()) {
                 final RelationType patternRelationType = patternRelationProperties.getRelationType();
@@ -137,7 +149,7 @@ public class RelationComparatorFactory {
                     if (systemRelationType == patternRelationType) {
                         if (!systemCardinalityLeft.isWithinLimitsOf(patternCardinalityLeft)) {
                             final String feedbackMsg = String.format(
-                                    "Mismatch with '%s': unexpected left cardinality '%s' in relation '%s'.",
+                                    MISMATCH_UNEXPECTED_LEFT_CARDINALITY_MSG,
                                     patternRelation.getName(),
                                     systemCardinalityLeft.toString(),
                                     systemRelation.getName());
@@ -146,7 +158,7 @@ public class RelationComparatorFactory {
                         }
                         if (!systemCardinalityRight.isWithinLimitsOf(patternCardinalityRight)) {
                             final String feedbackMsg = String.format(
-                                    "Mismatch with '%s': unexpected right cardinality '%s' in relation '%s'.",
+                                    MISMATCH_UNEXPECTED_RIGHT_CARDINALITY_MSG,
                                     patternRelation.getName(),
                                     systemCardinalityLeft.toString(),
                                     systemRelation.getName());

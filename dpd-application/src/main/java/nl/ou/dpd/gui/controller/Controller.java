@@ -3,6 +3,9 @@ package nl.ou.dpd.gui.controller;
 import javafx.fxml.Initializable;
 import nl.ou.dpd.gui.model.Model;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * An abstract controller for the views of the application. All controllers must extend this abstract controller, making
  * it possible for the {@link ControllerFactoryCreator} to create controllers.
@@ -35,4 +38,17 @@ public abstract class Controller implements Initializable {
         return this.model;
     }
 
+
+    /**
+     * Called to initialize a controller after its root element has been
+     * completely processed.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  <tt>null</tt> if the location is not known.
+     * @param resources The resources used to localize the root object, or <tt>null</tt> if
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 }

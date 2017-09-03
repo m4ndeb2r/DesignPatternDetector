@@ -6,6 +6,10 @@ import org.junit.rules.ExpectedException;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import static nl.ou.dpd.domain.relation.Cardinality.ILLEGAL_CARDINALITY_MSG;
+import static nl.ou.dpd.domain.relation.Cardinality.NEGATIVES_NOT_ALLOWED_MSG;
+import static nl.ou.dpd.domain.relation.Cardinality.UNLIMITED_NOT_ALLOWED_MSG;
+import static nl.ou.dpd.domain.relation.Cardinality.UPPERBOUND_MUST_BE_GE_LOWERBOUND_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -38,7 +42,7 @@ public class CardinalityTest {
     @Test
     public void testIllegalArguments() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Upperbound value must be >= lowerbound value.");
+        thrown.expectMessage(UPPERBOUND_MUST_BE_GE_LOWERBOUND_MSG);
         new Cardinality(1, 0);
     }
 
@@ -68,43 +72,46 @@ public class CardinalityTest {
     @Test
     public void testValueOfLowerValueUnlimited() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Unlimited value not allowed for lowerbound value.");
+        thrown.expectMessage(UNLIMITED_NOT_ALLOWED_MSG);
         Cardinality.valueOf("*..0");
     }
 
     @Test
     public void testValueOfLowerTooLarge() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Upperbound value must be >= lowerbound value.");
+        thrown.expectMessage(UPPERBOUND_MUST_BE_GE_LOWERBOUND_MSG);
         Cardinality.valueOf("1..0");
     }
 
     @Test
     public void testValueOfTooManyArgs() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Illegal cardinality value: '1..2..3'.");
-        Cardinality.valueOf("1..2..3");
+        testValueOfWithIllegalValue("1..2..3");
+        testValueOfWithIllegalValue("1,2..3");
+        testValueOfWithIllegalValue("1,2,3");
+        testValueOfWithIllegalValue("1..2,3");
     }
 
     @Test
     public void testValueOfCharacters() {
+        testValueOfWithIllegalValue("a..*");
+    }
+
+    @Test
+    public void testValueOfWithIllegalSeparator() {
+        testValueOfWithIllegalValue("1/5");
+    }
+
+    private void testValueOfWithIllegalValue(String illegal) {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Illegal cardinality value: 'a..*'.");
-        Cardinality.valueOf("a..*");
+        thrown.expectMessage(String.format(ILLEGAL_CARDINALITY_MSG, illegal));
+        Cardinality.valueOf(illegal);
     }
 
     @Test
     public void testValueOfWithNegativeValues() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("No negative values allowed in cardinality.");
+        thrown.expectMessage(NEGATIVES_NOT_ALLOWED_MSG);
         Cardinality.valueOf("-2..-1");
-    }
-
-    @Test
-    public void testValueOfWithIllegalSeparator() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Illegal cardinality value: '1/5'.");
-        Cardinality.valueOf("1/5");
     }
 
     @Test
@@ -123,8 +130,8 @@ public class CardinalityTest {
         assertIsWithinLimitsOf("*", "1..*", false);
         assertIsWithinLimitsOf("1..*", "1..999", false);
         assertIsWithinLimitsOf("5..*", "6..*", false);
-        assertIsWithinLimitsOf("5..8", "6..7", false);
-        assertIsWithinLimitsOf("5..8", "15..18", false);
+        assertIsWithinLimitsOf("5..8", "6,7", false);
+        assertIsWithinLimitsOf("5,8", "15..18", false);
     }
 
     private void assertIsWithinLimitsOf(String c1, String c2, boolean expect) {
@@ -153,10 +160,13 @@ public class CardinalityTest {
 
     @Test
     public void testEquals() {
-        Cardinality c = Cardinality.valueOf("*");
+        final Cardinality c = Cardinality.valueOf("*");
         assertTrue(c.equals(c));
         assertTrue(c.equals(Cardinality.valueOf("*")));
         assertFalse(c.equals(null));
+
+        assertTrue(Cardinality.valueOf("1,3").equals(Cardinality.valueOf("1..3")));
+        assertTrue(Cardinality.valueOf("1..*").equals(Cardinality.valueOf("1,*")));
     }
 
 }

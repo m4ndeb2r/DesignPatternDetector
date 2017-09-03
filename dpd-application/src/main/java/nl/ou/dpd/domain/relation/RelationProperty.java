@@ -63,12 +63,4 @@ public class RelationProperty {
         return Objects.hash(relationType, cardinalityLeft, cardinalityRight);
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "[ relation type = '%s', cardinality left = '%s', cardinality right = '%s' ]",
-                relationType,
-                cardinalityLeft,
-                cardinalityRight);
-    }
 }

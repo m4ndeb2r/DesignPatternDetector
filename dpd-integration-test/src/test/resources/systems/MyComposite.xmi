@@ -1,0 +1,164 @@
+<?xml version = '1.0' encoding = 'UTF-8' ?>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sat Aug 12 11:47:52 CEST 2017'>
+  <XMI.header>    <XMI.documentation>
+      <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
+      <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
+    </XMI.documentation>
+    <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
+  <XMI.content>
+    <UML:Model xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A4C'
+      name = 'Composite' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+      isAbstract = 'false'>
+      <UML:Namespace.ownedElement>
+        <UML:Class xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A4D'
+          name = 'MyUser' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'/>
+        <UML:Class xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A4F'
+          name = 'Rectangle' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021E0'/>
+          </UML:GeneralizableElement.generalization>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A68'
+              name = 'operation' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A69'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Class xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A50'
+          name = 'Picture' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.comment>
+            <UML:Comment xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A6A'/>
+          </UML:ModelElement.comment>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EB4'/>
+          </UML:GeneralizableElement.generalization>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021E3'
+              name = 'operation' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021E4'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Comment xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A6A'
+          isSpecification = 'false' body = 'operation = forall g in chilren&#10;g.operation();'>
+          <UML:Comment.annotatedElement>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A50'/>
+          </UML:Comment.annotatedElement>
+        </UML:Comment>
+        <UML:Class xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA7'
+          name = 'Graphic' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'true' isActive = 'false'>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA8'
+              name = 'operation' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'/>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Generalization xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EB4'
+          name = 'Picture-Graphic' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A50'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA7'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Association xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EBC'
+          name = 'User-Graphic' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+          isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EBD'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A4D'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EBE'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA7'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+        <UML:Association xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EBF'
+          name = 'Picture-Graphic_Composition' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EC0'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'composite' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A50'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EC1'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA7'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+        <UML:Class xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DC'
+          name = 'Text' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DF'/>
+          </UML:GeneralizableElement.generalization>
+        </UML:Class>
+        <UML:Class xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DD'
+          name = 'Line' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:GeneralizableElement.generalization>
+            <UML:Generalization xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DE'/>
+          </UML:GeneralizableElement.generalization>
+        </UML:Class>
+        <UML:Generalization xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DE'
+          name = 'Line-Graphic' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DD'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA7'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Generalization xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DF'
+          name = 'Text-Graphic' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021DC'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA7'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+        <UML:Generalization xmi.id = '-84-26-0-54--78758624:15db1453cfe:-8000:00000000000021E0'
+          name = 'Rectangle-Graphic' isSpecification = 'false'>
+          <UML:Generalization.child>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001A4F'/>
+          </UML:Generalization.child>
+          <UML:Generalization.parent>
+            <UML:Class xmi.idref = '-84-26-0-54--78758624:15db1453cfe:-8000:0000000000001EA7'/>
+          </UML:Generalization.parent>
+        </UML:Generalization>
+      </UML:Namespace.ownedElement>
+    </UML:Model>
+  </XMI.content>
+</XMI>

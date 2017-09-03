@@ -3,20 +3,26 @@ package nl.ou.dpd.gui.model;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import nl.ou.dpd.DesignPatternDetector;
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.domain.matching.PatternInspector;
-import nl.ou.dpd.gui.controller.ControllerFactoryCreator;
-import nl.ou.dpd.parsing.ParserFactory;
+import nl.ou.dpd.exception.DesignPatternDetectorException;
 import nl.ou.dpd.parsing.ArgoUMLParser;
+import nl.ou.dpd.parsing.ParserFactory;
 import nl.ou.dpd.parsing.PatternsParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +38,13 @@ public class Model extends Observable {
 
     private static final Logger LOGGER = LogManager.getLogger(Model.class);
 
+    private static final String HELPVIEW_FXML = "fxml/helpview.fxml";
     private static final String MAINVIEW_FXML = "fxml/mainview.fxml";
+    private static final String ABOUTVIEW_FXML = "fxml/aboutview.fxml";
     private static final String PROJECTVIEW_FXML = "fxml/projectview.fxml";
+
+    private static final String NO_CONTROLLER_ERR_MSG = "Initialization error. No controller factory was set in model.";
+    private static final String UNABLE_TO_OPEN_RESOURCE_MSG = "Unable to open resource '%s'.";
 
     private final RetentionFileChooser fileChooser;
     private Scene scene;
@@ -47,8 +58,17 @@ public class Model extends Observable {
      */
     public Model(Scene scene) {
         this.scene = scene;
-        this.controllerFactory = ControllerFactoryCreator.createControllerFactory(this);
         this.fileChooser = new RetentionFileChooser(new FileChooser());
+    }
+
+    /**
+     * Sets the controller factory for this model. A controller factory is {@link Callback} object that is used
+     * by the {@link FXMLLoader} to determine the controller object when loading a view.
+     *
+     * @param controllerFactory the {@link Callback} object used for determining the appropriate controller(s)
+     */
+    public void setControllerFactory(Callback<Class<?>, Object> controllerFactory) {
+        this.controllerFactory = controllerFactory;
     }
 
     /**
@@ -58,6 +78,14 @@ public class Model extends Observable {
         openProject = null;
         showView(MAINVIEW_FXML);
         setChangedAndNotifyObservers();
+    }
+
+    public void showAboutWindow() {
+        showWindow(ABOUTVIEW_FXML, "About");
+    }
+
+    public void showHelpWindow() {
+        showWindow(HELPVIEW_FXML, "Help");
     }
 
     /**
@@ -135,15 +163,6 @@ public class Model extends Observable {
     }
 
     /**
-     * Closes the current project and notifies the {@link java.util.Observer}s.
-     */
-    public void closeProject() {
-        openProject = null;
-        showView(MAINVIEW_FXML);
-        setChangedAndNotifyObservers();
-    }
-
-    /**
      * Determines if the project can be closed without loosing any changes to it.
      *
      * @return {@code true} if the project can be closed without loosing changes, or {@code false} otherwise.
@@ -217,14 +236,20 @@ public class Model extends Observable {
         final SystemUnderConsideration system = argoUMLParser.parse(openProject.getSystemUnderConsiderationFilePath());
 
         // Parse the xml input file
-        final PatternsParser patternsParser =ParserFactory.createPatternParser();
+        final PatternsParser patternsParser = ParserFactory.createPatternParser();
         final List<DesignPattern> designPatterns = patternsParser.parse(openProject.getDesignPatternFilePath());
 
         // Analyse the system under consideration
         final Map<String, PatternInspector.MatchingResult> assembledMatchResults = new HashMap<>();
         designPatterns.forEach(pattern -> {
             final PatternInspector patternInspector = new PatternInspector(system, pattern);
-            assembledMatchResults.put(pattern.getName(), patternInspector.getMatchingResult());
+            final String patternName = pattern.getName();
+            final String patternFamilyName = pattern.getFamily();
+            String key = patternName;
+            if (!patternName.equals(patternFamilyName)) {
+                key = String.format("%s (%s)", patternName, patternFamilyName);
+            }
+            assembledMatchResults.put(key, patternInspector.getMatchingResult());
         });
 
         return assembledMatchResults;
@@ -238,13 +263,46 @@ public class Model extends Observable {
     }
 
     private void showView(final String resource) {
+        final Parent parent = loadParentFromResource(resource);
+        scene.setRoot(parent);
+    }
+
+    private void showWindow(final String resource, String title) {
+        final Parent parent = loadParentFromResource(resource);
+        final Scene scene = new Scene(parent);
+        scene.getStylesheets().add(DesignPatternDetector.class.getResource(DesignPatternDetector.STYLE_SHEET).toExternalForm());
+
+        final Stage stage = new Stage();
+        stage.setScene(scene);
+
+        // Get the app icon
+        final InputStream iconResource = DesignPatternDetector.class.getResourceAsStream(DesignPatternDetector.ICON_NAME);
+        if (iconResource != null) {
+            stage.getIcons().add(new Image(iconResource));
+        }
+        stage.setTitle(title);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.setWidth(575.0);
+        stage.setHeight(700.0);
+
+        stage.show();
+    }
+
+    private Parent loadParentFromResource(String resource) {
+        if (controllerFactory == null) {
+            throw new DesignPatternDetectorException(NO_CONTROLLER_ERR_MSG);
+        }
         try {
             final URL location = getClass().getClassLoader().getResource(resource);
             final FXMLLoader loader = new FXMLLoader(location);
             loader.setControllerFactory(controllerFactory);
-            scene.setRoot((Parent) loader.load());
+            return (Parent) loader.load();
         } catch (Exception e) {
-            LOGGER.error("Unable to open resource " + resource + ".", e);
+            final String msg = String.format(UNABLE_TO_OPEN_RESOURCE_MSG, resource);
+            LOGGER.error(msg, e);
+            throw new DesignPatternDetectorException(msg, e);
         }
     }
 

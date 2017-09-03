@@ -46,24 +46,24 @@ public class PatternsParser {
 
     private static final String ID = "id";
     private static final String NAME = "name";
-    private static final String FAMILY = "family";
-
-    private static final String PATTERN = "pattern";
-
     private static final String NOTE = "note";
-
     private static final String NODE = "node";
-    private static final String NODE_TYPE = "nodeType";
-    private static final String NODE_RULE = "node.rule";
-
-    private static final String RELATION = "relation";
     private static final String NODE_1 = "node1";
     private static final String NODE_2 = "node2";
+    private static final String FAMILY = "family";
+    private static final String PATTERN = "pattern";
+    private static final String RELATION = "relation";
+    private static final String NODE_TYPE = "nodeType";
+    private static final String NODE_RULE = "node.rule";
     private static final String RELATION_RULE = "relation.rule";
     private static final String RELATION_TYPE = "relationType";
     private static final String CARDINALITY_LEFT = "cardinalityLeft";
     private static final String CARDINALITY_RIGHT = "cardinalityRight";
-    private static final String DEFAULT_CARDINALITY = "1";
+
+    private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
+
+    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_LONG_MSG = "The design pattern template file '%s' could not be parsed.";
+    static final String PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG = "The design pattern template file could not be parsed.";
 
     private List<DesignPattern> designPatterns = new ArrayList<>();
     private DesignPattern designPattern;
@@ -102,8 +102,8 @@ public class PatternsParser {
             // Rethrow ParseExceptions directly
             throw pe;
         } catch (Exception e) {
-            final String message = String.format("The pattern template file '%s' could not be parsed.", xmlFilename);
-            error(message, e);
+            final String message = String.format(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_LONG_MSG, xmlFilename);
+            error(message, PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG, e);
         }
         return designPatterns;
     }
@@ -223,7 +223,7 @@ public class PatternsParser {
     private Cardinality getCardinality(XMLEvent event, String elementName) {
         final String elementValue = getAttributeFromEvent(event, elementName);
         if (elementValue == null) {
-            return Cardinality.valueOf(DEFAULT_CARDINALITY);
+            return DEFAULT_CARDINALITY;
         } else {
             return Cardinality.valueOf(elementValue);
         }
@@ -247,9 +247,9 @@ public class PatternsParser {
         return null;
     }
 
-    private void error(String message, Exception cause) {
-        LOGGER.error(message);
-        throw new ParseException(message, cause);
+    private void error(String longMsg, String shortMsg, Exception cause) {
+        LOGGER.error(longMsg);
+        throw new ParseException(shortMsg, cause);
     }
 
 }

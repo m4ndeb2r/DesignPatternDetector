@@ -2,11 +2,9 @@ package nl.ou.dpd.parsing;
 
 import nl.ou.dpd.domain.DesignPattern;
 import nl.ou.dpd.domain.node.Node;
-import nl.ou.dpd.domain.node.NodeType;
 import nl.ou.dpd.domain.relation.Cardinality;
 import nl.ou.dpd.domain.relation.Relation;
 import nl.ou.dpd.domain.relation.RelationProperty;
-import nl.ou.dpd.domain.relation.RelationType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,12 +14,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.SAXException;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
@@ -34,6 +29,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static nl.ou.dpd.domain.node.NodeType.CONCRETE_CLASS;
+import static nl.ou.dpd.domain.node.NodeType.INTERFACE;
+import static nl.ou.dpd.domain.relation.RelationType.IMPLEMENTS;
+import static nl.ou.dpd.parsing.PatternsParser.PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
@@ -47,6 +46,39 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PatternsParserTest {
+
+    // XML tags
+    private static final String NOTE_TAG = "note";
+    private static final String NODE_TAG = "node";
+    private static final String NOTES_TAG = "notes";
+    private static final String NODES_TAG = "nodes";
+    private static final String PATTERN_TAG = "pattern";
+    private static final String PATTERNS_TAG = "patterns";
+    private static final String RELATION_TAG = "relation";
+    private static final String RELATIONS_TAG = "relations";
+    private static final String NODE_RULE_TAG = "node.rule";
+    private static final String RELATION_RULE_TAG = "relation.rule";
+
+    // XML attributes
+    private static final String ID_ATTRIBUTE = "id";
+    private static final String NAME_ATTRIBUTE = "name";
+    private static final String NODE_1_ATTRIBUTE = "node1";
+    private static final String NODE_2_ATTRIBUTE = "node2";
+    private static final String FAMILY_ATTRIBUTE = "family";
+    private static final String NODE_TYPE_ATTRIBUTE = "nodeType";
+    private static final String RELATION_TYPE_ATTRIBUTE = "relationType";
+    private static final String CARDINALITY_LEFT_ATTRIBUTE = "cardinalityLeft";
+
+    // Test values
+    private static final String A_NOTE_VALUE = "A nice note";
+    private static final String A_PATTERN_NAME = "aPatternName";
+    private static final String AN_INTERFACE_ID = "anInterfaceId";
+    private static final String A_CONCRETE_CLASS_ID = "aConcreteClassId";
+    private static final String A_CONCRETE_CLASS_NAME = "aConcreteClassName";
+    private static final String A_PATTERN_FAMILY_NAME = "aPatternFamily";
+
+    private static final Cardinality CARDINALITY_1_UNLIMITED = Cardinality.valueOf("1..*");
+    private static final Cardinality DEFAULT_CARDINALITY = Cardinality.valueOf("1");
 
     // This file is created just to satisfy the FileInputStream of the parser
     private String xmlFile = getPath("/patterns/dummy.xml");
@@ -68,19 +100,6 @@ public class PatternsParserTest {
             patternsEvent, patternEvent, notesEvent, noteEvent, nodesEvent,
             concreteClassNodeEvent, interfaceNodeEvent, relationsEvent, relationEvent,
             interfaceRuleEvent, concreteClassRuleEvent, inheritanceRuleEvent;
-
-    @Mock
-    private StartElement
-            nodesStartElement, concreteClassNodeStartElement,
-            interfaceNodeStartElement, relationsStartElement, relationStartElement,
-            interfaceRuleStartElement, concreteClassRuleStartElement, inheritanceRuleStartElement;
-
-    @Mock
-    private Iterator
-            concreteClassAttributeIterator,
-            interfaceAttributeIterator, relationAttributeIterator,
-            interfaceRuleAttributeIterator, concreteClassRuleAttributeIterator,
-            inheritanceRuleAttributeIterator;
 
     @Mock
     private Schema schema;
@@ -150,60 +169,60 @@ public class PatternsParserTest {
 
     @Before
     public void initPatternEvent() throws XMLStreamException {
-        patternsEvent = ParseTestHelper.createXMLEventMock("patterns");
+        patternsEvent = ParseTestHelper.createXMLEventMock(PATTERNS_TAG);
         patternEvent = ParseTestHelper.createXMLEventMock(
-                "pattern",
-                ParseTestHelper.createAttributeMock("name", "patternName"),
-                ParseTestHelper.createAttributeMock("family", "patternFamily")
+                PATTERN_TAG,
+                ParseTestHelper.createAttributeMock(NAME_ATTRIBUTE, A_PATTERN_NAME),
+                ParseTestHelper.createAttributeMock(FAMILY_ATTRIBUTE, A_PATTERN_FAMILY_NAME)
         );
     }
 
     @Before
     public void initNoteEvent() throws XMLStreamException {
-        notesEvent = ParseTestHelper.createXMLEventMock("notes");
-        noteEvent = ParseTestHelper.createXMLEventMock("note");
-        when(xmlEventReader.getElementText()).thenReturn("A nice note");
+        notesEvent = ParseTestHelper.createXMLEventMock(NOTES_TAG);
+        noteEvent = ParseTestHelper.createXMLEventMock(NOTE_TAG);
+        when(xmlEventReader.getElementText()).thenReturn(A_NOTE_VALUE);
     }
 
     @Before
     public void initNodeEvents() {
-        nodesEvent = ParseTestHelper.createXMLEventMock("nodes");
+        nodesEvent = ParseTestHelper.createXMLEventMock(NODES_TAG);
 
         // A concrete class node + rule
         concreteClassNodeEvent = ParseTestHelper.createXMLEventMock(
-                "node",
-                ParseTestHelper.createAttributeMock("name", "aConcreteClassName"),
-                ParseTestHelper.createAttributeMock("id", "aConcreteClassId"));
+                NODE_TAG,
+                ParseTestHelper.createAttributeMock(NAME_ATTRIBUTE, A_CONCRETE_CLASS_NAME),
+                ParseTestHelper.createAttributeMock(ID_ATTRIBUTE, A_CONCRETE_CLASS_ID));
         concreteClassRuleEvent = ParseTestHelper.createXMLEventMock(
-                "node.rule",
-                ParseTestHelper.createAttributeMock("nodeType", "CONCRETE_CLASS")
+                NODE_RULE_TAG,
+                ParseTestHelper.createAttributeMock(NODE_TYPE_ATTRIBUTE, CONCRETE_CLASS.name())
         );
 
         // An interface node + rule
         interfaceNodeEvent = ParseTestHelper.createXMLEventMock(
-                "node",
-                ParseTestHelper.createAttributeMock("id", "anInterface")
+                NODE_TAG,
+                ParseTestHelper.createAttributeMock(ID_ATTRIBUTE, AN_INTERFACE_ID)
         );
         interfaceRuleEvent = ParseTestHelper.createXMLEventMock(
-                "node.rule",
-                ParseTestHelper.createAttributeMock("nodeType", "INTERFACE")
+                NODE_RULE_TAG,
+                ParseTestHelper.createAttributeMock(NODE_TYPE_ATTRIBUTE, INTERFACE.name())
         );
     }
 
     @Before
     public void initRelationEvents() {
-        relationsEvent = ParseTestHelper.createXMLEventMock("relations");
+        relationsEvent = ParseTestHelper.createXMLEventMock(RELATIONS_TAG);
 
         // A relation + rule
         relationEvent = ParseTestHelper.createXMLEventMock(
-                "relation",
-                ParseTestHelper.createAttributeMock("node1", "aConcreteClassId"),
-                ParseTestHelper.createAttributeMock("node2", "anInterface")
+                RELATION_TAG,
+                ParseTestHelper.createAttributeMock(NODE_1_ATTRIBUTE, A_CONCRETE_CLASS_ID),
+                ParseTestHelper.createAttributeMock(NODE_2_ATTRIBUTE, AN_INTERFACE_ID)
         );
         inheritanceRuleEvent = ParseTestHelper.createXMLEventMock(
-                "relation.rule",
-                ParseTestHelper.createAttributeMock("relationType", "IMPLEMENTS"),
-                ParseTestHelper.createAttributeMock("cardinalityLeft", "1..*")
+                RELATION_RULE_TAG,
+                ParseTestHelper.createAttributeMock(RELATION_TYPE_ATTRIBUTE, IMPLEMENTS.name()),
+                ParseTestHelper.createAttributeMock(CARDINALITY_LEFT_ATTRIBUTE, CARDINALITY_1_UNLIMITED.toString())
         );
     }
 
@@ -221,7 +240,7 @@ public class PatternsParserTest {
         // We expect the parser to throw a ParseException, caused by a SAXException
         thrown.expect(ParseException.class);
         thrown.expectCause(is(SAXException.class));
-        thrown.expectMessage(String.format("The pattern template file '%s' could not be parsed.", xmlFile));
+        thrown.expectMessage(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG);
 
         patternsParser.parse(xmlFile);
     }
@@ -234,19 +253,21 @@ public class PatternsParserTest {
         // We expect the arbitrary exception to be mapped to a ParseException
         thrown.expect(ParseException.class);
         thrown.expectCause(is(NullPointerException.class));
-        thrown.expectMessage(String.format("The pattern template file '%s' could not be parsed.", xmlFile));
+        thrown.expectMessage(PATTERN_TEMPLATE_FILE_COULD_NOT_BE_PARSED_SHORT_MSG);
 
         patternsParser.parse(xmlFile);
     }
 
     @Test
     public void testParseException() {
+        final String errorMsg = "Oops";
+
         // Simulate an arbitrary exception somewhere along the way
-        when(concreteClassNodeEvent.asStartElement()).thenThrow(new ParseException("Oops", null));
+        when(concreteClassNodeEvent.asStartElement()).thenThrow(new ParseException(errorMsg, null));
 
         // We expect the ParseException to be rethrown directly
         thrown.expect(ParseException.class);
-        thrown.expectMessage("Oops");
+        thrown.expectMessage(errorMsg);
 
         patternsParser.parse(xmlFile);
     }
@@ -256,45 +277,45 @@ public class PatternsParserTest {
         final List<DesignPattern> designPatterns = patternsParser.parse(xmlFile);
 
         final DesignPattern designPattern = designPatterns.get(0);
-        assertThat(designPattern.getName(), is("patternName"));
-        assertThat(designPattern.getFamily(), is("patternFamily"));
+        assertThat(designPattern.getName(), is(A_PATTERN_NAME));
+        assertThat(designPattern.getFamily(), is(A_PATTERN_FAMILY_NAME));
 
         final Set<String> notes = designPattern.getNotes();
         assertThat(designPatterns.size(), is(1));
         assertThat(notes.size(), is(1));
-        assertThat(notes.iterator().next(), is("A nice note"));
+        assertThat(notes.iterator().next(), is(A_NOTE_VALUE));
 
         final Set<Node> nodeSet = designPattern.vertexSet();
         final Iterator<Node> nodeIterator = nodeSet.iterator();
         assertThat(nodeSet.size(), is(2));
 
         final Node concreteClassNode = nodeIterator.next();
-        assertThat(concreteClassNode.getId(), is("aConcreteClassId"));
-        assertThat(concreteClassNode.getName(), is("aConcreteClassName"));
+        assertThat(concreteClassNode.getId(), is(A_CONCRETE_CLASS_ID));
+        assertThat(concreteClassNode.getName(), is(A_CONCRETE_CLASS_NAME));
         assertThat(concreteClassNode.getTypes().size(), is(1));
-        assertThat(concreteClassNode.getTypes().iterator().next(), is(NodeType.CONCRETE_CLASS));
+        assertThat(concreteClassNode.getTypes().iterator().next(), is(CONCRETE_CLASS));
 
         final Node interfaceNode = nodeIterator.next();
-        assertThat(interfaceNode.getId(), is("anInterface"));
+        assertThat(interfaceNode.getId(), is(AN_INTERFACE_ID));
         assertThat(interfaceNode.getTypes().size(), is(1));
-        assertThat(interfaceNode.getTypes().iterator().next(), is(NodeType.INTERFACE));
+        assertThat(interfaceNode.getTypes().iterator().next(), is(INTERFACE));
 
         final Set<Relation> relationSet = designPattern.edgeSet();
         final Iterator<Relation> relationIterator = relationSet.iterator();
         assertThat(relationSet.size(), is(1));
 
         final Relation relation = relationIterator.next();
-        assertThat(relation.getId(), is("aConcreteClassName-anInterface"));
-        assertThat(relation.getName(), is("aConcreteClassName-anInterface"));
+        assertThat(relation.getId(), is(String.format("%s-%s", A_CONCRETE_CLASS_NAME, AN_INTERFACE_ID)));
+        assertThat(relation.getName(), is(String.format("%s-%s", A_CONCRETE_CLASS_NAME, AN_INTERFACE_ID)));
 
         final Set<RelationProperty> relationProperties = relation.getRelationProperties();
         assertThat(relationProperties.size(), is(1));
 
         final Iterator<RelationProperty> propertyIterator = relationProperties.iterator();
         final RelationProperty relationProperty = propertyIterator.next();
-        assertThat(relationProperty.getRelationType(), is(RelationType.IMPLEMENTS));
-        assertThat(relationProperty.getCardinalityLeft(), is(Cardinality.valueOf("1..*")));
-        assertThat(relationProperty.getCardinalityRight(), is(Cardinality.valueOf("1")));
+        assertThat(relationProperty.getRelationType(), is(IMPLEMENTS));
+        assertThat(relationProperty.getCardinalityLeft(), is(CARDINALITY_1_UNLIMITED));
+        assertThat(relationProperty.getCardinalityRight(), is(DEFAULT_CARDINALITY));
     }
 
     private String getPath(String resourceName) {

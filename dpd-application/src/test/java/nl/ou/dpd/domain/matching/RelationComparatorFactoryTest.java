@@ -12,6 +12,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashSet;
 
+import static nl.ou.dpd.domain.matching.CompoundComparator.MATCHED_WITH_MSG;
+import static nl.ou.dpd.domain.matching.CompoundComparator.MATCH_FAILED_WITH_MSG;
+import static nl.ou.dpd.domain.matching.MatchingTestHelper.assertFeedbackMessages;
+import static nl.ou.dpd.domain.matching.RelationComparatorFactory.CARDINALITIES_ANALYSED_MSG;
+import static nl.ou.dpd.domain.matching.RelationComparatorFactory.MISMATCH_MISSING_RELATION_TYPE_MSG;
+import static nl.ou.dpd.domain.matching.RelationComparatorFactory.MISMATCH_UNEXPECTED_LEFT_CARDINALITY_MSG;
+import static nl.ou.dpd.domain.matching.RelationComparatorFactory.MISMATCH_UNEXPECTED_RIGHT_CARDINALITY_MSG;
+import static nl.ou.dpd.domain.matching.RelationComparatorFactory.RELATION_TYPE_ANALYSED_MSG;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -89,13 +97,16 @@ public class RelationComparatorFactoryTest {
     public void testGetFeedbackForMatch() {
         defaultCompoundComparator.compare(inheritanceRelation, inheritanceRelation);
         Feedback feedback = defaultCompoundComparator.getFeedback();
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MATCH).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).size(), is(0));
-
-        // Because there is a mismatch in cardinality type, we expect cardinalities to be analysed
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).size(), is(2));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).get(0), is("Relation type(s) analysed."));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).get(1), is("Cardinalities analysed."));
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MATCH, new String[]{
+                String.format(
+                        MATCHED_WITH_MSG,
+                        inheritanceRelation.getName())
+        });
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.INFO, new String[]{
+                RELATION_TYPE_ANALYSED_MSG,
+                CARDINALITIES_ANALYSED_MSG
+        });
     }
 
     /**
@@ -105,14 +116,21 @@ public class RelationComparatorFactoryTest {
     public void testGetFeedbackForLeftCardinalityMismatch() {
         defaultCompoundComparator.compare(inheritanceRelation, inheritance2Relation);
         Feedback feedback = defaultCompoundComparator.getFeedback();
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).size(), is(2));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).get(1), is("Match failed with 'inheritance2Relation'."));
-
-        // Because there is a mismatch in relation type, we do not expect cardinalities to be analysed (matching prematurely failed)
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).size(), is(2));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).get(0), is("Relation type(s) analysed."));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).get(1), is("Cardinalities analysed."));
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MISMATCH, new String[]{
+                String.format(
+                        MATCH_FAILED_WITH_MSG,
+                        inheritance2Relation.getName()),
+                String.format(
+                        MISMATCH_UNEXPECTED_RIGHT_CARDINALITY_MSG,
+                        inheritance2Relation.getName(),
+                        "1",
+                        inheritanceRelation.getName())
+        });
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.INFO, new String[]{
+                RELATION_TYPE_ANALYSED_MSG,
+                CARDINALITIES_ANALYSED_MSG
+        });
     }
 
     /**
@@ -122,14 +140,21 @@ public class RelationComparatorFactoryTest {
     public void testGetFeedbackForRightCardinalityMismatch() {
         defaultCompoundComparator.compare(inheritanceRelation, inheritance3Relation);
         Feedback feedback = defaultCompoundComparator.getFeedback();
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).size(), is(2));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).get(1), is("Match failed with 'inheritance3Relation'."));
-
-        // Because there is a mismatch in relation type, we do not expect cardinalities to be analysed (matching prematurely failed)
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).size(), is(2));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).get(0), is("Relation type(s) analysed."));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).get(1), is("Cardinalities analysed."));
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MISMATCH, new String[]{
+                String.format(
+                        MATCH_FAILED_WITH_MSG,
+                        inheritance3Relation.getName()),
+                String.format(
+                        MISMATCH_UNEXPECTED_LEFT_CARDINALITY_MSG,
+                        inheritance3Relation.getName(),
+                        "1",
+                        inheritanceRelation.getName())
+        });
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.INFO, new String[]{
+                RELATION_TYPE_ANALYSED_MSG,
+                CARDINALITIES_ANALYSED_MSG
+        });
     }
 
     /**
@@ -139,13 +164,22 @@ public class RelationComparatorFactoryTest {
     public void testGetFeedbackForRelationTypeMismatch() {
         defaultCompoundComparator.compare(inheritanceRelation, associationRelation);
         Feedback feedback = defaultCompoundComparator.getFeedback();
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MATCH).size(), is(0));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).size(), is(2));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.MISMATCH).get(1), is("Match failed with 'associationRelation'."));
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.MISMATCH, new String[]{
+                String.format(
+                        MATCH_FAILED_WITH_MSG,
+                        associationRelation.getName()),
+                String.format(
+                        MISMATCH_MISSING_RELATION_TYPE_MSG,
+                        associationRelation.getName(),
+                        RelationType.ASSOCIATES_WITH.name(),
+                        inheritanceRelation.getName())
+        });
 
         // Because there is a mismatch in relation type, we do not expect cardinalities to be analysed (matching prematurely failed)
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).size(), is(1));
-        assertThat(feedback.getFeedbackMessages(inheritanceRelation, FeedbackType.INFO).get(0), is("Relation type(s) analysed."));
+        assertFeedbackMessages(feedback, inheritanceRelation, FeedbackType.INFO, new String[]{
+                RELATION_TYPE_ANALYSED_MSG
+        });
     }
 
     /**

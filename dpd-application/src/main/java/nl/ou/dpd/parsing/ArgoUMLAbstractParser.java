@@ -25,35 +25,29 @@ import java.util.Stack;
  */
 public abstract class ArgoUMLAbstractParser {
 
-    //attributes of the XMI used in the parser
-    protected static final String NAME = "name";
-    protected static final String ID = "xmi.id";
-    protected static final String IDREF = "xmi.idref";
-    protected static final String VISIBILITY = "visibility";
-    protected static final String IS_ABSTRACT = "isAbstract";
-    protected static final String HREF = "href";
-    protected static final String KIND = "kind";
-    protected static final String INPUT = "in";
-    protected static final String LOWER = "lower";
-    protected static final String UPPER = "upper";
-    protected static final String IS_NAVIGABLE = "isNavigable";
+    // XMI attributes
+    protected static final String ID_ATTRIBUTE = "xmi.id";
+    protected static final String NAME_ATTRIBUTE = "name";
+    protected static final String HREF_ATTRIBUTE = "href";
+    protected static final String KIND_ATTRIBUTE = "kind";
+    protected static final String INPUT_ATTRIBUTE = "in";
+    protected static final String IDREF_ATTRIBUTE = "xmi.idref";
+    protected static final String VISIBILITY_ATTRIBUTE = "visibility";
+    protected static final String IS_ABSTRACT_ATTRIBUTE = "isAbstract";
+    protected static final String IS_NAVIGABLE_ATTRIBUTE = "isNavigable";
 
-    //tags of the XMI used in the parser
-    protected static final String MODEL = "Model";
-    protected static final String CLASS = "Class";
-    protected static final String INTERFACE = "Interface";
-    protected static final String ATTRIBUTE = "Attribute";
-    protected static final String DATATYPE = "DataType";
-    protected static final String OPERATION = "Operation";
-    protected static final String PARAMETER = "Parameter";
-    protected static final String ASSOCIATION = "Association";
-    protected static final String ASSOCIATION_END = "AssociationEnd";
-    protected static final String MULTIPLICITY_RANGE = "MultiplicityRange";
-    protected static final String ABSTRACTION = "Abstraction";
-    protected static final String DEPENDENCY = "Dependency";
-    protected static final String GENERALIZATION = "Generalization";
+    //XMI tags
+    protected static final String MODEL_TAG = "Model";
+    protected static final String CLASS_TAG = "Class";
+    protected static final String DATATYPE_TAG = "DataType";
+    protected static final String INTERFACE_TAG = "Interface";
+    protected static final String ATTRIBUTE_TAG = "Attribute";
+    protected static final String DEPENDENCY_TAG = "Dependency";
 
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLAbstractParser.class);
+
+    static final String XMI_FILE_COULD_NOT_BE_PARSED_LONG_MSG = "The XMI file '%s' could not be parsed.";
+    static final String XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG = "The XMI file could not be parsed.";
 
     private XMLInputFactory xmlInputFactory;
 
@@ -88,8 +82,8 @@ public abstract class ArgoUMLAbstractParser {
             // Rethrow ParseExceptions directly
             throw pe;
         } catch (Exception e) {
-            String msg = String.format("The XMI file '%s' could not be parsed.", filename);
-            error(msg, e);
+            String msg = String.format(XMI_FILE_COULD_NOT_BE_PARSED_LONG_MSG, filename);
+            error(msg, XMI_FILE_COULD_NOT_BE_PARSED_SHORT_MSG, e);
         }
     }
 
@@ -140,8 +134,8 @@ public abstract class ArgoUMLAbstractParser {
         return event.asStartElement().getName().getLocalPart();
     }
 
-    protected void error(String msg, Exception cause) {
-        LOGGER.error(msg, cause);
-        throw new ParseException(msg, cause);
+    protected void error(String longMsg, String shortMsg, Exception cause) {
+        LOGGER.error(longMsg);
+        throw new ParseException(shortMsg, cause);
     }
 }

@@ -38,6 +38,8 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import static nl.ou.dpd.util.Util.nullSafeEquals;
+
 /**
  * A {@link Controller} for the project view of the application.
  *
@@ -409,17 +411,17 @@ public class ProjectViewController extends Controller implements Observer {
             } else {
                 projectNameLabel.setText(project.getName() + " *");
             }
-            systemFileTextField.setText(project.getSystemUnderConsiderationFilePath());
-            templateFileTextField.setText(project.getDesignPatternFilePath());
+            if (isSystemFileChanged(systemFileTextField, project)) {
+                systemFileTextField.setText(project.getSystemUnderConsiderationFilePath());
+                clearFeedback();
+            }
+            if (isTemplateFileChanged(templateFileTextField, project)) {
+                templateFileTextField.setText(project.getDesignPatternFilePath());
+                clearFeedback();
+            }
 
             // Enable/disable the analyse button
-            final boolean templateFileEmpty = templateFileTextField == null
-                    || templateFileTextField.getText() == null
-                    || templateFileTextField.getText().isEmpty();
-            final boolean systemFileEmpty = systemFileTextField == null
-                    || systemFileTextField.getText() == null
-                    || systemFileTextField.getText().isEmpty();
-            analyseButton.setDisable(templateFileEmpty || systemFileEmpty);
+            analyseButton.setDisable(isTemplateFileEmpty() || isSystemFileEmpty());
         } else {
             // Whipe the fields' values
             projectNameLabel.setText(null);
@@ -428,6 +430,26 @@ public class ProjectViewController extends Controller implements Observer {
             analyseButton.setDisable(true);
             clearFeedback();
         }
+    }
+
+    private boolean isSystemFileChanged(TextField systemFileTextField, Project project) {
+        return !nullSafeEquals(systemFileTextField.getText(), project.getSystemUnderConsiderationFilePath());
+    }
+
+    private boolean isTemplateFileChanged(TextField templateFileTextField, Project project) {
+        return !nullSafeEquals(templateFileTextField.getText(), project.getDesignPatternFilePath());
+    }
+
+    private boolean isSystemFileEmpty() {
+        return systemFileTextField == null
+                || systemFileTextField.getText() == null
+                || systemFileTextField.getText().isEmpty();
+    }
+
+    private boolean isTemplateFileEmpty() {
+        return templateFileTextField == null
+                || templateFileTextField.getText() == null
+                || templateFileTextField.getText().isEmpty();
     }
 
     private void clearFeedback() {

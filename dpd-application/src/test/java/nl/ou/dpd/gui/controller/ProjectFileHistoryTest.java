@@ -1,6 +1,5 @@
 package nl.ou.dpd.gui.controller;
 
-import nl.ou.dpd.gui.model.Project;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +9,7 @@ import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link ProjectFileHistory} enum.
@@ -95,10 +94,16 @@ public class ProjectFileHistoryTest {
 
         ProjectFileHistory.INSTANCE.store();
         ProjectFileHistory.INSTANCE.getProjectFiles().removeAll(ProjectFileHistory.INSTANCE.getProjectFiles());
-        assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().size(), is(0)); // Empty
+        assertTrue(ProjectFileHistory.INSTANCE.getProjectFiles().isEmpty()); // Empty
 
         ProjectFileHistory.INSTANCE.restore();
         assertThat(ProjectFileHistory.INSTANCE.getProjectFiles().size(), is(5)); // Unchanged
+
+        // Cleanup
+        ProjectFileHistory.INSTANCE.getProjectFiles().removeAll(ProjectFileHistory.INSTANCE.getProjectFiles());
+        ProjectFileHistory.INSTANCE.store();
+        ProjectFileHistory.INSTANCE.restore();
+        assertTrue(ProjectFileHistory.INSTANCE.getProjectFiles().isEmpty()); // Empty
     }
 
     private String getPath(String resourceName) {

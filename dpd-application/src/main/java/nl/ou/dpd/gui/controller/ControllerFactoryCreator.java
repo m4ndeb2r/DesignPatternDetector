@@ -24,6 +24,8 @@ import java.util.Map;
  */
 public final class ControllerFactoryCreator {
 
+    protected static final String UNABLE_TO_CREATE_CONTROLLER_FACTORY_MSG = "Unable to create controller factory.";
+
     private static final Logger LOGGER = LogManager.getLogger(ControllerFactoryCreator.class);
 
     private static Map<Model, Map<String, Controller>> controllers = new HashMap<>();
@@ -54,7 +56,7 @@ public final class ControllerFactoryCreator {
                 }
                 return controllersForModel.get(type.getName());
             } catch (Exception exc) {
-                final String msg = "Unable to create controller factory.";
+                final String msg = UNABLE_TO_CREATE_CONTROLLER_FACTORY_MSG;
                 LOGGER.error(msg, exc);
                 throw new RuntimeException(msg, exc); // fatal, just bail...
             }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.ou.dpd.gui.controller.AboutViewController">
+    <top>
+    </top>
+    <center>
+        <VBox id="aboutVBox">
+            <children>
+                <Label fx:id="applicationNameLabel" styleClass="page-title"/>
+                <Label fx:id="applicationVersionLabel" styleClass="page-subsubtitle"/>
+
+                <Label fx:id="aboutProjectSubtitle" styleClass="page-subtitle" text="About the project"/>
+                <Label fx:id="aboutDescriptionLabel" styleClass="paragraph" text="Description"/>
+
+                <Label fx:id="aboutContributersSubtitle" styleClass="page-subtitle" text="Contributors"/>
+                <GridPane fx:id="aboutContributersGridPane" styleClass="about-gridpane"/>
+
+                <BorderPane>
+                    <left></left>
+                    <center>
+                    <ImageView preserveRatio="true" BorderPane.alignment="CENTER">
+                        <image>
+                            <Image url="@../img/dpd_logo@0,5x.png"/>
+                        </image>
+                    </ImageView>
+                    </center>
+                    <right></right>
+                </BorderPane>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </VBox>
+    </center>
+    <bottom>
+    </bottom>
+</BorderPane>

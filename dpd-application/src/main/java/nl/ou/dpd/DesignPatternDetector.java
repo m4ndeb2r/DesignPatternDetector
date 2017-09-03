@@ -57,6 +57,7 @@ public final class DesignPatternDetector extends Application {
 
         // Set the scene to the main view of the application
         final Model model = new Model(scene);
+        model.setControllerFactory(ControllerFactoryCreator.createControllerFactory(model));
         model.showMainView();
 
         // Set the primary stage settings

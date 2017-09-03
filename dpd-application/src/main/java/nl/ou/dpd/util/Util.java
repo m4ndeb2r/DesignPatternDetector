@@ -34,4 +34,18 @@ public final class Util {
     public static String inverseSubstringOf(String s, int i) {
         return s.substring(s.length() - i);
     }
+
+    /**
+     * Tidies a text; eliminates newline characters, and superfluous spaces.
+     *
+     * @param text the text to tidy
+     * @return the tidied text
+     */
+    public static String tidy(String text) {
+        text = text.replaceAll("\n", " ");
+        while (text.contains("  ")) {
+            text = text.replaceAll("  ", " ");
+        }
+        return text.trim();
+    }
 }

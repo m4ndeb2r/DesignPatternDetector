@@ -38,11 +38,15 @@ import java.util.Set;
 public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private static final Logger LOGGER = LogManager.getLogger(ArgoUMLNodeParser.class);
 
-    //Datatype xmi.id endings
+    // Datatype xmi.id endings
     private static final String STRING = "87E";
     private static final String INTEGER = "87C";
     private static final String UNLIMITED_INTEGER = "87D";
     private static final String BOOLEAN = "880";
+
+    // XMI tags
+    private static final String OPERATION_TAG = "Operation";
+    private static final String PARAMETER_TAG = "Parameter";
 
     private static final Map<String, String> typeMap = new HashMap<>();
     static {
@@ -53,7 +57,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     }
 
     private static final List<String> eventTags = Arrays.asList(new String[]{
-            MODEL, CLASS, INTERFACE, ATTRIBUTE, DATATYPE, OPERATION, PARAMETER
+            MODEL_TAG, CLASS_TAG, INTERFACE_TAG, ATTRIBUTE_TAG, DATATYPE_TAG, OPERATION_TAG, PARAMETER_TAG
     });
 
     private Operation parentOperation;
@@ -77,7 +81,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * @return a map of {@link Node}s including attributes and operations. The key is represented by the node id, the
      * value is represented by the node itself.
      */
-    public Map<String, Node> parse(String filename) {
+    Map<String, Node> parse(String filename) {
         this.nodes = new HashMap<>();
         doParse(filename);
         LOGGER.info(String.format("Parsed %d nodes from %s.", nodes.size(), filename));
@@ -86,28 +90,28 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
 
     protected void handleStartElement(XMLEvent event) {
         switch (getStartElementNameLocalPart(event)) {
-            case MODEL:
+            case MODEL_TAG:
                 events.push(event);
                 break;
-            case CLASS:
-            case INTERFACE:
+            case CLASS_TAG:
+            case INTERFACE_TAG:
                 handleNodeEvent(event);
                 events.push(event);
                 break;
-            case ATTRIBUTE:
+            case ATTRIBUTE_TAG:
                 handleAttributeEvent(event);
                 events.push(event);
                 break;
-            case OPERATION:
+            case OPERATION_TAG:
                 handleOperationEvent(event);
                 events.push(event);
                 break;
-            case DATATYPE:
+            case DATATYPE_TAG:
                 //internal ArgoUML datatype of an attribute
                 handleDatatypeEvent(event);
                 events.push(event);
                 break;
-            case PARAMETER:
+            case PARAMETER_TAG:
                 handleParameterEvent(event);
                 events.push(event);
                 break;
@@ -125,14 +129,14 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private void handleNodeEvent(XMLEvent event) {
         //look for the event one level higher
         switch (getParentElementNameLocalPart()) {
-            case MODEL:
+            case MODEL_TAG:
                 handleModelEvent(event);
                 break;
-            case ATTRIBUTE:
-                setAttributeType(readAttributes(event).get(IDREF));
+            case ATTRIBUTE_TAG:
+                setAttributeType(readAttributes(event).get(IDREF_ATTRIBUTE));
                 break;
-            case PARAMETER:
-                setParameterType(readAttributes(event).get(IDREF));
+            case PARAMETER_TAG:
+                setParameterType(readAttributes(event).get(IDREF_ATTRIBUTE));
                 break;
             default:
                 break;
@@ -158,7 +162,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * @param event the attribute event
      */
     private void handleAttributeEvent(XMLEvent event) {
-        Node node = nodes.get(readAttributes(events.peek()).get(ID));
+        Node node = nodes.get(readAttributes(events.peek()).get(ID_ATTRIBUTE));
         createIncompleteAttribute(event, node);
     }
 
@@ -170,9 +174,9 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private void handleOperationEvent(XMLEvent event) {
         switch (getParentElementNameLocalPart()) {
-            case CLASS:
-            case INTERFACE:
-                Node node = nodes.get(readAttributes(events.peek()).get(ID));
+            case CLASS_TAG:
+            case INTERFACE_TAG:
+                Node node = nodes.get(readAttributes(events.peek()).get(ID_ATTRIBUTE));
                 createIncompleteOperation(event, node);
                 break;
             default:
@@ -194,11 +198,11 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
         }
         //look for the event one level higher
         switch (getParentElementNameLocalPart()) {
-            case ATTRIBUTE:
-                setAttributeType(readAttributes(event).get(HREF));
+            case ATTRIBUTE_TAG:
+                setAttributeType(readAttributes(event).get(HREF_ATTRIBUTE));
                 break;
-            case PARAMETER:
-                setParameterType(readAttributes(event).get(HREF));
+            case PARAMETER_TAG:
+                setParameterType(readAttributes(event).get(HREF_ATTRIBUTE));
                 break;
             default:
                 break;
@@ -208,15 +212,15 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     /**
      * If the kind of the {@link Parameter} is 'in' create a Parameter without type, else (the kind is 'return')
      * memorize the {@link Operation} under consideration. Types will be set as a special handling of the
-     * CLASS/INTERFACE event.
+     * CLASS_TAG/INTERFACE_TAG event.
      *
      * @param event the parameter event
      */
     private void handleParameterEvent(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
-        final String opId = readAttributes(events.peek()).get(ID);
+        final String opId = readAttributes(events.peek()).get(ID_ATTRIBUTE);
         final Operation operation = findOperationById(opId);
-        if (INPUT.equals(attributes.get(KIND))) {
+        if (INPUT_ATTRIBUTE.equals(attributes.get(KIND_ATTRIBUTE))) {
             createIncompleteParameter(event, operation);
         } else {
             parentOperation = operation;
@@ -230,7 +234,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      *              nodes.
      */
     private void setAttributeType(String idref) {
-        String attrId = readAttributes(events.peek()).get(ID);
+        String attrId = readAttributes(events.peek()).get(ID_ATTRIBUTE);
         final nl.ou.dpd.domain.node.Attribute attr = findAttributeById(attrId);
         Node node = nodes.get(idref);
         if (node == null) {
@@ -247,8 +251,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      *              nodes.
      */
     private void setParameterType(String idref) {
-        String kind = readAttributes(events.peek()).get(KIND);
-        if (INPUT.equals(kind)) {
+        String kind = readAttributes(events.peek()).get(KIND_ATTRIBUTE);
+        if (INPUT_ATTRIBUTE.equals(kind)) {
             setParameterInType(idref);
         } else {
             setParameterReturnType(idref);
@@ -262,7 +266,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      *              nodes.
      */
     private void setParameterInType(String idref) {
-        String paramId = readAttributes(events.peek()).get(ID);
+        String paramId = readAttributes(events.peek()).get(ID_ATTRIBUTE);
         Parameter parameter = findParameterById(paramId);
         Node node = nodes.get(idref);
         if (node == null) {
@@ -297,7 +301,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     }
 
     /**
-     * Find a {@link Node} with the ID specified in the attributes of the given event. If a node with this ID does not
+     * Find a {@link Node} with the ID_ATTRIBUTE specified in the attributes of the given event. If a node with this ID_ATTRIBUTE does not
      * exist, create it. Finally, set the appropriate properties of the (found or newly created) node.
      *
      * @param event the {@link XMLEvent} currently handled. Contains the attributes necessary for the creation of a
@@ -306,7 +310,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private Node findOrcreateNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
-        final String id = attributes.get(ID);
+        final String id = attributes.get(ID_ATTRIBUTE);
         if (id != null) {
             Node node = nodes.get(id);
             if (node == null) {
@@ -326,9 +330,9 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private Node addNodeProperties(Node node, XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
-        final String name = attributes.get(NAME);
+        final String name = attributes.get(NAME_ATTRIBUTE);
         final Set<NodeType> types = determineNodeTypes(event);
-        final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
+        final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY_ATTRIBUTE));
         node.setName(name);
         node.setVisibility(visibility);
         types.forEach(t -> node.addType(t));
@@ -338,7 +342,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     private Set<NodeType> determineNodeTypes(XMLEvent event) {
     	final Set<NodeType> types = new HashSet<>();
         final String typeString = getStartElementNameLocalPart(event).toUpperCase();
-        final boolean isAbstract = Boolean.parseBoolean(readAttributes(event).get(IS_ABSTRACT));
+        final boolean isAbstract = Boolean.parseBoolean(readAttributes(event).get(IS_ABSTRACT_ATTRIBUTE));
         if (typeString.equals("CLASS")) {
             if (isAbstract) {
             	types.add(NodeType.ABSTRACT_CLASS);
@@ -355,8 +359,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
     }
 
     /**
-     * Find a {@link Node} of the type DATATYPE with the ID specified in the attributes of the given event.
-     * If a node with this ID does not exist, create it.
+     * Find a {@link Node} of the type DATATYPE_TAG with the ID_ATTRIBUTE specified in the attributes of the given event.
+     * If a node with this ID_ATTRIBUTE does not exist, create it.
      * Finally, set the appropriate properties of the (found or newly created) node.
      *
      * @param event the {@link XMLEvent} currently handled. Contains the attributes necessary for the creation of a node.
@@ -364,7 +368,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private Node findOrCreateDatatypeNode(XMLEvent event) {
         final Map<String, String> attributes = readAttributes(event);
-        final String id = attributes.get(HREF);
+        final String id = attributes.get(HREF_ATTRIBUTE);
         Node node = null;
         if (id != null) {
             node = nodes.get(id);
@@ -384,7 +388,7 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      * @return the newly updated {@link Node}
      */
     private Node addDataTypeProperties(Node node, XMLEvent event) {
-        final String typeId = Util.inverseSubstringOf(readAttributes(event).get(HREF), 3);
+        final String typeId = Util.inverseSubstringOf(readAttributes(event).get(HREF_ATTRIBUTE), 3);
         node.setName(typeMap.get(typeId));
         node.setVisibility(Visibility.PUBLIC);
         node.addType(NodeType.DATATYPE);
@@ -400,9 +404,9 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private void createIncompleteAttribute(XMLEvent event, Node parentNode) {
         final Map<String, String> attributes = readAttributes(event);
-        final String id = attributes.get(ID);
-        final String name = attributes.get(NAME);
-        final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
+        final String id = attributes.get(ID_ATTRIBUTE);
+        final String name = attributes.get(NAME_ATTRIBUTE);
+        final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY_ATTRIBUTE));
         final nl.ou.dpd.domain.node.Attribute attr = new nl.ou.dpd.domain.node.Attribute(id, parentNode);
         attr.setName(name);
         attr.setVisibility(visibility);
@@ -417,8 +421,8 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private void createIncompleteParameter(XMLEvent event, Operation operation) {
         final Map<String, String> attributes = readAttributes(event);
-        final String id = attributes.get(ID);
-        final String name = attributes.get(NAME);
+        final String id = attributes.get(ID_ATTRIBUTE);
+        final String name = attributes.get(NAME_ATTRIBUTE);
         final Parameter parameter = new Parameter(id, operation);
         parameter.setName(name);
     }
@@ -432,9 +436,9 @@ public class ArgoUMLNodeParser extends ArgoUMLAbstractParser {
      */
     private void createIncompleteOperation(XMLEvent event, Node parentNode) {
         final Map<String, String> attributes = readAttributes(event);
-        final String id = attributes.get(ID);
-        final String name = attributes.get(NAME);
-        final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY));
+        final String id = attributes.get(ID_ATTRIBUTE);
+        final String name = attributes.get(NAME_ATTRIBUTE);
+        final Visibility visibility = Visibility.valueOfIgnoreCase(attributes.get(VISIBILITY_ATTRIBUTE));
         final Operation operation = new Operation(id, parentNode);
         operation.setName(name).setVisibility(visibility);
     }

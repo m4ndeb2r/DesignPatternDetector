@@ -23,13 +23,13 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RelationPropertyTest {
 
-    /**
-     * Exception rule.
-     */
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
     @Mock
     private Cardinality left_1, left_1_UNLIMITED, right_UNLIMITED, right_0_1;
+
+    private Cardinality defaultCardinality;
 
     @Before
     public void initCardinalities() {
@@ -37,52 +37,53 @@ public class RelationPropertyTest {
         when(left_1_UNLIMITED.toString()).thenReturn("1..*");
         when(right_0_1.toString()).thenReturn("0..1");
         when(right_UNLIMITED.toString()).thenReturn("*");
+        defaultCardinality = Cardinality.valueOf("1");
     }
 
     @Test
     public void testConstructor() {
-        assertThat(new RelationProperty(RelationType.ASSOCIATES_WITH).toString(),
-                is("[ relation type = 'ASSOCIATES_WITH', cardinality left = '1', cardinality right = '1' ]"));
-        assertThat(new RelationProperty(RelationType.ASSOCIATES_WITH, left_1_UNLIMITED, right_UNLIMITED).toString(),
-                is("[ relation type = 'ASSOCIATES_WITH', cardinality left = '1..*', cardinality right = '*' ]"));
-    }
+        RelationProperty relationProperty = new RelationProperty(RelationType.ASSOCIATES_WITH);
+        assertThat(relationProperty.getRelationType(), is(RelationType.ASSOCIATES_WITH));
+        assertThat(relationProperty.getCardinalityLeft(), is(defaultCardinality));
+        assertThat(relationProperty.getCardinalityRight(), is(defaultCardinality));
 
-    @Test
-    public void testToString() {
-        final RelationProperty relationProperty = new RelationProperty(RelationType.ASSOCIATES_WITH);
-        relationProperty.setCardinalityLeft(left_1);
-        relationProperty.setCardinalityRight(right_UNLIMITED);
-
-        assertThat(relationProperty.getCardinalityLeft(), is(left_1));
+        relationProperty = new RelationProperty(RelationType.ASSOCIATES_WITH, left_1_UNLIMITED, right_UNLIMITED);
+        assertThat(relationProperty.getRelationType(), is(RelationType.ASSOCIATES_WITH));
+        assertThat(relationProperty.getCardinalityLeft(), is(left_1_UNLIMITED));
         assertThat(relationProperty.getCardinalityRight(), is(right_UNLIMITED));
-        assertEquals(RelationType.ASSOCIATES_WITH, relationProperty.getRelationType());
-
-        assertEquals("[ relation type = 'ASSOCIATES_WITH', cardinality left = '1', cardinality right = '*' ]", relationProperty.toString());
     }
 
     @Test
     public void testEquals() {
-        RelationProperty rp1 = new RelationProperty(RelationType.ASSOCIATES_WITH);
-        RelationProperty rp2 = new RelationProperty(RelationType.ASSOCIATES_WITH);
+        final RelationType[] relationTypes = new RelationType[]{
+                RelationType.ASSOCIATES_WITH,
+                RelationType.CALLS_METHOD_OF,
+                RelationType.IMPLEMENTS
+        };
+        final Cardinality[] leftCardinalities = new Cardinality[]{left_1, left_1_UNLIMITED};
+        final Cardinality[] rightCardinalities = new Cardinality[]{right_0_1, right_UNLIMITED};
 
+        final RelationProperty rp1 = new RelationProperty(RelationType.IMPLEMENTS, left_1_UNLIMITED, right_0_1);
         assertEquals(rp1, rp1);
-        assertEquals(rp1, rp2);
-        assertEquals(rp1.hashCode(), rp2.hashCode());
         assertNotEquals(rp1, null);
-        assertNotEquals(rp1, left_1_UNLIMITED);
 
-        rp1.setCardinalityLeft(left_1_UNLIMITED);
-        assertNotEquals(rp1, rp2);
-        rp2.setCardinalityLeft(left_1_UNLIMITED);
-        assertEquals(rp1, rp2);
-        assertEquals(rp1.hashCode(), rp2.hashCode());
-
-        rp2.setCardinalityRight(right_UNLIMITED);
-        assertNotEquals(rp1, rp2);
-
-        RelationProperty rp3 = new RelationProperty(RelationType.CREATES_INSTANCE_OF);
-        rp3.setCardinalityLeft(left_1_UNLIMITED);
-        assertNotEquals(rp1, rp3);
+        for (RelationType relationType : relationTypes) {
+            for (Cardinality leftCardinality : leftCardinalities) {
+                for (Cardinality rightCardinality : rightCardinalities) {
+                    final RelationProperty rp2 = new RelationProperty(relationType);
+                    rp2.setCardinalityLeft(leftCardinality);
+                    rp2.setCardinalityRight(rightCardinality);
+                    if (rp1.getRelationType().equals(rp2.getRelationType()) &&
+                            rp1.getCardinalityLeft().equals(rp2.getCardinalityLeft()) &&
+                            rp1.getCardinalityRight().equals(rp2.getCardinalityRight())) {
+                        assertEquals(rp1, rp2);
+                        assertEquals(rp1.hashCode(), rp2.hashCode());
+                    } else {
+                        assertNotEquals(rp1, rp2);
+                    }
+                }
+            }
+        }
     }
 
 

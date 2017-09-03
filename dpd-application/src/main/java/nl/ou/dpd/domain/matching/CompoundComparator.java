@@ -13,6 +13,9 @@ import java.util.Set;
  */
 public abstract class CompoundComparator<T> implements FeedbackEnabledComparator<T> {
 
+    protected static final String MATCH_FAILED_WITH_MSG = "Match failed with '%s'.";
+    protected static final String MATCHED_WITH_MSG = "Matched with '%s'.";
+
     private Set<FeedbackEnabledComparator<T>> subComparators = new HashSet<>();
 
     public void addComparator(FeedbackEnabledComparator<T> subComparator) {

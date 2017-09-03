@@ -46,6 +46,31 @@
     -fx-stroke: black;
     -fx-stroke-width: 1;
     -fx-font-size: 22px;
+    -fx-padding: 10 20 10 20px;
+}
+
+.page-subtitle {
+    -fx-font-weight: 600;
+    -fx-font-style: normal;
+    -fx-text-fill: rgb(0, 0, 0);
+    -fx-font-size: 19px;
+    -fx-padding: 10 20 3 20px;
+}
+
+.page-subsubtitle {
+    -fx-font-style: normal;
+    -fx-text-fill: rgb(0, 0, 0);
+    -fx-font-size: 16px;
+    -fx-padding: 0 10 3 20px;
+}
+
+.paragraph {
+    -fx-fit-to-width: true;
+    -fx-wrap-text: true;
+    -fx-font-style: normal;
+    -fx-text-fill: rgb(0, 0, 0);
+    -fx-padding: 0 22 10 22px;
+    -fx-text-alignment: justify;
 }
 
 .error {
@@ -117,6 +142,20 @@
 .menu-item:hover > .label,
 .menu-item:focused > .label {
     -fx-text-fill: white;
+}
+
+/**
+ * About window
+ */
+#aboutVBox {
+    -fx-pref-width: 550px;
+    -fx-pref-height: 650px;
+}
+
+.about-gridpane {
+    -fx-padding: 5px 10px 5px 25px;
+    -fx-hgap: 5px;
+    -fx-vgap: 3px;
 }
 
 /*

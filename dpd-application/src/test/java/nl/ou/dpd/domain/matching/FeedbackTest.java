@@ -11,8 +11,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import static nl.ou.dpd.domain.matching.MatchingTestHelper.assertFeedbackMessages;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
@@ -92,49 +94,58 @@ public class FeedbackTest {
      */
     @Test
     public void testMerge() {
+        final String aNote = "Note";
+        final String infoMsg = "Info";
+        final String matchMsg = "Match";
+        final String misMatchMsg = "Mismatch";
+        final String notAnalysedMsg = "Not analysed";
+
         final Feedback fb1 = new Feedback();
+        fb1.addFeedbackMessage(node1, FeedbackType.NOT_ANALYSED, notAnalysedMsg);
+        fb1.addFeedbackMessage(relation1, FeedbackType.MISMATCH, misMatchMsg);
+
         final Feedback fb2 = new Feedback();
-
-        fb1.addFeedbackMessage(node1, FeedbackType.INFO, "node1-msg");
-        fb1.addFeedbackMessage(relation1, FeedbackType.INFO, "relation1-msg");
-
-        Set<String> notes = new HashSet<>();
-        notes.addAll(Arrays.asList("note"));
+        final Set<String> notes = new HashSet<>();
+        notes.addAll(Arrays.asList(aNote));
         fb2.addNotes(notes);
-        fb2.addFeedbackMessage(node2, FeedbackType.INFO, "node2-msg");
-        fb2.addFeedbackMessage(relation2, FeedbackType.MATCH, "relation2-msg");
+        fb2.addFeedbackMessage(node2, FeedbackType.INFO, infoMsg);
+        fb2.addFeedbackMessage(relation2, FeedbackType.MATCH, matchMsg);
 
         final Feedback fb3 = fb1.merge(fb2).merge(new Feedback()).merge(null);
 
-        assertThat(fb3.getNotes().size(), is(1));
-        assertThat(fb3.getNotes().iterator().next(), is("note"));
+        assertNotes(fb3, aNote);
+        assertFeedbackMessages(fb3, node1, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, node1, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(fb3, node1, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(fb3, node1, FeedbackType.NOT_ANALYSED, new String[]{notAnalysedMsg});
 
-        assertThat(fb3.getFeedbackMessages(node1, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(node1, FeedbackType.MATCH).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(node1, FeedbackType.MISMATCH).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(node1, FeedbackType.INFO).size(), is(1));
-        assertThat(fb3.getFeedbackMessages(node1, FeedbackType.INFO).get(0), is("node1-msg"));
+        assertFeedbackMessages(fb3, node2, FeedbackType.INFO, new String[]{infoMsg});
+        assertFeedbackMessages(fb3, node2, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(fb3, node2, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(fb3, node2, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertThat(fb3.getFeedbackMessages(node2, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(node2, FeedbackType.MATCH).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(node2, FeedbackType.MISMATCH).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(node2, FeedbackType.INFO).size(), is(1));
-        assertThat(fb3.getFeedbackMessages(node2, FeedbackType.INFO).get(0), is("node2-msg"));
+        assertFeedbackMessages(fb3, relation1, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, relation1, FeedbackType.MATCH, new String[]{});
+        assertFeedbackMessages(fb3, relation1, FeedbackType.MISMATCH, new String[]{misMatchMsg});
+        assertFeedbackMessages(fb3, relation1, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertThat(fb3.getFeedbackMessages(relation1, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(relation1, FeedbackType.MATCH).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(relation1, FeedbackType.MISMATCH).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(relation1, FeedbackType.INFO).size(), is(1));
-        assertThat(fb3.getFeedbackMessages(relation1, FeedbackType.INFO).iterator().next(), is("relation1-msg"));
+        assertFeedbackMessages(fb3, relation2, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, relation2, FeedbackType.MATCH, new String[]{matchMsg});
+        assertFeedbackMessages(fb3, relation2, FeedbackType.MISMATCH, new String[]{});
+        assertFeedbackMessages(fb3, relation2, FeedbackType.NOT_ANALYSED, new String[]{});
 
-        assertThat(fb3.getFeedbackMessages(relation2, FeedbackType.NOT_ANALYSED).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(relation2, FeedbackType.INFO).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(relation2, FeedbackType.MISMATCH).size(), is(0));
-        assertThat(fb3.getFeedbackMessages(relation2, FeedbackType.MATCH).size(), is(1));
-        assertThat(fb3.getFeedbackMessages(relation2, FeedbackType.MATCH).iterator().next(), is("relation2-msg"));
+        assertFeedbackMessages(fb3, (Node)null, FeedbackType.INFO, new String[]{});
+        assertFeedbackMessages(fb3, (Relation)null, FeedbackType.INFO, new String[]{});
+    }
 
-        assertThat(fb3.getFeedbackMessages((Relation)null, FeedbackType.INFO).size(), is(0));
-        assertThat(fb3.getFeedbackMessages((Node)null, FeedbackType.INFO).size(), is(0));
+    private void assertNotes(Feedback feedback, String... notes) {
+        final Set<String> feedbackNotes = feedback.getNotes();
+        assertThat(feedbackNotes.size(), is(notes.length));
+        final Iterator<String> feedbackIterator = feedbackNotes.iterator();
+        for (int i = 0; i < notes.length; i++) {
+            assertTrue(feedbackIterator.hasNext());
+            assertThat(feedbackIterator.next(), is(notes[i]));
+        }
     }
 
 }

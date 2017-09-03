@@ -18,6 +18,7 @@ import java.util.Set;
  */
 public class Feedback {
 
+    // The default feedback: not analysed
     private static final String MSG_NOT_ANALYSED = "Not analysed.";
 
     private final Set<String> patternRelatedNotes = new HashSet<>();

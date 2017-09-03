@@ -1,0 +1,153 @@
+<?xml version = '1.0' encoding = 'UTF-8' ?>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sat Aug 26 10:39:27 CEST 2017'>
+  <XMI.header>    <XMI.documentation>
+      <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
+      <XMI.exporterVersion>0.34(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
+    </XMI.documentation>
+    <XMI.metamodel xmi.name="UML" xmi.version="1.4"/></XMI.header>
+  <XMI.content>
+    <UML:Model xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A7F'
+      name = 'Iterator' isSpecification = 'false' isRoot = 'false' isLeaf = 'false'
+      isAbstract = 'false'>
+      <UML:Namespace.ownedElement>
+        <UML:Class xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A80'
+          name = 'User' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'/>
+        <UML:Interface xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A81'
+          name = 'ChannelFrequencies' visibility = 'public' isSpecification = 'false'
+          isRoot = 'false' isLeaf = 'false' isAbstract = 'false'/>
+        <UML:Interface xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A82'
+          name = 'ChannelIterator' visibility = 'public' isSpecification = 'false'
+          isRoot = 'false' isLeaf = 'false' isAbstract = 'false'/>
+        <UML:Class xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A83'
+          name = 'TunedChannel' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Dependency xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A97'/>
+            <UML:Abstraction xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A8B'/>
+          </UML:ModelElement.clientDependency>
+          <UML:Namespace.ownedElement>
+            <UML:Dependency xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A97'
+              name = 'ChannelFrequencies-ChannelSelector' isSpecification = 'false'>
+              <UML:Dependency.client>
+                <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A83'/>
+              </UML:Dependency.client>
+              <UML:Dependency.supplier>
+                <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A84'/>
+              </UML:Dependency.supplier>
+            </UML:Dependency>
+          </UML:Namespace.ownedElement>
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014FC'
+              name = 'createIterator' visibility = 'public' isSpecification = 'false'
+              ownerScope = 'instance' isQuery = 'false' concurrency = 'sequential' isRoot = 'false'
+              isLeaf = 'false' isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014FD'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A84'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014FE'
+                  name = 'aggregate' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A83'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+        <UML:Class xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A84'
+          name = 'ChannelSelector' visibility = 'public' isSpecification = 'false'
+          isRoot = 'false' isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
+          <UML:ModelElement.clientDependency>
+            <UML:Abstraction xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A8D'/>
+          </UML:ModelElement.clientDependency>
+        </UML:Class>
+        <UML:Abstraction xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A8B'
+          name = 'TunedChannel-ChannelFrequencies' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A83'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A81'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Abstraction xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A8D'
+          name = 'ChannelSelector-ChannelIterator' isSpecification = 'false'>
+          <UML:Dependency.client>
+            <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A84'/>
+          </UML:Dependency.client>
+          <UML:Dependency.supplier>
+            <UML:Interface xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A82'/>
+          </UML:Dependency.supplier>
+        </UML:Abstraction>
+        <UML:Association xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A8F'
+          name = 'ChannelSelectorl-ChannelFrequencies' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A90'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A84'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A91'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A83'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+        <UML:Class xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F2'
+          name = 'Client' visibility = 'public' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false' isActive = 'false'/>
+        <UML:Association xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F3'
+          name = 'Client-ChannelFrequencies' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F4'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F2'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F5'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Interface xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A81'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+        <UML:Association xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F6'
+          name = 'Clent--ChannelIterator' isSpecification = 'false' isRoot = 'false'
+          isLeaf = 'false' isAbstract = 'false'>
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F7'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'false' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Class xmi.idref = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F2'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+            <UML:AssociationEnd xmi.id = '-84-26-0-54--5af0f6a1:15ddfa5f2ba:-8000:00000000000014F8'
+              visibility = 'public' isSpecification = 'false' isNavigable = 'true' ordering = 'unordered'
+              aggregation = 'none' targetScope = 'instance' changeability = 'changeable'>
+              <UML:AssociationEnd.participant>
+                <UML:Interface xmi.idref = '127-0-1-1-11924dbf:1535d5d4fe4:-8000:0000000000000A82'/>
+              </UML:AssociationEnd.participant>
+            </UML:AssociationEnd>
+          </UML:Association.connection>
+        </UML:Association>
+      </UML:Namespace.ownedElement>
+    </UML:Model>
+  </XMI.content>
+</XMI>

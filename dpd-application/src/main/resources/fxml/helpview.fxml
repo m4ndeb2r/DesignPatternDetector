@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="nl.ou.dpd.gui.controller.HelpViewController">
+    <top>
+    </top>
+    <center>
+        <VBox id="aboutVBox">
+            <children>
+                <Label fx:id="applicationNameLabel" styleClass="page-title" text="Getting started"/>
+
+                <Label fx:id="newProjectSubtitleLabel" styleClass="page-subtitle" text="Start a new project"/>
+                <Label fx:id="newProjectDescriptionLabel"
+                       styleClass="paragraph"
+                       text="The DesignPatternDetector application enables you to find a number of design patterns in a system design. First, you need to start a new project. In het menu, click 'File' > New project'."/>
+
+                <Label fx:id="inputSubsubtitleLabel" styleClass="page-subsubtitle" text="Expected input"/>
+                <Label fx:id="newProjectDescriptionLabel1"
+                       styleClass="paragraph"
+                       text="Once you started a new project, the application needs some input, consisting of two files. The first one represents your system design, an ArgoUML export (*.xmi), and the second one is a file containing the design patterns' template definitions (*.xml)."/>
+                <Label fx:id="newProjectDescriptionLabel2"
+                       styleClass="paragraph"
+                       text="After selecting the files, hit the 'Analyse' button, and the application will scan the ArgoUML export you entered for the patterns defined in the pattern templates XML."/>
+                <Label fx:id="newProjectDescriptionLabel3"
+                       styleClass="paragraph"
+                       text="Note: the application is delivered with a number of example files, among which a file containing a complete set design pattern templates."/>
+
+                <Label fx:id="saveProjectSubsubtitleLabel" styleClass="page-subsubtitle" text="Save your project"/>
+                <Label fx:id="saveProjectDescriptionLabel"
+                       styleClass="paragraph"
+                       text="You can save your project for later use by selecting 'File' > 'Save as' in the menu. Project files are stored with extension *.dpd."/>
+
+                <Label fx:id="openProjectSubtitleLabel" styleClass="page-subtitle" text="Open an existing project"/>
+                <Label fx:id="openProjectDescriptionLabel" styleClass="paragraph" text="Projects, previously saved, can be opened by selecting 'File' > 'Open project' in the menu. Or, if the desired project is still available in the 'Recent projects' list, then you can select it there. (The application memorizes the 5 most recently used projects that wer used.)"/>
+
+                <Label fx:id="saveChangesSubsubtitleLabel" styleClass="page-subsubtitle" text="Save changes to your project"/>
+                <Label fx:id="aveChangesDescriptionLabel"
+                       styleClass="paragraph"
+                       text="You can save changes your project by selecting 'File' > 'Save' in the menu. Or, if you want to save it with a different name, by selecting 'File' > 'Save as'."/>
+
+                <Label fx:id="feedbackSubTitleLabel" styleClass="page-subtitle" text="Analysis feedback"/>
+                <Label fx:id="feedbackDescriptionLabel" styleClass="paragraph" text="The analysis feedback provided by the application, after clicking the 'Analyse' button, needs some in-depth explanation. Please read the application's tutorial on how to read the feedback."/>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </VBox>
+
+    </center>
+    <bottom>
+    </bottom>
+</BorderPane>

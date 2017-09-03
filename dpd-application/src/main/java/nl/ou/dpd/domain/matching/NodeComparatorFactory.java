@@ -14,6 +14,15 @@ import java.util.stream.Collectors;
  */
 public class NodeComparatorFactory {
 
+    protected static final String NODE_TYPES_ANALYSED_MSG = "Node type(s) analysed.";
+    protected static final String MISMATCH_MISSING_NODE_TYPE_MSG = "Mismatch with '%s': missing node type '%s' in '%s'.";
+
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
+    private NodeComparatorFactory() {
+    }
+
     /**
      * Creates a {@link CompoundNodeComparator} containing all the available sub comparators for {@link Node}s.
      *
@@ -48,10 +57,10 @@ public class NodeComparatorFactory {
         public int compare(Node systemNode, Node patternNode) {
             final int result = super.compare(systemNode, patternNode);
             if (result == 0) {
-                final String feedbackMsg = String.format("Matched with '%s'.", patternNode.getName());
+                final String feedbackMsg = String.format(MATCHED_WITH_MSG, patternNode.getName());
                 feedback.addFeedbackMessage(systemNode, FeedbackType.MATCH, feedbackMsg);
             } else {
-                final String feedbackMsg = String.format("Match failed with '%s'.", patternNode.getName());
+                final String feedbackMsg = String.format(MATCH_FAILED_WITH_MSG, patternNode.getName());
                 feedback.addFeedbackMessage(systemNode, FeedbackType.MISMATCH, feedbackMsg);
             }
             return result;
@@ -77,7 +86,7 @@ public class NodeComparatorFactory {
             final Set<NodeType> dpTypes = patternNode.getTypes();
             final Set<NodeType> dpDisjunction = getLeftDisjunction(dpTypes, sysTypes);
 
-            feedback.addFeedbackMessage(systemNode, FeedbackType.INFO, "Node type(s) analysed.");
+            feedback.addFeedbackMessage(systemNode, FeedbackType.INFO, NODE_TYPES_ANALYSED_MSG);
 
             final int result = dpDisjunction.size();
             if (result != 0) {
@@ -89,7 +98,7 @@ public class NodeComparatorFactory {
         private void createFeedback(Node systemNode, Node patternNode, Set<NodeType> dpDisjunction) {
             dpDisjunction.forEach(nodeType -> {
                 final String feedbackMsg = String.format(
-                        "Mismatch with '%s': missing node type '%s' in '%s'.",
+                        MISMATCH_MISSING_NODE_TYPE_MSG,
                         patternNode.getName(),
                         nodeType,
                         systemNode.getName());

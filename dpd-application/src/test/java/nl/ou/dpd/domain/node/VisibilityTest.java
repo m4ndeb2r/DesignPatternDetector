@@ -1,8 +1,6 @@
 package nl.ou.dpd.domain.node;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -13,9 +11,6 @@ import static org.hamcrest.core.Is.is;
  * @author Martin de Boer
  */
 public class VisibilityTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testValueOfIgnoreCase() {
@@ -28,11 +23,4 @@ public class VisibilityTest {
         }
     }
 
-    @Test
-    public void testValueOf() {
-        assertThat(Visibility.valueOf("PUBLIC"), is(Visibility.PUBLIC));
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("No enum");
-        Visibility.valueOf("public");
-    }
 }

@@ -2,97 +2,72 @@ package nl.ou.dpd.domain.matching;
 
 import nl.ou.dpd.IntegrationTest;
 import nl.ou.dpd.domain.DesignPattern;
-import nl.ou.dpd.domain.SystemUnderConsideration;
 import nl.ou.dpd.parsing.ParserFactory;
-import nl.ou.dpd.parsing.ArgoUMLParser;
 import nl.ou.dpd.parsing.PatternsParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test the matching process for a Bridge pattern.
  *
  * @author Martin de Boer
- * @author Peter Vansweevelt
  */
 @Category(IntegrationTest.class)
-public class BridgeMatchingTest {
+public class BridgeMatchingTest extends AbstractMatchingTest {
 
-    private String patternsXmlFile;
-    private PatternsParser patternsParser;
-    private ArgoUMLParser xmiParser;
+    private static final String PATTERN_NAME = "Bridge";
+    private static final String MATCHING_SYSTEM_XMI = "/systems/MyBridge.xmi";
+    private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyDecorator.xmi";
+    private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
+
+    private static final String[] EXPECTED_NOTES = {
+            "ArgoUML diagrams lack information regarding implementation of the methods which can lead to false positives.",
+            "Note1: The Operation of the Abstraction class must call a method of the attribute of type Implementor."
+    };
+
+    private DesignPattern designPattern;
 
     @Before
     public void initTests() {
-        patternsParser = ParserFactory.createPatternParser();
-        xmiParser = ParserFactory.createArgoUMLParser();
+        final PatternsParser patternsParser = ParserFactory.createPatternParser();
+        final String patternsXmlFile = BridgeMatchingTest.class.getResource(TEMPLATES_XML).getFile();
+        designPattern = getDesignPatternByName(patternsParser.parse(patternsXmlFile), PATTERN_NAME);
     }
 
     @Test
     public void testMatchingBridge() {
-        patternsXmlFile = BridgeMatchingTest.class.getResource("/patterns/patterns_bridge.xml").getFile();
+        assertMatchingPattern(MATCHING_SYSTEM_XMI, designPattern, EXPECTED_NOTES);
+    }
 
-        // Parse the bridge pattern xml ands create a DesignPattern
-        final DesignPattern designPattern = patternsParser.parse(patternsXmlFile).get(0);
+    @Test
+    public void testMismatchingBridge() {
+        assertMismatchingPattern(MISMATCHING_SYSTEM_XMI, designPattern);
+    }
 
-        // Create a system under consideration containing the observer pattern
-        final URL sucXmiUrl = BridgeMatchingTest.class.getResource("/systems/MyBridge.xmi");
-        final SystemUnderConsideration system = xmiParser.parse(sucXmiUrl);
+    @Test
+    public void testMismatchingBridgeWithoutAnalysingNodesAndRelations() {
+        assertMismatchingPatternWithoutAnalysingNodesAndRelations(NOT_ANALYSED_SYSTEM_XMI, designPattern);
+    }
 
-        // Check for a general note regarding the pattern, available from the xml-file
-        assertThat(designPattern.getNotes().size(), is(1));
-        assertTrue(designPattern.getNotes().iterator().next().startsWith("ArgoUML diagrams"));
+    protected void assertMatchingSolutions(PatternInspector.MatchingResult matchingResult) {
+        final List<Solution> solutions = matchingResult.getSolutions();
 
-        // Inspect the system for patterns
-        final PatternInspector patternInspector = new PatternInspector(system, designPattern);
-        final PatternInspector.MatchingResult matchingResult = patternInspector.getMatchingResult();
-        final Feedback feedback = matchingResult.getFeedback();
-
-        //TODO: test the values instead of printing it to the console
-        TestHelper.printFeedback(designPattern, system, patternInspector);
-
-        assertTrue(patternInspector.isomorphismExists());
-
-        // More detailed, but not exhaustive inspection
-        List<Solution> solutions = matchingResult.getSolutions(true);
-        assertEquals(12, solutions.size());
-
-        solutions = matchingResult.getSolutions();
         assertEquals(6, solutions.size());
-        assertMatch(solutions, "MyAbstraction", "Abstraction");
-        assertMatch(solutions, "MyImplementor", "Implementor");
-        assertMatch(solutions, "MyConcAbstr1", "RefinedAbstraction");
-        assertMatch(solutions, "MyConcAbstr2", "RefinedAbstraction");
-        assertAnyMatch(solutions, Arrays.asList(new String[]{"MyConcImpl1", "MyConcImpl2", "MyConcImpl3"}), Arrays.asList(new String[]{"ConcreteImplementorA", "ConcreteImplementorB"}));
-        assertMatch(solutions, "MyConcImpl1", "ConcreteImplementorB");
-
-        assertThat(feedback.getNotes(), is(designPattern.getNotes()));
-
-        // TODO Test feedback (getMatchingResult().getFeedback())
-    }
-
-    private void assertMatch(List<Solution> solutions, String sysNodeName, String patternNodeName) {
-        assertTrue(TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName));
-    }
-
-    private void assertAnyMatch(List<Solution> solutions, List<String> sysNodeNames, List<String> patternNodeNames) {
-        boolean match = false;
-        for (String sysNodeName : sysNodeNames) {
-            for (String patternNodeName : patternNodeNames) {
-                match |= TestHelper.areMatchingNodes(solutions, sysNodeName, patternNodeName);
-            }
-        }
-        assertTrue(match);
+        assertMatchingNodes(solutions, "MyConcImpl1", "ConcreteImplementorB");
+        assertMatchingNodes(solutions, "MyConcAbstr1", "RefinedAbstraction");
+        assertMatchingNodes(solutions, "MyConcAbstr2", "RefinedAbstraction");
+        assertMatchingNodes(solutions, "MyAbstraction", "Abstraction");
+        assertMatchingNodes(solutions, "MyImplementor", "Implementor");
+        assertAnyMatchingNode(solutions,
+                Arrays.asList(new String[]{"MyConcImpl1", "MyConcImpl2", "MyConcImpl3"}),
+                Arrays.asList(new String[]{"ConcreteImplementorA", "ConcreteImplementorB"})
+        );
     }
 
 }

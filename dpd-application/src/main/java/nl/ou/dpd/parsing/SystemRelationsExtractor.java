@@ -26,14 +26,16 @@ public class SystemRelationsExtractor {
 
     private SystemUnderConsideration system;
 
+    static final String SYSTEM_RELATION_PREFIX = "SystemRelation";
+
     /**
-     * This constructor has protected access so it can only be instantiated from within the same package (by the
+     * This constructor has package protected access so it can only be instantiated from within the same package (by the
      * ParserFactory or in a unit test in the same package).
      */
-    protected SystemRelationsExtractor() {
+    SystemRelationsExtractor() {
     }
 
-    public SystemUnderConsideration execute(SystemUnderConsideration system) {
+    SystemUnderConsideration execute(SystemUnderConsideration system) {
         this.system = system;
         for (Node node : system.vertexSet()) {
             exploreAttributesRelations(node);
@@ -49,25 +51,30 @@ public class SystemRelationsExtractor {
     }
 
     private void updateOrCreateAttributeRelation(Attribute attribute) {
-        Relation relation = system.getEdge(attribute.getParentNode(), attribute.getType());
-        if (relation == null) {
-            relation = createSystemAttributeRelation(attribute);
-        }
-        relation.addRelationProperty(new RelationProperty(RelationType.HAS_ATTRIBUTE_OF));
-        addEdge(attribute, relation);
+    	if (attribute.getType() != null) {
+	        Relation relation = system.getEdge(attribute.getParentNode(), attribute.getType());
+	        if (relation == null) {
+	            relation = createSystemAttributeRelation(attribute);
+	        }
+	        relation.addRelationProperty(new RelationProperty(RelationType.HAS_ATTRIBUTE_OF));
+	        addEdge(attribute, relation);
+    	}
     }
 
     private Relation createSystemAttributeRelation(Attribute attribute) {
         final Node parentNode = attribute.getParentNode();
-        return new Relation(
-                String.format("SystemRelation-%s-%s", parentNode.getId(), attribute.getId()),
-                String.format("%s-%s", parentNode.getName(), attribute.getName())
-        );
+        final String relationId = String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), attribute.getId());
+
+        final Node type = attribute.getType();
+        final String typeName = type.getName();
+        final String relationName = String.format("%s-%s (%s)", parentNode.getName(), typeName, attribute.getName());
+
+        return new Relation(relationId, relationName);
     }
 
     private void exploreOperationsRelations(Node node) {
         for (Operation operation : node.getOperations()) {
-            updateOrCreateInParameterRelation(operation);
+            updateOrCreateInputParameterRelation(operation);
             updateOrCreateReturnValueRelation(operation);
             updateOverrideRelation(node, operation);
         }
@@ -88,14 +95,17 @@ public class SystemRelationsExtractor {
                 .anyMatch(targetOperation -> targetOperation.equalsSignature(operation));
     }
 
-    private void updateOrCreateInParameterRelation(Operation operation) {
+    private void updateOrCreateInputParameterRelation(Operation operation) {
         for (Parameter param : operation.getParameters()) {
-            Relation relation = system.getEdge(operation.getParentNode(), param.getType());
-            if (relation == null) {
-                relation = createSystemOperationRelation(operation);
-            }
-            relation.addRelationProperty(new RelationProperty(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
-            addEdge(operation, param, relation);
+            final Node paramType = param.getType();
+            if (paramType != null) {
+	            Relation relation = system.getEdge(operation.getParentNode(), paramType);
+	            if (relation == null) {
+                    relation = createSystemOperationRelation(operation, paramType);
+	            }
+	            relation.addRelationProperty(new RelationProperty(RelationType.HAS_METHOD_PARAMETER_OF_TYPE));
+	            addEdge(operation, param, relation);
+        	}
         }
     }
 
@@ -103,19 +113,20 @@ public class SystemRelationsExtractor {
         if (operation.getReturnType() != null) {
             Relation relation = system.getEdge(operation.getParentNode(), operation.getReturnType());
             if (relation == null) {
-                relation = createSystemOperationRelation(operation);
+                relation = createSystemOperationRelation(operation, operation.getReturnType());
             }
             relation.addRelationProperty(new RelationProperty(RelationType.HAS_METHOD_RETURNTYPE));
             addEdge(operation, relation);
         }
     }
 
-    private Relation createSystemOperationRelation(Operation operation) {
+    private Relation createSystemOperationRelation(Operation operation, Node type) {
         final Node parentNode = operation.getParentNode();
-        return new Relation(
-                String.format("SystemRelation-%s-%s", parentNode.getId(), operation.getId()),
-                String.format("%s-%s", parentNode.getName(), operation.getName())
-        );
+        final String relationId = String.format("%s-%s-%s", SYSTEM_RELATION_PREFIX, parentNode.getId(), operation.getId());
+        final String typeName = type.getName();
+        final String relationName = String.format("%s-%s (%s)", parentNode.getName(), typeName, operation.getName());
+
+        return new Relation(relationId, relationName);
     }
 
     private void addEdge(Attribute attr, Relation relation) {

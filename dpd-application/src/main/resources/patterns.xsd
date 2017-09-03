@@ -15,7 +15,6 @@
             <xs:enumeration value='ABSTRACT_CLASS'/>
             <xs:enumeration value='INTERFACE'/>
             <xs:enumeration value='CONCRETE_CLASS'/>
-            <xs:enumeration value='CLASS_WITH_PRIVATE_CONSTRUCTOR'/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -49,6 +48,7 @@
             <xs:enumeration value='DEPENDS_ON'/>
             <xs:enumeration value='INHERITS_FROM'/>
             <xs:enumeration value='IMPLEMENTS'/>
+            <xs:enumeration value='INHERITS_FROM_OR_IMPLEMENTS'/>
             <xs:enumeration value='HAS_ATTRIBUTE_OF'/>
             <xs:enumeration value='CREATES_INSTANCE_OF'/>
             <xs:enumeration value='HAS_METHOD_PARAMETER_OF_TYPE'/>

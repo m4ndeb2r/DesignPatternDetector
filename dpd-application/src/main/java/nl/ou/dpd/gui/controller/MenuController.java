@@ -8,16 +8,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.Region;
 import nl.ou.dpd.gui.model.Model;
 import nl.ou.dpd.gui.model.Project;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  * A {@link Controller} for the menu of the application.
@@ -25,12 +24,6 @@ import java.util.ResourceBundle;
  * @author Martin de Boer
  */
 public class MenuController extends Controller implements Observer {
-
-    @FXML
-    private MenuItem newProject;
-
-    @FXML
-    private MenuItem openProject;
 
     @FXML
     private Menu recentProjectsMenu;
@@ -44,15 +37,6 @@ public class MenuController extends Controller implements Observer {
     @FXML
     private MenuItem closeProject;
 
-    @FXML
-    private MenuItem exit;
-
-    @FXML
-    private MenuItem help;
-
-    @FXML
-    private MenuItem about;
-
     /**
      * Constructs a {@link MenuController} with the specified {@link Model}.
      *
@@ -62,19 +46,6 @@ public class MenuController extends Controller implements Observer {
         super(model);
         model.addObserver(this);
         ProjectFileHistory.INSTANCE.restore();
-    }
-
-    /**
-     * Called to initialize a controller after its root element has been completely processed. It sets some of the
-     * menu items' state to disabled (the initial state), because those menu items work on open projects, and initially
-     * no project has been opened.
-     *
-     * @param location  The location used to resolve relative paths for the root object, or
-     *                  <tt>null</tt> if the location is not known.
-     * @param resources The resources used to localize the root object, or <tt>null</tt>
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
     }
 
     /**
@@ -108,6 +79,7 @@ public class MenuController extends Controller implements Observer {
                 alert.setTitle("Error");
                 alert.setHeaderText("The file could not be saved");
                 alert.setContentText(fnfe.getMessage());
+                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             }
         }
     }
@@ -122,7 +94,7 @@ public class MenuController extends Controller implements Observer {
         if (!getModel().hasOpenProject()
                 || getModel().canCloseProjectWithoutDataLoss()
                 || canCloseWithoutSaving()) {
-            getModel().closeProject();
+            getModel().showMainView();
         }
     }
 
@@ -132,6 +104,7 @@ public class MenuController extends Controller implements Observer {
         alert.setTitle("Note: unsaved changes");
         alert.setHeaderText("The current project will be discarded");
         alert.setContentText("Are you sure you want to close the current project and lose unsaved changes?");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
@@ -197,6 +170,7 @@ public class MenuController extends Controller implements Observer {
             if (detailMsg != null) {
                 alert.setContentText(detailMsg);
             }
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         }
         alert.showAndWait();
     }
@@ -208,7 +182,7 @@ public class MenuController extends Controller implements Observer {
      */
     @FXML
     protected void aboutAction(ActionEvent event) {
-        showNotImplementedAlert("About");
+        getModel().showAboutWindow();
     }
 
     /**
@@ -218,15 +192,7 @@ public class MenuController extends Controller implements Observer {
      */
     @FXML
     protected void helpAction(ActionEvent event) {
-        showNotImplementedAlert("Help");
-    }
-
-    private void showNotImplementedAlert(String function) {
-        Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setHeaderText("Not implemented yet: " + function);
-        alert.setContentText("This function will be implemented in a future version of the application. Our apologies for the inconvenience.");
-        alert.showAndWait();
+        getModel().showHelpWindow();
     }
 
     /**
@@ -264,6 +230,7 @@ public class MenuController extends Controller implements Observer {
         alert.setTitle("Exit application");
         alert.setHeaderText("The application will stop");
         alert.setContentText("Are you sure you want exit the application?");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
@@ -333,6 +300,7 @@ public class MenuController extends Controller implements Observer {
                     alert.setTitle("Error");
                     alert.setHeaderText("Project file not found");
                     alert.setContentText(ex.getMessage());
+                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                     alert.showAndWait();
                 }
             }
