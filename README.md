@@ -1,27 +1,28 @@
 # DesignPatternDetector
 
 ## Original version
-The original version was a command line application. It was developed as a prototype by E. van Doorn. it analyses 
-exports from ArgoUML (\*.xmi) and attempts to find design patterns, specied in templates file (\*.xml). The input files 
-were provided to the application as command line arguments, along with a third argument, the maximum number of allowed 
-missing edges (-n flag).
+The original version was a command line application. It was developed as a prototype by E. van Doorn. It analyses 
+exports from ArgoUML (`*.xmi`) and attempts to find design patterns, specied in a templates file (`*.xml`). The input 
+files were provided to the application as command line arguments, along with a third argument, the maximum number of 
+allowed missing edges (`-n` flag).
 
 **Example**
 
 `$ java -jar ./target/patterndetectionArgouml.jar -x input.xmi -t templates.xml -n 1
 `
 
-With -n 0 the application is very strict when detecting patterns. With higher values it is less strict, and accepts n 
-missing edges in detected patterns. Typical values for -n are 0 (strict) or 1 (not so strict).
+With `-n 0` the application is very strict when detecting patterns. With higher values it is less strict, and accepts 
+n missing edges in detected patterns. Typical values for `-n` are 0 (strict) or 1 (not so strict).
 
 ## Current version
-The current version is a JavaFX application with a graphic userinterface. Just like the original prototype, it analyses 
-exports from ArgoUML (\*.xmi) and attempts to find design patterns, specied in templates file (\*.xml). All arguments 
-can be entered in the GUI. Also, the matching process is refatored, and is based on graphs, using the JGraphT library.
+The current version is a JavaFX application with a graphic user interface. Just like the original prototype, it analyses 
+exports from ArgoUML (`*.xmi`) and attempts to find design patterns, specied in templates file (`*.xml`). All arguments 
+can be entered in the GUI. Since these are both files, they can be selected using a file browser. Also, the matching 
+process is refactored, and is based on graphs, using the JGraphT library.
 
 ### How to build and automatically test the application
 The application consists of two modules: dpd-application (the application) and dpd-integrations-test (the integration 
-tests tesing the dpd-application). 
+tests testing the dpd-application). 
 
 To run the unittests of the application, in the dpd-application module directory, run:
 
@@ -72,7 +73,7 @@ containing the specs of your system design (1).
 Save the project via *File > Save* or *File > Save as*. Saved projects can be re-opened via *File > Open*.
 
 For info, warning and error messages, see the log files that are also new in the new application. Older log files
-are stored as *.gz files in subdirectories named after the date of creation.
+are stored as `*.gz` files in subdirectories named after the date of creation.
 
 ### Example files
 Our example files can be used to run the application and to get an idea of its workings. All the example files 
