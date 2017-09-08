@@ -52,7 +52,7 @@ directory, run:
 
 `$ mvn clean install`
 
-### How to run the application
+### How to start the application
 After building and packaging the application, go to the dpd-application directory of the project, and enter:
 
 `$ java -jar ./target/DesignPatternDetector-<version>.jar`
@@ -74,9 +74,20 @@ Save the project via *File > Save* or *File > Save as*. Saved projects can be re
 For info, warning and error messages, see the log files that are also new in the new application. Older log files
 are stored as *.gz files in subdirectories named after the date of creation.
 
-## Future work ...
-Besides detecting patterns in UML, we foresee:
-* detection of patterns in Java-code
+### Example files
+Our example files can be used to run the application and to get an idea of its workings. All the example files 
+(XMI-files as well as XML-files) are present in the dpd-integration-test module, in the `/src/test/resources/patterns` 
+and `/src/test/resources/systems` directory. 
+
+**Patterns file**
+
+The `/src/test/resources/patterns/designpatterns_templates.xml` file contains the templates for all the design patterns
+we have tested using the application.
+
+**Systems files**
+
+The `/src/test/resources/systems` directory contains a list of XMI-files that can be used as example files when running
+the application. Some of them are also used in some of our integration tests. 
 
 # Tooling
 Build tool: Maven 3.3.9 (Bundled with IntelliJ)
@@ -86,3 +97,4 @@ Compiler: jdk1.8.0_121
 IntelliJ IDEA 2017.x
 
 JavaFX SceneBuilder 2.0
+
