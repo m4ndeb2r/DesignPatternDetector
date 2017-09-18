@@ -77,7 +77,7 @@ public class MenuController extends Controller implements Observer {
             } catch (FileNotFoundException fnfe) {
                 final Alert alert = new CustomAlert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
-                alert.setHeaderText("The file could not be saved");
+                alert.setHeaderText("The file could not be opened");
                 alert.setContentText(fnfe.getMessage());
                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             }
