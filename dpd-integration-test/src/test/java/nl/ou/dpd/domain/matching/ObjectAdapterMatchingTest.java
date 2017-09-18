@@ -26,7 +26,7 @@ public class ObjectAdapterMatchingTest extends AbstractMatchingTest {
 
     private static final String[] EXPECTED_NOTES = {
             "An operation of the Adapter must call an operation of the Adaptee.",
-            "Set the adaptee attribute of the object adapter with private visibility."
+            "Set the adaptee attribute of Adapter with private visibility."
     };
 
     private DesignPattern designPattern;

@@ -27,8 +27,8 @@ public class CommandMatchingTest extends AbstractMatchingTest {
     private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {
-            "The execute method of the ConcreteCommand must invoke an action of the Reciever.",
-            "The attribute of type Reciever of the ConcreteCommand should be set with a private visibility."
+            "The execute method of the ConcreteCommand must invoke an action of the Receiver.",
+            "The attribute of type Receiver of the ConcreteCommand should be set with a private visibility."
     };
 
     private DesignPattern designPattern;

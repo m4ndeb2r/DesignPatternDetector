@@ -26,7 +26,7 @@ public class ClassAdapterMatchingTest extends AbstractMatchingTest {
     private static final String MISMATCHING_SYSTEM_XMI = "/systems/MyBuilder.xmi";
 
     private static final String[] EXPECTED_NOTES = {
-            "An operation of the Adapter must call an operation of the Adaptee"
+            "An operation of the Adapter must call an operation of the Adaptee."
     };
 
     private DesignPattern designPattern;

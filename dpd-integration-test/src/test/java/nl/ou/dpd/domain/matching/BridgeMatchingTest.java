@@ -27,8 +27,7 @@ public class BridgeMatchingTest extends AbstractMatchingTest {
     private static final String NOT_ANALYSED_SYSTEM_XMI = "/systems/MyClassAdapter.xmi";
 
     private static final String[] EXPECTED_NOTES = {
-            "ArgoUML diagrams lack information regarding implementation of the methods which can lead to false positives.",
-            "Note1: The Operation of the Abstraction class must call a method of the attribute of type Implementor."
+            "The Operation of the Abstraction class must call a method of the attribute of type Implementor.",
     };
 
     private DesignPattern designPattern;
